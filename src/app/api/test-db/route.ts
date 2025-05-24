@@ -1,5 +1,5 @@
-import { db } from "@/db"
 import { NextResponse } from "next/server"
+import { db } from "../../../../db"
 
 export const runtime = 'nodejs' // Ensure Node.js runtime
 

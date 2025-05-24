@@ -19,13 +19,69 @@ model User {
   apiKey          String          @unique @default(cuid())
   createdAt       DateTime        @default(now())
   updatedAt       DateTime        @updatedAt
+  waitlists       Waitlist[]
+  subscribers     Subscriber[]
+
 
   @@index([email, apiKey])
+}
+
+model Waitlist {
+  id            String       @id @default(cuid())
+  name          String
+  slug          String      @unique
+  description   String?
+  websiteUrl    String?
+  redirectUrl   String?
+  userId       String
+  user          User        @relation(fields: [userId], references: [id])
+  status       WaitlistStatus @default(DRAFT)
+  customFields Json?
+  style        Json?
+  settings     Json?
+  subscribers  Subscriber[]
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+
+  @@index([slug, userId])
+}
+
+model Subscriber {
+  id            String          @id @default(cuid())
+  email         String
+  name          String?
+  waitlistId    String
+  waitlist      Waitlist       @relation(fields: [waitlistId], references: [id])
+  userId        String
+  user          User           @relation(fields: [userId], references: [id])
+  customFields  Json?
+  referralCode  String?        @unique
+  referredBy    String?
+  status       SubscriberStatus @default(PENDING)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+
+  @@unique([email, waitlistId])
+  @@index([referralCode])
 }
 
 enum Plan {
   FREE
   PRO
+}
+
+enum WaitlistStatus {
+  DRAFT
+  ACTIVE
+  PAUSED
+  ARCHIVED
+}
+
+enum SubscriberStatus {
+  PENDING
+  VERIFIED
+  APPROVED
+  REJECTED
 }
 
 enum DeliveryStatus {

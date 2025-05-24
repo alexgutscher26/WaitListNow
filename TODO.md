@@ -47,5 +47,3 @@ Adding reward tiers = prompt upgrade to Growth
 Adding webhook = prompt upgrade to Starter
 
 make the onboarding route where user cannot use it again after completion 
-
-now lets make the Create Waitlist function work and sync to the http://localhost:3000/dashboard/waitlists and remove the mockdata and then create the prisma stuff use edge runtime 

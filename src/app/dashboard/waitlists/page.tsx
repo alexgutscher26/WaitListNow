@@ -11,70 +11,49 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { Badge } from "@/components/ui/badge"
+import { Skeleton } from "@/components/ui/skeleton"
+import { useQuery } from "@tanstack/react-query"
+import { Waitlist } from "@prisma/client"
 
-// Mock data - replace with real data from your database
-const waitlists = [
-  {
-    id: "1",
-    name: "Early Access",
-    description: "Be the first to try our new product",
-    subscribers: 1245,
-    status: "active" as const,
-    createdAt: "2023-05-15T10:30:00Z",
-    updatedAt: "2023-05-20T14:45:00Z"
-  },
-  {
-    id: "2",
-    name: "Beta Testers",
-    description: "Help us test new features",
-    subscribers: 842,
-    status: "active" as const,
-    createdAt: "2023-04-10T09:15:00Z",
-    updatedAt: "2023-05-18T11:20:00Z"
-  },
-  {
-    id: "3",
-    name: "VIP Access",
-    description: "Exclusive features for VIP members",
-    subscribers: 156,
-    status: "paused" as const,
-    createdAt: "2023-03-22T16:20:00Z",
-    updatedAt: "2023-05-10T13:10:00Z"
+type WaitlistWithCount = Waitlist & {
+  _count: {
+    subscribers: number
   }
-]
+}
 
-// Custom Badge component since shadcn/ui Badge isn't available
-const Badge = ({ 
-  variant = 'default', 
-  className = '', 
-  children, 
-  ...props 
-}: { 
-  variant?: 'default' | 'secondary' | 'outline' | 'destructive' | 'success', 
-  className?: string, 
-  children: React.ReactNode 
-} & React.HTMLAttributes<HTMLSpanElement>) => {
-  const baseStyles = 'inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2';
-  
-  const variantStyles = {
-    default: 'bg-primary text-primary-foreground hover:bg-primary/80 border-transparent',
-    secondary: 'bg-secondary text-secondary-foreground hover:bg-secondary/80 border-transparent',
-    outline: 'text-foreground border-border',
-    destructive: 'bg-destructive text-destructive-foreground hover:bg-destructive/80 border-transparent',
-    success: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100 border-transparent'
-  };
-
-  return (
-    <span 
-      className={`${baseStyles} ${variantStyles[variant as keyof typeof variantStyles] || variantStyles.default} ${className}`}
-      {...props}
-    >
-      {children}
-    </span>
-  );
-};
+// Skeleton Loader Component
+const WaitlistSkeleton = () => (
+  <div className="flex items-center justify-between rounded-lg border p-4">
+    <div className="flex items-center space-x-4">
+      <Skeleton className="h-10 w-10 rounded-md" />
+      <div className="space-y-2">
+        <Skeleton className="h-4 w-48" />
+        <Skeleton className="h-3 w-64" />
+        <div className="flex space-x-4">
+          <Skeleton className="h-3 w-24" />
+        </div>
+      </div>
+    </div>
+    <div className="flex space-x-2">
+      <Skeleton className="h-9 w-20" />
+      <Skeleton className="h-9 w-9" />
+    </div>
+  </div>
+)
 
 export default function WaitlistsPage() {
+  const { data: waitlists, isLoading, isError } = useQuery<WaitlistWithCount[]>({
+    queryKey: ['waitlists'],
+    queryFn: async () => {
+      const res = await fetch('/api/waitlists')
+      if (!res.ok) {
+        throw new Error('Failed to fetch waitlists')
+      }
+      return res.json()
+    },
+  })
+
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
@@ -83,16 +62,60 @@ export default function WaitlistsPage() {
     })
   }
 
+  // Calculate stats
+  const hasWaitlists = waitlists && waitlists.length > 0
+  const totalSubscribers = hasWaitlists ? waitlists.reduce((sum, wl) => sum + wl._count.subscribers, 0) : 0
+  const activeWaitlists = hasWaitlists ? waitlists.filter(wl => wl.status === 'ACTIVE').length : 0
+  const lastUpdated = hasWaitlists && waitlists[0]?.updatedAt 
+    ? formatDate(waitlists[0].updatedAt.toString()) 
+    : formatDate(new Date().toISOString())
+
+  if (isError) {
+    return (
+      <DashboardPage 
+        title="Waitlists"
+        cta={
+          <Button asChild>
+            <Link href="/dashboard/waitlists/new">
+              <Plus className="mr-2 h-4 w-4" />
+              New Waitlist
+            </Link>
+          </Button>
+        }
+      >
+        <div className="flex flex-col items-center justify-center space-y-4 p-8 text-center">
+          <div className="rounded-full bg-muted p-4">
+            <Users className="h-8 w-8 text-muted-foreground" />
+          </div>
+          <h3 className="text-xl font-semibold">No waitlists yet</h3>
+          <p className="text-muted-foreground">
+            Get started by creating your first waitlist to collect subscribers.
+          </p>
+          <Button asChild>
+            <Link href="/dashboard/waitlists/new">
+              <Plus className="mr-2 h-4 w-4" />
+              Create Waitlist
+            </Link>
+          </Button>
+        </div>
+      </DashboardPage>
+    )
+  }
+
   return (
-    <DashboardPage title="Waitlists" cta={
-      <Button asChild>
-        <Link href="/dashboard/waitlists/new">
-          <Plus className="mr-2 h-4 w-4" />
-          New Waitlist
-        </Link>
-      </Button>
-    }>
+    <DashboardPage 
+      title="Waitlists" 
+      cta={
+        <Button asChild>
+          <Link href="/dashboard/waitlists/new">
+            <Plus className="mr-2 h-4 w-4" />
+            New Waitlist
+          </Link>
+        </Button>
+      }
+    >
       <div className="space-y-6">
+        {/* Stats Grid */}
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -102,12 +125,17 @@ export default function WaitlistsPage() {
               <Users className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{waitlists.length}</div>
-              <p className="text-xs text-muted-foreground">
-                +2 from last month
-              </p>
+              {isLoading ? (
+                <Skeleton className="h-8 w-16" />
+              ) : (
+                <div className="text-2xl font-bold">{waitlists?.length || 0}</div>
+              )}
+              <div className="text-xs text-muted-foreground">
+                {isLoading ? <Skeleton className="mt-2 h-4 w-32" /> : 'All your waitlists'}
+              </div>
             </CardContent>
           </Card>
+
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">
@@ -116,28 +144,44 @@ export default function WaitlistsPage() {
               <Users className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">
-                {waitlists.reduce((sum, wl) => sum + wl.subscribers, 0).toLocaleString()}
+              {isLoading ? (
+                <Skeleton className="h-8 w-16" />
+              ) : (
+                <div className="text-2xl font-bold">
+                  {totalSubscribers.toLocaleString()}
+                </div>
+              )}
+              <div className="text-xs text-muted-foreground">
+                {isLoading ? <Skeleton className="mt-2 h-4 w-32" /> : 'Across all waitlists'}
               </div>
-              <p className="text-xs text-muted-foreground">
-                +180.1% from last month
-              </p>
             </CardContent>
           </Card>
+
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Active</CardTitle>
               <div className="h-4 w-4 rounded-full bg-green-500" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">
-                {waitlists.filter(wl => wl.status === 'active').length}
+              {isLoading ? (
+                <Skeleton className="h-8 w-16" />
+              ) : (
+                <div className="text-2xl font-bold">
+                  {activeWaitlists}
+                </div>
+              )}
+              <div className="text-xs text-muted-foreground">
+                {isLoading ? (
+                  <Skeleton className="mt-2 h-4 w-32" />
+                ) : waitlists?.length ? (
+                  `${Math.round((activeWaitlists / (waitlists?.length || 1)) * 100)}% of total`
+                ) : (
+                  'No waitlists yet'
+                )}
               </div>
-              <p className="text-xs text-muted-foreground">
-                {Math.round((waitlists.filter(wl => wl.status === 'active').length / waitlists.length) * 100)}% of total
-              </p>
             </CardContent>
           </Card>
+
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">
@@ -146,23 +190,30 @@ export default function WaitlistsPage() {
               <span className="h-4 w-4 text-muted-foreground">🔄</span>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">
-                {formatDate(waitlists[0]?.updatedAt || new Date().toISOString())}
+              {isLoading ? (
+                <Skeleton className="h-8 w-32" />
+              ) : (
+                <div className="text-2xl font-bold">
+                  {lastUpdated}
+                </div>
+              )}
+              <div className="text-xs text-muted-foreground">
+                {isLoading ? <Skeleton className="mt-2 h-4 w-20" /> : 'Last activity'}
               </div>
-              <p className="text-xs text-muted-foreground">
-                Just now
-              </p>
             </CardContent>
           </Card>
         </div>
 
+        {/* Waitlists List */}
         <Card>
           <CardHeader>
             <div className="flex items-center justify-between">
               <div>
                 <CardTitle>Your Waitlists</CardTitle>
                 <CardDescription>
-                  Manage your waitlists and view subscriber analytics
+                  {hasWaitlists 
+                    ? 'Manage your waitlists and view subscriber analytics'
+                    : 'Create your first waitlist to start collecting subscribers'}
                 </CardDescription>
               </div>
               <Button asChild>
@@ -174,47 +225,46 @@ export default function WaitlistsPage() {
             </div>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
-              {waitlists.map((waitlist) => (
-                <div key={waitlist.id} className="flex items-center justify-between rounded-lg border p-4 hover:bg-muted/50">
-                  <div className="flex items-center space-x-4">
-                    <div className="rounded-md bg-primary/10 p-2">
-                      <Users className="h-5 w-5 text-primary" />
-                    </div>
-                    <div>
-                      <div className="flex items-center space-x-2">
-                        <Link href={`/dashboard/waitlists/${waitlist.id}`} className="font-medium hover:underline">
-                          {waitlist.name}
-                        </Link>
-                        <Badge variant={waitlist.status === 'active' ? 'default' : 'outline'}>
-                          {waitlist.status.charAt(0).toUpperCase() + waitlist.status.slice(1)}
-                        </Badge>
+            {isLoading ? (
+              <div className="space-y-4">
+                {[...Array(3)].map((_, i) => (
+                  <WaitlistSkeleton key={i} />
+                ))}
+              </div>
+            ) : hasWaitlists ? (
+              <div className="space-y-4">
+                {waitlists.map((waitlist) => (
+                  <div
+                    key={waitlist.id}
+                    className="flex items-center justify-between rounded-lg border p-4 hover:bg-accent/50 transition-colors"
+                  >
+                    <div className="flex items-center space-x-4">
+                      <div className="rounded-md bg-primary/10 p-2">
+                        <Users className="h-6 w-6 text-primary" />
                       </div>
-                      <p className="text-sm text-muted-foreground">
-                        {waitlist.description}
-                      </p>
-                      <div className="mt-1 flex items-center space-x-4 text-xs text-muted-foreground">
-                        <span>{waitlist.subscribers.toLocaleString()} subscribers</span>
-                        <span>•</span>
-                        <span>Created {formatDate(waitlist.createdAt)}</span>
+                      <div>
+                        <div className="flex items-center space-x-2">
+                          <h3 className="font-medium">{waitlist.name}</h3>
+                          <Badge variant={waitlist.status === 'ACTIVE' ? 'default' : 'secondary'}>
+                            {waitlist.status.charAt(0) + waitlist.status.slice(1).toLowerCase()}
+                          </Badge>
+                        </div>
+                        <p className="text-sm text-muted-foreground">
+                          {waitlist._count.subscribers} subscribers • Created {formatDate(waitlist.createdAt.toString())}
+                        </p>
                       </div>
                     </div>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <Button variant="outline" size="sm" asChild>
-                      <Link href={`/waitlist/${waitlist.id}`} target="_blank">
-                        <Eye className="mr-2 h-4 w-4" />
-                        View
-                      </Link>
-                    </Button>
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
                         <Button variant="ghost" size="icon">
                           <MoreVertical className="h-4 w-4" />
-                          <span className="sr-only">More options</span>
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
+                        <DropdownMenuItem>
+                          <Eye className="mr-2 h-4 w-4" />
+                          View
+                        </DropdownMenuItem>
                         <DropdownMenuItem>
                           <Copy className="mr-2 h-4 w-4" />
                           Copy Link
@@ -226,25 +276,25 @@ export default function WaitlistsPage() {
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </div>
+                ))}
+              </div>
+            ) : (
+              <div className="flex flex-col items-center justify-center space-y-4 p-8 text-center">
+                <div className="rounded-full bg-muted p-4">
+                  <Users className="h-8 w-8 text-muted-foreground" />
                 </div>
-              ))}
-              
-              {waitlists.length === 0 && (
-                <div className="flex flex-col items-center justify-center py-12 text-center">
-                  <Users className="mb-4 h-12 w-12 text-muted-foreground" />
-                  <h3 className="mb-1 text-lg font-medium">No waitlists yet</h3>
-                  <p className="mb-4 max-w-md text-sm text-muted-foreground">
-                    Create your first waitlist to start collecting subscribers and growing your audience.
-                  </p>
-                  <Button asChild>
-                    <Link href="/dashboard/waitlists/new">
-                      <Plus className="mr-2 h-4 w-4" />
-                      New Waitlist
-                    </Link>
-                  </Button>
-                </div>
-              )}
-            </div>
+                <h3 className="text-xl font-semibold">No waitlists yet</h3>
+                <p className="text-muted-foreground">
+                  Get started by creating your first waitlist to collect subscribers.
+                </p>
+                <Button asChild>
+                  <Link href="/dashboard/waitlists/new">
+                    <Plus className="mr-2 h-4 w-4" />
+                    Create Waitlist
+                  </Link>
+                </Button>
+              </div>
+            )}
           </CardContent>
         </Card>
       </div>

@@ -1,0 +1,37 @@
+{
+  "recommendations": [
+    // Editor Extensions
+    "esbenp.prettier-vscode",
+    "dbaeumer.vscode-eslint",
+    "bradlc.vscode-tailwindcss",
+    "streetsidesoftware.code-spell-checker",
+    
+    // TypeScript & JavaScript
+    "ms-vscode.vscode-typescript-next",
+    "ms-vscode.vscode-typescript-tslint-plugin",
+    "aaron-bond.better-comments",
+    
+    // React & Next.js
+    "ms-azuretools.vscode-docker",
+    "Prisma.prisma",
+    "bradymholt.pgformatter",
+    "firsttris.vscode-jest-runner",
+    "Orta.vscode-jest",
+    
+    // Git & GitHub
+    "eamodio.gitlens",
+    "GitHub.copilot",
+    "GitHub.vscode-pull-request-github",
+    
+    // Productivity
+    "mikestead.dotenv",
+    "wix.vscode-import-cost",
+    "waderyan.gitblame",
+    "usernamehw.errorlens"
+  ],
+  "unwantedRecommendations": [
+    "hookyqr.beautify",
+    "dbaeumer.jshint",
+    "ms-vscode.vscode-typescript-tslint-plugin"
+  ]
+}

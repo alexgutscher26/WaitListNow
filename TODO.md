@@ -1,0 +1,51 @@
+# List of TODOs: for the boilerplate part
+
+- [ ] Email notifications, resend, nodemailer
+- [ ] i18n, next-i18next, react-i18next
+- [ ] File uploads, uploadthing, cloudinary
+- [ ] Rate limiting, @upstash/ratelimit
+- [ ] Feature flags, flagsmith, growthbook
+
+# List of TODOs: for the waitlist part
+- [ ] Create an API endpoint to handle form submission
+- [ ] Update the redirect URL to point to the newly created waitlist
+- [ ] Implement the embeddable widget functionality
+- [ ] Add white-labeling for the widget (logo, colors, fonts)
+   - [ ] Branding Elements:
+     - Logo upload
+     - Custom color schemes
+     - Font family selection
+     - Custom CSS overrides
+   - [ ] Implementation Approach:
+     - Add a "Branding" section in the widget settings
+     - Store branding preferences in the database
+     - Apply these settings in the widget's CSS-in-JS
+   - [ ] Benefits:
+     - Enhanced brand consistency
+     - Professional appearance
+     - Better user trust and recognition
+
+# List of TODOs: for the referral part
+- [ ] Create an API endpoint to handle referral rewards
+- [ ] Implement the referral system
+- [ ] Add white-labeling for the referral system (logo, colors, fonts)
+- [ ] Add analytics for the referral system (Google Analytics, Mixpanel, etc.)
+- [ ] Add email notifications for the referral system
+
+# List of TODOs: for the dashboard part
+- [ ] Add white-labeling for the dashboard (logo, colors, fonts)
+- [ ] Add analytics for the dashboard (Google Analytics, Mixpanel, etc.)
+- [ ] Add email notifications for the dashboard
+
+🎯 Suggested Upgrade Triggers
+500 signups = prompt to move to Starter
+
+Enabling branding removal = requires Starter
+
+Adding reward tiers = prompt upgrade to Growth
+
+Adding webhook = prompt upgrade to Starter
+
+make the onboarding route where user cannot use it again after completion 
+
+now lets make the Create Waitlist function work and sync to the http://localhost:3000/dashboard/waitlists and remove the mockdata and then create the prisma stuff use edge runtime 

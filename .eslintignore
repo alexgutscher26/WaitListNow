@@ -1,0 +1,61 @@
+# Dependencies
+node_modules
+.next
+out
+build
+coverage
+
+# Environment files
+.env*.local
+.env
+
+# Build files
+.next
+out
+build
+
+# Test coverage
+coverage
+
+# Debug logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# Editor directories and files
+.vscode/*
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Local development
+.vercel
+.netlify
+
+# Auto-generated files
+**/generated/*
+
+# Prisma
+prisma/generated/*
+
+# TypeScript declaration files
+**/*.d.ts
+
+# Build output
+.next/*
+
+# Cache
+.cache/
+
+# Public files
+public/*
+
+# Test files
+**/*.test.ts
+**/*.spec.ts
+**/__tests__/*

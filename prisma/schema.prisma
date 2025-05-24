@@ -1,0 +1,37 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["driverAdapters", "postgresqlExtensions"]
+  binaryTargets   = ["native", "rhel-openssl-1.0.x"]
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DATABASE_URL")
+  extensions = [pgcrypto, uuid_ossp, pg_trgm]
+}
+
+model User {
+  id              String          @id @default(cuid())
+  externalId      String?         @unique
+  quotaLimit      Int
+  plan            Plan            @default(FREE)
+  email           String          @unique
+  apiKey          String          @unique @default(cuid())
+  discordId       String?
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  @@index([email, apiKey])
+}
+
+enum Plan {
+  FREE
+  PRO
+}
+
+enum DeliveryStatus {
+  PENDING
+  DELIVERED
+  FAILED
+}

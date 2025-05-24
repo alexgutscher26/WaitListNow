@@ -23,7 +23,6 @@ export const authRouter = router({
     if (!user) {
       await db.user.create({
         data: {
-          quotaLimit: 100,
           externalId: auth.id,
           email: auth.emailAddresses[0].emailAddress,
         },

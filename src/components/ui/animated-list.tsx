@@ -40,6 +40,9 @@ export const AnimatedList = React.memo(
 
 AnimatedList.displayName = 'AnimatedList';
 
+/**
+ * Renders an animated list item using Framer Motion.
+ */
 export function AnimatedListItem({ children }: { children: React.ReactNode }) {
   const animations = {
     initial: { scale: 0, opacity: 0 },

@@ -7,13 +7,14 @@ import superjson from 'superjson';
 /**
  * Determines the base URL based on the environment and deployment context.
  *
- * This function checks if the code is running in a browser environment.
- * If it is, it returns an empty string for relative paths.
- * Otherwise, it determines the base URL based on the Node.js environment:
+ * This function first checks if it is running in a browser environment by verifying
+ * the presence of the `window` object. If true, it returns an empty string for
+ * relative paths. Otherwise, it determines the base URL based on the Node.js
+ * environment:
  * - In development mode, it uses 'http://localhost:3000/'.
- * - In production, it checks for the VERCEL_URL environment variable and
- *   constructs the URL accordingly. If VERCEL_URL is not set, it defaults to a
- *   placeholder deployed worker URL.
+ * - In production, it checks for the VERCEL_URL environment variable and constructs
+ *   the URL accordingly. If VERCEL_URL is not set, it defaults to a placeholder
+ *   deployed worker URL.
  */
 const getBaseUrl = () => {
   // browser should use relative path
@@ -84,11 +85,11 @@ function serializeWithSuperJSON(data: any): any {
 }
 
 /**
- * Creates a proxy to pass data directly to an API.
+ * Creates a proxy to facilitate API requests with convenience methods.
  *
- * This function wraps an object and provides convenience methods
- * like `$get` and `$post` for making API requests. It uses recursion
- * to handle nested objects and constructs the request path accordingly.
+ * This function wraps an object and provides `$get` and `$post` methods
+ * for making API calls. It uses recursion to handle nested objects,
+ * constructing the request path dynamically based on property access.
  *
  * @param target - The target object to be proxied.
  * @param path - An optional array representing the current path in the object hierarchy.

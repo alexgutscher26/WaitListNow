@@ -24,7 +24,7 @@ type WaitlistWithCount = Waitlist & {
 
 // Skeleton Loader Component
 /**
- * Renders a waitlist skeleton UI component.
+ * Renders a waitlist skeleton UI component with loading placeholders.
  */
 const WaitlistSkeleton = () => (
   <div className="flex items-center justify-between rounded-lg border p-4">
@@ -51,6 +51,10 @@ const WaitlistSkeleton = () => (
  * This component fetches waitlists from an API and displays various statistics such as total waitlists,
  * total subscribers, active waitlists, and the last updated date. It also renders a list of waitlists with options to view,
  * copy link, or delete each waitlist. If there are no waitlists, it provides a call-to-action to create a new one.
+ *
+ * The component uses `useQuery` to fetch waitlists from the '/api/waitlists' endpoint and handles loading, error,
+ * and success states. It calculates statistics like total subscribers and active waitlists using array methods.
+ * Each waitlist is displayed with its name, status, subscriber count, creation date, and a dropdown menu for actions.
  *
  * @returns The WaitlistsPage component for rendering in the dashboard.
  */

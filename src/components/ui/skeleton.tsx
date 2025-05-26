@@ -1,30 +1,27 @@
-import { cn } from "@/lib/utils"
-import { cva, type VariantProps } from "class-variance-authority"
-import { Loader2 } from "lucide-react"
-import * as React from "react"
+import { cn } from '@/lib/utils';
+import { cva, type VariantProps } from 'class-variance-authority';
+import { Loader2 } from 'lucide-react';
+import * as React from 'react';
 
-const skeletonVariants = cva(
-  "animate-pulse rounded-md bg-muted",
-  {
-    variants: {
-      variant: {
-        default: "",
-        circle: "rounded-full"
-      },
-      size: {
-        default: "h-4 w-full",
-        sm: "h-2 w-16",
-        lg: "h-8 w-24",
-        xl: "h-10 w-32",
-        "2xl": "h-12 w-40",
-      },
+const skeletonVariants = cva('animate-pulse rounded-md bg-muted', {
+  variants: {
+    variant: {
+      default: '',
+      circle: 'rounded-full',
     },
-    defaultVariants: {
-      variant: "default",
-      size: "default",
+    size: {
+      default: 'h-4 w-full',
+      sm: 'h-2 w-16',
+      lg: 'h-8 w-24',
+      xl: 'h-10 w-32',
+      '2xl': 'h-12 w-40',
     },
-  }
-)
+  },
+  defaultVariants: {
+    variant: 'default',
+    size: 'default',
+  },
+});
 
 export interface SkeletonProps
   extends React.HTMLAttributes<HTMLDivElement>,
@@ -36,7 +33,7 @@ function Skeleton({ className, variant, size, ...props }: SkeletonProps) {
       className={cn(skeletonVariants({ variant, size, className }))}
       {...props}
     />
-  )
+  );
 }
 
-export { Skeleton }
+export { Skeleton };

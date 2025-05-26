@@ -29,10 +29,7 @@ export async function register() {
       replaysOnErrorSampleRate: 1.0,
       debug: process.env.NODE_ENV === 'development',
       integrations: [replay],
-      tracePropagationTargets: [
-        'localhost',
-        /^https:\/\/api\.yourdomain\.com\/api/
-      ],
+      tracePropagationTargets: ['localhost', /^https:\/\/api\.yourdomain\.com\/api/],
     });
   }
 }

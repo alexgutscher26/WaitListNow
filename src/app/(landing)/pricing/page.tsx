@@ -1,12 +1,12 @@
 'use client';
 
-import { Button } from "@/components/ui/button";
-import { client } from "@/lib/client";
-import { useUser } from "@clerk/nextjs";
-import { useMutation } from "@tanstack/react-query";
-import { Check, CheckCircle, XCircle, Star, Zap, Users, Shield, Crown } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { MaxWidthWrapper } from "@/components/max-width-wrapper";
+import { Button } from '@/components/ui/button';
+import { client } from '@/lib/client';
+import { useUser } from '@clerk/nextjs';
+import { useMutation } from '@tanstack/react-query';
+import { Check, CheckCircle, XCircle, Star, Zap, Users, Shield, Crown } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { MaxWidthWrapper } from '@/components/max-width-wrapper';
 
 type PlanFeatures = {
   projects: string | number;
@@ -73,7 +73,7 @@ const pricingPlans: PricingPlan[] = [
       abTesting: false,
       teamMembers: '1',
       support: '❌',
-    }
+    },
   },
   {
     id: 'starter',
@@ -105,7 +105,7 @@ const pricingPlans: PricingPlan[] = [
       abTesting: false,
       teamMembers: '3',
       support: 'Email',
-    }
+    },
   },
   {
     id: 'pro',
@@ -136,7 +136,7 @@ const pricingPlans: PricingPlan[] = [
       abTesting: false,
       teamMembers: '10',
       support: 'Priority',
-    }
+    },
   },
   {
     id: 'enterprise',
@@ -167,8 +167,8 @@ const pricingPlans: PricingPlan[] = [
       abTesting: true,
       teamMembers: 'Unlimited',
       support: '24/7 Dedicated',
-    }
-  }
+    },
+  },
 ];
 
 const features = [
@@ -193,17 +193,19 @@ const features = [
 
 const testimonials = [
   {
-    quote: "WaitlistNow helped us build excitement for our launch and collect 10,000+ signups in just 2 weeks.",
-    author: "Sarah Chen",
-    role: "Founder, TechStart",
-    avatar: "SC"
+    quote:
+      'WaitlistNow helped us build excitement for our launch and collect 10,000+ signups in just 2 weeks.',
+    author: 'Sarah Chen',
+    role: 'Founder, TechStart',
+    avatar: 'SC',
   },
   {
-    quote: "The referral system increased our signup rate by 300%. Amazing tool for viral marketing.",
-    author: "Mike Rodriguez",
-    role: "Marketing Director, GrowthCo",
-    avatar: "MR"
-  }
+    quote:
+      'The referral system increased our signup rate by 300%. Amazing tool for viral marketing.',
+    author: 'Mike Rodriguez',
+    role: 'Marketing Director, GrowthCo',
+    avatar: 'MR',
+  },
 ];
 
 const Page = () => {
@@ -234,7 +236,7 @@ const Page = () => {
       router.push('/contact');
       return;
     }
-    
+
     if (user) {
       createCheckoutSession();
     } else {
@@ -256,8 +258,8 @@ const Page = () => {
               Simple, transparent pricing
             </h1>
             <p className="mt-6 text-xl text-muted-foreground max-w-2xl mx-auto">
-              Choose the perfect plan for your needs. Start free, scale as you grow. 
-              No hidden fees, cancel anytime.
+              Choose the perfect plan for your needs. Start free, scale as you grow. No hidden fees,
+              cancel anytime.
             </p>
             <div className="mt-6 flex flex-wrap items-center justify-center gap-4 text-sm text-muted-foreground">
               <div className="flex items-center gap-2">
@@ -283,7 +285,7 @@ const Page = () => {
           {pricingPlans.map((plan) => {
             const IconComponent = plan.icon;
             return (
-              <div 
+              <div
                 key={plan.name}
                 className={`relative rounded-2xl border bg-card text-card-foreground shadow-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-1 ${
                   plan.featured ? 'ring-2 ring-blue-500 scale-105 lg:scale-105' : ''
@@ -291,19 +293,21 @@ const Page = () => {
               >
                 {plan.badge && (
                   <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 z-10">
-                    <span className={`bg-gradient-to-r ${plan.color} text-white text-sm font-semibold px-4 py-1 rounded-full shadow-lg`}>
+                    <span
+                      className={`bg-gradient-to-r ${plan.color} text-white text-sm font-semibold px-4 py-1 rounded-full shadow-lg`}
+                    >
                       {plan.badge}
                     </span>
                   </div>
                 )}
-                
+
                 <div className="p-6">
                   <div className={`inline-flex p-3 rounded-xl bg-gradient-to-r ${plan.color} mb-4`}>
                     <IconComponent className="h-6 w-6 text-white" />
                   </div>
-                  
+
                   <h3 className="text-xl font-bold">{plan.name}</h3>
-                  
+
                   <div className="mt-4 flex items-baseline gap-2">
                     <span className="text-4xl font-bold">{plan.price}</span>
                     {plan.price !== 'Custom' && (
@@ -315,14 +319,14 @@ const Page = () => {
                       </span>
                     )}
                   </div>
-                  
+
                   <p className="mt-2 text-muted-foreground">{plan.description}</p>
-                  
-                  <Button 
+
+                  <Button
                     onClick={() => handleGetAccess(plan.name)}
                     className={`w-full mt-6 h-12 font-semibold ${
-                      plan.featured 
-                        ? `bg-gradient-to-r ${plan.color} hover:opacity-90 text-white border-0` 
+                      plan.featured
+                        ? `bg-gradient-to-r ${plan.color} hover:opacity-90 text-white border-0`
                         : ''
                     }`}
                     variant={plan.buttonVariant}
@@ -331,12 +335,15 @@ const Page = () => {
                     {plan.buttonText}
                   </Button>
                 </div>
-                
+
                 <div className="border-t bg-muted/30 p-6 pt-4 rounded-b-2xl">
                   <h4 className="text-sm font-medium mb-4">Key features:</h4>
                   <ul className="space-y-3">
                     {Object.keys(plan.features).map((feature, index) => (
-                      <li key={index} className="flex items-start gap-2 text-sm">
+                      <li
+                        key={index}
+                        className="flex items-start gap-2 text-sm"
+                      >
                         <CheckCircle className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
                         <span>{plan.features[feature as keyof typeof plan.features]}</span>
                       </li>
@@ -356,14 +363,17 @@ const Page = () => {
               Everything you need to know about our plans
             </p>
           </div>
-          
+
           <div className="overflow-x-auto">
             <table className="w-full text-sm text-left">
               <thead>
                 <tr className="border-b">
                   <th className="py-4 font-medium">Feature</th>
                   {pricingPlans.map((plan) => (
-                    <th key={plan.name} className="py-4 font-medium text-center min-w-[150px]">
+                    <th
+                      key={plan.name}
+                      className="py-4 font-medium text-center min-w-[150px]"
+                    >
                       {plan.name}
                     </th>
                   ))}
@@ -371,11 +381,18 @@ const Page = () => {
               </thead>
               <tbody>
                 {features.map((feature) => (
-                  <tr key={feature.key} className="border-b hover:bg-muted/50">
+                  <tr
+                    key={feature.key}
+                    className="border-b hover:bg-muted/50"
+                  >
                     <td className="py-4 pr-4">{feature.name}</td>
                     {pricingPlans.map((plan) => (
-                      <td key={`${plan.name}-${feature.key}`} className="py-4 text-center">
-                        {typeof plan.features[feature.key as keyof typeof plan.features] === 'boolean' ? (
+                      <td
+                        key={`${plan.name}-${feature.key}`}
+                        className="py-4 text-center"
+                      >
+                        {typeof plan.features[feature.key as keyof typeof plan.features] ===
+                        'boolean' ? (
                           plan.features[feature.key as keyof typeof plan.features] ? (
                             <CheckCircle className="h-5 w-5 text-green-500 mx-auto" />
                           ) : (
@@ -398,18 +415,26 @@ const Page = () => {
         {/* Testimonials */}
         <div className="mt-24 bg-gradient-to-r from-blue-50 to-purple-50 rounded-2xl p-8">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold tracking-tight">Trusted by thousands of businesses</h2>
+            <h2 className="text-3xl font-bold tracking-tight">
+              Trusted by thousands of businesses
+            </h2>
             <p className="mt-4 text-lg text-muted-foreground">
               Join the growing list of successful companies using our platform
             </p>
           </div>
-          
+
           <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
             {testimonials.map((testimonial, index) => (
-              <div key={index} className="bg-white p-6 rounded-xl shadow-sm">
+              <div
+                key={index}
+                className="bg-white p-6 rounded-xl shadow-sm"
+              >
                 <div className="flex gap-1 mb-4">
                   {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="h-5 w-5 fill-yellow-400 text-yellow-400" />
+                    <Star
+                      key={i}
+                      className="h-5 w-5 fill-yellow-400 text-yellow-400"
+                    />
                   ))}
                 </div>
                 <p className="text-muted-foreground italic mb-6">"{testimonial.quote}"</p>
@@ -433,33 +458,43 @@ const Page = () => {
           <p className="mt-4 text-lg text-muted-foreground max-w-3xl mx-auto">
             Everything you need to know about our pricing and plans
           </p>
-          
+
           <div className="mt-12 max-w-3xl mx-auto space-y-6 text-left">
             <div className="border-b pb-6">
               <h3 className="text-lg font-medium">What payment methods do you accept?</h3>
               <p className="mt-2 text-muted-foreground">
-                We accept all major credit cards including Visa, Mastercard, American Express, and Discover. We also support payments through PayPal.
+                We accept all major credit cards including Visa, Mastercard, American Express, and
+                Discover. We also support payments through PayPal.
               </p>
             </div>
-            
+
             <div className="border-b pb-6">
               <h3 className="text-lg font-medium">Can I change plans later?</h3>
               <p className="mt-2 text-muted-foreground">
-                Yes, you can upgrade or downgrade your plan at any time. Your subscription will be prorated based on your current billing cycle.
+                Yes, you can upgrade or downgrade your plan at any time. Your subscription will be
+                prorated based on your current billing cycle.
               </p>
             </div>
-            
+
             <div className="border-b pb-6">
               <h3 className="text-lg font-medium">Is there a free trial available?</h3>
               <p className="mt-2 text-muted-foreground">
-                Yes, all paid plans come with a 14-day free trial. No credit card is required to start your trial.
+                Yes, all paid plans come with a 14-day free trial. No credit card is required to
+                start your trial.
               </p>
             </div>
-            
+
             <div>
               <h3 className="text-lg font-medium">Need more information?</h3>
               <p className="mt-2 text-muted-foreground">
-                Contact our sales team at <a href="mailto:sales@waitlistnow.com" className="text-primary hover:underline">sales@waitlistnow.com</a> for more information about our enterprise plans.
+                Contact our sales team at{' '}
+                <a
+                  href="mailto:sales@waitlistnow.com"
+                  className="text-primary hover:underline"
+                >
+                  sales@waitlistnow.com
+                </a>{' '}
+                for more information about our enterprise plans.
               </p>
             </div>
           </div>

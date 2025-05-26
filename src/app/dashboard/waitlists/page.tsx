@@ -1,26 +1,26 @@
-"use client"
+'use client';
 
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Plus, Users, Eye, Copy, Trash2, MoreVertical } from "lucide-react"
-import Link from "next/link"
-import { DashboardPage } from "@/components/dashboard-page"
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Plus, Users, Eye, Copy, Trash2, MoreVertical } from 'lucide-react';
+import Link from 'next/link';
+import { DashboardPage } from '@/components/dashboard-page';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Badge } from "@/components/ui/badge"
-import { Skeleton } from "@/components/ui/skeleton"
-import { useQuery } from "@tanstack/react-query"
-import { Waitlist } from "@prisma/client"
+} from '@/components/ui/dropdown-menu';
+import { Badge } from '@/components/ui/badge';
+import { Skeleton } from '@/components/ui/skeleton';
+import { useQuery } from '@tanstack/react-query';
+import { Waitlist } from '@prisma/client';
 
 type WaitlistWithCount = Waitlist & {
   _count: {
-    subscribers: number
-  }
-}
+    subscribers: number;
+  };
+};
 
 // Skeleton Loader Component
 const WaitlistSkeleton = () => (
@@ -40,39 +40,48 @@ const WaitlistSkeleton = () => (
       <Skeleton className="h-9 w-9" />
     </div>
   </div>
-)
+);
 
 export default function WaitlistsPage() {
-  const { data: waitlists, isLoading, isError } = useQuery<WaitlistWithCount[]>({
+  const {
+    data: waitlists,
+    isLoading,
+    isError,
+  } = useQuery<WaitlistWithCount[]>({
     queryKey: ['waitlists'],
     queryFn: async () => {
-      const res = await fetch('/api/waitlists')
+      const res = await fetch('/api/waitlists');
       if (!res.ok) {
-        throw new Error('Failed to fetch waitlists')
+        throw new Error('Failed to fetch waitlists');
       }
-      return res.json()
+      return res.json();
     },
-  })
+  });
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'short',
-      day: 'numeric'
-    })
-  }
+      day: 'numeric',
+    });
+  };
 
   // Calculate stats
-  const hasWaitlists = waitlists && waitlists.length > 0
-  const totalSubscribers = hasWaitlists ? waitlists.reduce((sum, wl) => sum + wl._count.subscribers, 0) : 0
-  const activeWaitlists = hasWaitlists ? waitlists.filter(wl => wl.status === 'ACTIVE').length : 0
-  const lastUpdated = hasWaitlists && waitlists[0]?.updatedAt 
-    ? formatDate(waitlists[0].updatedAt.toString()) 
-    : formatDate(new Date().toISOString())
+  const hasWaitlists = waitlists && waitlists.length > 0;
+  const totalSubscribers = hasWaitlists
+    ? waitlists.reduce((sum, wl) => sum + wl._count.subscribers, 0)
+    : 0;
+  const activeWaitlists = hasWaitlists
+    ? waitlists.filter((wl) => wl.status === 'ACTIVE').length
+    : 0;
+  const lastUpdated =
+    hasWaitlists && waitlists[0]?.updatedAt
+      ? formatDate(waitlists[0].updatedAt.toString())
+      : formatDate(new Date().toISOString());
 
   if (isError) {
     return (
-      <DashboardPage 
+      <DashboardPage
         title="Waitlists"
         cta={
           <Button asChild>
@@ -99,12 +108,12 @@ export default function WaitlistsPage() {
           </Button>
         </div>
       </DashboardPage>
-    )
+    );
   }
 
   return (
-    <DashboardPage 
-      title="Waitlists" 
+    <DashboardPage
+      title="Waitlists"
       cta={
         <Button asChild>
           <Link href="/dashboard/waitlists/new">
@@ -119,9 +128,7 @@ export default function WaitlistsPage() {
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">
-                Total Waitlists
-              </CardTitle>
+              <CardTitle className="text-sm font-medium">Total Waitlists</CardTitle>
               <Users className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
@@ -138,18 +145,14 @@ export default function WaitlistsPage() {
 
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">
-                Total Subscribers
-              </CardTitle>
+              <CardTitle className="text-sm font-medium">Total Subscribers</CardTitle>
               <Users className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
               {isLoading ? (
                 <Skeleton className="h-8 w-16" />
               ) : (
-                <div className="text-2xl font-bold">
-                  {totalSubscribers.toLocaleString()}
-                </div>
+                <div className="text-2xl font-bold">{totalSubscribers.toLocaleString()}</div>
               )}
               <div className="text-xs text-muted-foreground">
                 {isLoading ? <Skeleton className="mt-2 h-4 w-32" /> : 'Across all waitlists'}
@@ -166,9 +169,7 @@ export default function WaitlistsPage() {
               {isLoading ? (
                 <Skeleton className="h-8 w-16" />
               ) : (
-                <div className="text-2xl font-bold">
-                  {activeWaitlists}
-                </div>
+                <div className="text-2xl font-bold">{activeWaitlists}</div>
               )}
               <div className="text-xs text-muted-foreground">
                 {isLoading ? (
@@ -184,18 +185,14 @@ export default function WaitlistsPage() {
 
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">
-                Last Updated
-              </CardTitle>
+              <CardTitle className="text-sm font-medium">Last Updated</CardTitle>
               <span className="h-4 w-4 text-muted-foreground">🔄</span>
             </CardHeader>
             <CardContent>
               {isLoading ? (
                 <Skeleton className="h-8 w-32" />
               ) : (
-                <div className="text-2xl font-bold">
-                  {lastUpdated}
-                </div>
+                <div className="text-2xl font-bold">{lastUpdated}</div>
               )}
               <div className="text-xs text-muted-foreground">
                 {isLoading ? <Skeleton className="mt-2 h-4 w-20" /> : 'Last activity'}
@@ -211,7 +208,7 @@ export default function WaitlistsPage() {
               <div>
                 <CardTitle>Your Waitlists</CardTitle>
                 <CardDescription>
-                  {hasWaitlists 
+                  {hasWaitlists
                     ? 'Manage your waitlists and view subscriber analytics'
                     : 'Create your first waitlist to start collecting subscribers'}
                 </CardDescription>
@@ -250,13 +247,17 @@ export default function WaitlistsPage() {
                           </Badge>
                         </div>
                         <p className="text-sm text-muted-foreground">
-                          {waitlist._count.subscribers} subscribers • Created {formatDate(waitlist.createdAt.toString())}
+                          {waitlist._count.subscribers} subscribers • Created{' '}
+                          {formatDate(waitlist.createdAt.toString())}
                         </p>
                       </div>
                     </div>
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="icon">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                        >
                           <MoreVertical className="h-4 w-4" />
                         </Button>
                       </DropdownMenuTrigger>
@@ -299,5 +300,5 @@ export default function WaitlistsPage() {
         </Card>
       </div>
     </DashboardPage>
-  )
+  );
 }

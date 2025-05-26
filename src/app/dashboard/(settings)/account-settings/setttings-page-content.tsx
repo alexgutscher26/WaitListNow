@@ -1,41 +1,47 @@
-"use client"
+'use client';
 
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Switch } from "@/components/ui/switch"
-import { Badge } from "@/components/ui/badge"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Textarea } from "@/components/ui/textarea"
-import { useUser } from "@clerk/nextjs"
-import { 
-  Mail, 
-  Bell, 
-  Lock, 
-  User, 
-  CheckCircle2, 
-  Users, 
-  TrendingUp, 
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Switch } from '@/components/ui/switch';
+import { Badge } from '@/components/ui/badge';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { Textarea } from '@/components/ui/textarea';
+import { useUser } from '@clerk/nextjs';
+import {
+  Mail,
+  Bell,
+  Lock,
+  User,
+  CheckCircle2,
+  Users,
+  TrendingUp,
   Calendar,
   Globe,
   Zap,
   Crown,
   AlertCircle,
   Copy,
-  ExternalLink
-} from "lucide-react"
-import { useState, useEffect } from "react"
+  ExternalLink,
+} from 'lucide-react';
+import { useState, useEffect } from 'react';
 
 const AccountSettingsContent = () => {
-  const { user } = useUser()
-  const [email, setEmail] = useState(user?.emailAddresses[0]?.emailAddress || "")
-  const [name, setName] = useState(`${user?.firstName || ""} ${user?.lastName || ""}`.trim())
-  const [company, setCompany] = useState("")
-  const [website, setWebsite] = useState("")
-  const [bio, setBio] = useState("")
-  const [timezone, setTimezone] = useState("UTC")
-  
+  const { user } = useUser();
+  const [email, setEmail] = useState(user?.emailAddresses[0]?.emailAddress || '');
+  const [name, setName] = useState(`${user?.firstName || ''} ${user?.lastName || ''}`.trim());
+  const [company, setCompany] = useState('');
+  const [website, setWebsite] = useState('');
+  const [bio, setBio] = useState('');
+  const [timezone, setTimezone] = useState('UTC');
+
   const [notifications, setNotifications] = useState({
     email: true,
     waitlistMilestones: true,
@@ -44,48 +50,48 @@ const AccountSettingsContent = () => {
     signupAlerts: false,
     integrationUpdates: true,
     securityAlerts: true,
-    marketing: false
-  })
-  
+    marketing: false,
+  });
+
   const [preferences, setPreferences] = useState({
-    defaultView: "overview",
+    defaultView: 'overview',
     autoArchive: false,
     publicProfile: true,
-    allowReferrals: true
-  })
-  
-  const [isSaving, setIsSaving] = useState(false)
-  const [isSaved, setIsSaved] = useState(false)
-  const [activeWaitlists] = useState(3)
-  const [totalSignups] = useState(1247)
-  const [accountTier] = useState("Pro")
+    allowReferrals: true,
+  });
+
+  const [isSaving, setIsSaving] = useState(false);
+  const [isSaved, setIsSaved] = useState(false);
+  const [activeWaitlists] = useState(3);
+  const [totalSignups] = useState(1247);
+  const [accountTier] = useState('Pro');
 
   const handleSave = async () => {
-    setIsSaving(true)
+    setIsSaving(true);
     // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1500))
-    setIsSaving(false)
-    setIsSaved(true)
-    setTimeout(() => setIsSaved(false), 3000)
-  }
+    await new Promise((resolve) => setTimeout(resolve, 1500));
+    setIsSaving(false);
+    setIsSaved(true);
+    setTimeout(() => setIsSaved(false), 3000);
+  };
 
   const handleNotificationToggle = (key: keyof typeof notifications) => {
-    setNotifications(prev => ({
+    setNotifications((prev) => ({
       ...prev,
-      [key]: !prev[key]
-    }))
-  }
+      [key]: !prev[key],
+    }));
+  };
 
   const handlePreferenceToggle = (key: keyof typeof preferences) => {
-    setPreferences(prev => ({
+    setPreferences((prev) => ({
       ...prev,
-      [key]: !prev[key]
-    }))
-  }
+      [key]: !prev[key],
+    }));
+  };
 
   const copyReferralLink = () => {
-    navigator.clipboard.writeText("https://yourwaitlist.com/ref/user123")
-  }
+    navigator.clipboard.writeText('https://yourwaitlist.com/ref/user123');
+  };
 
   return (
     <div className="space-y-6">
@@ -96,8 +102,11 @@ const AccountSettingsContent = () => {
             <div>
               <CardTitle className="flex items-center gap-2">
                 Account Overview
-                <Badge variant={accountTier === "Pro" ? "default" : "secondary"} className="ml-2">
-                  {accountTier === "Pro" && <Crown className="w-3 h-3 mr-1" />}
+                <Badge
+                  variant={accountTier === 'Pro' ? 'default' : 'secondary'}
+                  className="ml-2"
+                >
+                  {accountTier === 'Pro' && <Crown className="w-3 h-3 mr-1" />}
                   {accountTier}
                 </Badge>
               </CardTitle>
@@ -145,39 +154,39 @@ const AccountSettingsContent = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="name">Full Name</Label>
-              <Input 
-                id="name" 
-                value={name} 
+              <Input
+                id="name"
+                value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="Your full name"
               />
             </div>
             <div className="space-y-2">
               <Label htmlFor="email">Email Address</Label>
-              <Input 
-                id="email" 
-                type="email" 
-                value={email} 
+              <Input
+                id="email"
+                type="email"
+                value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
             </div>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="company">Company/Organization</Label>
-              <Input 
-                id="company" 
-                value={company} 
+              <Input
+                id="company"
+                value={company}
                 onChange={(e) => setCompany(e.target.value)}
                 placeholder="Your company name"
               />
             </div>
             <div className="space-y-2">
               <Label htmlFor="website">Website</Label>
-              <Input 
-                id="website" 
-                value={website} 
+              <Input
+                id="website"
+                value={website}
                 onChange={(e) => setWebsite(e.target.value)}
                 placeholder="https://yourwebsite.com"
               />
@@ -186,9 +195,9 @@ const AccountSettingsContent = () => {
 
           <div className="space-y-2">
             <Label htmlFor="bio">Bio</Label>
-            <Textarea 
-              id="bio" 
-              value={bio} 
+            <Textarea
+              id="bio"
+              value={bio}
               onChange={(e) => setBio(e.target.value)}
               placeholder="Tell us about yourself or your project..."
               className="min-h-[80px]"
@@ -197,7 +206,10 @@ const AccountSettingsContent = () => {
 
           <div className="space-y-2">
             <Label htmlFor="timezone">Timezone</Label>
-            <Select value={timezone} onValueChange={setTimezone}>
+            <Select
+              value={timezone}
+              onValueChange={setTimezone}
+            >
               <SelectTrigger className="max-w-md">
                 <SelectValue />
               </SelectTrigger>
@@ -226,42 +238,51 @@ const AccountSettingsContent = () => {
           <div className="flex items-center justify-between">
             <div className="space-y-0.5">
               <Label htmlFor="public-profile">Public Profile</Label>
-              <p className="text-sm text-muted-foreground">Allow others to discover your waitlists</p>
+              <p className="text-sm text-muted-foreground">
+                Allow others to discover your waitlists
+              </p>
             </div>
-            <Switch 
-              id="public-profile" 
-              checked={preferences.publicProfile} 
-              onCheckedChange={() => handlePreferenceToggle('publicProfile')} 
+            <Switch
+              id="public-profile"
+              checked={preferences.publicProfile}
+              onCheckedChange={() => handlePreferenceToggle('publicProfile')}
             />
           </div>
 
           <div className="flex items-center justify-between">
             <div className="space-y-0.5">
               <Label htmlFor="allow-referrals">Allow Referrals</Label>
-              <p className="text-sm text-muted-foreground">Enable referral system for your waitlists</p>
+              <p className="text-sm text-muted-foreground">
+                Enable referral system for your waitlists
+              </p>
             </div>
-            <Switch 
-              id="allow-referrals" 
-              checked={preferences.allowReferrals} 
-              onCheckedChange={() => handlePreferenceToggle('allowReferrals')} 
+            <Switch
+              id="allow-referrals"
+              checked={preferences.allowReferrals}
+              onCheckedChange={() => handlePreferenceToggle('allowReferrals')}
             />
           </div>
 
           <div className="flex items-center justify-between">
             <div className="space-y-0.5">
               <Label htmlFor="auto-archive">Auto-archive Completed</Label>
-              <p className="text-sm text-muted-foreground">Automatically archive waitlists after launch</p>
+              <p className="text-sm text-muted-foreground">
+                Automatically archive waitlists after launch
+              </p>
             </div>
-            <Switch 
-              id="auto-archive" 
-              checked={preferences.autoArchive} 
-              onCheckedChange={() => handlePreferenceToggle('autoArchive')} 
+            <Switch
+              id="auto-archive"
+              checked={preferences.autoArchive}
+              onCheckedChange={() => handlePreferenceToggle('autoArchive')}
             />
           </div>
 
           <div className="space-y-2">
             <Label htmlFor="default-view">Default Dashboard View</Label>
-            <Select value={preferences.defaultView} onValueChange={(value) => setPreferences(prev => ({ ...prev, defaultView: value }))}>
+            <Select
+              value={preferences.defaultView}
+              onValueChange={(value) => setPreferences((prev) => ({ ...prev, defaultView: value }))}
+            >
               <SelectTrigger className="max-w-md">
                 <SelectValue />
               </SelectTrigger>
@@ -289,12 +310,14 @@ const AccountSettingsContent = () => {
           <div className="flex items-center justify-between">
             <div className="space-y-0.5">
               <Label htmlFor="email-notifications">Email Notifications</Label>
-              <p className="text-sm text-muted-foreground">Master toggle for all email notifications</p>
+              <p className="text-sm text-muted-foreground">
+                Master toggle for all email notifications
+              </p>
             </div>
-            <Switch 
-              id="email-notifications" 
-              checked={notifications.email} 
-              onCheckedChange={() => handleNotificationToggle('email')} 
+            <Switch
+              id="email-notifications"
+              checked={notifications.email}
+              onCheckedChange={() => handleNotificationToggle('email')}
             />
           </div>
 
@@ -304,9 +327,9 @@ const AccountSettingsContent = () => {
                 <Label htmlFor="signup-alerts">Real-time Signup Alerts</Label>
                 <p className="text-sm text-muted-foreground">Get notified for each new signup</p>
               </div>
-              <Switch 
-                id="signup-alerts" 
-                checked={notifications.signupAlerts} 
+              <Switch
+                id="signup-alerts"
+                checked={notifications.signupAlerts}
                 onCheckedChange={() => handleNotificationToggle('signupAlerts')}
                 disabled={!notifications.email}
               />
@@ -315,11 +338,13 @@ const AccountSettingsContent = () => {
             <div className="flex items-center justify-between">
               <div className="space-y-0.5">
                 <Label htmlFor="waitlist-milestones">Waitlist Milestones</Label>
-                <p className="text-sm text-muted-foreground">Celebrate reaching signup milestones</p>
+                <p className="text-sm text-muted-foreground">
+                  Celebrate reaching signup milestones
+                </p>
               </div>
-              <Switch 
-                id="waitlist-milestones" 
-                checked={notifications.waitlistMilestones} 
+              <Switch
+                id="waitlist-milestones"
+                checked={notifications.waitlistMilestones}
                 onCheckedChange={() => handleNotificationToggle('waitlistMilestones')}
                 disabled={!notifications.email}
               />
@@ -328,11 +353,13 @@ const AccountSettingsContent = () => {
             <div className="flex items-center justify-between">
               <div className="space-y-0.5">
                 <Label htmlFor="daily-reports">Daily Reports</Label>
-                <p className="text-sm text-muted-foreground">Daily summary of your waitlist activity</p>
+                <p className="text-sm text-muted-foreground">
+                  Daily summary of your waitlist activity
+                </p>
               </div>
-              <Switch 
-                id="daily-reports" 
-                checked={notifications.dailyReports} 
+              <Switch
+                id="daily-reports"
+                checked={notifications.dailyReports}
                 onCheckedChange={() => handleNotificationToggle('dailyReports')}
                 disabled={!notifications.email}
               />
@@ -343,9 +370,9 @@ const AccountSettingsContent = () => {
                 <Label htmlFor="weekly-digest">Weekly Digest</Label>
                 <p className="text-sm text-muted-foreground">Weekly analytics and insights</p>
               </div>
-              <Switch 
-                id="weekly-digest" 
-                checked={notifications.weeklyDigest} 
+              <Switch
+                id="weekly-digest"
+                checked={notifications.weeklyDigest}
                 onCheckedChange={() => handleNotificationToggle('weeklyDigest')}
                 disabled={!notifications.email}
               />
@@ -355,12 +382,14 @@ const AccountSettingsContent = () => {
           <div className="flex items-center justify-between">
             <div className="space-y-0.5">
               <Label htmlFor="integration-updates">Integration Updates</Label>
-              <p className="text-sm text-muted-foreground">Updates about third-party integrations</p>
+              <p className="text-sm text-muted-foreground">
+                Updates about third-party integrations
+              </p>
             </div>
-            <Switch 
-              id="integration-updates" 
-              checked={notifications.integrationUpdates} 
-              onCheckedChange={() => handleNotificationToggle('integrationUpdates')} 
+            <Switch
+              id="integration-updates"
+              checked={notifications.integrationUpdates}
+              onCheckedChange={() => handleNotificationToggle('integrationUpdates')}
             />
           </div>
 
@@ -368,24 +397,28 @@ const AccountSettingsContent = () => {
             <div className="space-y-0.5 flex items-center gap-2">
               <Label htmlFor="security-alerts">Security Alerts</Label>
               <AlertCircle className="h-4 w-4 text-orange-500" />
-              <p className="text-sm text-muted-foreground">Important security notifications (recommended)</p>
+              <p className="text-sm text-muted-foreground">
+                Important security notifications (recommended)
+              </p>
             </div>
-            <Switch 
-              id="security-alerts" 
-              checked={notifications.securityAlerts} 
-              onCheckedChange={() => handleNotificationToggle('securityAlerts')} 
+            <Switch
+              id="security-alerts"
+              checked={notifications.securityAlerts}
+              onCheckedChange={() => handleNotificationToggle('securityAlerts')}
             />
           </div>
 
           <div className="flex items-center justify-between">
             <div className="space-y-0.5">
               <Label htmlFor="marketing">Marketing Emails</Label>
-              <p className="text-sm text-muted-foreground">Product updates and promotional content</p>
+              <p className="text-sm text-muted-foreground">
+                Product updates and promotional content
+              </p>
             </div>
-            <Switch 
-              id="marketing" 
-              checked={notifications.marketing} 
-              onCheckedChange={() => handleNotificationToggle('marketing')} 
+            <Switch
+              id="marketing"
+              checked={notifications.marketing}
+              onCheckedChange={() => handleNotificationToggle('marketing')}
             />
           </div>
         </CardContent>
@@ -410,7 +443,11 @@ const AccountSettingsContent = () => {
               <code className="flex-1 p-2 bg-white rounded border text-sm">
                 https://yourwaitlist.com/ref/user123
               </code>
-              <Button size="sm" variant="outline" onClick={copyReferralLink}>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={copyReferralLink}
+              >
                 <Copy className="h-4 w-4" />
               </Button>
             </div>
@@ -436,15 +473,25 @@ const AccountSettingsContent = () => {
               <Label>Password</Label>
               <p className="text-sm text-muted-foreground">Last changed 3 months ago</p>
             </div>
-            <Button variant="outline" size="sm">Change Password</Button>
+            <Button
+              variant="outline"
+              size="sm"
+            >
+              Change Password
+            </Button>
           </div>
-          
+
           <div className="flex items-center justify-between">
             <div className="space-y-0.5">
               <Label>Two-Factor Authentication</Label>
               <p className="text-sm text-muted-foreground">Add an extra layer of security</p>
             </div>
-            <Button variant="outline" size="sm">Set Up 2FA</Button>
+            <Button
+              variant="outline"
+              size="sm"
+            >
+              Set Up 2FA
+            </Button>
           </div>
 
           <div className="flex items-center justify-between">
@@ -452,7 +499,10 @@ const AccountSettingsContent = () => {
               <Label>API Keys</Label>
               <p className="text-sm text-muted-foreground">Manage your API access tokens</p>
             </div>
-            <Button variant="outline" size="sm">
+            <Button
+              variant="outline"
+              size="sm"
+            >
               <ExternalLink className="h-4 w-4 mr-2" />
               Manage Keys
             </Button>
@@ -463,16 +513,19 @@ const AccountSettingsContent = () => {
               <Label>Active Sessions</Label>
               <p className="text-sm text-muted-foreground">View and manage your active sessions</p>
             </div>
-            <Button variant="outline" size="sm">View Sessions</Button>
+            <Button
+              variant="outline"
+              size="sm"
+            >
+              View Sessions
+            </Button>
           </div>
         </CardContent>
       </Card>
 
       {/* Save Button */}
       <div className="flex justify-between items-center">
-        <div className="text-sm text-muted-foreground">
-          Changes are saved automatically
-        </div>
+        <div className="text-sm text-muted-foreground">Changes are saved automatically</div>
         <div className="flex items-center gap-4">
           {isSaved && (
             <div className="flex items-center gap-2 text-sm text-green-600">
@@ -480,25 +533,28 @@ const AccountSettingsContent = () => {
               <span>Changes saved successfully!</span>
             </div>
           )}
-          <Button onClick={handleSave} disabled={isSaving}>
-            {isSaving ? "Saving..." : "Save Changes"}
+          <Button
+            onClick={handleSave}
+            disabled={isSaving}
+          >
+            {isSaving ? 'Saving...' : 'Save Changes'}
           </Button>
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
 export const AccountSettings = () => {
-  const [isMounted, setIsMounted] = useState(false)
+  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
-    setIsMounted(true)
-  }, [])
+    setIsMounted(true);
+  }, []);
 
   if (!isMounted) {
-    return null
+    return null;
   }
 
-  return <AccountSettingsContent />
-}
+  return <AccountSettingsContent />;
+};

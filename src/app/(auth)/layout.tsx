@@ -1,5 +1,5 @@
-import { ReactNode } from "react"
-import { Navbar } from "@/components/navbar"
+import { ReactNode } from 'react';
+import { Navbar } from '@/components/navbar';
 
 const Layout = ({ children }: { children: ReactNode }) => {
   return (
@@ -7,7 +7,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
       <Navbar />
       {children}
     </>
-  )
-}
+  );
+};
 
-export default Layout
+export default Layout;

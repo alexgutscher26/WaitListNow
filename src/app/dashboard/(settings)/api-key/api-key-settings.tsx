@@ -1,27 +1,31 @@
-"use client"
+'use client';
 
-import { Button } from "@/components/ui/button"
-import { Card } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { CheckIcon, ClipboardIcon } from "lucide-react"
-import { useState } from "react"
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { CheckIcon, ClipboardIcon } from 'lucide-react';
+import { useState } from 'react';
 
 export const ApiKeySettings = ({ apiKey }: { apiKey: string }) => {
-  const [copySuccess, setCopySuccess] = useState(false)
+  const [copySuccess, setCopySuccess] = useState(false);
 
   const copyApiKey = () => {
-    navigator.clipboard.writeText(apiKey)
-    setCopySuccess(true)
-    setTimeout(() => setCopySuccess(false), 2000)
-  }
+    navigator.clipboard.writeText(apiKey);
+    setCopySuccess(true);
+    setTimeout(() => setCopySuccess(false), 2000);
+  };
 
   return (
     <Card className="max-w-xl w-full">
       <div>
         <Label>Your API Key</Label>
         <div className="mt-1 relative">
-          <Input type="password" value={apiKey} readOnly />
+          <Input
+            type="password"
+            value={apiKey}
+            readOnly
+          />
           <div className="absolute space-x-0.5 inset-y-0 right-0 flex items-center">
             <Button
               variant="ghost"
@@ -42,5 +46,5 @@ export const ApiKeySettings = ({ apiKey }: { apiKey: string }) => {
         </p>
       </div>
     </Card>
-  )
-}
+  );
+};

@@ -11,6 +11,10 @@ import { Heading } from '@/components/heading';
 import { LoadingSpinner } from '@/components/loading-spinner';
 import { client } from '@/lib/client';
 
+/**
+ * Renders a loading page component with a spinner and text indicating account creation.
+ * Fetches the database sync status using `useQuery` and redirects to onboarding if synced.
+ */
 const Page = () => {
   const router = useRouter();
 
@@ -47,6 +51,9 @@ const Page = () => {
   );
 };
 
+/**
+ * Renders a background pattern with grid lines and radial gradient mask.
+ */
 const BackgroundPattern = (props: LucideProps) => {
   return (
     <svg

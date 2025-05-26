@@ -7,7 +7,7 @@ import { MiddlewareHandler } from 'hono';
 import { parseSuperJSON } from './utils';
 
 /**
- * Parses query parameters of a GET request using SuperJSON and attaches it to the context.
+ * Parses query parameters of a GET request and attaches them to the context.
  */
 export const queryParsingMiddleware: MiddlewareHandler = async (c, next) => {
   const rawQuery = c.req.query();

@@ -302,11 +302,13 @@ const timeline = [
 ];
 
 /**
- * @fileoverview This module contains the main component of a web application that showcases the features and benefits of WaitlistNow, a platform for building and managing waitlists.
- * The component includes sections for faqs, features, success stories, and a call to action for signing up.
- * It uses various UI components such as Headings, MaxWidthWrapper, ShinyButton, etc., to structure and style the content.
+ * React component that renders the homepage of WaitlistNow, a platform for building and managing waitlists.
  *
- * @module HomePage
+ * The component includes several sections such as testimonials, features, pricing plans, and contact information.
+ * It also uses various imported components like `Hero`, `Testimonials`, `Pricing`, `ContactForm`, and utility functions
+ * to structure the layout and functionality of the homepage.
+ *
+ * @returns {JSX.Element} - The rendered React component representing the WaitlistNow homepage.
  */
 export default function Page() {
   return (

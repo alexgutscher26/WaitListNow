@@ -11,6 +11,16 @@ type OperationType<I extends Record<string, unknown>, O> =
   | QueryOperation<I, O>
   | MutationOperation<I, O>;
 
+/**
+ * Create a Hono router with specified operations and middleware.
+ *
+ * This function iterates over an object of operations, defining routes for each operation type (query or mutation).
+ * It applies middlewares to each route and handles request parsing using Zod schemas if provided.
+ * The function also sets up error handling for HTTP exceptions and unknown errors.
+ *
+ * @param obj - An object where keys are route identifiers and values are operation configurations.
+ * @returns A configured Hono router instance with defined routes and middleware.
+ */
 export const router = <T extends Record<string, OperationType<any, any>>>(obj: T) => {
   const route = new Hono<{ Bindings: Bindings; Variables: any }>().onError((err, c) => {
     if (err instanceof HTTPException) {
@@ -38,9 +48,15 @@ export const router = <T extends Record<string, OperationType<any, any>>>(obj: T
     const path = `/${key}` as const;
 
     const operationMiddlewares: MiddlewareHandler[] = operation.middlewares.map((middleware) => {
+      /**
+       * Wraps middleware execution and updates context with results.
+       */
       const wrapperFunction = async (c: Context, next: Next) => {
         const ctx = c.get('__middleware_output') ?? {};
 
+        /**
+         * Updates context with new arguments and sets middleware output.
+         */
         const nextWrapper = <B>(args: B) => {
           c.set('__middleware_output', { ...ctx, ...args });
           return { ...ctx, ...args };

@@ -629,17 +629,19 @@ export default function Page() {
                         {(() => {
                           try {
                             // Safely extract and validate prices
-                            const originalPrice = parseFloat(plan.originalPrice.replace(/[^0-9.]/g, ''));
+                            const originalPrice = parseFloat(
+                              plan.originalPrice.replace(/[^0-9.]/g, ''),
+                            );
                             const currentPrice = parseFloat(plan.price.replace(/[^0-9.]/g, ''));
-                            
+
                             // Validate the parsed numbers
                             if (isNaN(originalPrice) || isNaN(currentPrice) || originalPrice <= 0) {
                               return '';
                             }
-                            
+
                             // Calculate discount percentage safely
                             const discount = Math.round((1 - currentPrice / originalPrice) * 100);
-                            
+
                             // Only show if there's an actual discount
                             return discount > 0 ? `Save ${discount}%` : '';
                           } catch (error) {

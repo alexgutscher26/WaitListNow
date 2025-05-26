@@ -82,9 +82,20 @@ const SIDEBAR_ITEMS: SidebarCategoryProps[] = [
   },
 ];
 
+/**
+ * Renders a sidebar component with navigation items and user profile information.
+ *
+ * The component uses the `usePathname` hook to determine the active pathname
+ * and highlights the corresponding navigation item. It maps over predefined sidebar items
+ * to generate navigation links, handling both internal and external links.
+ * The user section includes an account button and a sign-out link.
+ */
 const Sidebar = ({ onClose }: { onClose?: () => void }) => {
   const pathname = usePathname();
 
+  /**
+   * Determines if the given href matches or starts with the current pathname.
+   */
   const isActive = (href: string) => {
     if (href === '/dashboard') {
       return pathname === href;
@@ -189,6 +200,12 @@ const Sidebar = ({ onClose }: { onClose?: () => void }) => {
   );
 };
 
+/**
+ * Layout component that renders a responsive layout with a sidebar and main content area.
+ * The layout adjusts based on the screen size and path, showing different elements for desktop and mobile views.
+ *
+ * @param children - React children to be rendered within the main content area.
+ */
 const Layout = ({ children }: PropsWithChildren) => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const pathname = usePathname();

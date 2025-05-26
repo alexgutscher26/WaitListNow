@@ -1,85 +1,159 @@
 # WaitListNow - Modern Waitlist Management
 
-A powerful waitlist management SaaS built with Next.js App Router, Supabase, TypeScript, Tailwind CSS, and Clerk
+<div align="center">
+  <img src="https://github.com/alexgutscher26/WaitListNow/blob/main/public/thumbnail.png" alt="WaitListNow Dashboard" width="800px" />
+  <p><em>Transform your product launches with powerful waitlist management</em></p>
+</div>
 
-![WaitListNow Dashboard](https://github.com/yourusername/waitlistnow/blob/main/public/thumbnail.png)
+WaitListNow is a comprehensive SaaS platform designed to help businesses create, manage, and optimize waitlists for product launches, beta testing, and exclusive offerings. Built with modern technologies, it provides a seamless experience for both businesses and their customers.
 
-## Features
+## ✨ Features
 
-- 🚀 Complete waitlist management solution built with Next.js 14
-- 🎨 Beautiful, responsive landing page with conversion-focused design
-- 📊 Real-time waitlist analytics and user management
-- 🔔 Email notifications for waitlist updates
-- 🔐 Secure authentication with Clerk
-- 🎯 Easy integration with any website or application
-- 📱 Mobile-responsive dashboard
-- 🛠️ Built with TypeScript for type safety
-- ⚡ Blazing fast performance with Next.js App Router
-- 🌈 Modern UI built with Tailwind CSS and shadcn/ui
-- 🔄 Real-time updates with Supabase
-- 📈 Track conversion metrics and user engagement
+### Core Functionality
+- 🚀 **Complete Waitlist Management**: Create and manage multiple waitlists for different products or services
+- 📊 **Real-time Analytics**: Track signups, conversion rates, and user engagement metrics
+- 🔔 **Notification System**: Automated email notifications for waitlist updates and position changes
+- 🔐 **Secure Authentication**: User management with Clerk for secure access control
+- 🎯 **Embeddable Widgets**: Easily integrate waitlist forms into any website with customizable widgets
 
-## Getting Started
+### User Experience
+- 🎨 **Beautiful UI/UX**: Conversion-focused design with modern aesthetics
+- 📱 **Fully Responsive**: Optimized for all devices - mobile, tablet, and desktop
+- ⚡ **High Performance**: Fast loading times and smooth interactions
+- 🌐 **White-labeling Options**: Customize the look and feel to match your brand (Premium feature)
+
+### Developer Experience
+- 🛠️ **TypeScript Integration**: Full type safety throughout the codebase
+- 🔄 **Real-time Updates**: Instant data synchronization with Prisma and PostgreSQL
+- 📈 **Analytics Integration**: Easy connection with popular analytics platforms
+- 🔌 **API Access**: RESTful API endpoints for custom integrations
+
+## 🚀 Getting Started
 
 ### Prerequisites
 
 - Node.js 18 or later
-- npm or yarn
-- Supabase account
-- Clerk account
+- pnpm (recommended) or npm/yarn
+- PostgreSQL database (local or hosted)
+- Clerk account for authentication
+- (Optional) Stripe account for payment processing
 
 ### Installation
 
-1. Clone the repository:
+1. **Clone the repository**:
 
    ```bash
-   git clone https://github.com/yourusername/waitlistnow.git
-   cd waitlistnow
+   git clone https://github.com/alexgutscher26/WaitListNow.git
+   cd WaitListNow
    ```
 
-2. Install dependencies:
+2. **Install dependencies**:
 
    ```bash
+   pnpm install
+   # or
    npm install
    # or
    yarn install
    ```
 
-3. Set up environment variables:
-
-   - Copy `.env.example` to `.env.local`
-   - Fill in your Supabase and Clerk credentials
-
-4. Run the development server:
+3. **Set up environment variables**:
 
    ```bash
-   npm run dev
-   # or
-   yarn dev
+   cp .env.example .env.local
+   ```
+   
+   Edit `.env.local` and add your credentials:
+   - Database connection string
+   - Clerk API keys
+   - Stripe API keys (if using payments)
+   - Sentry DSN (for error tracking)
+
+4. **Set up the database**:
+
+   ```bash
+   pnpm db:generate  # Generate Prisma client
+   pnpm db:push      # Push schema to database
+   pnpm db:seed      # (Optional) Seed with sample data
    ```
 
-5. Open [http://localhost:3000](http://localhost:3000) in your browser to see the application.
+5. **Run the development server**:
 
-## Deployment
+   ```bash
+   pnpm dev
+   ```
+
+6. **Open [http://localhost:3000](http://localhost:3000)** in your browser to see the application.
+
+## 🏗️ Project Structure
+
+```
+WaitListNow/
+├── prisma/               # Database schema and migrations
+├── public/               # Static assets
+├── src/
+│   ├── app/              # Next.js App Router pages
+│   │   ├── (auth)/       # Authentication routes
+│   │   ├── (landing)/    # Public landing pages
+│   │   ├── api/          # API routes
+│   │   └── dashboard/    # Dashboard pages
+│   ├── components/       # Reusable UI components
+│   ├── hooks/            # Custom React hooks
+│   ├── lib/              # Utility functions
+│   ├── providers/        # React context providers
+│   └── server/           # Server-side code
+└── ...config files
+```
+
+## 🔧 Available Scripts
+
+- `pnpm dev` - Start development server
+- `pnpm build` - Build for production
+- `pnpm start` - Start production server
+- `pnpm lint` - Run ESLint
+- `pnpm format` - Format code with Prettier
+- `pnpm test` - Run tests
+- `pnpm db:*` - Database commands (generate, push, seed, reset, studio)
+
+## 📦 Tech Stack
+
+- **Framework**: [Next.js 14](https://nextjs.org/) with App Router
+- **Language**: [TypeScript](https://www.typescriptlang.org/)
+- **Database**: [PostgreSQL](https://www.postgresql.org/) with [Prisma ORM](https://www.prisma.io/)
+- **Authentication**: [Clerk](https://clerk.com/)
+- **UI Components**: [Radix UI](https://www.radix-ui.com/) with [shadcn/ui](https://ui.shadcn.com/)
+- **Styling**: [Tailwind CSS](https://tailwindcss.com/)
+- **State Management**: [React Query](https://tanstack.com/query)
+- **Form Handling**: [React Hook Form](https://react-hook-form.com/) with [Zod](https://zod.dev/)
+- **Email**: [React Email](https://react.email/) with [Resend](https://resend.com/)
+- **Monitoring**: [Sentry](https://sentry.io/)
+- **Payments**: [Stripe](https://stripe.com/)
+- **Deployment**: [Vercel](https://vercel.com/)
+
+## 🚢 Deployment
 
 Deploy your waitlist application to Vercel with one click:
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fyourusername%2Fwaitlistnow&env=NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY,CLERK_SECRET_KEY,NEXT_PUBLIC_CLERK_SIGN_IN_URL,NEXT_PUBLIC_CLERK_SIGN_UP_URL,NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL,NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL,NEXT_PUBLIC_SUPABASE_URL,NEXT_PUBLIC_SUPABASE_ANON_KEY,SUPABASE_SERVICE_ROLE_KEY&project-name=waitlistnow&repository-name=waitlistnow)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Falexgutscher26%2FWaitListNow&env=DATABASE_URL,NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY,CLERK_SECRET_KEY,NEXT_PUBLIC_APP_URL,STRIPE_SECRET_KEY,NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,NEXT_PUBLIC_SENTRY_DSN&project-name=waitlistnow&repository-name=waitlistnow)
 
-## Tech Stack
+## 🤝 Contributing
 
-- **Frontend**: Next.js 14, TypeScript, Tailwind CSS, shadcn/ui
-- **Authentication**: Clerk
-- **Database**: Supabase (PostgreSQL)
-- **Styling**: Tailwind CSS
-- **Deployment**: Vercel
+Contributions are welcome! Please feel free to submit a Pull Request.
 
-## Acknowledgements
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## 📝 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🙏 Acknowledgements
 
 - [Clerk](https://clerk.com) for authentication
-- [Supabase](https://supabase.com) for the backend
+- [Prisma](https://www.prisma.io/) for database ORM
 - [shadcn/ui](https://ui.shadcn.com) for the component library
-
-## License
-
-[MIT](https://choosealicense.com/licenses/mit/)
+- [Vercel](https://vercel.com) for hosting and deployment
+- [Sentry](https://sentry.io) for error tracking

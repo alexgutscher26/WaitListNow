@@ -128,7 +128,7 @@ const CommandItem = React.forwardRef<
 CommandItem.displayName = CommandPrimitive.Item.displayName;
 
 /**
- * A span element with predefined styling and additional props.
+ * A styled span element with additional props.
  */
 const CommandShortcut = ({ className, ...props }: React.HTMLAttributes<HTMLSpanElement>) => {
   return (

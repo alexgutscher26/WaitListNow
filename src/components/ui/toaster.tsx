@@ -6,6 +6,9 @@ import { useTheme } from 'next-themes';
 import { Toast, ToastProvider, ToastViewport } from '@/components/ui/toast';
 import { useToast } from '@/components/ui/use-toast';
 
+/**
+ * Renders a toaster component displaying toast messages.
+ */
 export function Toaster() {
   const { toasts } = useToast();
   const { theme } = useTheme();

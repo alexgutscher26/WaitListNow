@@ -6,7 +6,7 @@ declare global {
 
 // Initialize Plausible Analytics
 /**
- * Loads and initializes the Plausible analytics script.
+ * Loads and initializes the Plausible analytics script asynchronously.
  */
 export const initializePlausible = () => {
   const script = document.createElement('script');
@@ -33,6 +33,9 @@ export const trackEvent = (
   }
 };
 
+/**
+ * Tracks a page view using the plausible analytics script if available.
+ */
 export const trackPageview = () => {
   if (typeof window !== 'undefined' && window.plausible) {
     window.plausible('pageview');

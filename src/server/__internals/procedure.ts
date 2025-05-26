@@ -52,7 +52,7 @@ export class Procedure<ctx = {}> {
   }
 
   /**
-   * Adds a middleware function to the procedure chain.
+   * Adds a middleware function to the procedure chain and returns a new procedure with updated context.
    */
   use<T, Return = void>(
     fn: ({

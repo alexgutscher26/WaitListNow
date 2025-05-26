@@ -56,7 +56,7 @@ interface State {
 const toastTimeouts = new Map<string, ReturnType<typeof setTimeout>>();
 
 /**
- * Adds a toast to the removal queue with a delay.
+ * Adds a toast to the removal queue with a specified delay.
  */
 const addToRemoveQueue = (toastId: string) => {
   if (toastTimeouts.has(toastId)) {
@@ -155,13 +155,13 @@ function dispatch(action: Action) {
 type Toast = Omit<ToasterToast, 'id'>;
 
 /**
- * Creates a toast notification with specified properties and provides methods to update or dismiss it.
+ * Creates and manages a toast notification with specified properties.
  */
 function toast({ ...props }: Toast) {
   const id = genId();
 
   /**
-   * Dispatches an action to update a toast with new properties.
+   * Dispatches an action to update a toast with new properties and an ID.
    */
   const update = (props: ToasterToast) =>
     dispatch({
@@ -169,7 +169,7 @@ function toast({ ...props }: Toast) {
       toast: { ...props, id },
     });
   /**
-   * Dispatches an action to dismiss a toast notification.
+   * Dispatches an action to dismiss a toast notification by ID.
    */
   const dismiss = () => dispatch({ type: 'DISMISS_TOAST', toastId: id });
 

@@ -6,7 +6,7 @@ import { ArrowRight } from 'lucide-react';
 import { currentUser } from '@clerk/nextjs/server';
 
 /**
- * Renders a navigation bar with user authentication status.
+ * Renders a navigation bar displaying user authentication status and respective links.
  */
 export const Navbar = async () => {
   const user = await currentUser();

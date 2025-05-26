@@ -72,7 +72,7 @@ interface RootLayoutProps {
 }
 
 /**
- * Provides the root layout structure for the application.
+ * Provides the root layout structure for the application, including providers and global components.
  */
 export default function RootLayout({ children, modal }: RootLayoutProps) {
   return (

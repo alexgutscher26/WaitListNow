@@ -94,7 +94,7 @@ const Sidebar = ({ onClose }: { onClose?: () => void }) => {
   const pathname = usePathname();
 
   /**
-   * Determines if the given href matches or starts with the current pathname.
+   * Checks if the given href matches or starts with the current pathname.
    */
   const isActive = (href: string) => {
     if (href === '/dashboard') {

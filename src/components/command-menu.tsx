@@ -52,7 +52,7 @@ const CommandDialog = ({
   // Handle keyboard shortcuts
   React.useEffect(() => {
     /**
-     * Handles keyboard events to manage a toggleable element's visibility.
+     * Toggles an element's visibility based on keyboard events.
      *
      * This function listens for keyboard events and performs actions based on the key pressed:
      * - If 'k' is pressed with either the metaKey or ctrlKey, it toggles the open state of an element.

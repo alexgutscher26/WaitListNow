@@ -301,6 +301,13 @@ const timeline = [
   },
 ];
 
+/**
+ * @fileoverview This module contains the main component of a web application that showcases the features and benefits of WaitlistNow, a platform for building and managing waitlists.
+ * The component includes sections for faqs, features, success stories, and a call to action for signing up.
+ * It uses various UI components such as Headings, MaxWidthWrapper, ShinyButton, etc., to structure and style the content.
+ *
+ * @module HomePage
+ */
 export default function Page() {
   return (
     <div className="min-h-screen">

@@ -197,6 +197,8 @@ const getActivityIcon = (type: Activity['type']): React.ComponentType<{ classNam
  * Formats an activity message based on the type of activity.
  *
  * This function uses a switch statement to determine the type of activity and returns a corresponding JSX element with formatted text.
+ * The activity types include 'new_subscriber', 'waitlist_created', 'referral', 'conversion', and 'milestone'.
+ * Each case handles different formatting requirements for specific activity details.
  *
  * @param activity - An object containing details about the activity.
  * @returns A JSX element representing the formatted activity message.
@@ -336,13 +338,12 @@ const ActivityItem = ({ activity }: { activity: Activity }) => {
 /**
  * Renders the main dashboard page for a user, displaying their waitlists and related statistics.
  *
- * The function performs the following steps:
- * 1. Retrieves the current user information.
- * 2. Redirects to the sign-in page if the user is not authenticated.
- * 3. Checks if the user has premium access.
- * 4. Determines whether to show an upgrade banner based on query parameters.
- * 5. Fetches the user's recent waitlists with subscriber counts.
- * 6. Renders various cards and tables displaying statistics, recent activity, and waitlist details.
+ * This function performs several key tasks:
+ * 1. Retrieves the current user information and checks if they are authenticated.
+ * 2. Redirects to the sign-in page if the user is not logged in.
+ * 3. Determines if the user has premium access and whether to display an upgrade banner based on query parameters.
+ * 4. Fetches the user's recent waitlists with subscriber counts.
+ * 5. Renders various cards, tables, and components displaying statistics, recent activity, and waitlist details.
  */
 export default async function Page({ searchParams }: PageProps) {
   const user = await currentUser();

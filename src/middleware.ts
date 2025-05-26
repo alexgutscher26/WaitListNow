@@ -5,6 +5,14 @@ import { NextResponse } from 'next/server';
 
 import { trackPageview } from '@/lib/plausible';
 
+/**
+ * Handles middleware logic for tracking page views and processing requests with Clerk middleware.
+ *
+ * This function performs the following steps:
+ * 1. Tracks a page view using the `trackPageview` function.
+ * 2. Calls the Clerk middleware, passing both the request (`req`) and event (`event`) objects.
+ * 3. If an error occurs during these operations, it logs the error to the console and returns a 500 Internal Server Error response.
+ */
 const middleware = async (req: NextRequest, event: any) => {
   try {
     // Track page views

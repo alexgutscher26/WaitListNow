@@ -1,7 +1,7 @@
 # WaitListNow - Modern Waitlist Management
 
 <div align="center">
-  <img src="https://github.com/alexgutscher26/WaitListNow/blob/main/public/thumbnail.png" alt="WaitListNow Dashboard" width="800px" />
+  <img src="public/thumbnailnew.png" alt="WaitListNow Dashboard" width="800px" />
   <p><em>Transform your product launches with powerful waitlist management</em></p>
 </div>
 

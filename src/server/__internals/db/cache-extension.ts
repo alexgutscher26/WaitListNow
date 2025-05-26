@@ -16,7 +16,6 @@ function isSuperJSONResult(obj: any): obj is SuperJSONResult {
   return typeof obj === 'object' && obj !== null && 'json' in obj && 'meta' in obj;
 }
 
-
 /**
  * Prisma extension to provide built-in caching with Upstash Redis.
  *

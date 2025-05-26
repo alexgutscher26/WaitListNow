@@ -3,6 +3,15 @@ import { stripe } from '@/lib/stripe';
 import { headers } from 'next/headers';
 import Stripe from 'stripe';
 
+/**
+ * Handles incoming POST requests from Stripe webhooks.
+ *
+ * This function processes the incoming request, verifies the event signature,
+ * and updates user plans based on completed checkout sessions.
+ *
+ * @param req - The HTTP request object containing the webhook payload.
+ * @returns A Response object indicating success or failure.
+ */
 export async function POST(req: Request) {
   const body = await req.text();
   const signature = headers().get('stripe-signature');

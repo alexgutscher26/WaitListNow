@@ -208,6 +208,16 @@ const testimonials = [
   },
 ];
 
+/**
+ * Renders a pricing page with various plans and features.
+ *
+ * This component fetches user data and router information using hooks.
+ * It defines a mutation function to create a checkout session, which is triggered when a user selects a plan.
+ * The `handleGetAccess` function handles the logic for navigating based on the selected plan and user authentication status.
+ * The page displays pricing cards, feature comparison tables, testimonials, and FAQs. Each section dynamically renders content based on predefined data structures.
+ *
+ * @returns A React component representing the pricing page.
+ */
 const Page = () => {
   const { user } = useUser();
   const router = useRouter();
@@ -231,6 +241,9 @@ const Page = () => {
     },
   });
 
+  /**
+   * Handles access based on the plan name and user authentication status.
+   */
   const handleGetAccess = (planName: string) => {
     if (planName === 'Enterprise') {
       router.push('/contact');

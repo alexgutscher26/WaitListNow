@@ -6,6 +6,12 @@ const prisma = new PrismaClient({
   log: ['query', 'info', 'warn', 'error'],
 });
 
+/**
+ * Queries and logs all users from the database.
+ * This function attempts to fetch all user records using Prisma's `findMany` method.
+ * It logs the users if the query is successful, otherwise logs any errors encountered during the process.
+ * Finally, it ensures that the Prisma client connection is disconnected.
+ */
 async function checkData() {
   try {
     console.log('\n🔎 Querying users...');

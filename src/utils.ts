@@ -9,7 +9,7 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 /**
- * Parses a color string and returns its integer representation.
+ * Converts a hexadecimal color string to its integer representation.
  */
 export const parseColor = (color: string) => {
   const hex = color.startsWith('#') ? color.slice(1) : color;

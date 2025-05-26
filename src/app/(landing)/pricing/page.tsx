@@ -242,7 +242,7 @@ const Page = () => {
   });
 
   /**
-   * Handles access based on the plan name and user authentication status.
+   * Handles access based on plan name and user authentication status, redirecting or creating a checkout session as needed.
    */
   const handleGetAccess = (planName: string) => {
     if (planName === 'Enterprise') {

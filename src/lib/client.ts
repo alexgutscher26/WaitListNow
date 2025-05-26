@@ -63,10 +63,9 @@ export const baseClient = hc<AppType>(getBaseUrl(), {
 
 /**
  * Retrieves a nested function from an object using a series of keys.
- * Ensures that the path is valid and does not lead to prototype pollution.
  *
- * The function iterates through each key, checking for the existence of the property on the current object
- * and ensuring it does not lead to prototype methods. It throws errors if any validation fails.
+ * Iterates through each key, checking for the existence of the property on the current object and ensuring it does not lead to prototype pollution.
+ * Throws errors if any validation fails at any step.
  *
  * @param obj - The initial object from which to start retrieving nested properties.
  * @param keys - A rest parameter representing the series of keys to navigate through the object.

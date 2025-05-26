@@ -5,6 +5,9 @@ type Options = {
   interval: number;
 };
 
+/**
+ * Creates a rate limiting mechanism using an LRU cache to track token usage.
+ */
 export function rateLimit(options: Options) {
   const tokenCache = new LRUCache<string, number[]>({
     max: options.uniqueTokenPerInterval || 500,

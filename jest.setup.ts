@@ -4,7 +4,7 @@ import type { ReactNode } from 'react';
 
 // Mock next/head
 /**
- * Renders a React Fragment with the provided children.
+ * Renders a React Fragment with the provided children using React.createElement.
  */
 const MockHead = ({ children }: { children: ReactNode }) => {
   // Using React.createElement instead of JSX to avoid TSX issues in .ts file

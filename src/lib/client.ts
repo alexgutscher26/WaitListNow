@@ -63,12 +63,42 @@ export const baseClient = hc<AppType>(getBaseUrl(), {
 
 /**
  * Retrieves a nested function from an object using a series of keys.
+ * Prevents prototype pollution by checking for prototype properties.
  */
 function getHandler(obj: Object, ...keys: string[]) {
   let current = obj;
-  for (const key of keys) {
-    current = current[key as keyof typeof current];
+  
+  // Check if the object is safe to work with
+  if (obj === null || typeof obj !== 'object' || Array.isArray(obj)) {
+    throw new Error('Invalid object provided to getHandler');
   }
+
+  for (const key of keys) {
+    // Prevent prototype pollution by checking if the key exists on the object itself
+    // and not on its prototype chain
+    if (!Object.prototype.hasOwnProperty.call(current, key)) {
+      throw new Error(`Property '${key}' does not exist on the target object`);
+    }
+    
+    const value = current[key as keyof typeof current];
+    
+    // Ensure we don't allow access to prototype methods
+    if (key === '__proto__' || key === 'constructor' || key === 'prototype') {
+      throw new Error(`Access to '${key}' is not allowed`);
+    }
+    
+    current = value;
+    
+    // If we hit a non-object before processing all keys, it's an invalid path
+    if (current === null || typeof current !== 'object') {
+      throw new Error('Invalid path: not an object');
+    }
+  }
+  
+  if (typeof current !== 'function') {
+    throw new Error('The specified path does not point to a function');
+  }
+  
   return current as Function;
 }
 

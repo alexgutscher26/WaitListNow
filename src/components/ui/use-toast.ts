@@ -155,7 +155,7 @@ function dispatch(action: Action) {
 type Toast = Omit<ToasterToast, 'id'>;
 
 /**
- * Creates and manages a toast notification with specified properties.
+ * Creates and manages a toast notification with specified properties, providing methods to update and dismiss it.
  */
 function toast({ ...props }: Toast) {
   const id = genId();

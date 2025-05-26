@@ -20,6 +20,9 @@ interface LoadingSpinnerProps extends VariantProps<typeof spinnerVariants> {
   className?: string;
 }
 
+/**
+ * Renders a loading spinner with specified size and class name.
+ */
 export const LoadingSpinner = ({ size, className }: LoadingSpinnerProps) => {
   return (
     <div className="flex justify-center items-center">

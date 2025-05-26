@@ -7,9 +7,15 @@ import { Label } from '@/components/ui/label';
 import { CheckIcon, ClipboardIcon } from 'lucide-react';
 import { useState } from 'react';
 
+/**
+ * Displays an API key in a read-only input field with a copy button.
+ */
 export const ApiKeySettings = ({ apiKey }: { apiKey: string }) => {
   const [copySuccess, setCopySuccess] = useState(false);
 
+  /**
+   * Copies the API key to the clipboard and shows a success message.
+   */
   const copyApiKey = () => {
     navigator.clipboard.writeText(apiKey);
     setCopySuccess(true);

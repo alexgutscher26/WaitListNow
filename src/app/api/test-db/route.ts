@@ -30,43 +30,43 @@ export async function GET() {
     if (!success) {
       return NextResponse.json(
         { success: false, error: 'Too many requests' },
-        { 
-          status: 429, 
-          headers: { 
+        {
+          status: 429,
+          headers: {
             'Retry-After': '60',
-            'Cache-Control': 'no-store, max-age=0'
-          } 
-        }
+            'Cache-Control': 'no-store, max-age=0',
+          },
+        },
       );
     }
 
     // Authentication check
     const user = await currentUser();
-    
+
     if (!user) {
       return NextResponse.json(
         { success: false, error: 'Unauthorized' },
-        { 
+        {
           status: 401,
-          headers: { 'Cache-Control': 'no-store, max-age=0' }
-        }
+          headers: { 'Cache-Control': 'no-store, max-age=0' },
+        },
       );
     }
 
     // Debug: Log the Clerk user ID
     console.log('Clerk User ID:', user.id);
-    
+
     // Verify user exists in our database
     let dbUser: UserData | null = null;
     try {
       // First try to find by Clerk ID
       dbUser = await db.user.findUnique({
         where: { id: user.id },
-        select: { 
+        select: {
           id: true,
           email: true,
-          createdAt: true
-        }
+          createdAt: true,
+        },
       });
 
       // If not found by Clerk ID, try to find by email
@@ -74,11 +74,11 @@ export async function GET() {
         console.log('Trying to find user by email:', user.emailAddresses[0].emailAddress);
         const userByEmail = await db.user.findFirst({
           where: { email: user.emailAddresses[0].emailAddress },
-          select: { 
+          select: {
             id: true,
             email: true,
-            createdAt: true
-          }
+            createdAt: true,
+          },
         });
         dbUser = userByEmail;
       }
@@ -88,37 +88,37 @@ export async function GET() {
         console.log('User not found, listing all users:');
         const allUsers = await db.user.findMany({
           select: { id: true, email: true, createdAt: true },
-          take: 10
+          take: 10,
         });
         console.log('First 10 users in DB:', allUsers);
-        
+
         return NextResponse.json(
-          { 
-            success: false, 
+          {
+            success: false,
             error: 'User not found',
             debug: {
               clerkUserId: user.id,
               clerkEmail: user.emailAddresses?.[0]?.emailAddress,
-              dbUsersSample: allUsers
-            }
+              dbUsersSample: allUsers,
+            },
           },
-          { 
+          {
             status: 404,
-            headers: { 
+            headers: {
               'Cache-Control': 'no-store, max-age=0',
-              'X-Content-Type-Options': 'nosniff'
-            }
-          }
+              'X-Content-Type-Options': 'nosniff',
+            },
+          },
         );
       }
     } catch (dbError) {
       console.error('Database error:', dbError);
       return NextResponse.json(
         { success: false, error: 'Database error' },
-        { 
+        {
           status: 500,
-          headers: { 'Cache-Control': 'no-store, max-age=0' }
-        }
+          headers: { 'Cache-Control': 'no-store, max-age=0' },
+        },
       );
     }
 
@@ -127,21 +127,21 @@ export async function GET() {
     try {
       users = await db.user.findMany({
         take: 1,
-        select: { 
+        select: {
           id: true,
           email: true,
-          createdAt: true 
+          createdAt: true,
         },
-        orderBy: { createdAt: 'desc' }
+        orderBy: { createdAt: 'desc' },
       });
     } catch (queryError) {
       console.error('Query error:', queryError);
       return NextResponse.json(
         { success: false, error: 'Query error' },
-        { 
+        {
           status: 500,
-          headers: { 'Cache-Control': 'no-store, max-age=0' }
-        }
+          headers: { 'Cache-Control': 'no-store, max-age=0' },
+        },
       );
     }
 
@@ -159,37 +159,40 @@ export async function GET() {
     return NextResponse.json(
       {
         success: true,
-        users: users.map(u => ({
+        users: users.map((u) => ({
           id: u.id,
           email: u.email,
           // Don't expose sensitive information
-          createdAt: u.createdAt.toISOString()
+          createdAt: u.createdAt.toISOString(),
         })),
         message: 'Database connection successful!',
       },
-      { 
-        headers: responseHeaders 
-      }
+      {
+        headers: responseHeaders,
+      },
     );
   } catch (error) {
     console.error('Database connection error:', error);
     // Don't leak stack traces in production
-    const errorMessage = process.env.NODE_ENV === 'development' 
-      ? error instanceof Error ? error.message : 'Unknown error'
-      : 'Internal server error';
+    const errorMessage =
+      process.env.NODE_ENV === 'development'
+        ? error instanceof Error
+          ? error.message
+          : 'Unknown error'
+        : 'Internal server error';
 
     return NextResponse.json(
       {
         success: false,
         error: errorMessage,
       },
-      { 
+      {
         status: 500,
         headers: {
           'Cache-Control': 'no-store, max-age=0',
           'X-Content-Type-Options': 'nosniff',
-        }
-      }
+        },
+      },
     );
   }
 }

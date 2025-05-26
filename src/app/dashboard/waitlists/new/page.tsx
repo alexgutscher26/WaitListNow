@@ -130,11 +130,11 @@ const BORDER_RADIUS: { value: ButtonRounded; label: string }[] = [
 ];
 
 /**
- * This React component allows users to create a new waitlist by filling out various configuration options.
- * It includes sections for basic information, custom fields, appearance settings, and behavior preferences.
- * The form supports validation, preview mode, and tabs navigation for an organized user experience.
+ * This component renders a page for creating a new waitlist, allowing users to input basic information,
+ * customize fields, adjust appearance settings, and define behavior options. It includes validation,
+ * form submission handling, preview mode, tab navigation, and various UI components for different sections.
  *
- * @returns {JSX.Element} - A JSX element representing the waitlist creation form within a dashboard page.
+ * @returns {JSX.Element} - The rendered dashboard page with tabs for different sections of the waitlist creation process.
  */
 export default function NewWaitlistPage() {
   const router = useRouter();
@@ -1588,10 +1588,11 @@ interface WaitlistPreviewProps {
 /**
  * Renders a preview of a waitlist form based on the provided formData.
  *
- * This component displays a styled and interactive preview of the waitlist form,
- * including custom fields, labels, buttons, and additional information such as
- * max signups, referrals, and email verification requirements. The form's style
- * is dynamically applied using props from formData.
+ * This component dynamically generates a styled and interactive preview of the waitlist form,
+ * incorporating custom fields, labels, buttons, and additional information such as max signups,
+ * referrals, and email verification requirements. The form's style is determined by props from
+ * formData, including background color, text color, font family, padding, border radius, button
+ * styles, and layout options.
  *
  * @param {WaitlistPreviewProps} formData - An object containing all necessary data to render the form preview.
  */

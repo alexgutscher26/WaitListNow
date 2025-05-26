@@ -302,13 +302,17 @@ const timeline = [
 ];
 
 /**
- * React component that renders the homepage of WaitlistNow, a platform for building and managing waitlists.
+ * This component represents the main page of a website or application, which includes various sections such as hero, faq, features, customer testimonials, and a call to action button. Each section is responsible for presenting different aspects of the product or service, engaging users, and encouraging them to take action.
  *
- * The component includes several sections such as testimonials, features, pricing plans, and contact information.
- * It also uses various imported components like `Hero`, `Testimonials`, `Pricing`, `ContactForm`, and utility functions
- * to structure the layout and functionality of the homepage.
+ * The hero section at the top of the page introduces the main offer or value proposition with an image, heading, subheading, and a start button that leads users to sign up or learn more. Below the hero, there's a faq section that addresses common questions about the product using expandable card components.
  *
- * @returns {JSX.Element} - The rendered React component representing the WaitlistNow homepage.
+ * The features section highlights the key benefits of the service by showcasing different aspects like cost effectiveness, user satisfaction, integration capabilities, and support options. These features are displayed in a grid layout with icons and descriptions for each benefit.
+ *
+ * The customer testimonials section features success stories from satisfied customers, sharing their experiences and outcomes using the product. Each testimonial includes a star rating, review text, and information about the reviewer's position and company.
+ *
+ * Lastly, there is a call to action button at the bottom of the page, which encourages users to start building their waitlist by signing up. This section also provides a brief overview of the number of founders who have successfully launched with WaitlistNow.
+ *
+ * @returns {JSX.Element} The main page component as a JSX element.
  */
 export default function Page() {
   return (

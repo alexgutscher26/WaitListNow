@@ -8,7 +8,7 @@ import { CheckIcon, ClipboardIcon } from 'lucide-react';
 import { useState } from 'react';
 
 /**
- * Displays an API key in a read-only input field with a copy button.
+ * Renders a component to display an API key in a read-only input field with a copy button.
  */
 export const ApiKeySettings = ({ apiKey }: { apiKey: string }) => {
   const [copySuccess, setCopySuccess] = useState(false);

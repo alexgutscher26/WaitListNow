@@ -6,7 +6,7 @@ type Options = {
 };
 
 /**
- * Creates a rate limiter with token-based limiting.
+
  */
 export function rateLimit(options: Options) {
   const tokenCache = new LRUCache<string, number[]>({

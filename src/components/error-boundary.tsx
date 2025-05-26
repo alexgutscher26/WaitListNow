@@ -19,14 +19,23 @@ export class ErrorBoundary extends Component<Props, State> {
     this.state = { hasError: false };
   }
 
+  /**
+   * Returns a new state object indicating an error occurred.
+   */
   static getDerivedStateFromError(): State {
     return { hasError: true };
   }
 
+  /**
+   * Captures an error and its associated information.
+   */
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     captureException(error, { errorInfo });
   }
 
+  /**
+   * Renders children or a fallback UI if an error has occurred.
+   */
   render() {
     if (this.state.hasError) {
       return this.props.fallback || <div>Something went wrong. Please try again later.</div>;

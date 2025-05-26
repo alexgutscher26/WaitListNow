@@ -3,6 +3,9 @@ import { jest } from '@jest/globals';
 import React from 'react';
 
 // Mock next/head
+/**
+ * Renders its children without any additional wrapping.
+ */
 const MockHead = ({ children }: { children: React.ReactNode }) => <>{children}</>;
 MockHead.displayName = 'Head';
 

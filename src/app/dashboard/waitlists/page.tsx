@@ -42,6 +42,15 @@ const WaitlistSkeleton = () => (
   </div>
 );
 
+/**
+ * WaitlistsPage component for displaying waitlist statistics and data.
+ *
+ * This component fetches waitlists from an API and displays various statistics such as total waitlists,
+ * total subscribers, active waitlists, and the last updated date. It also renders a list of waitlists with options to view,
+ * copy link, or delete each waitlist. If there are no waitlists, it provides a call-to-action to create a new one.
+ *
+ * @returns The WaitlistsPage component for rendering in the dashboard.
+ */
 export default function WaitlistsPage() {
   const {
     data: waitlists,
@@ -58,6 +67,9 @@ export default function WaitlistsPage() {
     },
   });
 
+  /**
+   * Formats a date string to a locale-specific format.
+   */
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',

@@ -1,6 +1,9 @@
 import Link from 'next/link';
 import { Home, ArrowLeft, Users, Sparkles } from 'lucide-react';
 
+/**
+ * Renders a 404 Not Found page with an animated background and a rocket icon.
+ */
 export default function NotFound() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-gray-800 flex items-center justify-center p-4 relative overflow-hidden">

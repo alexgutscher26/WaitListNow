@@ -5,6 +5,9 @@ declare global {
 }
 
 // Initialize Plausible Analytics
+/**
+ * Loads and initializes the Plausible analytics script.
+ */
 export const initializePlausible = () => {
   const script = document.createElement('script');
   script.src = 'https://plausible.io/js/plausible.js';
@@ -18,6 +21,9 @@ export const initializePlausible = () => {
 };
 
 // Export helper functions
+/**
+ * Tracks an event using the plausible analytics library if available.
+ */
 export const trackEvent = (
   eventName: string,
   options?: { [key: string]: string | number | boolean },

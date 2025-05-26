@@ -27,7 +27,7 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 
   /**
-   * Captures an error and its associated information.
+   * Captures an error and its associated information using Sentry's captureException method.
    */
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     captureException(error, { errorInfo });

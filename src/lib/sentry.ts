@@ -10,11 +10,12 @@ const logLevelMap: Record<LogLevel, ConsoleLogLevel> = {
 };
 
 /**
- * Converts a log level to its corresponding Sentry severity level.
+ * Maps a log level to its corresponding Sentry severity level.
  *
- * This function maps the provided log level to a Sentry.SeverityLevel.
- * It handles 'info', 'warning', and 'error' cases directly, returning the same string value.
- * For any other log levels, it defaults to 'info'.
+ * This function uses a switch statement to match the provided log level
+ * against known cases ('info', 'warning', 'error'). If the log level matches
+ * one of these cases, it returns the same string value. For any other log levels,
+ * it defaults to 'info'.
  *
  * @param level - The log level to convert.
  */
@@ -47,7 +48,7 @@ export const captureException = (error: Error, context?: Record<string, unknown>
 };
 
 /**
- * Captures a message for logging or error tracking based on the environment and log level.
+ * Captures a message for logging or error tracking.
  */
 export const captureMessage = (message: string, level: LogLevel = 'info'): void => {
   if (process.env.NODE_ENV === 'production') {

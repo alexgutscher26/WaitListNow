@@ -4,7 +4,7 @@ import { SignIn } from '@clerk/nextjs';
 import { useSearchParams } from 'next/navigation';
 
 /**
- * Renders a page with a sign-in component, redirecting based on search params.
+ * Renders a sign-in page with conditional redirection based on search params.
  */
 const Page = () => {
   const searchParams = useSearchParams();

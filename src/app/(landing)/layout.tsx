@@ -2,7 +2,7 @@ import { ReactNode } from 'react';
 import { Navbar } from '@/components/navbar';
 
 /**
- * Renders a layout with a Navbar and children components.
+ * Renders a layout containing a Navbar and its child components.
  */
 const Layout = ({ children }: { children: ReactNode }) => {
   return (

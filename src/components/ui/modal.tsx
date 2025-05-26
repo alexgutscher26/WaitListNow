@@ -43,8 +43,7 @@ export const Modal = ({
    *
    * This function checks if `preventDefaultClose` is true and if the modal was not dragged.
    * If both conditions are met, it returns early without closing the modal.
-   * Otherwise, it calls the `onClose` callback if it exists, and then sets `setShowModal` to false
-   * to close the modal visually.
+   * Otherwise, it sets `setShowModal` to false to close the modal visually.
    *
    * @param {Object} options - An object containing optional parameters.
    * @param {boolean} [options.dragged] - A flag indicating whether the modal was dragged.

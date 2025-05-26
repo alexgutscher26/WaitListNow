@@ -97,7 +97,6 @@ We request that you:
 We regularly publish security updates and advisories. To stay informed:
 
 - Watch our [GitHub repository](https://github.com/alexgutscher26/WaitListNow)
-- Subscribe to our security newsletter at [waitlistnow.com/security](https://waitlistnow.com/security)
 - Follow us on Twitter [@WaitListNow](https://twitter.com/waitlistnow)
 
 ## Compliance and Certifications

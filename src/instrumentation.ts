@@ -4,6 +4,16 @@ import { Replay } from '@sentry/replay';
 // This file is used to initialize Sentry for both client and server
 // It's automatically loaded by Next.js
 
+/**
+ * Registers Sentry instrumentation based on the runtime environment.
+ *
+ * This function initializes Sentry differently depending on whether it's running
+ * in a Node.js server, an edge runtime, or as a client-side application. For
+ * server-side environments, it imports specific server-side instrumentation.
+ * For edge runtimes, it imports edge-specific modules. On the client side,
+ * it configures Sentry with replay integration and other settings for better
+ * error tracking and performance monitoring.
+ */
 export async function register() {
   if (process.env.NEXT_RUNTIME === 'nodejs') {
     // Server-side Sentry initialization

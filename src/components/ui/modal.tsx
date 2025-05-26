@@ -14,6 +14,21 @@ interface ModalProps {
   preventDefaultClose?: boolean;
 }
 
+/**
+ * Modal component that renders a dialog or drawer based on screen size and configuration.
+ *
+ * This component conditionally renders either a Dialog or Drawer depending on whether the screen is mobile or desktop.
+ * It handles closing the modal, managing state through props, and applying styles based on provided className.
+ *
+ * @param children - The content to be rendered inside the Modal.
+ * @param className - Additional CSS classes to apply to the Modal content.
+ * @param desktopOnly - If true, the Modal will only be shown on desktop sizes.
+ * @param onClose - Callback function invoked when the Modal is closed.
+ * @param preventDefaultClose - Prevents closing the Modal unless dragged if set to true.
+ * @param setShowModal - Function to update the showModal state.
+ * @param showModal - The current visibility state of the Modal.
+ * @returns A Dialog or Drawer component based on screen size and configuration.
+ */
 export const Modal = ({
   children,
   className,
@@ -23,6 +38,17 @@ export const Modal = ({
   setShowModal,
   showModal,
 }: ModalProps) => {
+  /**
+   * Closes the modal based on certain conditions.
+   *
+   * This function checks if `preventDefaultClose` is true and if the modal was not dragged.
+   * If both conditions are met, it returns early without closing the modal.
+   * Otherwise, it calls the `onClose` callback if it exists, and then sets `setShowModal` to false
+   * to close the modal visually.
+   *
+   * @param {Object} options - An object containing optional parameters.
+   * @param {boolean} [options.dragged] - A flag indicating whether the modal was dragged.
+   */
   const closeModal = ({ dragged }: { dragged?: boolean }) => {
     if (preventDefaultClose && !dragged) {
       return;

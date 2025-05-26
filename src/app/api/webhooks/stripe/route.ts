@@ -7,7 +7,8 @@ import Stripe from 'stripe';
  * Handles incoming POST requests from Stripe webhooks.
  *
  * This function processes the incoming request, verifies the event signature,
- * and updates user plans based on completed checkout sessions.
+ * and updates user plans based on completed checkout sessions. It checks for valid metadata
+ * and performs database operations accordingly.
  *
  * @param req - The HTTP request object containing the webhook payload.
  * @returns A Response object indicating success or failure.

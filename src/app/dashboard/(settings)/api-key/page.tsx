@@ -1,8 +1,8 @@
 import { DashboardPage } from "@/components/dashboard-page"
-import { db } from "@/db"
 import { currentUser } from "@clerk/nextjs/server"
 import { redirect } from "next/navigation"
 import { ApiKeySettings } from "./api-key-settings"
+import { db } from "@/lib/db"
 
 const Page = async () => {
   const auth = await currentUser()

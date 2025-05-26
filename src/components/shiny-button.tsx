@@ -1,3 +1,5 @@
+"use client"
+
 import { cn } from "@/utils"
 import { ArrowRight } from "lucide-react"
 import Link from "next/link"

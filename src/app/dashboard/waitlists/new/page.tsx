@@ -1,7 +1,5 @@
 "use client"
 
-"use client"
-
 import { useState, useCallback, useMemo } from "react"
 import { useRouter } from "next/navigation"
 // Simple Badge component

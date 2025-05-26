@@ -13,6 +13,7 @@ export const createCheckoutSession = async ({
   userId: string
 }) => {
   const session = await stripe.checkout.sessions.create({
+    // TODO: change price and add more plans
     line_items: [
       {
         price: "price_1QBHVBA19umTXGu8gzhUCSG7",

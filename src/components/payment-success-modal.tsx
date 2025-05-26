@@ -9,6 +9,8 @@ import { LoadingSpinner } from "./loading-spinner"
 import { Button } from "./ui/button"
 import { CheckIcon } from "lucide-react"
 
+// TODO: Need to update this modal to show different content based on the plan plus change for the different plans for this saas
+
 export const PaymentSuccessModal = () => {
   const router = useRouter()
   const [isOpen, setIsOpen] = useState(true)

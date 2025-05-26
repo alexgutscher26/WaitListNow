@@ -1,40 +1,92 @@
 import { ClerkProvider } from "@clerk/nextjs"
-import type { Metadata } from "next"
-import { Inter, EB_Garamond } from "next/font/google"
-
+import type { Metadata, Viewport } from "next"
+import { Inter } from "next/font/google"
+import { Toaster } from "@/components/ui/toaster"
+import { Analytics } from "@vercel/analytics/react"
+import { SpeedInsights } from "@vercel/speed-insights/next"
+import { PlausibleProvider } from "./plausible-provider"
+import { HeroUIProvider } from "@heroui/react"
+import { QueryProvider } from "@/providers/query-provider"
+import { cn } from "@/lib/utils"
 import "./globals.css"
 
-import { Providers } from "@/components/providers"
-import { cn } from "@/utils"
-
-import { PlausibleProvider } from "./plausible-provider"
-
-const inter = Inter({ subsets: ["latin"], variable: "--font-sans" })
-const eb_garamond = EB_Garamond({
+// Font configuration
+const inter = Inter({
   subsets: ["latin"],
-  variable: "--font-heading",
+  display: "swap",
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-sans"
 })
 
+// Metadata configuration
 export const metadata: Metadata = {
-  title: "jStack App",
-  description: "Created using jStack",
-  icons: [{ rel: "icon", url: "/favicon.ico" }],
+  title: {
+    default: "WaitlistNow - Build Your Waitlist in Minutes",
+    template: "%s | WaitlistNow"
+  },
+  description: "Launch your product with a beautiful, high-converting waitlist. Start collecting leads and building your audience today.",
+  keywords: ["waitlist", "launch", "saas", "startup", "early access", "beta"],
+  authors: [{ name: "WaitlistNow Team" }],
+  creator: "WaitlistNow",
+  publisher: "WaitlistNow",
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || "https://waitlistnow.app"),
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: process.env.NEXT_PUBLIC_APP_URL,
+    title: "WaitlistNow - Build Your Waitlist in Minutes",
+    description: "Launch your product with a beautiful, high-converting waitlist. Start collecting leads and building your audience today.",
+    siteName: "WaitlistNow",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "WaitlistNow - Build Your Waitlist in Minutes",
+    description: "The easiest way to launch your product with a beautiful waitlist.",
+    creator: "@waitlistnow",
+  },
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+    ],
+    apple: "/apple-touch-icon.png",
+  },
+  manifest: "/site.webmanifest",
 }
 
-export default function RootLayout({
-  children,
-}: Readonly<{
+// Viewport configuration
+export const viewport: Viewport = {
+  themeColor: "#ffffff",
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+}
+
+interface RootLayoutProps {
   children: React.ReactNode
-}>) {
+  modal: React.ReactNode
+}
+
+export default function RootLayout({ children, modal }: RootLayoutProps) {
   return (
     <ClerkProvider>
-      <html lang="en" className={cn(inter.variable, eb_garamond.variable)}>
-        <body className="min-h-[calc(100vh-1px)] flex flex-col font-sans bg-brand-50 text-brand-950 antialiased">
-          <main className="relative flex-1 flex flex-col">
-            <PlausibleProvider>
-              <Providers>{children}</Providers>
-            </PlausibleProvider>
-          </main>
+      <html lang="en" suppressHydrationWarning>
+        <body className={cn("min-h-screen bg-background font-sans antialiased", inter.variable)}>
+          <PlausibleProvider>
+            <QueryProvider>
+              <HeroUIProvider>
+                <div className="flex-1">
+                  {children}
+                  {modal}
+                </div>
+                <Toaster />
+                <Analytics />
+                <SpeedInsights />
+              </HeroUIProvider>
+            </QueryProvider>
+          </PlausibleProvider>
         </body>
       </html>
     </ClerkProvider>

@@ -1,9 +1,9 @@
 import { DashboardPage } from "@/components/dashboard-page"
-import { db } from "@/db"
 import { currentUser } from "@clerk/nextjs/server"
 import { redirect } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Check, CheckCircle, XCircle, Star, Zap, Users, Shield, Crown } from "lucide-react"
+import { db } from "@/lib/db"
 
 const pricingPlans = [
   {

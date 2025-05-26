@@ -1,5 +1,5 @@
 import { DashboardPage } from "@/components/dashboard-page"
-import { db } from "@/db"
+import { db } from "@/lib/db"
 import { currentUser } from "@clerk/nextjs/server"
 import { redirect } from "next/navigation"
 import { AccountSettings } from "./setttings-page-content"
@@ -21,7 +21,7 @@ const Page = async () => {
 
   return (
     <DashboardPage title="Account Settings">
-      <AccountSettings discordId={user.discordId ?? ""} />
+      <AccountSettings />
     </DashboardPage>
   )
 }

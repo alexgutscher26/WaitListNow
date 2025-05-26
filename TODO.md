@@ -47,3 +47,14 @@ Adding reward tiers = prompt upgrade to Growth
 Adding webhook = prompt upgrade to Starter
 
 make the onboarding route where user cannot use it again after completion 
+
+To complete the setup, you'll need to create the following API endpoints:
+
+POST /api/waitlists - To create a new waitlist
+POST /api/onboarding/complete - To mark onboarding as complete
+Would you like me to help you create these API endpoints next? I can also help with:
+
+Setting up the database schema for waitlists
+Creating the embeddable widget
+Adding authentication checks to the API routes
+Implementing the dashboard to manage waitlists

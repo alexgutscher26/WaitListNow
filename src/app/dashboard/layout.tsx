@@ -4,99 +4,172 @@ import { buttonVariants } from "@/components/ui/button"
 import { Modal } from "@/components/ui/modal"
 import { cn } from "@/utils"
 import { UserButton } from "@clerk/nextjs"
-import { Gem, Home, Key, LucideIcon, Menu, Settings, Users, X } from "lucide-react"
+import { Gem, Home, Key, LucideIcon, Menu, Settings, Users, X, LogOut, ArrowUpRight } from "lucide-react"
+import { CommandButton } from "@/components/command-button"
 import Link from "next/link"
-import { PropsWithChildren, useState } from "react"
+import { PropsWithChildren, useState, useMemo } from "react"
+import { usePathname } from "next/navigation"
 
-interface SidebarItem {
+interface SidebarItemProps {
   href: string
   icon: LucideIcon
   text: string
+  external?: boolean
 }
 
-interface SidebarCategory {
+interface SidebarCategoryProps {
   category: string
-  items: SidebarItem[]
+  items: SidebarItemProps[]
 }
 
-const SIDEBAR_ITEMS: SidebarCategory[] = [
+const SIDEBAR_ITEMS: SidebarCategoryProps[] = [
   {
     category: "Overview",
     items: [
-      { href: "/dashboard", icon: Home, text: "Dashboard" },
+      { 
+        href: "/dashboard", 
+        icon: Home, 
+        text: "Dashboard" 
+      },
     ],
   },
   {
     category: "Waitlists",
     items: [
-      { href: "/dashboard/waitlists", icon: Users, text: "All Waitlists" },
+      { 
+        href: "/dashboard/waitlists", 
+        icon: Users, 
+        text: "All Waitlists" 
+      },
     ],
   },
   {
     category: "Account",
-    items: [{ href: "/dashboard/upgrade", icon: Gem, text: "Upgrade" }],
+    items: [
+      { 
+        href: "/dashboard/upgrade", 
+        icon: Gem, 
+        text: "Upgrade",
+        external: false
+      },
+    ],
   },
   {
     category: "Settings",
     items: [
-      { href: "/dashboard/api-key", icon: Key, text: "API Key" },
+      { 
+        href: "/dashboard/api-key", 
+        icon: Key, 
+        text: "API Key" 
+      },
       {
         href: "/dashboard/account-settings",
         icon: Settings,
-        text: "Account Settings",
+        text: "Account Settings"
       },
     ],
   },
 ]
 
 const Sidebar = ({ onClose }: { onClose?: () => void }) => {
+  const pathname = usePathname()
+  
+  const isActive = (href: string) => {
+    if (href === '/dashboard') {
+      return pathname === href
+    }
+    return pathname.startsWith(href)
+  }
+
   return (
     <div className="space-y-4 md:space-y-6 relative z-20 flex flex-col h-full">
-      {/* logo */}
-      <p className="hidden sm:block text-lg/7 font-semibold text-brand-900">
-        Waitlist<span className="text-brand-700">Now</span>
-      </p>
+      {/* Logo */}
+      <Link 
+        href="/dashboard" 
+        className="hidden sm:flex items-center gap-2 group"
+        onClick={onClose}
+      >
+        <span className="text-2xl font-bold bg-gradient-to-r from-brand-600 to-brand-400 bg-clip-text text-transparent">
+          Waitlist<span className="font-bold">Now</span>
+        </span>
+      </Link>
 
-      {/* navigation items */}
-      <div className="flex-grow">
-        <ul>
+      {/* Navigation Items */}
+      <nav className="flex-grow overflow-y-auto">
+        <ul className="space-y-1">
           {SIDEBAR_ITEMS.map(({ category, items }) => (
-            <li key={category} className="mb-4 md:mb-8">
-              <p className="text-xs font-medium leading-6 text-zinc-500">
+            <li key={category} className="mb-6 last:mb-0">
+              <h3 className="text-xs font-medium uppercase tracking-wider text-gray-500 px-2 mb-2">
                 {category}
-              </p>
-              <div className="-mx-2 flex flex-1 flex-col">
-                {items.map((item, i) => (
-                  <Link
-                    key={i}
-                    href={item.href}
-                    className={cn(
-                      buttonVariants({ variant: "ghost" }),
-                      "w-full justify-start group flex items-center gap-x-2.5 rounded-md px-2 py-1.5 text-sm font-medium leading-6 text-zinc-700 hover:bg-gray-50 transition"
-                    )}
-                    onClick={onClose}
-                  >
-                    <item.icon className="size-4 text-zinc-500 group-hover:text-zinc-700" />
-                    {item.text}
-                  </Link>
-                ))}
-              </div>
+              </h3>
+              <ul className="space-y-1">
+                {items.map((item, i) => {
+                  const active = isActive(item.href)
+                  return (
+                    <li key={`${category}-${i}`}>
+                      <Link
+                        href={item.href}
+                        target={item.external ? "_blank" : undefined}
+                        rel={item.external ? "noopener noreferrer" : undefined}
+                        className={cn(
+                          "group flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+                          active
+                            ? "bg-brand-50 text-brand-700"
+                            : "text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                        )}
+                        onClick={onClose}
+                      >
+                        <item.icon 
+                          className={cn(
+                            "size-5",
+                            active ? "text-brand-600" : "text-gray-500 group-hover:text-gray-700"
+                          )} 
+                        />
+                        <span>{item.text}</span>
+                        {item.external && (
+                          <span className="ml-auto">
+                            <ArrowUpRight className="size-3.5 text-gray-400" />
+                          </span>
+                        )}
+                      </Link>
+                    </li>
+                  )
+                })}
+              </ul>
             </li>
           ))}
         </ul>
-      </div>
+      </nav>
 
-      <div className="flex flex-col">
-        <hr className="my-4 md:my-6 w-full h-px bg-gray-100" />
-
-        <UserButton
-          showName
-          appearance={{
-            elements: {
-              userButtonBox: "flex-row-reverse",
-            },
-          }}
-        />
+      {/* User Section */}
+      <div className="border-t border-gray-100 pt-4">
+        <div className="flex items-center justify-between px-2">
+          <div className="flex items-center gap-3">
+            <UserButton
+              afterSignOutUrl="/"
+              appearance={{
+                elements: {
+                  userButtonAvatarBox: "h-8 w-8",
+                },
+              }}
+            />
+            <div className="text-sm">
+              <p className="font-medium text-gray-900">Your Account</p>
+              <p className="text-gray-500">Manage profile</p>
+            </div>
+          </div>
+          <CommandButton className="text-gray-500 hover:text-gray-700 p-2 rounded-md hover:bg-gray-100" />
+        </div>
+        
+        <div className="mt-4">
+          <Link
+            href="/sign-out"
+            className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100"
+          >
+            <LogOut className="size-5" />
+            <span>Sign out</span>
+          </Link>
+        </div>
       </div>
     </div>
   )
@@ -104,57 +177,98 @@ const Sidebar = ({ onClose }: { onClose?: () => void }) => {
 
 const Layout = ({ children }: PropsWithChildren) => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
+  const pathname = usePathname()
+  
+  // Only show the mobile header on the dashboard page
+  const showMobileHeader = pathname === '/dashboard'
 
   return (
     <div className="relative h-screen flex flex-col md:flex-row bg-white overflow-hidden">
-      {/* sidebar for desktop */}
-      <div className="hidden md:block w-64 lg:w-80 border-r border-gray-100 p-6 h-full text-brand-900 relative z-10">
-        <Sidebar />
+      {/* Desktop Sidebar */}
+      <aside className="hidden md:flex md:flex-shrink-0">
+        <div className="w-64 lg:w-72 border-r border-gray-200 bg-white p-4 lg:p-6 flex flex-col h-full">
+          <Sidebar />
+        </div>
+      </aside>
+
+      <div className="flex-1 flex flex-col overflow-hidden bg-gray-50">
+        {/* Mobile Header */}
+        {showMobileHeader && (
+          <header className="md:hidden flex items-center justify-between px-4 h-16 border-b border-gray-200 bg-white">
+            <button
+              onClick={() => setIsDrawerOpen(true)}
+              className="p-2 rounded-md text-gray-500 hover:bg-gray-100"
+              aria-label="Open navigation"
+            >
+              <Menu className="h-5 w-5" />
+            </button>
+            <Link href="/dashboard" className="flex items-center">
+              <span className="text-lg font-bold bg-gradient-to-r from-brand-600 to-brand-400 bg-clip-text text-transparent">
+                Waitlist<span className="font-bold">Now</span>
+              </span>
+            </Link>
+            <div className="w-9">
+              <CommandButton className="text-gray-500 hover:text-gray-700 p-2 rounded-md hover:bg-gray-100" />
+            </div>
+          </header>
+        )}
+
+        {/* Main Content */}
+        <main className="flex-1 overflow-y-auto focus:outline-none">
+          <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+            {children}
+          </div>
+        </main>
+
+        {/* Mobile Navigation */}
+        <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-2 z-20">
+          <div className="flex justify-around">
+            {SIDEBAR_ITEMS.flatMap(category => category.items)
+              .filter(item => item.href !== '/dashboard/upgrade') // Exclude upgrade from mobile nav
+              .map((item, i) => {
+                const active = pathname === item.href
+                return (
+                  <Link
+                    key={i}
+                    href={item.href}
+                    className={cn(
+                      "flex flex-col items-center justify-center p-2 rounded-lg text-xs font-medium",
+                      active 
+                        ? "text-brand-600 bg-brand-50" 
+                        : "text-gray-500 hover:text-gray-700"
+                    )}
+                  >
+                    <item.icon className={cn("h-5 w-5 mb-1", active ? "text-brand-600" : "text-gray-400")} />
+                    <span>{item.text}</span>
+                  </Link>
+                )
+              })}
+          </div>
+        </nav>
       </div>
 
-      <div className="flex-1 flex flex-col overflow-hidden">
-        {/* mobile header */}
-        <div className="md:hidden flex items-center justify-between p-4 border-b border-gray-200">
-          <p className="text-lg/7 font-semibold text-brand-900">
-            Ping<span className="text-brand-700">Panda</span>
-          </p>
-          <button
-            onClick={() => setIsDrawerOpen(true)}
-            className="text-gray-500 hover:text-gray-600"
-          >
-            <Menu className="size-6" />
-          </button>
-        </div>
-
-        {/* main content area */}
-        <div className="flex-1 overflow-y-auto bg-gray-50 shadow-md p-4 md:p-6 relative z-10">
-          <div className="relative min-h-full flex flex-col">
-            <div className="h-full flex flex-col flex-1 space-y-4">
-              {children}
-            </div>
-          </div>
-        </div>
-
-        <Modal
-          className="p-4"
-          showModal={isDrawerOpen}
-          setShowModal={setIsDrawerOpen}
-        >
-          <div className="flex justify-between items-center mb-4">
-            <p className="text-lg/7 font-semibold text-brand-900">
-              Ping<span className="text-brand-700">Panda</span>
-            </p>
+      {/* Mobile Sidebar */}
+      <Modal
+        className="p-0 w-full max-w-xs sm:max-w-md"
+        showModal={isDrawerOpen}
+        setShowModal={setIsDrawerOpen}
+      >
+        <div className="flex flex-col h-full">
+          <div className="flex items-center justify-between p-4 border-b">
+            <h2 className="text-lg font-semibold">Menu</h2>
             <button
-              aria-label="Close modal"
               onClick={() => setIsDrawerOpen(false)}
+              className="rounded-md p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-500"
+              aria-label="Close menu"
             >
-              <X className="size-6" />
+              <X className="h-6 w-6" />
             </button>
           </div>
-
-          <Sidebar />
-        </Modal>
-      </div>
+          <div className="flex-1 overflow-y-auto p-4">
+            <Sidebar onClose={() => setIsDrawerOpen(false)} />
+          </div>
+        </div>
+      </Modal>
     </div>
   )
 }

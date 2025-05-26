@@ -51,6 +51,9 @@ export class Procedure<ctx = {}> {
     }
   }
 
+  /**
+   * Adds a middleware function to the procedure chain.
+   */
   use<T, Return = void>(
     fn: ({
       ctx,
@@ -101,6 +104,9 @@ export class Procedure<ctx = {}> {
     }),
   });
 
+  /**
+   * Registers a query operation with the specified function and returns it.
+   */
   query<Output>(
     fn: ({
       input,
@@ -119,6 +125,9 @@ export class Procedure<ctx = {}> {
     };
   }
 
+  /**
+   * Registers a mutation operation with specified handler and middleware.
+   */
   mutation<Output>(
     fn: ({
       input,

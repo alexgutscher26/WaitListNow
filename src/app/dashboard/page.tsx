@@ -165,6 +165,16 @@ interface PageProps {
   };
 }
 
+/**
+ * Returns a React component for rendering an activity icon based on the given type.
+ *
+ * This function maps each activity type to its corresponding icon component,
+ * applying specific styles and class names as needed. If the type does not match any
+ * known cases, it throws an exhaustive check error to ensure all types are handled.
+ *
+ * @param type - The type of the activity for which to get the icon.
+ * @returns A React functional component that renders the appropriate icon with given className.
+ */
 const getActivityIcon = (type: Activity['type']): React.ComponentType<{ className?: string }> => {
   switch (type) {
     case 'new_subscriber':
@@ -183,6 +193,14 @@ const getActivityIcon = (type: Activity['type']): React.ComponentType<{ classNam
   }
 };
 
+/**
+ * Formats an activity message based on the type of activity.
+ *
+ * This function uses a switch statement to determine the type of activity and returns a corresponding JSX element with formatted text.
+ *
+ * @param activity - An object containing details about the activity.
+ * @returns A JSX element representing the formatted activity message.
+ */
 const formatActivityMessage = (activity: Activity) => {
   switch (activity.type) {
     case 'new_subscriber':
@@ -243,6 +261,13 @@ interface StatCardProps {
   trendValue?: string;
 }
 
+/**
+ * Renders a stat card component with title, value, icon, and optional trend indicators.
+ *
+ * This component displays a card containing a title, a main value, an icon,
+ * and optionally shows a trend indicator if both `trend` and `trendValue` are provided.
+ * The trend can be either 'up' or 'down', affecting the styling and icon used.
+ */
 const StatCard = ({
   title,
   value,
@@ -281,6 +306,9 @@ const StatCard = ({
   </Card>
 );
 
+/**
+ * Renders an activity item with an icon, message, and timestamp.
+ */
 const ActivityItem = ({ activity }: { activity: Activity }) => {
   const IconComponent = getActivityIcon(activity.type);
   const message = formatActivityMessage(activity);
@@ -305,6 +333,17 @@ const ActivityItem = ({ activity }: { activity: Activity }) => {
   );
 };
 
+/**
+ * Renders the main dashboard page for a user, displaying their waitlists and related statistics.
+ *
+ * The function performs the following steps:
+ * 1. Retrieves the current user information.
+ * 2. Redirects to the sign-in page if the user is not authenticated.
+ * 3. Checks if the user has premium access.
+ * 4. Determines whether to show an upgrade banner based on query parameters.
+ * 5. Fetches the user's recent waitlists with subscriber counts.
+ * 6. Renders various cards and tables displaying statistics, recent activity, and waitlist details.
+ */
 export default async function Page({ searchParams }: PageProps) {
   const user = await currentUser();
   if (!user) {

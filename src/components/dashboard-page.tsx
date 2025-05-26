@@ -13,6 +13,9 @@ interface DashboardPageProps {
   cta?: ReactNode;
 }
 
+/**
+ * Renders a dashboard page with optional navigation and CTA button.
+ */
 export const DashboardPage = ({ title, children, cta, hideBackButton }: DashboardPageProps) => {
   const router = useRouter();
 

@@ -4,6 +4,9 @@ import { QueryCache, QueryClient, QueryClientProvider } from '@tanstack/react-qu
 import { HTTPException } from 'hono/http-exception';
 import { PropsWithChildren, useState } from 'react';
 
+/**
+ * Provides a QueryClientProvider with error handling for HTTP and generic errors.
+ */
 export const Providers = ({ children }: PropsWithChildren) => {
   const [queryClient] = useState(
     () =>

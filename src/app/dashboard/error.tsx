@@ -3,6 +3,9 @@
 import { useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 
+/**
+ * Displays an error message and a retry button.
+ */
 export default function Error({
   error,
   reset,

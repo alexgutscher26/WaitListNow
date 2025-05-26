@@ -249,6 +249,9 @@ const onboardingSteps = [
     }: ContentProps) => {
       const waitlistId = 'wl_' + Math.random().toString(36).substr(2, 9);
 
+      /**
+       * Copies text to clipboard and sets copied state with a timeout.
+       */
       const handleCopy = (text: string, type: 'script' | 'div') => {
         navigator.clipboard.writeText(text);
         setCopied(type);
@@ -360,6 +363,16 @@ const onboardingSteps = [
   },
 ];
 
+/**
+ * Improved onboarding component managing user through multiple steps with validation and preview functionalities.
+ *
+ * This function renders a multi-step onboarding process, manages form data, validates inputs, and provides navigation controls.
+ * It uses React hooks like useState and useEffect to manage state and side effects. The component checks the validity of form
+ * data based on the current step and enables or disables the next button accordingly. It also handles asynchronous operations
+ * such as simulating an API call upon completing the onboarding process.
+ *
+ * @returns A JSX element representing the onboarding UI.
+ */
 export default function ImprovedOnboarding() {
   const [currentStep, setCurrentStep] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
@@ -403,6 +416,15 @@ export default function ImprovedOnboarding() {
     setCanProceed(Object.keys(newErrors).length === 0);
   }, [formData, currentStep]);
 
+  /**
+   * Handles the next step in the onboarding process.
+   *
+   * This function checks if the current step is the last one in the onboardingSteps array.
+   * If it is, it simulates an API call by using a timeout and then alerts the user that
+   * onboarding is completed. If there's an error during this process, it logs the error to the console.
+   * Finally, it sets isLoading to false regardless of the outcome.
+   * If the current step is not the last one, it increments the currentStep by 1.
+   */
   const handleNext = async () => {
     if (currentStep === onboardingSteps.length - 1) {
       setIsLoading(true);
@@ -420,6 +442,9 @@ export default function ImprovedOnboarding() {
     }
   };
 
+  /**
+   * Decrements the current step by one and clears errors.
+   */
   const handleBack = () => {
     setCurrentStep((prev) => Math.max(0, prev - 1));
     setErrors({});

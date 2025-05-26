@@ -4,6 +4,13 @@ import { redirect } from 'next/navigation';
 import { ApiKeySettings } from './api-key-settings';
 import { db } from '@/lib/db';
 
+/**
+ * Retrieves and displays the API key settings page for a user.
+ *
+ * This function checks if the user is authenticated, retrieves the user's information from the database,
+ * and renders the API key settings page. If the user is not authenticated or does not exist in the database,
+ * it redirects to the sign-in page.
+ */
 const Page = async () => {
   const auth = await currentUser();
 

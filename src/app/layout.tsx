@@ -71,6 +71,9 @@ interface RootLayoutProps {
   modal: React.ReactNode;
 }
 
+/**
+ * Provides the root layout structure for the application.
+ */
 export default function RootLayout({ children, modal }: RootLayoutProps) {
   return (
     <ClerkProvider>

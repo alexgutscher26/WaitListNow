@@ -33,6 +33,11 @@ import {
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 
+/**
+ * React component that renders the Account Settings page with various settings sections.
+ *
+ * @returns {JSX.Element} The JSX element representing the Account Settings page.
+ */
 const AccountSettingsContent = () => {
   const { user } = useUser();
   const [email, setEmail] = useState(user?.emailAddresses[0]?.emailAddress || '');
@@ -66,6 +71,9 @@ const AccountSettingsContent = () => {
   const [totalSignups] = useState(1247);
   const [accountTier] = useState('Pro');
 
+  /**
+   * Handles saving process by setting loading state, simulating an API call, and updating saved state.
+   */
   const handleSave = async () => {
     setIsSaving(true);
     // Simulate API call
@@ -75,6 +83,9 @@ const AccountSettingsContent = () => {
     setTimeout(() => setIsSaved(false), 3000);
   };
 
+  /**
+   * Toggles the notification state for a given key.
+   */
   const handleNotificationToggle = (key: keyof typeof notifications) => {
     setNotifications((prev) => ({
       ...prev,
@@ -82,6 +93,9 @@ const AccountSettingsContent = () => {
     }));
   };
 
+  /**
+   * Toggles the boolean value of a specified preference key.
+   */
   const handlePreferenceToggle = (key: keyof typeof preferences) => {
     setPreferences((prev) => ({
       ...prev,
@@ -89,6 +103,9 @@ const AccountSettingsContent = () => {
     }));
   };
 
+  /**
+   * Copies a referral link to the clipboard.
+   */
   const copyReferralLink = () => {
     navigator.clipboard.writeText('https://yourwaitlist.com/ref/user123');
   };
@@ -545,6 +562,9 @@ const AccountSettingsContent = () => {
   );
 };
 
+/**
+ * Renders account settings component once mounted.
+ */
 export const AccountSettings = () => {
   const [isMounted, setIsMounted] = useState(false);
 

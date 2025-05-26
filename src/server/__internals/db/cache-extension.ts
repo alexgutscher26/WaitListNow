@@ -4,14 +4,29 @@ import superjson, { SuperJSONResult } from 'superjson';
 
 export type CacheArgs = { cache?: { id: string; ttl?: number } };
 
+/**
+ * Determines if the provided object is a SuperJSONResult.
+ *
+ * This function checks if the input `obj` is an object, not null, and contains both 'json' and 'meta' properties.
+ * It returns true if all conditions are met, otherwise false.
+ *
+ * @param obj - The object to be checked.
+ */
 function isSuperJSONResult(obj: any): obj is SuperJSONResult {
   return typeof obj === 'object' && obj !== null && 'json' in obj && 'meta' in obj;
 }
 
 /**
- * The Prisma extension to provide built-in caching with Upstash Redis
+ * Prisma extension to provide built-in caching with Upstash Redis.
+ *
+ * This extension enhances Prisma client methods by adding caching functionality using Redis.
+ * It intercepts `findFirst`, `findUnique`, `findMany`, `create`, `update`, and `delete` operations.
+ * If a cache is specified in the arguments, it checks for cached results before hitting the database.
+ * For write operations (`create`, `update`, `delete`), it invalidates the relevant cache entries.
+ *
+ * @param redis - An instance of Redis to be used for caching.
+ * @returns A Prisma extension with caching capabilities.
  */
-
 export const cacheExtension = ({ redis }: { redis: Redis }) => {
   return Prisma.defineExtension({
     name: 'prisma-extension-cache',

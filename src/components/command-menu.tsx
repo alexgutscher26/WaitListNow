@@ -29,6 +29,15 @@ const Command = React.forwardRef<
 Command.displayName = CommandPrimitive.displayName;
 
 // Enhanced CommandDialog with keyboard shortcuts and better UX
+/**
+ * CommandDialog component that wraps a dialog with command interface.
+ *
+ * This component manages keyboard shortcuts for opening and closing the dialog,
+ * as well as rendering the command interface with optional shortcut instructions.
+ * It uses React hooks to handle side effects, specifically adding and removing
+ * event listeners for keyboard events. The dialog's open state is controlled
+ * by props, and it passes down necessary props to its child components.
+ */
 const CommandDialog = ({
   children,
   open,
@@ -42,6 +51,13 @@ const CommandDialog = ({
 }) => {
   // Handle keyboard shortcuts
   React.useEffect(() => {
+    /**
+     * Handles keyboard events to manage a toggleable element's visibility.
+     *
+     * This function listens for keyboard events and performs actions based on the key pressed:
+     * - If 'k' is pressed with either the metaKey or ctrlKey, it toggles the open state of an element.
+     * - If 'Escape' is pressed and the element is currently open, it closes the element.
+     */
     const down = (e: KeyboardEvent) => {
       if (e.key === 'k' && (e.metaKey || e.ctrlKey)) {
         e.preventDefault();
@@ -263,6 +279,9 @@ const CommandItem = React.forwardRef<
 CommandItem.displayName = CommandPrimitive.Item.displayName;
 
 // Enhanced CommandShortcut with better styling
+/**
+ * Renders a styled span element with optional additional props and className.
+ */
 const CommandShortcut = ({ className, ...props }: React.HTMLAttributes<HTMLSpanElement>) => {
   return (
     <span

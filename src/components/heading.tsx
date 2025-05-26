@@ -5,6 +5,9 @@ interface HeadingProps extends HTMLAttributes<HTMLHeadingElement> {
   children?: ReactNode;
 }
 
+/**
+ * Renders a heading with custom styles and additional props.
+ */
 export const Heading = ({ children, className, ...props }: HeadingProps) => {
   return (
     <h1

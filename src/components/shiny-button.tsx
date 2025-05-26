@@ -7,6 +7,9 @@ import { AnchorHTMLAttributes } from 'react';
 
 interface ShinyButtonProps extends AnchorHTMLAttributes<HTMLAnchorElement> {}
 
+/**
+ * Renders a styled button component with an arrow icon and interactive effects.
+ */
 export const ShinyButton = ({ className, children, href, ...props }: ShinyButtonProps) => {
   return (
     <Link

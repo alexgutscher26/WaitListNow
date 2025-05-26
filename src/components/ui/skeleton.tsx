@@ -27,6 +27,9 @@ export interface SkeletonProps
   extends React.HTMLAttributes<HTMLDivElement>,
     VariantProps<typeof skeletonVariants> {}
 
+/**
+ * Renders a skeleton component with specified styling and properties.
+ */
 function Skeleton({ className, variant, size, ...props }: SkeletonProps) {
   return (
     <div

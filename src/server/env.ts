@@ -40,8 +40,13 @@ const envSchema = z.object({
 export type Env = z.infer<typeof envSchema>;
 
 /**
- * Validates and returns the environment variables
- * @throws {Error} If any required environment variables are missing or invalid
+ * Validates and returns the environment variables.
+ *
+ * This function attempts to parse the environment variables using `envSchema`. If any required environment
+ * variables are missing or invalid, it throws an error with detailed information about the missing or invalid
+ * variables. If there is any other failure during parsing, a generic error is thrown.
+ *
+ * @throws {Error} If any required environment variables are missing or invalid, or if parsing fails for other reasons.
  */
 export function getEnv(): Env {
   try {

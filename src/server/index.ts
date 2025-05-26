@@ -4,7 +4,19 @@ import { handle } from 'hono/vercel';
 import { authRouter } from './routers/auth-router';
 import { paymentRouter } from './routers/payment-router';
 
-const app = new Hono().basePath('/api').use(cors());
+// Configure CORS with explicit origins and secure defaults
+const corsOptions = {
+  origin: [
+    'http://localhost:3000', // Local development
+    'https://your-production-domain.com', // Replace with your production domain
+  ],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true,
+  maxAge: 86400, // 24 hours
+};
+
+const app = new Hono().basePath('/api').use(cors(corsOptions));
 
 /**
  * This is the primary router for your server.

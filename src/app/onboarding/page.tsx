@@ -1,7 +1,20 @@
-"use client"
+'use client';
 
-import { CheckCircle2, ArrowRight, Link as LinkIcon, Users, Settings, Bell, Zap, Copy, Check, AlertCircle, Eye, EyeOff } from "lucide-react"
-import { useState, useEffect } from "react"
+import {
+  CheckCircle2,
+  ArrowRight,
+  Link as LinkIcon,
+  Users,
+  Settings,
+  Bell,
+  Zap,
+  Copy,
+  Check,
+  AlertCircle,
+  Eye,
+  EyeOff,
+} from 'lucide-react';
+import { useState, useEffect } from 'react';
 
 interface FormData {
   waitlistName: string;
@@ -26,9 +39,9 @@ interface ContentProps {
   setCopied?: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
-const onboardingSteps = [  
+const onboardingSteps = [
   {
-    title: "Welcome to WaitlistNow",
+    title: 'Welcome to WaitlistNow',
     description: "Let's get your waitlist and referral system up and running in minutes.",
     icon: <Zap className="h-8 w-8 text-blue-500" />,
     content: (
@@ -43,11 +56,26 @@ const onboardingSteps = [
         </div>
         <div className="grid gap-4">
           {[
-            { icon: "📝", title: "Beautiful Forms", desc: "Create stunning, conversion-optimized waitlist forms" },
-            { icon: "🚀", title: "Viral Growth", desc: "Built-in referral system that grows your list automatically" },
-            { icon: "📊", title: "Analytics", desc: "Track signups, referrals, and conversion metrics" }
+            {
+              icon: '📝',
+              title: 'Beautiful Forms',
+              desc: 'Create stunning, conversion-optimized waitlist forms',
+            },
+            {
+              icon: '🚀',
+              title: 'Viral Growth',
+              desc: 'Built-in referral system that grows your list automatically',
+            },
+            {
+              icon: '📊',
+              title: 'Analytics',
+              desc: 'Track signups, referrals, and conversion metrics',
+            },
           ].map((feature, index) => (
-            <div key={index} className="flex items-start gap-3 rounded-lg border border-gray-100 p-4 transition-all hover:border-blue-200 hover:bg-blue-50/50">
+            <div
+              key={index}
+              className="flex items-start gap-3 rounded-lg border border-gray-100 p-4 transition-all hover:border-blue-200 hover:bg-blue-50/50"
+            >
               <span className="text-2xl">{feature.icon}</span>
               <div>
                 <h4 className="font-semibold text-gray-900">{feature.title}</h4>
@@ -60,8 +88,8 @@ const onboardingSteps = [
     ),
   },
   {
-    title: "Set Up Your Waitlist",
-    description: "Customize your waitlist to match your brand and goals.",
+    title: 'Set Up Your Waitlist',
+    description: 'Customize your waitlist to match your brand and goals.',
     icon: <Settings className="h-8 w-8 text-blue-500" />,
     content: ({ formData, setFormData, errors = {} }: ContentProps) => (
       <div className="space-y-6">
@@ -71,13 +99,13 @@ const onboardingSteps = [
             <input
               type="text"
               className={`w-full rounded-lg border-2 p-3 transition-colors focus:outline-none focus:ring-0 ${
-                errors.waitlistName 
-                  ? 'border-red-300 focus:border-red-500' 
+                errors.waitlistName
+                  ? 'border-red-300 focus:border-red-500'
                   : 'border-gray-200 focus:border-blue-500'
               }`}
               placeholder="e.g., Get Early Access to SuperApp"
               value={formData.waitlistName}
-              onChange={(e) => setFormData(prev => ({ ...prev, waitlistName: e.target.value }))}
+              onChange={(e) => setFormData((prev) => ({ ...prev, waitlistName: e.target.value }))}
             />
             {errors.waitlistName && (
               <p className="flex items-center gap-1 text-sm text-red-600">
@@ -86,19 +114,19 @@ const onboardingSteps = [
               </p>
             )}
           </div>
-          
+
           <div className="space-y-2">
             <label className="text-sm font-semibold text-gray-700">Website URL *</label>
             <input
               type="url"
               className={`w-full rounded-lg border-2 p-3 transition-colors focus:outline-none focus:ring-0 ${
-                errors.websiteUrl 
-                  ? 'border-red-300 focus:border-red-500' 
+                errors.websiteUrl
+                  ? 'border-red-300 focus:border-red-500'
                   : 'border-gray-200 focus:border-blue-500'
               }`}
               placeholder="https://yourapp.com"
               value={formData.websiteUrl}
-              onChange={(e) => setFormData(prev => ({ ...prev, websiteUrl: e.target.value }))}
+              onChange={(e) => setFormData((prev) => ({ ...prev, websiteUrl: e.target.value }))}
             />
             {errors.websiteUrl && (
               <p className="flex items-center gap-1 text-sm text-red-600">
@@ -114,7 +142,7 @@ const onboardingSteps = [
               type="date"
               className="w-full rounded-lg border-2 border-gray-200 p-3 transition-colors focus:border-blue-500 focus:outline-none focus:ring-0"
               value={formData.launchDate}
-              onChange={(e) => setFormData(prev => ({ ...prev, launchDate: e.target.value }))}
+              onChange={(e) => setFormData((prev) => ({ ...prev, launchDate: e.target.value }))}
               min={new Date().toISOString().split('T')[0]}
             />
           </div>
@@ -127,7 +155,9 @@ const onboardingSteps = [
             </div>
             <div>
               <h4 className="font-semibold text-blue-900">Pro Tip</h4>
-              <p className="text-sm text-blue-700">A clear, compelling waitlist name can increase signups by up to 40%!</p>
+              <p className="text-sm text-blue-700">
+                A clear, compelling waitlist name can increase signups by up to 40%!
+              </p>
             </div>
           </div>
         </div>
@@ -135,8 +165,8 @@ const onboardingSteps = [
     ),
   },
   {
-    title: "Configure Referral System",
-    description: "Turn your waitlist into a viral growth engine.",
+    title: 'Configure Referral System',
+    description: 'Turn your waitlist into a viral growth engine.',
     icon: <Users className="h-8 w-8 text-blue-500" />,
     content: ({ formData, setFormData, errors = {} }: ContentProps) => (
       <div className="space-y-6">
@@ -149,11 +179,13 @@ const onboardingSteps = [
               </p>
             </div>
             <label className="relative inline-flex cursor-pointer items-center">
-              <input 
-                type="checkbox" 
-                className="peer sr-only" 
+              <input
+                type="checkbox"
+                className="peer sr-only"
                 checked={formData.referralEnabled}
-                onChange={(e) => setFormData(prev => ({ ...prev, referralEnabled: e.target.checked }))}
+                onChange={(e) =>
+                  setFormData((prev) => ({ ...prev, referralEnabled: e.target.checked }))
+                }
               />
               <div className="peer h-6 w-11 rounded-full bg-gray-200 transition-all after:absolute after:left-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-blue-500 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-500/20"></div>
             </label>
@@ -165,10 +197,12 @@ const onboardingSteps = [
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
                 <label className="text-sm font-semibold text-gray-700">Positions to Skip</label>
-                <select 
+                <select
                   className="w-full rounded-lg border-2 border-gray-200 p-3 transition-colors focus:border-blue-500 focus:outline-none focus:ring-0"
                   value={formData.referralReward}
-                  onChange={(e) => setFormData(prev => ({ ...prev, referralReward: e.target.value }))}
+                  onChange={(e) =>
+                    setFormData((prev) => ({ ...prev, referralReward: e.target.value }))
+                  }
                 >
                   <option value="1">1 position</option>
                   <option value="2">2 positions</option>
@@ -183,14 +217,16 @@ const onboardingSteps = [
                 </div>
               </div>
             </div>
-            
+
             <div className="rounded-lg bg-green-50 border border-green-200 p-4">
               <div className="flex items-start gap-3">
                 <Users className="h-5 w-5 text-green-600 mt-0.5" />
                 <div>
                   <h4 className="font-semibold text-green-900">Referral Preview</h4>
                   <p className="text-sm text-green-700">
-                    "Invite friends and skip {formData.referralReward} position{formData.referralReward !== '1' ? 's' : ''} in line for each successful referral!"
+                    "Invite friends and skip {formData.referralReward} position
+                    {formData.referralReward !== '1' ? 's' : ''} in line for each successful
+                    referral!"
                   </p>
                 </div>
               </div>
@@ -201,12 +237,18 @@ const onboardingSteps = [
     ),
   },
   {
-    title: "Get Your Embed Code",
-    description: "Add your waitlist to your website with simple copy-paste.",
+    title: 'Get Your Embed Code',
+    description: 'Add your waitlist to your website with simple copy-paste.',
     icon: <LinkIcon className="h-8 w-8 text-blue-500" />,
-    content: ({ showPreview = false, setShowPreview = () => {}, copied = null, setCopied = () => {}, errors = {} }: ContentProps) => {
-      const waitlistId = "wl_" + Math.random().toString(36).substr(2, 9);
-      
+    content: ({
+      showPreview = false,
+      setShowPreview = () => {},
+      copied = null,
+      setCopied = () => {},
+      errors = {},
+    }: ContentProps) => {
+      const waitlistId = 'wl_' + Math.random().toString(36).substr(2, 9);
+
       const handleCopy = (text: string, type: 'script' | 'div') => {
         navigator.clipboard.writeText(text);
         setCopied(type);
@@ -232,8 +274,14 @@ const onboardingSteps = [
                 <div className="inline-block rounded-lg bg-white border border-gray-200 p-6 shadow-sm">
                   <h4 className="font-semibold text-gray-900 mb-2">Join the Waitlist</h4>
                   <div className="flex gap-2 mb-3">
-                    <input type="email" placeholder="Enter your email" className="flex-1 px-3 py-2 border border-gray-300 rounded-md text-sm" />
-                    <button className="px-4 py-2 bg-blue-500 text-white rounded-md text-sm font-medium hover:bg-blue-600">Join</button>
+                    <input
+                      type="email"
+                      placeholder="Enter your email"
+                      className="flex-1 px-3 py-2 border border-gray-300 rounded-md text-sm"
+                    />
+                    <button className="px-4 py-2 bg-blue-500 text-white rounded-md text-sm font-medium hover:bg-blue-600">
+                      Join
+                    </button>
                   </div>
                   <p className="text-xs text-gray-500">✨ Get early access + exclusive perks</p>
                 </div>
@@ -241,20 +289,31 @@ const onboardingSteps = [
               </div>
             </div>
           )}
-          
+
           <div className="space-y-4">
             <div className="rounded-lg bg-gray-50 p-4">
               <div className="flex items-center justify-between mb-2">
-                <h4 className="font-semibold text-gray-900">1. Add to your website's &lt;head&gt;</h4>
-                <button 
-                  onClick={() => handleCopy(`<script src="${window.location.origin}/embed.js" data-waitlist="${waitlistId}" async></script>`, 'script')}
+                <h4 className="font-semibold text-gray-900">
+                  1. Add to your website's &lt;head&gt;
+                </h4>
+                <button
+                  onClick={() =>
+                    handleCopy(
+                      `<script src="${window.location.origin}/embed.js" data-waitlist="${waitlistId}" async></script>`,
+                      'script',
+                    )
+                  }
                   className={`flex items-center gap-1 px-3 py-1 rounded-md text-sm font-medium transition-colors ${
-                    copied === 'script' 
-                      ? 'bg-green-100 text-green-700' 
+                    copied === 'script'
+                      ? 'bg-green-100 text-green-700'
                       : 'bg-gray-200 hover:bg-gray-300 text-gray-700'
                   }`}
                 >
-                  {copied === 'script' ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
+                  {copied === 'script' ? (
+                    <Check className="h-3 w-3" />
+                  ) : (
+                    <Copy className="h-3 w-3" />
+                  )}
                   {copied === 'script' ? 'Copied!' : 'Copy'}
                 </button>
               </div>
@@ -264,15 +323,15 @@ const onboardingSteps = [
                 </code>
               </pre>
             </div>
-            
+
             <div className="rounded-lg bg-gray-50 p-4">
               <div className="flex items-center justify-between mb-2">
                 <h4 className="font-semibold text-gray-900">2. Add where you want the form</h4>
-                <button 
+                <button
                   onClick={() => handleCopy('<div data-waitlist-embed></div>', 'div')}
                   className={`flex items-center gap-1 px-3 py-1 rounded-md text-sm font-medium transition-colors ${
-                    copied === 'div' 
-                      ? 'bg-green-100 text-green-700' 
+                    copied === 'div'
+                      ? 'bg-green-100 text-green-700'
                       : 'bg-gray-200 hover:bg-gray-300 text-gray-700'
                   }`}
                 >
@@ -281,90 +340,90 @@ const onboardingSteps = [
                 </button>
               </div>
               <pre className="overflow-x-auto rounded-md bg-gray-900 p-3 text-sm">
-                <code className="text-blue-400">
-                  {`<div data-waitlist-embed></div>`}
-                </code>
+                <code className="text-blue-400">{`<div data-waitlist-embed></div>`}</code>
               </pre>
             </div>
           </div>
-          
+
           <div className="flex items-center gap-3 p-4 bg-blue-50 rounded-lg border border-blue-200">
             <Bell className="h-5 w-5 text-blue-600" />
             <div>
               <p className="text-sm font-medium text-blue-900">All set!</p>
-              <p className="text-sm text-blue-700">Your waitlist is ready to start collecting signups immediately.</p>
+              <p className="text-sm text-blue-700">
+                Your waitlist is ready to start collecting signups immediately.
+              </p>
             </div>
           </div>
         </div>
       );
     },
   },
-]
+];
 
 export default function ImprovedOnboarding() {
-  const [currentStep, setCurrentStep] = useState(0)
-  const [isLoading, setIsLoading] = useState(false)
+  const [currentStep, setCurrentStep] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState<FormData>({
     waitlistName: '',
     websiteUrl: '',
     launchDate: '',
     referralEnabled: true,
-    referralReward: '2'
-  })
-  const [errors, setErrors] = useState<FormErrors>({})
-  const [showPreview, setShowPreview] = useState(false)
-  const [copied, setCopied] = useState<string | null>(null)
+    referralReward: '2',
+  });
+  const [errors, setErrors] = useState<FormErrors>({});
+  const [showPreview, setShowPreview] = useState(false);
+  const [copied, setCopied] = useState<string | null>(null);
 
-  const currentStepData = onboardingSteps[currentStep]
-  const progress = ((currentStep + 1) / onboardingSteps.length) * 100
-  const [canProceed, setCanProceed] = useState(true)
+  const currentStepData = onboardingSteps[currentStep];
+  const progress = ((currentStep + 1) / onboardingSteps.length) * 100;
+  const [canProceed, setCanProceed] = useState(true);
 
   useEffect(() => {
     if (currentStep === 0 || currentStep >= 2) {
-      setCanProceed(true)
-      return
+      setCanProceed(true);
+      return;
     }
-    
-    const newErrors: FormErrors = {}
+
+    const newErrors: FormErrors = {};
     if (currentStep === 1) {
       if (!formData.waitlistName.trim()) {
-        newErrors.waitlistName = 'Waitlist name is required'
+        newErrors.waitlistName = 'Waitlist name is required';
       } else if (formData.waitlistName.length < 3) {
-        newErrors.waitlistName = 'Waitlist name must be at least 3 characters'
+        newErrors.waitlistName = 'Waitlist name must be at least 3 characters';
       }
-      
+
       if (!formData.websiteUrl.trim()) {
-        newErrors.websiteUrl = 'Website URL is required'
+        newErrors.websiteUrl = 'Website URL is required';
       } else if (!/^https?:\/\/.+/.test(formData.websiteUrl)) {
-        newErrors.websiteUrl = 'Please enter a valid URL (starting with http:// or https://)'
+        newErrors.websiteUrl = 'Please enter a valid URL (starting with http:// or https://)';
       }
     }
-    
-    setErrors(newErrors)
-    setCanProceed(Object.keys(newErrors).length === 0)
-  }, [formData, currentStep])
+
+    setErrors(newErrors);
+    setCanProceed(Object.keys(newErrors).length === 0);
+  }, [formData, currentStep]);
 
   const handleNext = async () => {
     if (currentStep === onboardingSteps.length - 1) {
-      setIsLoading(true)
+      setIsLoading(true);
       try {
         // Simulate API call
-        await new Promise(resolve => setTimeout(resolve, 1500))
-        alert('🎉 Onboarding completed! Redirecting to dashboard...')
+        await new Promise((resolve) => setTimeout(resolve, 1500));
+        alert('🎉 Onboarding completed! Redirecting to dashboard...');
       } catch (error) {
-        console.error("Error completing onboarding:", error)
+        console.error('Error completing onboarding:', error);
       } finally {
-        setIsLoading(false)
+        setIsLoading(false);
       }
     } else {
-      setCurrentStep(prev => prev + 1)
+      setCurrentStep((prev) => prev + 1);
     }
-  }
+  };
 
   const handleBack = () => {
-    setCurrentStep(prev => Math.max(0, prev - 1))
-    setErrors({})
-  }
+    setCurrentStep((prev) => Math.max(0, prev - 1));
+    setErrors({});
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 p-4 flex items-center justify-center">
@@ -373,24 +432,31 @@ export default function ImprovedOnboarding() {
         <div className="mb-8">
           <div className="flex items-center justify-between mb-4">
             {onboardingSteps.map((_, index) => (
-              <div key={index} className="flex items-center">
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold transition-all ${
-                  index <= currentStep 
-                    ? 'bg-blue-500 text-white' 
-                    : 'bg-gray-200 text-gray-500'
-                }`}>
+              <div
+                key={index}
+                className="flex items-center"
+              >
+                <div
+                  className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold transition-all ${
+                    index <= currentStep ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-500'
+                  }`}
+                >
                   {index < currentStep ? <Check className="h-4 w-4" /> : index + 1}
                 </div>
                 {index < onboardingSteps.length - 1 && (
-                  <div className={`h-1 w-16 mx-2 rounded-full transition-all ${
-                    index < currentStep ? 'bg-blue-500' : 'bg-gray-200'
-                  }`} />
+                  <div
+                    className={`h-1 w-16 mx-2 rounded-full transition-all ${
+                      index < currentStep ? 'bg-blue-500' : 'bg-gray-200'
+                    }`}
+                  />
                 )}
               </div>
             ))}
           </div>
           <div className="flex justify-between text-sm text-gray-600">
-            <span>Step {currentStep + 1} of {onboardingSteps.length}</span>
+            <span>
+              Step {currentStep + 1} of {onboardingSteps.length}
+            </span>
             <span>{Math.round(progress)}% complete</span>
           </div>
         </div>
@@ -405,23 +471,22 @@ export default function ImprovedOnboarding() {
               <h1 className="text-3xl font-bold text-gray-900 mb-2">{currentStepData.title}</h1>
               <p className="text-gray-600 text-lg">{currentStepData.description}</p>
             </div>
-            
+
             <div className="min-h-[400px]">
-              {typeof currentStepData.content === 'function' 
-                ? currentStepData.content({ 
-                    formData, 
-                    setFormData, 
-                    errors, 
-                    showPreview, 
-                    setShowPreview, 
-                    copied, 
-                    setCopied 
+              {typeof currentStepData.content === 'function'
+                ? currentStepData.content({
+                    formData,
+                    setFormData,
+                    errors,
+                    showPreview,
+                    setShowPreview,
+                    copied,
+                    setCopied,
                   })
-                : currentStepData.content
-              }
+                : currentStepData.content}
             </div>
           </div>
-          
+
           <div className="bg-gray-50 px-8 py-6 flex justify-between items-center">
             <button
               onClick={handleBack}
@@ -430,9 +495,9 @@ export default function ImprovedOnboarding() {
             >
               Back
             </button>
-            
-            <button 
-              onClick={handleNext} 
+
+            <button
+              onClick={handleNext}
               disabled={isLoading || (currentStep === 1 && !canProceed)}
               className="px-6 py-2 bg-blue-500 text-white rounded-lg font-medium hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
             >
@@ -442,7 +507,7 @@ export default function ImprovedOnboarding() {
                   Setting up...
                 </>
               ) : currentStep === onboardingSteps.length - 1 ? (
-                "Complete Setup"
+                'Complete Setup'
               ) : (
                 <>
                   Next <ArrowRight className="h-4 w-4" />
@@ -453,5 +518,5 @@ export default function ImprovedOnboarding() {
         </div>
       </div>
     </div>
-  )
+  );
 }

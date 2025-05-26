@@ -20,7 +20,7 @@ export default function NotFound() {
             <span className="text-6xl animate-bounce">🚀</span>
           </div>
         </div>
-        
+
         <div className="flex items-center justify-center gap-2 mb-4">
           <Sparkles className="w-5 h-5 text-gray-300 animate-pulse" />
           <h1 className="text-4xl font-bold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
@@ -28,18 +28,17 @@ export default function NotFound() {
           </h1>
           <Sparkles className="w-5 h-5 text-gray-300 animate-pulse delay-300" />
         </div>
-        
-        <h2 className="text-2xl font-semibold text-white mb-3">
-          Oops! Page Not Found
-        </h2>
-        
+
+        <h2 className="text-2xl font-semibold text-white mb-3">Oops! Page Not Found</h2>
+
         <p className="text-purple-200 mb-8 leading-relaxed">
-          Looks like this page got lost in space! While you're here, why not check out our amazing waitlist community?
+          Looks like this page got lost in space! While you're here, why not check out our amazing
+          waitlist community?
         </p>
-        
+
         <div className="space-y-4">
-          <Link 
-            href="/" 
+          <Link
+            href="/"
             className="inline-flex items-center justify-center gap-3 w-full px-8 py-4 bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-semibold rounded-xl hover:from-purple-700 hover:to-indigo-700 transition-all duration-300 transform hover:scale-105 hover:shadow-lg group"
           >
             <Home className="w-5 h-5 group-hover:rotate-12 transition-transform" />

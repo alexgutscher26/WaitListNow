@@ -3,9 +3,7 @@ import { jest } from '@jest/globals';
 import React from 'react';
 
 // Mock next/head
-const MockHead = ({ children }: { children: React.ReactNode }) => (
-  <>{children}</>
-);
+const MockHead = ({ children }: { children: React.ReactNode }) => <>{children}</>;
 MockHead.displayName = 'Head';
 
 jest.mock('next/head', () => ({

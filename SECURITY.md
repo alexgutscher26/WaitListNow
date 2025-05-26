@@ -6,12 +6,12 @@ At WaitListNow, we take security seriously. This document outlines our security 
 
 We currently provide security updates for the following versions of WaitListNow:
 
-| Version | Supported          | Notes                                    |
-| ------- | ------------------ | ---------------------------------------- |
-| 1.x.x   | :white_check_mark: | Current stable release                   |
-| 0.9.x   | :white_check_mark: | Beta release with security support       |
-| 0.8.x   | :x:                | No longer supported                      |
-| < 0.8   | :x:                | No longer supported                      |
+| Version | Supported          | Notes                              |
+| ------- | ------------------ | ---------------------------------- |
+| 1.x.x   | :white_check_mark: | Current stable release             |
+| 0.9.x   | :white_check_mark: | Beta release with security support |
+| 0.8.x   | :x:                | No longer supported                |
+| < 0.8   | :x:                | No longer supported                |
 
 We recommend all users to upgrade to the latest stable version to ensure you have the most up-to-date security features and patches.
 
@@ -20,18 +20,21 @@ We recommend all users to upgrade to the latest stable version to ensure you hav
 WaitListNow implements several security measures to protect your data:
 
 ### Authentication & Authorization
+
 - Secure authentication via [Clerk](https://clerk.com/)
 - Role-based access control for dashboard and API access
 - JWT token validation for all API requests
 - CSRF protection for form submissions
 
 ### Data Protection
+
 - All data encrypted in transit via HTTPS/TLS
 - Sensitive data encrypted at rest
 - Database access restricted by IP and strong authentication
 - Regular security audits and penetration testing
 
 ### API Security
+
 - Rate limiting to prevent abuse
 - Input validation and sanitization
 - Secure headers implementation
@@ -42,11 +45,13 @@ WaitListNow implements several security measures to protect your data:
 To ensure maximum security when using WaitListNow:
 
 1. **Keep your credentials secure**
+
    - Use strong, unique passwords
    - Enable two-factor authentication
    - Rotate API keys regularly
 
 2. **Implement proper access controls**
+
    - Only grant necessary permissions to team members
    - Regularly audit user access
    - Remove access for former team members promptly
@@ -65,6 +70,7 @@ We appreciate the work of security researchers and the community in helping us m
 If you discover a security vulnerability in WaitListNow, please report it by emailing [security@waitlistnow.com](mailto:security@waitlistnow.com).
 
 Please include the following information:
+
 - A clear description of the vulnerability
 - Steps to reproduce the issue
 - Potential impact of the vulnerability
@@ -88,6 +94,7 @@ After submitting a report:
 ### Responsible Disclosure
 
 We request that you:
+
 - Allow us reasonable time to investigate and address the vulnerability before any public disclosure
 - Make a good faith effort to avoid privacy violations, data destruction, or service interruption during your research
 - Do not access or modify data of other users without explicit permission

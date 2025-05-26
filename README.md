@@ -10,6 +10,7 @@ WaitListNow is a comprehensive SaaS platform designed to help businesses create,
 ## ✨ Features
 
 ### Core Functionality
+
 - 🚀 **Complete Waitlist Management**: Create and manage multiple waitlists for different products or services
 - 📊 **Real-time Analytics**: Track signups, conversion rates, and user engagement metrics
 - 🔔 **Notification System**: Automated email notifications for waitlist updates and position changes
@@ -17,12 +18,14 @@ WaitListNow is a comprehensive SaaS platform designed to help businesses create,
 - 🎯 **Embeddable Widgets**: Easily integrate waitlist forms into any website with customizable widgets
 
 ### User Experience
+
 - 🎨 **Beautiful UI/UX**: Conversion-focused design with modern aesthetics
 - 📱 **Fully Responsive**: Optimized for all devices - mobile, tablet, and desktop
 - ⚡ **High Performance**: Fast loading times and smooth interactions
 - 🌐 **White-labeling Options**: Customize the look and feel to match your brand (Premium feature)
 
 ### Developer Experience
+
 - 🛠️ **TypeScript Integration**: Full type safety throughout the codebase
 - 🔄 **Real-time Updates**: Instant data synchronization with Prisma and PostgreSQL
 - 📈 **Analytics Integration**: Easy connection with popular analytics platforms
@@ -62,8 +65,9 @@ WaitListNow is a comprehensive SaaS platform designed to help businesses create,
    ```bash
    cp .env.example .env.local
    ```
-   
+
    Edit `.env.local` and add your credentials:
+
    - Database connection string
    - Clerk API keys
    - Stripe API keys (if using payments)

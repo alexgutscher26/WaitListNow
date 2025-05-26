@@ -11,17 +11,22 @@ datasource db {
   extensions = [pgcrypto, pg_trgm]
 }
 
+enum UserRole {
+  USER
+  ADMIN
+}
+
 model User {
   id              String          @id @default(cuid())
   externalId      String?         @unique
   plan            Plan            @default(FREE)
   email           String          @unique
   apiKey          String          @unique @default(cuid())
+  role            UserRole        @default(USER)
   createdAt       DateTime        @default(now())
   updatedAt       DateTime        @updatedAt
   waitlists       Waitlist[]
   subscribers     Subscriber[]
-
 
   @@index([email, apiKey])
 }

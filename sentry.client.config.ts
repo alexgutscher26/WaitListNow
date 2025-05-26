@@ -1,5 +1,5 @@
-import * as Sentry from "@sentry/nextjs";
-import { Replay } from "@sentry/replay";
+import * as Sentry from '@sentry/nextjs';
+import { Replay } from '@sentry/replay';
 
 // Only initialize Sentry in the browser
 if (typeof window !== 'undefined') {
@@ -25,9 +25,6 @@ if (typeof window !== 'undefined') {
       // BrowserTracing is automatically included in @sentry/nextjs
     ],
     // Configure distributed tracing
-    tracePropagationTargets: [
-      'localhost',
-      /^https:\/\/api\.yourdomain\.com\/api/
-    ],
+    tracePropagationTargets: ['localhost', /^https:\/\/api\.yourdomain\.com\/api/],
   });
 }

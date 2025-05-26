@@ -1,9 +1,9 @@
-import { DashboardPage } from "@/components/dashboard-page"
-import { currentUser } from "@clerk/nextjs/server"
-import { redirect } from "next/navigation"
-import { Button } from "@/components/ui/button"
-import { Check, CheckCircle, XCircle, Star, Zap, Users, Shield, Crown } from "lucide-react"
-import { db } from "@/lib/db"
+import { DashboardPage } from '@/components/dashboard-page';
+import { currentUser } from '@clerk/nextjs/server';
+import { redirect } from 'next/navigation';
+import { Button } from '@/components/ui/button';
+import { Check, CheckCircle, XCircle, Star, Zap, Users, Shield, Crown } from 'lucide-react';
+import { db } from '@/lib/db';
 
 const pricingPlans = [
   {
@@ -34,7 +34,7 @@ const pricingPlans = [
       abTesting: false,
       teamMembers: '1',
       support: '❌',
-    }
+    },
   },
   {
     name: 'Starter',
@@ -65,7 +65,7 @@ const pricingPlans = [
       abTesting: false,
       teamMembers: '1',
       support: 'Email',
-    }
+    },
   },
   {
     name: 'Growth',
@@ -95,7 +95,7 @@ const pricingPlans = [
       abTesting: false,
       teamMembers: '3',
       support: 'Email',
-    }
+    },
   },
   {
     name: 'Pro',
@@ -125,9 +125,9 @@ const pricingPlans = [
       abTesting: true,
       teamMembers: '10+',
       support: 'Chat & Email',
-    }
+    },
   },
-]
+];
 
 const features = [
   { key: 'projects', name: 'Projects', category: 'Core' },
@@ -140,64 +140,74 @@ const features = [
   { key: 'csvExport', name: 'CSV Export', category: 'Analytics' },
   { key: 'webhooks', name: 'Webhooks', category: 'Integrations' },
   { key: 'emailNotifications', name: 'Email Notifications', category: 'Integrations' },
-  { key: 'emailIntegrations', name: 'Email Integrations (Mailchimp, ConvertKit)', category: 'Integrations' },
-  { key: 'rewardMilestones', name: 'Reward Milestones (e.g., Refer 5 = gift)', category: 'Advanced' },
+  {
+    key: 'emailIntegrations',
+    name: 'Email Integrations (Mailchimp, ConvertKit)',
+    category: 'Integrations',
+  },
+  {
+    key: 'rewardMilestones',
+    name: 'Reward Milestones (e.g., Refer 5 = gift)',
+    category: 'Advanced',
+  },
   { key: 'leaderboard', name: 'Public Leaderboard', category: 'Advanced' },
   { key: 'apiAccess', name: 'API Access', category: 'Advanced' },
   { key: 'abTesting', name: 'A/B Test Widget Variants', category: 'Advanced' },
   { key: 'teamMembers', name: 'Team Members (admin access)', category: 'Team' },
   { key: 'support', name: 'Priority Support', category: 'Support' },
-]
+];
 
 const addOns = [
   {
-    title: "Extra 10,000 signups",
-    description: "Additional capacity for your waitlist",
-    price: "+$10/month",
-    type: "recurring"
+    title: 'Extra 10,000 signups',
+    description: 'Additional capacity for your waitlist',
+    price: '+$10/month',
+    type: 'recurring',
   },
   {
-    title: "Remove \"Powered by WaitlistNow\"",
-    description: "White-label your waitlist completely",
-    price: "+$5/month",
-    type: "recurring"
+    title: 'Remove "Powered by WaitlistNow"',
+    description: 'White-label your waitlist completely',
+    price: '+$5/month',
+    type: 'recurring',
   },
   {
-    title: "One-time export of all user data",
-    description: "Get a complete backup of your waitlist",
-    price: "$10",
-    type: "one-time"
-  }
-]
+    title: 'One-time export of all user data',
+    description: 'Get a complete backup of your waitlist',
+    price: '$10',
+    type: 'one-time',
+  },
+];
 
 const testimonials = [
   {
-    quote: "WaitlistNow helped us build excitement for our launch and collect 10,000+ signups in just 2 weeks.",
-    author: "Sarah Chen",
-    role: "Founder, TechStart",
-    avatar: "SC"
+    quote:
+      'WaitlistNow helped us build excitement for our launch and collect 10,000+ signups in just 2 weeks.',
+    author: 'Sarah Chen',
+    role: 'Founder, TechStart',
+    avatar: 'SC',
   },
   {
-    quote: "The referral system increased our signup rate by 300%. Amazing tool for viral marketing.",
-    author: "Mike Rodriguez",
-    role: "Marketing Director, GrowthCo",
-    avatar: "MR"
-  }
-]
+    quote:
+      'The referral system increased our signup rate by 300%. Amazing tool for viral marketing.',
+    author: 'Mike Rodriguez',
+    role: 'Marketing Director, GrowthCo',
+    avatar: 'MR',
+  },
+];
 
 const Page = async () => {
-  const auth = await currentUser()
+  const auth = await currentUser();
 
   if (!auth) {
-    redirect("/sign-in")
+    redirect('/sign-in');
   }
 
   const user = await db.user.findUnique({
     where: { externalId: auth.id },
-  })
+  });
 
   if (!user) {
-    redirect("/sign-in")
+    redirect('/sign-in');
   }
 
   return (
@@ -213,8 +223,8 @@ const Page = async () => {
             Simple, transparent pricing
           </h1>
           <p className="mt-6 text-xl text-muted-foreground max-w-2xl mx-auto">
-            Choose the perfect plan for your needs. Start free, scale as you grow. 
-            No hidden fees, cancel anytime.
+            Choose the perfect plan for your needs. Start free, scale as you grow. No hidden fees,
+            cancel anytime.
           </p>
           <div className="mt-6 flex items-center justify-center gap-6 text-sm text-muted-foreground">
             <div className="flex items-center gap-2">
@@ -235,9 +245,9 @@ const Page = async () => {
         {/* Pricing Cards */}
         <div className="grid lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
           {pricingPlans.map((plan) => {
-            const IconComponent = plan.icon
+            const IconComponent = plan.icon;
             return (
-              <div 
+              <div
                 key={plan.name}
                 className={`relative rounded-2xl border bg-card text-card-foreground shadow-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-1 ${
                   plan.featured ? 'ring-2 ring-primary scale-105 lg:scale-110' : ''
@@ -245,19 +255,21 @@ const Page = async () => {
               >
                 {plan.badge && (
                   <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 z-10">
-                    <span className={`bg-gradient-to-r ${plan.color} text-white text-sm font-semibold px-4 py-2 rounded-full shadow-lg`}>
+                    <span
+                      className={`bg-gradient-to-r ${plan.color} text-white text-sm font-semibold px-4 py-2 rounded-full shadow-lg`}
+                    >
                       {plan.badge}
                     </span>
                   </div>
                 )}
-                
+
                 <div className="p-8">
                   <div className={`inline-flex p-3 rounded-xl bg-gradient-to-r ${plan.color} mb-6`}>
                     <IconComponent className="h-6 w-6 text-white" />
                   </div>
-                  
+
                   <h3 className="text-xl font-bold">{plan.name}</h3>
-                  
+
                   <div className="mt-4 flex items-baseline gap-2">
                     <span className="text-4xl font-bold">{plan.price.split('/')[0]}</span>
                     <span className="text-muted-foreground">/month</span>
@@ -267,13 +279,13 @@ const Page = async () => {
                       </span>
                     )}
                   </div>
-                  
+
                   <p className="mt-3 text-muted-foreground">{plan.description}</p>
-                  
-                  <Button 
+
+                  <Button
                     className={`w-full mt-8 h-12 font-semibold ${
-                      plan.featured 
-                        ? `bg-gradient-to-r ${plan.color} hover:opacity-90 text-white border-0` 
+                      plan.featured
+                        ? `bg-gradient-to-r ${plan.color} hover:opacity-90 text-white border-0`
                         : ''
                     }`}
                     variant={plan.buttonVariant as any}
@@ -282,12 +294,16 @@ const Page = async () => {
                     {plan.buttonText}
                   </Button>
                 </div>
-                
+
                 <div className="border-t bg-muted/30 p-8 pt-6 rounded-b-2xl">
                   <ul className="space-y-4">
                     {features.slice(0, 6).map((feature) => (
-                      <li key={feature.key} className="flex items-start gap-3 text-sm">
-                        {typeof plan.features[feature.key as keyof typeof plan.features] === 'boolean' ? (
+                      <li
+                        key={feature.key}
+                        className="flex items-start gap-3 text-sm"
+                      >
+                        {typeof plan.features[feature.key as keyof typeof plan.features] ===
+                        'boolean' ? (
                           plan.features[feature.key as keyof typeof plan.features] ? (
                             <CheckCircle className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
                           ) : (
@@ -301,21 +317,22 @@ const Page = async () => {
                             </span>
                           </div>
                         )}
-                        {typeof plan.features[feature.key as keyof typeof plan.features] === 'boolean' && (
-                          <span className="leading-relaxed">{feature.name}</span>
-                        )}
-                        {typeof plan.features[feature.key as keyof typeof plan.features] !== 'boolean' && (
-                          <span className="leading-relaxed">{feature.name}</span>
-                        )}
+                        {typeof plan.features[feature.key as keyof typeof plan.features] ===
+                          'boolean' && <span className="leading-relaxed">{feature.name}</span>}
+                        {typeof plan.features[feature.key as keyof typeof plan.features] !==
+                          'boolean' && <span className="leading-relaxed">{feature.name}</span>}
                       </li>
                     ))}
                   </ul>
-                  <Button variant="ghost" className="mt-6 p-0 h-auto text-sm font-medium text-primary hover:text-primary/80">
+                  <Button
+                    variant="ghost"
+                    className="mt-6 p-0 h-auto text-sm font-medium text-primary hover:text-primary/80"
+                  >
                     View all features →
                   </Button>
                 </div>
               </div>
-            )
+            );
           })}
         </div>
 
@@ -327,10 +344,16 @@ const Page = async () => {
           </div>
           <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
             {testimonials.map((testimonial, index) => (
-              <div key={index} className="bg-background p-6 rounded-xl shadow-sm">
+              <div
+                key={index}
+                className="bg-background p-6 rounded-xl shadow-sm"
+              >
                 <div className="flex gap-1 mb-4">
                   {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                    <Star
+                      key={i}
+                      className="h-4 w-4 fill-yellow-400 text-yellow-400"
+                    />
                   ))}
                 </div>
                 <p className="text-muted-foreground mb-4">"{testimonial.quote}"</p>
@@ -357,7 +380,10 @@ const Page = async () => {
           <div className="max-w-3xl mx-auto">
             <div className="grid gap-4">
               {addOns.map((addon, index) => (
-                <div key={index} className="flex items-center justify-between p-6 bg-background rounded-xl shadow-sm hover:shadow-md transition-shadow">
+                <div
+                  key={index}
+                  className="flex items-center justify-between p-6 bg-background rounded-xl shadow-sm hover:shadow-md transition-shadow"
+                >
                   <div className="flex-1">
                     <div className="flex items-center gap-3 mb-2">
                       <h4 className="font-semibold">{addon.title}</h4>
@@ -371,7 +397,10 @@ const Page = async () => {
                   </div>
                   <div className="flex items-center gap-4">
                     <span className="font-bold text-lg">{addon.price}</span>
-                    <Button variant="outline" size="sm">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                    >
                       Add
                     </Button>
                   </div>
@@ -387,16 +416,21 @@ const Page = async () => {
             <h2 className="text-2xl font-bold mb-2">Compare all features</h2>
             <p className="text-muted-foreground">Everything you need to know about our plans</p>
           </div>
-          
+
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b-2">
                   <th className="py-4 text-left font-semibold">Feature</th>
                   {pricingPlans.map((plan) => (
-                    <th key={plan.name} className="py-4 font-semibold text-center min-w-[120px]">
+                    <th
+                      key={plan.name}
+                      className="py-4 font-semibold text-center min-w-[120px]"
+                    >
                       <div className="flex flex-col items-center gap-2">
-                        <div className={`inline-flex p-2 rounded-lg bg-gradient-to-r ${plan.color}`}>
+                        <div
+                          className={`inline-flex p-2 rounded-lg bg-gradient-to-r ${plan.color}`}
+                        >
                           <plan.icon className="h-4 w-4 text-white" />
                         </div>
                         {plan.name}
@@ -407,13 +441,20 @@ const Page = async () => {
               </thead>
               <tbody>
                 {features.map((feature, index) => (
-                  <tr key={feature.key} className={`border-b hover:bg-muted/50 transition-colors ${
-                    index % 5 === 0 && index > 0 ? 'border-t-2 border-muted' : ''
-                  }`}>
+                  <tr
+                    key={feature.key}
+                    className={`border-b hover:bg-muted/50 transition-colors ${
+                      index % 5 === 0 && index > 0 ? 'border-t-2 border-muted' : ''
+                    }`}
+                  >
                     <td className="py-4 pr-4 font-medium">{feature.name}</td>
                     {pricingPlans.map((plan) => (
-                      <td key={`${plan.name}-${feature.key}`} className="py-4 text-center">
-                        {typeof plan.features[feature.key as keyof typeof plan.features] === 'boolean' ? (
+                      <td
+                        key={`${plan.name}-${feature.key}`}
+                        className="py-4 text-center"
+                      >
+                        {typeof plan.features[feature.key as keyof typeof plan.features] ===
+                        'boolean' ? (
                           plan.features[feature.key as keyof typeof plan.features] ? (
                             <CheckCircle className="h-5 w-5 text-green-500 mx-auto" />
                           ) : (
@@ -444,17 +485,25 @@ const Page = async () => {
             </p>
           </div>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button variant="outline" size="lg" className="font-semibold">
+            <Button
+              variant="outline"
+              size="lg"
+              className="font-semibold"
+            >
               Contact Sales
             </Button>
-            <Button variant="default" size="lg" className="font-semibold">
+            <Button
+              variant="default"
+              size="lg"
+              className="font-semibold"
+            >
               Start Free Trial
             </Button>
           </div>
         </div>
       </div>
     </DashboardPage>
-  )
-}
+  );
+};
 
-export default Page
+export default Page;

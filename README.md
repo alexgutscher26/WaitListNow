@@ -22,6 +22,7 @@ A powerful waitlist management SaaS built with Next.js App Router, Supabase, Typ
 ## Getting Started
 
 ### Prerequisites
+
 - Node.js 18 or later
 - npm or yarn
 - Supabase account
@@ -30,12 +31,14 @@ A powerful waitlist management SaaS built with Next.js App Router, Supabase, Typ
 ### Installation
 
 1. Clone the repository:
+
    ```bash
    git clone https://github.com/yourusername/waitlistnow.git
    cd waitlistnow
    ```
 
 2. Install dependencies:
+
    ```bash
    npm install
    # or
@@ -43,10 +46,12 @@ A powerful waitlist management SaaS built with Next.js App Router, Supabase, Typ
    ```
 
 3. Set up environment variables:
+
    - Copy `.env.example` to `.env.local`
    - Fill in your Supabase and Clerk credentials
 
 4. Run the development server:
+
    ```bash
    npm run dev
    # or
@@ -54,7 +59,6 @@ A powerful waitlist management SaaS built with Next.js App Router, Supabase, Typ
    ```
 
 5. Open [http://localhost:3000](http://localhost:3000) in your browser to see the application.
-
 
 ## Deployment
 

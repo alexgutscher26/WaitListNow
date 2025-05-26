@@ -23,6 +23,9 @@ type WaitlistWithCount = Waitlist & {
 };
 
 // Skeleton Loader Component
+/**
+ * Renders a waitlist skeleton UI component.
+ */
 const WaitlistSkeleton = () => (
   <div className="flex items-center justify-between rounded-lg border p-4">
     <div className="flex items-center space-x-4">
@@ -68,7 +71,7 @@ export default function WaitlistsPage() {
   });
 
   /**
-   * Formats a date string to a locale-specific format.
+   * Converts a date string to a US locale-specific format (e.g., "Jan 1, 2023").
    */
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {

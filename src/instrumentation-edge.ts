@@ -1,6 +1,9 @@
 import * as Sentry from '@sentry/nextjs';
 
 // Edge runtime Sentry initialization
+/**
+ * Initializes Sentry with environment-specific configuration.
+ */
 export default function init() {
   Sentry.init({
     dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,

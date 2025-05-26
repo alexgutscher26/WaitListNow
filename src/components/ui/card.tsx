@@ -16,7 +16,7 @@ Card.displayName = 'Card';
 
 // CardHeader Component
 /**
- * Renders a card header with optional custom class name and props.
+ * Renders a card header with optional custom class name and additional props.
  */
 export const CardHeader = ({ className, ...props }: HTMLAttributes<HTMLDivElement>) => (
   <div

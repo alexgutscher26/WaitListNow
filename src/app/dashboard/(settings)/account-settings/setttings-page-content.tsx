@@ -34,9 +34,11 @@ import {
 import { useState, useEffect } from 'react';
 
 /**
- * React component that renders the Account Settings page with various settings sections.
+ * This component renders a user profile settings page with various sections including profile details,
+ * notification preferences, referral program, and account security. It provides options to update personal information,
+ * manage notifications, share referral links, and enhance account security.
  *
- * @returns {JSX.Element} The JSX element representing the Account Settings page.
+ * @returns {JSX.Element} A React JSX element representing the user profile settings page.
  */
 const AccountSettingsContent = () => {
   const { user } = useUser();
@@ -72,7 +74,7 @@ const AccountSettingsContent = () => {
   const [accountTier] = useState('Pro');
 
   /**
-   * Handles saving process by setting loading state, simulating an API call, and updating saved state.
+   * Manages save process with loading and saved state transitions.
    */
   const handleSave = async () => {
     setIsSaving(true);
@@ -84,7 +86,7 @@ const AccountSettingsContent = () => {
   };
 
   /**
-   * Toggles the notification state for a given key.
+   * Toggles the notification state for a specified key.
    */
   const handleNotificationToggle = (key: keyof typeof notifications) => {
     setNotifications((prev) => ({
@@ -104,7 +106,7 @@ const AccountSettingsContent = () => {
   };
 
   /**
-   * Copies a referral link to the clipboard.
+   * Copies a predefined referral link to the clipboard.
    */
   const copyReferralLink = () => {
     navigator.clipboard.writeText('https://yourwaitlist.com/ref/user123');

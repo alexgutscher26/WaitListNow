@@ -14,7 +14,7 @@ export const ApiKeySettings = ({ apiKey }: { apiKey: string }) => {
   const [copySuccess, setCopySuccess] = useState(false);
 
   /**
-   * Copies the API key to the clipboard and shows a success message.
+   * Copies the API key to the clipboard and shows a success message for 2 seconds.
    */
   const copyApiKey = () => {
     navigator.clipboard.writeText(apiKey);

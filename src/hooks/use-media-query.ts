@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 /**
  * A custom hook to determine the current device type and screen dimensions.
  *
- * This hook uses the `useState` and `useEffect` hooks from React to track the device type (mobile, tablet, or desktop)
+ * This hook uses React's `useState` and `useEffect` hooks to track the device type (mobile, tablet, or desktop)
  * based on window width. It also listens for window resize events to update the device type accordingly.
  */
 export const useMediaQuery = () => {
@@ -16,7 +16,7 @@ export const useMediaQuery = () => {
 
   useEffect(() => {
     /**
-     * Sets the device type based on screen width.
+     * Determines and sets the device type based on screen width.
      */
     const checkDevice = () => {
       if (window.matchMedia('(max-width: 640px)').matches) {

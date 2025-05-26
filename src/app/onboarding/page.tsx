@@ -419,11 +419,11 @@ export default function ImprovedOnboarding() {
   /**
    * Handles the next step in the onboarding process.
    *
-   * This function checks if the current step is the last one in the onboardingSteps array.
-   * If it is, it simulates an API call by using a timeout and then alerts the user that
-   * onboarding is completed. If there's an error during this process, it logs the error to the console.
-   * Finally, it sets isLoading to false regardless of the outcome.
-   * If the current step is not the last one, it increments the currentStep by 1.
+   * This function checks if the current step is the last one in the `onboardingSteps` array.
+   * If it is, it simulates an API call using a timeout and alerts the user that onboarding is completed.
+   * In case of an error during this process, it logs the error to the console.
+   * Regardless of the outcome, it sets `isLoading` to false.
+   * If the current step is not the last one, it increments the `currentStep` by 1.
    */
   const handleNext = async () => {
     if (currentStep === onboardingSteps.length - 1) {

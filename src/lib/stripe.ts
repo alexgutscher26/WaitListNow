@@ -6,7 +6,7 @@ export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY ?? '', {
 });
 
 /**
- * Creates a Stripe checkout session for payment.
+ * Creates a Stripe checkout session for payment with specified user details.
  */
 export const createCheckoutSession = async ({
   userEmail,

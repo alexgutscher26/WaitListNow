@@ -21,9 +21,9 @@ export function useCommandMenu() {
     /**
      * Toggles the open state when 'k' is pressed with metaKey or ctrlKey.
      *
-     * This function listens to keyboard events and checks if the key 'k' is pressed along with either
-     * the metaKey (on macOS) or ctrlKey (on Windows/Linux). If the condition is met, it prevents the
-     * default event behavior and toggles the open state using the setOpen function.
+     * This function handles keyboard events, checking if the key 'k' is pressed alongside either
+     * the metaKey (on macOS) or ctrlKey (on Windows/Linux). If so, it prevents the default event
+     * behavior and toggles the open state using the setOpen function.
      *
      * @param e - The KeyboardEvent object representing the keyboard input.
      */

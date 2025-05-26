@@ -7,13 +7,14 @@ import superjson from 'superjson';
 /**
  * Determines the base URL based on the environment and deployment context.
  *
- * This function checks if the code is running in a browser environment.
- * If it is, it returns an empty string for relative paths.
- * Otherwise, it determines the base URL based on the Node.js environment:
+ * This function first checks if it is running in a browser environment by verifying
+ * the presence of the `window` object. If true, it returns an empty string for
+ * relative paths. Otherwise, it determines the base URL based on the Node.js
+ * environment:
  * - In development mode, it uses 'http://localhost:3000/'.
- * - In production, it checks for the VERCEL_URL environment variable and
- *   constructs the URL accordingly. If VERCEL_URL is not set, it defaults to a
- *   placeholder deployed worker URL.
+ * - In production, it checks for the VERCEL_URL environment variable and constructs
+ *   the URL accordingly. If VERCEL_URL is not set, it defaults to a placeholder
+ *   deployed worker URL.
  */
 const getBaseUrl = () => {
   // browser should use relative path
@@ -62,12 +63,50 @@ export const baseClient = hc<AppType>(getBaseUrl(), {
 
 /**
  * Retrieves a nested function from an object using a series of keys.
+ * Ensures that the path is valid and does not lead to prototype pollution.
+ *
+ * The function iterates through each key, checking for the existence of the property on the current object
+ * and ensuring it does not lead to prototype methods. It throws errors if any validation fails.
+ *
+ * @param obj - The initial object from which to start retrieving nested properties.
+ * @param keys - A rest parameter representing the series of keys to navigate through the object.
+ * @returns The function located at the specified path within the object.
+ * @throws Error If the initial object is invalid, a key does not exist, or the final value is not a function.
  */
 function getHandler(obj: Object, ...keys: string[]) {
   let current = obj;
-  for (const key of keys) {
-    current = current[key as keyof typeof current];
+
+  // Check if the object is safe to work with
+  if (obj === null || typeof obj !== 'object' || Array.isArray(obj)) {
+    throw new Error('Invalid object provided to getHandler');
   }
+
+  for (const key of keys) {
+    // Prevent prototype pollution by checking if the key exists on the object itself
+    // and not on its prototype chain
+    if (!Object.prototype.hasOwnProperty.call(current, key)) {
+      throw new Error(`Property '${key}' does not exist on the target object`);
+    }
+
+    const value = current[key as keyof typeof current];
+
+    // Ensure we don't allow access to prototype methods
+    if (key === '__proto__' || key === 'constructor' || key === 'prototype') {
+      throw new Error(`Access to '${key}' is not allowed`);
+    }
+
+    current = value;
+
+    // If we hit a non-object before processing all keys, it's an invalid path
+    if (current === null || typeof current !== 'object') {
+      throw new Error('Invalid path: not an object');
+    }
+  }
+
+  if (typeof current !== 'function') {
+    throw new Error('The specified path does not point to a function');
+  }
+
   return current as Function;
 }
 
@@ -84,11 +123,11 @@ function serializeWithSuperJSON(data: any): any {
 }
 
 /**
- * Creates a proxy to pass data directly to an API.
+ * Creates a proxy to facilitate API requests with convenience methods.
  *
- * This function wraps an object and provides convenience methods
- * like `$get` and `$post` for making API requests. It uses recursion
- * to handle nested objects and constructs the request path accordingly.
+ * This function wraps an object and provides `$get` and `$post` methods
+ * for making API calls. It uses recursion to handle nested objects,
+ * constructing the request path dynamically based on property access.
  *
  * @param target - The target object to be proxied.
  * @param path - An optional array representing the current path in the object hierarchy.

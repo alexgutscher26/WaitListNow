@@ -130,14 +130,11 @@ const BORDER_RADIUS: { value: ButtonRounded; label: string }[] = [
 ];
 
 /**
- * @function CreateNewWaitlist
- * @description A React component that provides a form for creating a new waitlist.
- * The component includes sections for basic information, custom fields,
- * appearance settings, and behavior customization. Users can preview their
- * waitlist design, navigate through different tabs, and submit the form to create
- * a new waitlist.
+ * This React component allows users to create a new waitlist by filling out various configuration options.
+ * It includes sections for basic information, custom fields, appearance settings, and behavior preferences.
+ * The form supports validation, preview mode, and tabs navigation for an organized user experience.
  *
- * @returns {JSX.Element} - A JSX element representing the Create New Waitlist page.
+ * @returns {JSX.Element} - A JSX element representing the waitlist creation form within a dashboard page.
  */
 export default function NewWaitlistPage() {
   const router = useRouter();
@@ -241,7 +238,7 @@ export default function NewWaitlistPage() {
   }, [formData]);
 
   /**
-   * Checks if a given string is a valid URL.
+   * Validates whether a given string is a valid URL by attempting to construct it with the URL class.
    */
   const isValidUrl = (url: string): boolean => {
     try {
@@ -347,12 +344,11 @@ export default function NewWaitlistPage() {
    * Handles form submission by preventing default form behavior, validating input,
    * and redirecting to a waitlist page upon successful API call.
    *
-   * The function first validates the form using `validateForm()`. If validation fails,
+   * The function validates the form using `validateForm()`. If validation fails,
    * it returns early. Otherwise, it sets the submitting state to true and simulates
    * an API call with a timeout. On success, it redirects to a waitlist dashboard page.
    * If there's an error during the API call, it logs the error and updates the errors
    * state. Finally, regardless of outcome, it resets the submitting state.
-   *
    */
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -782,6 +778,9 @@ interface SectionProps {
  * website URL, and thank you page URL. It handles form data changes through
  * the provided `onChange` function and displays error messages if applicable.
  *
+ * The component uses conditional rendering to apply error styles and display
+ * error messages next to respective input fields.
+ *
  * @param formData - An object containing the current values of the form fields.
  * @param errors - An object containing error messages for each field, if any.
  * @param onChange - A callback function to handle changes in the form fields.
@@ -867,9 +866,9 @@ interface CustomFieldsSectionProps {
 /**
  * Renders a custom fields section component.
  *
- * This component allows users to add, remove, and update custom fields for forms.
+ * This component allows users to manage custom fields in forms by adding, removing, and updating them.
  * It includes input fields for field name, type, placeholder text, and required status.
- * Additionally, it provides functionality to reorder custom fields and handle specific types like 'select' with options.
+ * Additionally, it supports reordering of custom fields and handling specific types like 'select' with options.
  *
  * @param formData - The form data containing custom fields.
  * @param newField - The current state of the new custom field being added.
@@ -1594,11 +1593,11 @@ interface WaitlistPreviewProps {
  * max signups, referrals, and email verification requirements. The form's style
  * is dynamically applied using props from formData.
  *
- * @param formData - An object containing all necessary data to render the form preview.
+ * @param {WaitlistPreviewProps} formData - An object containing all necessary data to render the form preview.
  */
 function WaitlistPreview({ formData }: WaitlistPreviewProps) {
   /**
-   * Returns the border radius value based on the given size.
+   * Retrieves the border radius value based on the specified size.
    */
   const getBorderRadius = (size: ButtonRounded): string => {
     const radiusMap = {

@@ -5,12 +5,13 @@ import superjson, { SuperJSONResult } from 'superjson';
 export type CacheArgs = { cache?: { id: string; ttl?: number } };
 
 /**
- * Determines if the provided object is a SuperJSONResult.
+ * Checks if the given object is a valid SuperJSONResult.
  *
- * This function checks if the input `obj` is an object, not null, and contains both 'json' and 'meta' properties.
- * It returns true if all conditions are met, otherwise false.
+ * This function evaluates whether the input `obj` is an object, not null,
+ * and contains both 'json' and 'meta' properties. It returns true if all
+ * conditions are satisfied, otherwise false.
  *
- * @param obj - The object to be checked.
+ * @param obj - The object to be validated.
  */
 function isSuperJSONResult(obj: any): obj is SuperJSONResult {
   return typeof obj === 'object' && obj !== null && 'json' in obj && 'meta' in obj;
@@ -21,8 +22,9 @@ function isSuperJSONResult(obj: any): obj is SuperJSONResult {
  *
  * This extension enhances Prisma client methods by adding caching functionality using Redis.
  * It intercepts `findFirst`, `findUnique`, `findMany`, `create`, `update`, and `delete` operations.
- * If a cache is specified in the arguments, it checks for cached results before hitting the database.
- * For write operations (`create`, `update`, `delete`), it invalidates the relevant cache entries.
+ * For read operations (`findFirst`, `findUnique`, `findMany`), it checks for cached results before hitting the database.
+ * If a cache is specified in the arguments and the result is found, it deserializes and returns the cached result.
+ * For write operations (`create`, `update`, `delete`), it invalidates the relevant cache entries by deleting them from Redis.
  *
  * @param redis - An instance of Redis to be used for caching.
  * @returns A Prisma extension with caching capabilities.

@@ -3,6 +3,9 @@ import { jest } from '@jest/globals';
 import type { ReactNode } from 'react';
 
 // Mock next/head
+/**
+ * Renders a React Fragment with the provided children.
+ */
 const MockHead = ({ children }: { children: ReactNode }) => {
   // Using React.createElement instead of JSX to avoid TSX issues in .ts file
   return global.React.createElement(global.React.Fragment, {}, children);

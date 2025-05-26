@@ -198,9 +198,9 @@ const testimonials = [
 /**
  * Renders the pricing page for a dashboard application.
  *
- * This function checks if the user is authenticated and redirects to the sign-in page if not.
- * It retrieves the user data from the database and renders various sections including hero,
- * pricing cards, social proof, add-ons, feature comparison table, and FAQ section. Each section
+ * This function first checks if the user is authenticated and redirects to the sign-in page if not.
+ * It then retrieves the user data from the database. The function renders various sections including:
+ * hero, pricing cards, social proof, add-ons, feature comparison table, and FAQ section. Each section
  * displays different aspects of pricing plans, features, testimonials, and additional options.
  *
  * @returns A JSX component representing the pricing page.

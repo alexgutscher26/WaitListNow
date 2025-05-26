@@ -301,6 +301,15 @@ const timeline = [
   },
 ];
 
+/**
+ * React component that renders the homepage of WaitlistNow, a platform for building and managing waitlists.
+ *
+ * The component includes several sections such as testimonials, features, pricing plans, and contact information.
+ * It also uses various imported components like `Hero`, `Testimonials`, `Pricing`, `ContactForm`, and utility functions
+ * to structure the layout and functionality of the homepage.
+ *
+ * @returns {JSX.Element} - The rendered React component representing the WaitlistNow homepage.
+ */
 export default function Page() {
   return (
     <div className="min-h-screen">
@@ -617,14 +626,29 @@ export default function Page() {
                     <p className="text-sm text-gray-500 mt-1">
                       <span className="line-through">{plan.originalPrice}</span>
                       <span className="ml-1.5 text-green-600 font-medium">
-                        Save{' '}
-                        {Math.round(
-                          (1 -
-                            parseInt(plan.price.replace('$', '')) /
-                              parseInt(plan.originalPrice.replace('$', ''))) *
-                            100,
-                        )}
-                        %
+                        {(() => {
+                          try {
+                            // Safely extract and validate prices
+                            const originalPrice = parseFloat(
+                              plan.originalPrice.replace(/[^0-9.]/g, ''),
+                            );
+                            const currentPrice = parseFloat(plan.price.replace(/[^0-9.]/g, ''));
+
+                            // Validate the parsed numbers
+                            if (isNaN(originalPrice) || isNaN(currentPrice) || originalPrice <= 0) {
+                              return '';
+                            }
+
+                            // Calculate discount percentage safely
+                            const discount = Math.round((1 - currentPrice / originalPrice) * 100);
+
+                            // Only show if there's an actual discount
+                            return discount > 0 ? `Save ${discount}%` : '';
+                          } catch (error) {
+                            console.error('Error calculating discount:', error);
+                            return '';
+                          }
+                        })()}
                       </span>
                     </p>
                   )}

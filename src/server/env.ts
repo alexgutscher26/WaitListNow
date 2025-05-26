@@ -42,11 +42,9 @@ export type Env = z.infer<typeof envSchema>;
 /**
  * Validates and returns the environment variables.
  *
- * This function attempts to parse the environment variables using `envSchema`. If any required environment
+ * This function parses the environment variables using `envSchema`. If any required environment
  * variables are missing or invalid, it throws an error with detailed information about the missing or invalid
- * variables. If there is any other failure during parsing, a generic error is thrown.
- *
- * @throws {Error} If any required environment variables are missing or invalid, or if parsing fails for other reasons.
+ * variables. For other parsing failures, a generic error is thrown.
  */
 export function getEnv(): Env {
   try {

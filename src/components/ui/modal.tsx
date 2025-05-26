@@ -54,7 +54,6 @@ export const Modal = ({
       return;
     }
 
-
     if (setShowModal) {
       setShowModal(false);
     }

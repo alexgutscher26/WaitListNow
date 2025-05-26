@@ -63,11 +63,19 @@ export const baseClient = hc<AppType>(getBaseUrl(), {
 
 /**
  * Retrieves a nested function from an object using a series of keys.
- * Prevents prototype pollution by checking for prototype properties.
+ * Ensures that the path is valid and does not lead to prototype pollution.
+ *
+ * The function iterates through each key, checking for the existence of the property on the current object
+ * and ensuring it does not lead to prototype methods. It throws errors if any validation fails.
+ *
+ * @param obj - The initial object from which to start retrieving nested properties.
+ * @param keys - A rest parameter representing the series of keys to navigate through the object.
+ * @returns The function located at the specified path within the object.
+ * @throws Error If the initial object is invalid, a key does not exist, or the final value is not a function.
  */
 function getHandler(obj: Object, ...keys: string[]) {
   let current = obj;
-  
+
   // Check if the object is safe to work with
   if (obj === null || typeof obj !== 'object' || Array.isArray(obj)) {
     throw new Error('Invalid object provided to getHandler');
@@ -79,26 +87,26 @@ function getHandler(obj: Object, ...keys: string[]) {
     if (!Object.prototype.hasOwnProperty.call(current, key)) {
       throw new Error(`Property '${key}' does not exist on the target object`);
     }
-    
+
     const value = current[key as keyof typeof current];
-    
+
     // Ensure we don't allow access to prototype methods
     if (key === '__proto__' || key === 'constructor' || key === 'prototype') {
       throw new Error(`Access to '${key}' is not allowed`);
     }
-    
+
     current = value;
-    
+
     // If we hit a non-object before processing all keys, it's an invalid path
     if (current === null || typeof current !== 'object') {
       throw new Error('Invalid path: not an object');
     }
   }
-  
+
   if (typeof current !== 'function') {
     throw new Error('The specified path does not point to a function');
   }
-  
+
   return current as Function;
 }
 

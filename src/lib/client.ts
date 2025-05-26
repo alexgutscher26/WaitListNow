@@ -4,6 +4,17 @@ import { HTTPException } from 'hono/http-exception';
 import { ContentfulStatusCode } from 'hono/utils/http-status';
 import superjson from 'superjson';
 
+/**
+ * Determines the base URL based on the environment and deployment context.
+ *
+ * This function checks if the code is running in a browser environment.
+ * If it is, it returns an empty string for relative paths.
+ * Otherwise, it determines the base URL based on the Node.js environment:
+ * - In development mode, it uses 'http://localhost:3000/'.
+ * - In production, it checks for the VERCEL_URL environment variable and
+ *   constructs the URL accordingly. If VERCEL_URL is not set, it defaults to a
+ *   placeholder deployed worker URL.
+ */
 const getBaseUrl = () => {
   // browser should use relative path
   if (typeof window !== 'undefined') {
@@ -49,6 +60,9 @@ export const baseClient = hc<AppType>(getBaseUrl(), {
   },
 })['api'];
 
+/**
+ * Retrieves a nested function from an object using a series of keys.
+ */
 function getHandler(obj: Object, ...keys: string[]) {
   let current = obj;
   for (const key of keys) {
@@ -57,6 +71,9 @@ function getHandler(obj: Object, ...keys: string[]) {
   return current as Function;
 }
 
+/**
+ * Serializes an object using SuperJSON for its values.
+ */
 function serializeWithSuperJSON(data: any): any {
   if (typeof data !== 'object' || data === null) {
     return data;
@@ -67,8 +84,14 @@ function serializeWithSuperJSON(data: any): any {
 }
 
 /**
- * This is an optional convenience proxy to pass data directly to your API
- * instead of using nested objects as hono does by default
+ * Creates a proxy to pass data directly to an API.
+ *
+ * This function wraps an object and provides convenience methods
+ * like `$get` and `$post` for making API requests. It uses recursion
+ * to handle nested objects and constructs the request path accordingly.
+ *
+ * @param target - The target object to be proxied.
+ * @param path - An optional array representing the current path in the object hierarchy.
  */
 function createProxy(target: any, path: string[] = []): any {
   return new Proxy(target, {

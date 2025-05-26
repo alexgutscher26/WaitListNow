@@ -3,6 +3,9 @@
 import { useState, useCallback, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 // Simple Badge component
+/**
+ * Renders a badge component with customizable variant and class name.
+ */
 const Badge = ({
   children,
   variant = 'default',
@@ -126,6 +129,16 @@ const BORDER_RADIUS: { value: ButtonRounded; label: string }[] = [
   { value: 'full', label: 'Pill' },
 ];
 
+/**
+ * @function CreateNewWaitlist
+ * @description A React component that provides a form for creating a new waitlist.
+ * The component includes sections for basic information, custom fields,
+ * appearance settings, and behavior customization. Users can preview their
+ * waitlist design, navigate through different tabs, and submit the form to create
+ * a new waitlist.
+ *
+ * @returns {JSX.Element} - A JSX element representing the Create New Waitlist page.
+ */
 export default function NewWaitlistPage() {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -227,6 +240,9 @@ export default function NewWaitlistPage() {
     return Object.keys(newErrors).length === 0;
   }, [formData]);
 
+  /**
+   * Checks if a given string is a valid URL.
+   */
   const isValidUrl = (url: string): boolean => {
     try {
       new URL(url);
@@ -327,6 +343,17 @@ export default function NewWaitlistPage() {
     });
   }, []);
 
+  /**
+   * Handles form submission by preventing default form behavior, validating input,
+   * and redirecting to a waitlist page upon successful API call.
+   *
+   * The function first validates the form using `validateForm()`. If validation fails,
+   * it returns early. Otherwise, it sets the submitting state to true and simulates
+   * an API call with a timeout. On success, it redirects to a waitlist dashboard page.
+   * If there's an error during the API call, it logs the error and updates the errors
+   * state. Finally, regardless of outcome, it resets the submitting state.
+   *
+   */
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -400,6 +427,9 @@ export default function NewWaitlistPage() {
     }
   }, [formData, embedType, showBranding]);
 
+  /**
+   * Copies the embed code to the clipboard and logs an error if it fails.
+   */
   const copyEmbedCode = async () => {
     try {
       await navigator.clipboard.writeText(embedCode);
@@ -409,6 +439,9 @@ export default function NewWaitlistPage() {
     }
   };
 
+  /**
+   * Resets form data to default values and clears errors.
+   */
   const resetForm = () => {
     setFormData({
       name: 'My Waitlist',
@@ -742,6 +775,17 @@ interface SectionProps {
   ) => void;
 }
 
+/**
+ * Renders a section for basic information input fields in a form.
+ *
+ * This component includes input fields for the waitlist name, description,
+ * website URL, and thank you page URL. It handles form data changes through
+ * the provided `onChange` function and displays error messages if applicable.
+ *
+ * @param formData - An object containing the current values of the form fields.
+ * @param errors - An object containing error messages for each field, if any.
+ * @param onChange - A callback function to handle changes in the form fields.
+ */
 function BasicInfoSection({ formData, errors, onChange }: SectionProps) {
   return (
     <Card>
@@ -820,6 +864,21 @@ interface CustomFieldsSectionProps {
   reorderCustomFields: (dragIndex: number, dropIndex: number) => void;
 }
 
+/**
+ * Renders a custom fields section component.
+ *
+ * This component allows users to add, remove, and update custom fields for forms.
+ * It includes input fields for field name, type, placeholder text, and required status.
+ * Additionally, it provides functionality to reorder custom fields and handle specific types like 'select' with options.
+ *
+ * @param formData - The form data containing custom fields.
+ * @param newField - The current state of the new custom field being added.
+ * @param setNewField - A function to update the new custom field state.
+ * @param addCustomField - A function to add a new custom field to the form data.
+ * @param removeCustomField - A function to remove a custom field from the form data.
+ * @param updateCustomField - A function to update an existing custom field in the form data.
+ * @param reorderCustomFields - A function to reorder custom fields within the form data.
+ */
 function CustomFieldsSection({
   formData,
   newField,
@@ -966,6 +1025,9 @@ interface AppearanceSectionProps {
   getBorderRadius: (size: ButtonRounded) => string;
 }
 
+/**
+ * Renders a section for customizing button appearance and form styling.
+ */
 function AppearanceSection({ formData, setFormData, getBorderRadius }: AppearanceSectionProps) {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -1147,6 +1209,21 @@ interface BehaviorSectionProps {
   showBranding?: boolean;
 }
 
+/**
+ * Renders a behavior section component for configuring waitlist settings.
+ *
+ * This component provides UI elements to configure confirmation messages, advanced settings,
+ * integration options, and direct links. It uses React state management to handle form data
+ * updates and conditional rendering based on user selections. The component also includes
+ * buttons for copying embed codes and a preview section for embedding the waitlist form.
+ *
+ * @param formData - The current form data containing configuration values.
+ * @param setFormData - A function to update the form data.
+ * @param errors - An object containing validation errors for form fields.
+ * @param embedCode - The code snippet or iframe URL for embedding the waitlist.
+ * @param copyEmbedCode - A function to handle copying the embed code to clipboard.
+ * @param showBranding - A boolean indicating whether branding should be shown (default is true).
+ */
 function BehaviorSection({
   formData,
   setFormData,
@@ -1509,7 +1586,20 @@ interface WaitlistPreviewProps {
   formData: FormData;
 }
 
+/**
+ * Renders a preview of a waitlist form based on the provided formData.
+ *
+ * This component displays a styled and interactive preview of the waitlist form,
+ * including custom fields, labels, buttons, and additional information such as
+ * max signups, referrals, and email verification requirements. The form's style
+ * is dynamically applied using props from formData.
+ *
+ * @param formData - An object containing all necessary data to render the form preview.
+ */
 function WaitlistPreview({ formData }: WaitlistPreviewProps) {
+  /**
+   * Returns the border radius value based on the given size.
+   */
   const getBorderRadius = (size: ButtonRounded): string => {
     const radiusMap = {
       none: '0px',

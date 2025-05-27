@@ -1,2 +1,11 @@
 onlyBuiltDependencies:
+  - '@clerk/shared'
+  - '@heroui/shared-utils'
   - '@prisma/client'
+  - '@prisma/engines'
+  - '@sentry/cli'
+  - '@vercel/speed-insights'
+  - esbuild
+  - prisma
+  - sharp
+  - workerd

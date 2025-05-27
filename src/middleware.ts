@@ -1,44 +1,33 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { clerkMiddleware } from '@clerk/nextjs/server';
-import type { NextRequest } from 'next/server';
+import { authMiddleware } from '@clerk/nextjs/server';
 import { NextResponse } from 'next/server';
-
 import { trackPageview } from '@/lib/plausible';
 
-/**
- * Handles middleware logic for tracking page views and processing requests with Clerk middleware.
- *
- * This function performs the following steps:
- * 1. Tracks a page view using the `trackPageview` function.
- * 2. Calls the Clerk middleware, passing both the request (`req`) and event (`event`) objects.
- * 3. If an error occurs during these operations, it logs the error to the console
- *    and returns a NextResponse with a JSON payload indicating an internal server error.
- *
- * @param req - The Next.js request object.
- * @param event - The event object associated with the request.
- */
-const middleware = async (req: NextRequest, event: any) => {
-  try {
-    // Track page views
+// This example protects all routes including api/trpc routes
+// Please edit this to allow other routes to be public as needed.
+// See https://clerk.com/docs/references/nextjs/auth-middleware for more information about configuring your Middleware
+export default authMiddleware({
+  publicRoutes: [
+    '/',
+    '/sign-in(.*)',
+    '/sign-up(.*)',
+    '/api/webhook(.*)',
+    '/pricing',
+    '/blog(.*)',
+  ],
+  afterAuth(auth, req) {
+    // Track page views for analytics
     trackPageview();
 
-    // Call the Clerk middleware with both request and event
-    const response = await clerkMiddleware()(req, event);
-    return response;
-  } catch (error) {
-    console.error('Middleware error:', error);
-    return NextResponse.next();
-    return NextResponse.json(
-      {
-        error: 'Internal Server Error',
-        message: 'An unexpected error occurred. Please try again later.',
-      },
-      { status: 500 },
-    );
-  }
-};
+    // Handle users who aren't authenticated
+    if (!auth.userId && !auth.isPublicRoute) {
+      const signInUrl = new URL('/sign-in', req.url);
+      signInUrl.searchParams.set('redirect_url', req.url);
+      return NextResponse.redirect(signInUrl);
+    }
 
-export default middleware;
+    return NextResponse.next();
+  },
+});
 
 export const config = {
   matcher: [

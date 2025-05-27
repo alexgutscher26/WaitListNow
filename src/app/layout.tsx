@@ -1,6 +1,5 @@
-import { ClerkProvider } from '@clerk/nextjs';
+import { ClerkProvider } from '@/providers/clerk-provider';
 import type { Metadata, Viewport } from 'next';
-import { Inter } from 'next/font/google';
 import { Toaster } from '@/components/ui/toaster';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/next';
@@ -9,6 +8,7 @@ import { HeroUIProvider } from '@heroui/react';
 import { QueryProvider } from '@/providers/query-provider';
 import { cn } from '@/lib/utils';
 import './globals.css';
+import { Inter } from 'next/font/google';
 
 // Font configuration
 const inter = Inter({
@@ -76,14 +76,14 @@ interface RootLayoutProps {
  */
 export default function RootLayout({ children, modal }: RootLayoutProps) {
   return (
-    <ClerkProvider>
-      <html
-        lang="en"
-        suppressHydrationWarning
-      >
-        <body className={cn('min-h-screen bg-background font-sans antialiased', inter.variable)}>
-          <PlausibleProvider>
-            <QueryProvider>
+    <html
+      lang="en"
+      suppressHydrationWarning
+    >
+      <body className={cn('min-h-screen bg-background font-sans antialiased', inter.variable)}>
+        <ClerkProvider>
+          <QueryProvider>
+            <PlausibleProvider>
               <HeroUIProvider>
                 <div className="flex-1">
                   {children}
@@ -93,10 +93,10 @@ export default function RootLayout({ children, modal }: RootLayoutProps) {
                 <Analytics />
                 <SpeedInsights />
               </HeroUIProvider>
-            </QueryProvider>
-          </PlausibleProvider>
-        </body>
-      </html>
-    </ClerkProvider>
+            </PlausibleProvider>
+          </QueryProvider>
+        </ClerkProvider>
+      </body>
+    </html>
   );
 }

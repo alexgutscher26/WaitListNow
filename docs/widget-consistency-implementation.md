@@ -9,6 +9,7 @@ Currently, there's an inconsistency between the waitlist preview shown in the da
 ### Phase 1: Shared Styling Module (1-2 days)
 
 1. **Create a shared styling utility**:
+
    - Create `src/lib/waitlist-styles.ts` to contain all styling logic
    - Extract styling functions from the `WaitlistPreview` component
    - Ensure all style calculations are consistent
@@ -60,11 +61,13 @@ export interface WaitlistConfig {
 ### Phase 2: Shared Component Structure (2-3 days)
 
 1. **Create a shared waitlist form component**:
+
    - Create `src/components/waitlist/WaitlistForm.tsx`
    - Implement the form structure that will be used by both preview and embedded widget
    - Use the shared styling module for consistent appearance
 
 2. **Update the preview component**:
+
    - Refactor `WaitlistPreview` to use the shared form component
    - Add a `isPreview` flag to show preview-specific elements
 
@@ -133,7 +136,7 @@ export async function GET() {
       }
     })();
   `;
-  
+
   return new NextResponse(script, {
     headers: {
       'Content-Type': 'application/javascript',
@@ -162,16 +165,16 @@ export default function EmbedPage() {
   const [config, setConfig] = useState<WaitlistConfig | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  
+
   useEffect(() => {
     const waitlistId = searchParams.get('waitlist-id');
-    
+
     if (!waitlistId) {
       setError('Waitlist ID is required');
       setLoading(false);
       return;
     }
-    
+
     // Fetch the waitlist configuration
     fetch(`/api/waitlists/${waitlistId}`)
       .then(response => {
@@ -189,14 +192,14 @@ export default function EmbedPage() {
             buttonText: searchParams.get('button-text') || data.style.buttonText,
             buttonVariant: searchParams.get('button-variant') || data.style.buttonVariant,
             buttonRounded: searchParams.get('button-rounded') || data.style.buttonRounded,
-            primaryColor: searchParams.get('primary-color') 
-              ? `#${searchParams.get('primary-color')}` 
+            primaryColor: searchParams.get('primary-color')
+              ? `#${searchParams.get('primary-color')}`
               : data.style.primaryColor,
             // Other style parameters
           },
           // Other configuration parameters
         };
-        
+
         setConfig(mergedConfig);
         setLoading(false);
       })
@@ -205,19 +208,19 @@ export default function EmbedPage() {
         setLoading(false);
       });
   }, [searchParams]);
-  
+
   if (loading) {
     return <div className="loading">Loading waitlist...</div>;
   }
-  
+
   if (error) {
     return <div className="error">{error}</div>;
   }
-  
+
   if (!config) {
     return <div className="error">Waitlist configuration not found</div>;
   }
-  
+
   return <WaitlistForm config={config} isPreview={false} />;
 }
 ```
@@ -225,16 +228,19 @@ export default function EmbedPage() {
 ### Phase 4: Custom Domain Support (3-4 days)
 
 1. **Update database schema**:
+
    - Add `CustomDomain` model to Prisma schema
    - Add relations to `User` and `Waitlist` models
    - Run migrations
 
 2. **Create domain management UI**:
+
    - Create `src/app/dashboard/domains/page.tsx` for domain management
    - Implement UI for adding, verifying, and removing domains
    - Add domain selection to waitlist creation/editing form
 
 3. **Implement domain verification**:
+
    - Create utility for DNS verification
    - Implement API endpoints for domain verification
    - Add proper error handling and user feedback
@@ -247,12 +253,14 @@ export default function EmbedPage() {
 ### Phase 5: Testing and Documentation (2-3 days)
 
 1. **Comprehensive testing**:
+
    - Test preview and embedded widget side by side
    - Test with various configuration options
    - Test custom domain functionality
    - Test across different browsers and devices
 
 2. **Update documentation**:
+
    - Create user guide for custom domains
    - Update embedding documentation
    - Add troubleshooting section

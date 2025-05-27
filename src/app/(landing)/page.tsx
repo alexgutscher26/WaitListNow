@@ -1,7 +1,6 @@
 import { Heading } from '@/components/heading';
 import { MaxWidthWrapper } from '@/components/max-width-wrapper';
 import {
-  Check,
   Star,
   Users,
   Zap,
@@ -14,17 +13,11 @@ import {
   BarChart2,
   Rocket,
   Trophy,
-  Twitter,
-  Linkedin,
-  Shield,
-  Crown,
-  XCircle,
 } from 'lucide-react';
 import Image from 'next/image';
 import { Icons } from '@/components/icons';
 import { Metadata } from 'next';
 import Link from 'next/link';
-import { Button } from '@/components/ui/button';
 import { ShinyButton } from '@/components/shiny-button';
 
 export const metadata: Metadata = {
@@ -701,6 +694,43 @@ export default function Page() {
           </div>
         </MaxWidthWrapper>
       </section>
+
+      {/* Footer */}
+      <footer className="text-white py-16">
+        <MaxWidthWrapper>
+          <div className="text-center overflow-hidden px-4">
+            {/* Large Brand Text */}
+            <div className="mb-12 -mx-4">
+              <h2 className="text-7xl sm:text-8xl md:text-8xl lg:text-9xl xl:text-[10rem] 2xl:text-[12rem] font-black text-transparent bg-gradient-to-r from-brand-400 to-brand-600 bg-clip-text tracking-tight">
+                WaitListNow
+              </h2>
+            </div>
+
+            {/* Footer Links */}
+            <div className="flex flex-wrap justify-center items-center gap-6 sm:gap-8 text-sm text-gray-400">
+              <p>© {new Date().getFullYear()} WaitlistNow Inc. All rights reserved.</p>
+              <Link 
+                href="/terms" 
+                className="hover:text-white transition-colors"
+              >
+                Terms of service
+              </Link>
+              <Link 
+                href="/privacy" 
+                className="hover:text-white transition-colors"
+              >
+                Privacy Policy
+              </Link>
+              <Link 
+                href="/help" 
+                className="hover:text-white transition-colors"
+              >
+                Help Center
+              </Link>
+            </div>
+          </div>
+        </MaxWidthWrapper>
+      </footer>
     </div>
   );
 }

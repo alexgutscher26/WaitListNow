@@ -15,7 +15,9 @@ type MiddlewareFunction<T = Record<string, never>, R = void> = (params: {
  */
 
 export const j = {
-  middleware: <T = Record<string, never>, R = void>(fn: MiddlewareFunction<T, R>): MiddlewareFunction<T, R> => {
+  middleware: <T = Record<string, never>, R = void>(
+    fn: MiddlewareFunction<T, R>,
+  ): MiddlewareFunction<T, R> => {
     return fn;
   },
   procedure: baseProcedure,

@@ -243,7 +243,7 @@ export default function NewWaitlistPage() {
   const isValidUrl = (url: string): boolean => {
     try {
       const parsedUrl = new URL(url);
-      return !!parsedUrl;
+      return Boolean(parsedUrl);
     } catch {
       return false;
     }
@@ -1672,7 +1672,10 @@ function WaitlistPreview({ formData }: WaitlistPreviewProps) {
               {/* Email field (always present) */}
               <div className={formData.style.formLayout === 'inline' ? 'flex-1 min-w-0' : ''}>
                 {formData.style.showLabels && (
-                  <label htmlFor="email-preview" className="block text-sm font-medium mb-1">
+                  <label
+                    htmlFor="email-preview"
+                    className="block text-sm font-medium mb-1"
+                  >
                     Email Address <span className="text-red-500">*</span>
                   </label>
                 )}

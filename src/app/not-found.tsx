@@ -9,16 +9,16 @@ export default function NotFound() {
     <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-gray-800 flex items-center justify-center p-4 relative overflow-hidden">
       {/* Animated background elements */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-white/5 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gray-400/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-white/5 rounded-full blur-3xl animate-pulse delay-500"></div>
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-white/5 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gray-400/10 rounded-full blur-3xl animate-pulse delay-1000" />
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-white/5 rounded-full blur-3xl animate-pulse delay-500" />
       </div>
 
       <div className="relative z-10 bg-white/5 backdrop-blur-lg rounded-3xl shadow-2xl max-w-lg w-full border border-white/10 text-center p-10">
         {/* Animated icon container */}
         <div className="relative w-32 h-32 mx-auto mb-8">
-          <div className="absolute inset-0 bg-gradient-to-r from-gray-400 to-white rounded-full animate-spin opacity-20"></div>
-          <div className="absolute inset-2 bg-gradient-to-r from-gray-600 to-gray-400 rounded-full animate-pulse"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-gray-400 to-white rounded-full animate-spin opacity-20" />
+          <div className="absolute inset-2 bg-gradient-to-r from-gray-600 to-gray-400 rounded-full animate-pulse" />
           <div className="relative w-full h-full flex items-center justify-center">
             <span className="text-6xl animate-bounce">🚀</span>
           </div>

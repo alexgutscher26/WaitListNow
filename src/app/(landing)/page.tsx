@@ -385,9 +385,9 @@ export default function Page() {
               <div className="text-center p-8">
                 <div className="inline-flex items-center gap-2 px-4 py-2 bg-white rounded-full shadow-sm mb-6">
                   <div className="flex space-x-1">
-                    <div className="size-3 rounded-full bg-red-500"></div>
-                    <div className="size-3 rounded-full bg-yellow-500"></div>
-                    <div className="size-3 rounded-full bg-green-500"></div>
+                    <div className="size-3 rounded-full bg-red-500" />
+                    <div className="size-3 rounded-full bg-yellow-500" />
+                    <div className="size-3 rounded-full bg-green-500" />
                   </div>
                   <span className="text-sm font-medium text-gray-700">waitlist.yourdomain.com</span>
                 </div>
@@ -838,7 +838,7 @@ export default function Page() {
                 className="border border-gray-200 rounded-xl overflow-hidden hover:shadow-lg transition-shadow"
               >
                 <div className="h-48 bg-gradient-to-r from-blue-50 to-indigo-50 flex items-center justify-center">
-                  <div className="h-12 w-32 bg-gray-200 rounded"></div>
+                  <div className="h-12 w-32 bg-gray-200 rounded" />
                 </div>
                 <div className="p-6">
                   <h3 className="text-xl font-bold text-gray-900 mb-2">{study.title}</h3>
@@ -916,7 +916,7 @@ export default function Page() {
           </div>
 
           <div className="relative max-w-3xl mx-auto">
-            <div className="absolute left-1/2 top-0 h-full w-0.5 -translate-x-1/2 bg-gray-200"></div>
+            <div className="absolute left-1/2 top-0 h-full w-0.5 -translate-x-1/2 bg-gray-200" />
 
             <div className="space-y-12">
               {timeline.map((item, index) => (
@@ -938,7 +938,7 @@ export default function Page() {
                       <p className="text-gray-600">{item.description}</p>
                     </div>
                   </div>
-                  <div className="flex-shrink-0 w-6 h-6 rounded-full bg-brand-500 border-4 border-white"></div>
+                  <div className="flex-shrink-0 w-6 h-6 rounded-full bg-brand-500 border-4 border-white" />
                 </div>
               ))}
             </div>
@@ -1148,7 +1148,7 @@ export default function Page() {
                       <div className="text-2xl font-bold text-green-700 mb-1">2,847</div>
                       <div className="text-sm text-green-600 mb-3">Total Referrals</div>
                       <div className="flex items-center justify-center gap-2 text-xs text-green-600">
-                        <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                        <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
                         +127 this week
                       </div>
                     </div>

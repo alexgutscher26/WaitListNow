@@ -5,9 +5,12 @@ import { DialogProps } from '@radix-ui/react-dialog';
 import { Command as CommandPrimitive } from 'cmdk';
 import { Search } from 'lucide-react';
 
-declare module 'react' {
-  interface HTMLAttributes<T> extends AriaAttributes, DOMAttributes<T> {
-    'cmdk-input-wrapper'?: string;
+// Extend the HTMLAttributes interface to include cmdk-input-wrapper
+declare global {
+  namespace React {
+    interface HTMLAttributes<T> extends AriaAttributes, DOMAttributes<T> {
+      'cmdk-input-wrapper'?: string;
+    }
   }
 }
 
@@ -29,12 +32,10 @@ const Command = React.forwardRef<
 ));
 Command.displayName = CommandPrimitive.displayName;
 
-interface CommandDialogProps extends DialogProps {}
-
 /**
  * Renders a command dialog with custom styling and content.
  */
-const CommandDialog = ({ children, ...props }: CommandDialogProps) => {
+const CommandDialog = ({ children, ...props }: DialogProps) => {
   return (
     <Dialog {...props}>
       <DialogContent className="overflow-hidden p-0">

@@ -2,6 +2,16 @@
 
 import { useState, useCallback, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
+
+// URL validation helper
+const isValidUrl = (url: string): boolean => {
+  try {
+    new URL(url);
+    return true;
+  } catch (e) {
+    return false;
+  }
+};
 // Simple Badge component
 /**
  * Renders a badge component with customizable variant and class name.
@@ -405,8 +415,8 @@ export default function NewWaitlistPage() {
       dataAttributes.forEach((attr) => {
         const [key, value] = attr.split('=');
         if (key && value) {
-          const cleanKey = key.replace('data-', '').replace(/[\"\']/g, '');
-          const cleanValue = value.replace(/[\"\']/g, '');
+          const cleanKey = key.replace('data-', '').replace(/["']/g, '');
+          const cleanValue = value.replace(/["']/g, '');
           params.append(cleanKey, cleanValue);
         }
       });

@@ -4,9 +4,12 @@ import { Command as CommandPrimitive } from 'cmdk';
 import { Search, X, ArrowUp, ArrowDown, Loader2 } from 'lucide-react';
 import * as React from 'react';
 
-declare module 'react' {
-  interface HTMLAttributes<T> extends React.AriaAttributes, React.DOMAttributes<T> {
-    'cmdk-input-wrapper'?: string;
+// Extend the HTMLAttributes interface to include cmdk-input-wrapper
+declare global {
+  namespace React {
+    interface HTMLAttributes<T> extends React.AriaAttributes, React.DOMAttributes<T> {
+      'cmdk-input-wrapper'?: string;
+    }
   }
 }
 
@@ -253,11 +256,30 @@ const CommandSeparator = React.forwardRef<
 ));
 CommandSeparator.displayName = CommandPrimitive.Separator.displayName;
 
+// Enhanced CommandShortcut with better styling
+/**
+ * Renders a styled span element with optional additional props and className.
+ */
+const CommandShortcut = ({ className, ...props }: React.HTMLAttributes<HTMLSpanElement>) => {
+  return (
+    <span
+      className={cn(
+        'ml-auto text-xs tracking-widest text-muted-foreground',
+        'bg-muted px-1.5 py-0.5 rounded font-mono',
+        className,
+      )}
+      {...props}
+    />
+  );
+};
+CommandShortcut.displayName = 'CommandShortcut';
+
 // Enhanced CommandItem with better interaction states
 const CommandItem = React.forwardRef<
   React.ElementRef<typeof CommandPrimitive.Item>,
-  React.ComponentPropsWithoutRef<typeof CommandPrimitive.Item> & {
+  Omit<React.ComponentPropsWithoutRef<typeof CommandPrimitive.Item>, 'onSelect'> & {
     shortcut?: string;
+    onSelect?: (value: string, event?: React.MouseEvent<HTMLElement>) => void;
     icon?: React.ReactNode;
     description?: string;
   }
@@ -283,24 +305,6 @@ const CommandItem = React.forwardRef<
   </CommandPrimitive.Item>
 ));
 CommandItem.displayName = CommandPrimitive.Item.displayName;
-
-// Enhanced CommandShortcut with better styling
-/**
- * Renders a styled span element with optional additional props and className.
- */
-const CommandShortcut = ({ className, ...props }: React.HTMLAttributes<HTMLSpanElement>) => {
-  return (
-    <span
-      className={cn(
-        'ml-auto text-xs tracking-widest text-muted-foreground',
-        'bg-muted px-1.5 py-0.5 rounded font-mono',
-        className,
-      )}
-      {...props}
-    />
-  );
-};
-CommandShortcut.displayName = 'CommandShortcut';
 
 // New: CommandLoading component
 const CommandLoading = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(

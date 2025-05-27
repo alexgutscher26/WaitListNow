@@ -28,7 +28,7 @@ export class Procedure<ctx = Record<string, never>> {
    * Optional, but recommended:
    * This makes "c.superjson" available to your API routes
    */
-  private async superjsonMiddleware({ c, next }: Parameters<Middleware<ctx>>[0]): Promise<any> {
+  private static async superjsonMiddleware({ c, next }: Parameters<Middleware<any>>[0]): Promise<any> {
     type JSONRespond = typeof c.json;
 
     c.superjson = ((data: unknown, status?: StatusCode): Response => {
@@ -47,7 +47,7 @@ export class Procedure<ctx = Record<string, never>> {
 
     // add built-in superjson middleware if not already present
     if (!this.middlewares.some((mw) => mw.name === 'superjsonMiddleware')) {
-      this.middlewares.push(this.superjsonMiddleware);
+      this.middlewares.push(Procedure.superjsonMiddleware);
     }
   }
 

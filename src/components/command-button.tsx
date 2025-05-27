@@ -16,12 +16,13 @@ import { Command as CommandIcon } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
-interface CommandButtonProps extends React.HTMLAttributes<HTMLButtonElement> {}
-
 /**
  * Renders a command button that opens a dialog with a list of pages.
  */
-export function CommandButton({ className, ...props }: CommandButtonProps) {
+export function CommandButton({
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLButtonElement>) {
   const { open, setOpen, pages } = useCommandMenu();
   const router = useRouter();
   const [isMounted, setIsMounted] = useState(false);

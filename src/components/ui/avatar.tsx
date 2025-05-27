@@ -16,9 +16,11 @@ const Avatar = React.forwardRef<
       {...props}
     >
       {src ? (
-        <img
+        <AvatarImage
           src={src}
-          alt={alt}
+          alt={alt || ''}
+          width={40}
+          height={40}
           className="aspect-square h-full w-full"
         />
       ) : (
@@ -31,9 +33,11 @@ const Avatar = React.forwardRef<
 });
 Avatar.displayName = 'Avatar';
 
-const AvatarImage = React.forwardRef<HTMLImageElement, React.ImgHTMLAttributes<HTMLImageElement>>(
+import Image from 'next/image';
+
+const AvatarImage = React.forwardRef<HTMLImageElement, React.ComponentProps<typeof Image>>(
   ({ className, alt = '', ...props }, ref) => (
-    <img
+    <Image
       ref={ref}
       alt={alt}
       className={cn('aspect-square h-full w-full', className)}

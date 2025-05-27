@@ -252,3 +252,77 @@ This document outlines the planned improvements and enhancements for the WaitLis
 - [ ] Enabling branding removal = requires Starter
 - [ ] Adding reward tiers = prompt upgrade to Growth
 - [ ] Adding webhook = prompt upgrade to Starter
+
+## 9. Feature Details
+
+### ✅ 2. Referral Tracking System
+- [ ] Unique referral link for each user
+- [ ] Tracks signups driven by each user
+- [ ] Shows referral count and rank
+- [ ] Handles duplicate entries gracefully
+
+### ✅ 3. Thank You / Referral Page
+- [ ] After signing up, user sees:
+  - [ ] Their current position in the waitlist
+  - [ ] Number of referrals
+  - [ ] Shareable referral link with one-click copy/share to:
+    - [ ] Twitter
+    - [ ] LinkedIn
+    - [ ] Email
+  - [ ] Optional: Referral leaderboard
+
+### ✅ 4. Admin Dashboard
+- [ ] View/export waitlist entries
+- [ ] Sort by referral count, signup date
+- [ ] Manually add/edit/remove users
+- [ ] CSV export
+- [ ] Integration/webhook settings
+
+## 🧩 Nice-to-Have Features
+
+### 🖌️ 5. Widget Customization
+- [ ] Light/dark mode
+- [ ] Customize copy: title, placeholder text
+- [ ] Change submit button style
+- [ ] Add logo
+
+### 🔗 6. Webhooks & Integrations
+- [ ] Webhooks on new signup
+- [ ] Integrate with:
+  - [ ] Mailchimp / ConvertKit / SendGrid / Resend
+  - [ ] Airtable or Google Sheets
+  - [ ] Zapier / Make.com support
+
+### 📈 7. Analytics
+- [ ] Total signups
+- [ ] Daily/weekly growth charts
+- [ ] Conversion rate from referral clicks to signups
+
+## 🧠 Advanced / Premium Features
+
+### 🎁 8. Reward Tiers / Milestones
+- [ ] Define rewards for certain referral thresholds (e.g. 5, 10, 20)
+- [ ] Show users which rewards they've unlocked
+- [ ] Email users when they hit milestones
+
+### 🛂 9. Anti-Fraud Measures
+- [ ] Email/domain blocklists
+- [ ] Rate limiting
+- [ ] Optional email verification (Resend/Postmark)
+
+### 🧪 10. A/B Testing
+- [ ] Test different widget copy/designs
+- [ ] Compare referral viral coefficient
+
+## 🚀 Potential Growth Features
+
+### 🌐 Multi-Project Support
+- [ ] Each customer can run multiple waitlists with different widgets
+
+### 🧬 Public Leaderboards
+- [ ] Viral leaderboard-style signup race
+- [ ] Optional "top referrers" list
+
+### 🛠 Dev Tools
+- [ ] API access for devs to push/pull waitlist data
+- [ ] SDK or React hook to integrate custom UIs

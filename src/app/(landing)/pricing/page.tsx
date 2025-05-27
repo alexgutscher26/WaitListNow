@@ -591,8 +591,9 @@ const Page = () => {
         </div>
       </MaxWidthWrapper>
 
-      <style dangerouslySetInnerHTML={{
-        __html: `
+      <style
+        dangerouslySetInnerHTML={{
+          __html: `
           @keyframes fadeInUp {
             from {
               opacity: 0;
@@ -603,8 +604,9 @@ const Page = () => {
               transform: translateY(0);
             }
           }
-        `
-      }} />
+        `,
+        }}
+      />
     </div>
   );
 };

@@ -34,7 +34,7 @@ interface ContentProps {
   setFormData: React.Dispatch<React.SetStateAction<FormData>>;
   errors: FormErrors;
   showPreview?: boolean;
-  setShowPreview?: React.Dispatch<React.SetStateAction<boolean>>;
+  setShowPreview?: (value: boolean) => void;
   copied?: string | null;
   setCopied?: React.Dispatch<React.SetStateAction<string | null>>;
 }
@@ -242,9 +242,9 @@ const onboardingSteps = [
     icon: <LinkIcon className="h-8 w-8 text-blue-500" />,
     content: ({
       showPreview = false,
-      setShowPreview = () => {},
+      setShowPreview = (_value: React.SetStateAction<boolean>) => {},
       copied = null,
-      setCopied = () => {},
+      setCopied = (_value: React.SetStateAction<string | null>) => {},
       errors = {},
     }: ContentProps) => {
       const waitlistId = 'wl_' + Math.random().toString(36).substr(2, 9);
@@ -263,7 +263,7 @@ const onboardingSteps = [
           <div className="flex items-center justify-between">
             <h3 className="font-semibold text-gray-900">Integration Options</h3>
             <button
-              onClick={() => setShowPreview(!showPreview)}
+              onClick={() => setShowPreview?.(!showPreview)}
               className="flex items-center gap-2 text-sm text-blue-600 hover:text-blue-700 transition-colors"
             >
               {showPreview ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
@@ -343,7 +343,7 @@ const onboardingSteps = [
                 </button>
               </div>
               <pre className="overflow-x-auto rounded-md bg-gray-900 p-3 text-sm">
-                <code className="text-blue-400">{`<div data-waitlist-embed></div>`}</code>
+                <code className="text-blue-400">{'<div data-waitlist-embed></div>'}</code>
               </pre>
             </div>
           </div>

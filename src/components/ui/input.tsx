@@ -1,10 +1,13 @@
 import { cn } from '@/utils';
 import * as React from 'react';
 
-export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {}
+export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+  /** Set to true to suppress hydration warnings */
+  suppressHydrationWarning?: boolean;
+}
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className, type, ...props }, ref) => {
+  ({ className, type, suppressHydrationWarning = true, ...props }, ref) => {
     return (
       <input
         type={type}
@@ -13,6 +16,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           className,
         )}
         ref={ref}
+        suppressHydrationWarning={suppressHydrationWarning}
         {...props}
       />
     );

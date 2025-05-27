@@ -591,22 +591,7 @@ const Page = () => {
         </div>
       </MaxWidthWrapper>
 
-      <style
-        dangerouslySetInnerHTML={{
-          __html: `
-          @keyframes fadeInUp {
-            from {
-              opacity: 0;
-              transform: translateY(30px);
-            }
-            to {
-              opacity: 1;
-              transform: translateY(0);
-            }
-          }
-        `,
-        }}
-      />
+      {/* Animation styles are now in pricing.module.css */}
     </div>
   );
 };

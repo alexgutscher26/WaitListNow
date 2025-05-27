@@ -233,7 +233,7 @@ const Page = () => {
 
   const { mutate: createCheckoutSession } = useMutation<{ url: string | null }, Error>({
     mutationFn: async () => {
-      const res = await client.payment.createCheckoutSession.$post();
+      const res = await client.payment.createCheckoutSession.$post({});
       return await res.json();
     },
     onSuccess: (data) => {
@@ -591,18 +591,22 @@ const Page = () => {
         </div>
       </MaxWidthWrapper>
 
-      <style jsx>{`
-        @keyframes fadeInUp {
-          from {
-            opacity: 0;
-            transform: translateY(30px);
+      <style
+        dangerouslySetInnerHTML={{
+          __html: `
+          @keyframes fadeInUp {
+            from {
+              opacity: 0;
+              transform: translateY(30px);
+            }
+            to {
+              opacity: 1;
+              transform: translateY(0);
+            }
           }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-      `}</style>
+        `,
+        }}
+      />
     </div>
   );
 };

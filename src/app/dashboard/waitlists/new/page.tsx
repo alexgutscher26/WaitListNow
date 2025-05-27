@@ -242,8 +242,8 @@ export default function NewWaitlistPage() {
    */
   const isValidUrl = (url: string): boolean => {
     try {
-      new URL(url);
-      return true;
+      const parsedUrl = new URL(url);
+      return Boolean(parsedUrl);
     } catch {
       return false;
     }
@@ -285,9 +285,8 @@ export default function NewWaitlistPage() {
       // Clear error when user starts typing
       if (errors[name]) {
         setErrors((prev) => {
-          const newErrors = { ...prev };
-          delete newErrors[name];
-          return newErrors;
+          const { [name]: _, ...rest } = prev;
+          return rest;
         });
       }
     },
@@ -1673,11 +1672,15 @@ function WaitlistPreview({ formData }: WaitlistPreviewProps) {
               {/* Email field (always present) */}
               <div className={formData.style.formLayout === 'inline' ? 'flex-1 min-w-0' : ''}>
                 {formData.style.showLabels && (
-                  <label className="block text-sm font-medium mb-1">
+                  <label
+                    htmlFor="email-preview"
+                    className="block text-sm font-medium mb-1"
+                  >
                     Email Address <span className="text-red-500">*</span>
                   </label>
                 )}
                 <Input
+                  id="email-preview"
                   placeholder={formData.style.showLabels ? '' : 'Your email address'}
                   style={{
                     borderRadius: getBorderRadius(formData.style.buttonRounded),

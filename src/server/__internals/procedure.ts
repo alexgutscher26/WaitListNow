@@ -21,17 +21,17 @@ export type SuperJSONTypedResponse<T, U extends StatusCode = StatusCode> = Typed
   'json'
 >;
 
-export class Procedure<ctx = {}> {
+export class Procedure<ctx = Record<string, never>> {
   private readonly middlewares: Middleware<ctx>[] = [];
 
   /**
    * Optional, but recommended:
    * This makes "c.superjson" available to your API routes
    */
-  private superjsonMiddleware: Middleware<ctx> = async function superjsonMiddleware({ c, next }) {
+  private async superjsonMiddleware({ c, next }: Parameters<Middleware<ctx>>[0]): Promise<any> {
     type JSONRespond = typeof c.json;
 
-    c.superjson = (<T>(data: T, status?: StatusCode): Response => {
+    c.superjson = ((data: unknown, status?: StatusCode): Response => {
       const serialized = superjson.stringify(data);
       return new Response(serialized, {
         status: status || 200,
@@ -40,7 +40,7 @@ export class Procedure<ctx = {}> {
     }) as JSONRespond;
 
     return await next();
-  };
+  }
 
   constructor(middlewares: Middleware<ctx>[] = []) {
     this.middlewares = middlewares;
@@ -117,7 +117,7 @@ export class Procedure<ctx = {}> {
       ctx: ctx;
       c: Context<{ Bindings: Bindings }>;
     }) => SuperJSONTypedResponse<Output> | Promise<SuperJSONTypedResponse<Output>>,
-  ): QueryOperation<{}, Output> {
+  ): QueryOperation<Record<string, never>, Output> {
     return {
       type: 'query',
       handler: fn as any,
@@ -138,7 +138,7 @@ export class Procedure<ctx = {}> {
       ctx: ctx;
       c: Context<{ Bindings: Bindings }>;
     }) => TypedResponse<Output> | Promise<TypedResponse<Output>>,
-  ): MutationOperation<{}, Output> {
+  ): MutationOperation<Record<string, never>, Output> {
     return {
       type: 'mutation',
       handler: fn as any,

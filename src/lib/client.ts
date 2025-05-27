@@ -72,7 +72,7 @@ export const baseClient = hc<AppType>(getBaseUrl(), {
  * @returns The function located at the specified path within the object.
  * @throws Error If the initial object is invalid, a key does not exist, or the final value is not a function.
  */
-function getHandler(obj: Object, ...keys: string[]) {
+function getHandler(obj: object, ...keys: string[]) {
   let current = obj;
 
   // Check if the object is safe to work with
@@ -106,7 +106,7 @@ function getHandler(obj: Object, ...keys: string[]) {
     throw new Error('The specified path does not point to a function');
   }
 
-  return current as Function;
+  return current as (...args: any[]) => any;
 }
 
 /**

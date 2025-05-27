@@ -6,7 +6,7 @@ import React from 'react';
 /**
  * Renders its children without any additional wrapping.
  */
-const MockHead = ({ children }: { children: React.ReactNode }) => <>{children}</>;
+const MockHead = ({ children }: { children: React.ReactNode }) => children;
 MockHead.displayName = 'Head';
 
 jest.mock('next/head', () => ({

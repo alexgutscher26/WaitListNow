@@ -70,6 +70,7 @@ Create a step-by-step wizard to guide users through the domain setup process:
 #### 2.3 Domain Card Component
 
 Create a reusable component to display domain information:
+
 - Domain name
 - Status indicator (pending, verified, active, failed)
 - Last verified date
@@ -93,6 +94,7 @@ Create the following API endpoints:
 Implement two verification methods:
 
 1. **DNS TXT Record Verification**
+
    - Generate a unique verification token
    - User adds a TXT record to their DNS settings
    - System verifies the presence of the token
@@ -134,12 +136,14 @@ Create comprehensive documentation for users on how to configure their DNS setti
 #### 6.1 Root Domain Setup
 
 Instructions for setting up a root domain (example.com):
+
 - A record pointing to our server IP
 - CNAME record for www subdomain
 
 #### 6.2 Subdomain Setup
 
 Instructions for setting up a subdomain (waitlist.example.com):
+
 - CNAME record pointing to our application
 
 ### 7. Pricing Tier Integration
@@ -173,25 +177,25 @@ import { db } from '@/lib/db';
 
 export async function middleware(request: NextRequest) {
   const hostname = request.headers.get('host') || '';
-  
+
   // Skip for known application hostnames
   if (hostname.includes('waitlistnow.com') || hostname.includes('localhost')) {
     return NextResponse.next();
   }
-  
+
   // Check if this is a custom domain
   const customDomain = await db.customDomain.findUnique({
     where: { domain: hostname, status: 'ACTIVE' },
     include: { waitlist: true },
   });
-  
+
   if (customDomain) {
     // Rewrite the request to the waitlist page
     const url = request.nextUrl.clone();
     url.pathname = `/waitlist/${customDomain.waitlist.slug}`;
     return NextResponse.rewrite(url);
   }
-  
+
   // Continue with normal processing if not a custom domain
   return NextResponse.next();
 }
@@ -228,32 +232,32 @@ async function verifyDomain(domainId: string): Promise<boolean> {
   const domain = await db.customDomain.findUnique({
     where: { id: domainId },
   });
-  
+
   if (!domain || !domain.verificationToken) {
     return false;
   }
-  
+
   try {
     // Use DNS resolution library to check for TXT record
     const records = await dns.resolveTxt(domain.domain);
-    const verified = records.some(record => 
-      record.includes(`waitlistnow-verify=${domain.verificationToken}`)
+    const verified = records.some((record) =>
+      record.includes(`waitlistnow-verify=${domain.verificationToken}`),
     );
-    
+
     if (verified) {
       await db.customDomain.update({
         where: { id: domainId },
-        data: { 
+        data: {
           status: 'VERIFIED',
-          verifiedAt: new Date()
+          verifiedAt: new Date(),
         },
       });
-      
+
       // Trigger SSL certificate provisioning
       await provisionSSLCertificate(domain.domain);
       return true;
     }
-    
+
     return false;
   } catch (error) {
     console.error('Domain verification failed:', error);

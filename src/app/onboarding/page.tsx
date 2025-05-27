@@ -244,7 +244,7 @@ const onboardingSteps = [
       showPreview = false,
       setShowPreview = () => {},
       copied = null,
-      setCopied = () => {},
+      setCopied = (value: React.SetStateAction<string | null>) => {},
       errors = {},
     }: ContentProps) => {
       const waitlistId = 'wl_' + Math.random().toString(36).substr(2, 9);
@@ -263,7 +263,7 @@ const onboardingSteps = [
           <div className="flex items-center justify-between">
             <h3 className="font-semibold text-gray-900">Integration Options</h3>
             <button
-              onClick={() => setShowPreview(!showPreview)}
+              onClick={() => setShowPreview && setShowPreview(!showPreview)}
               className="flex items-center gap-2 text-sm text-blue-600 hover:text-blue-700 transition-colors"
             >
               {showPreview ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}

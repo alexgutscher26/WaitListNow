@@ -1,10 +1,12 @@
 'use client';
 
+// TODO: Redesign the pricing page
+
 import { Button } from '@/components/ui/button';
 import { client } from '@/lib/client';
 import { useUser } from '@clerk/nextjs';
 import { useMutation } from '@tanstack/react-query';
-import { Check, CheckCircle, XCircle, Star, Zap, Users, Shield, Crown } from 'lucide-react';
+import { Check, CheckCircle, XCircle, Star, Zap, Users, Shield, Crown, Sparkles, TrendingUp, Award, ArrowRight } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { MaxWidthWrapper } from '@/components/max-width-wrapper';
 
@@ -54,7 +56,7 @@ const pricingPlans: PricingPlan[] = [
     buttonVariant: 'outline',
     featured: false,
     icon: Users,
-    color: 'from-gray-500 to-gray-600',
+    color: 'from-gray-400 to-gray-600',
     features: {
       projects: '1',
       signups: '500',
@@ -86,7 +88,7 @@ const pricingPlans: PricingPlan[] = [
     featured: true,
     badge: 'Most Popular',
     icon: Zap,
-    color: 'from-blue-500 to-purple-600',
+    color: 'from-blue-500 to-cyan-500',
     features: {
       projects: '3',
       signups: '10,000',
@@ -117,7 +119,7 @@ const pricingPlans: PricingPlan[] = [
     buttonVariant: 'default',
     featured: false,
     icon: Shield,
-    color: 'from-purple-500 to-pink-600',
+    color: 'from-purple-500 to-pink-500',
     features: {
       projects: '10',
       signups: '50,000',
@@ -148,7 +150,7 @@ const pricingPlans: PricingPlan[] = [
     buttonVariant: 'outline',
     featured: false,
     icon: Crown,
-    color: 'from-amber-500 to-orange-600',
+    color: 'from-amber-400 to-orange-500',
     features: {
       projects: 'Unlimited',
       signups: 'Unlimited',
@@ -209,14 +211,8 @@ const testimonials = [
 ];
 
 /**
- * Renders a pricing page with various plans and features.
- *
- * This component fetches user data and router information using hooks.
- * It defines a mutation function to create a checkout session, which is triggered when a user selects a plan.
- * The `handleGetAccess` function handles the logic for navigating based on the selected plan and user authentication status.
- * The page displays pricing cards, feature comparison tables, testimonials, and FAQs. Each section dynamically renders content based on predefined data structures.
- *
- * @returns A React component representing the pricing page.
+ * Enhanced pricing page with modern styling, animations, and improved visual hierarchy.
+ * Features gradient backgrounds, glassmorphism effects, and smooth transitions.
  */
 const Page = () => {
   const { user } = useUser();
@@ -232,18 +228,13 @@ const Page = () => {
         router.push(data.url);
       } else {
         console.error('No URL returned from checkout session creation');
-        // Optionally show an error message to the user
       }
     },
     onError: (error) => {
       console.error('Error creating checkout session:', error);
-      // Optionally show an error message to the user
     },
   });
 
-  /**
-   * Handles access based on plan name and user authentication status, redirecting or creating a checkout session as needed.
-   */
   const handleGetAccess = (planName: string) => {
     if (planName === 'Enterprise') {
       router.push('/contact');
@@ -258,107 +249,131 @@ const Page = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <MaxWidthWrapper className="py-12 md:py-20">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 relative overflow-hidden">
+      {/* Background decorative elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-blue-400/20 to-purple-600/20 rounded-full blur-3xl"></div>
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-br from-pink-400/20 to-orange-600/20 rounded-full blur-3xl"></div>
+      </div>
+
+      <MaxWidthWrapper className="py-12 md:py-20 relative z-10">
         {/* Hero Section */}
         <div className="py-16 sm:py-24">
-          <div className="text-center max-w-4xl mx-auto">
-            <div className="inline-flex items-center gap-2 bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-sm font-medium mb-6">
-              <Zap className="h-4 w-4" />
-              Limited Time: 30% Off All Paid Plans
+          <div className="text-center max-w-5xl mx-auto">
+            <div className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-500/10 to-purple-500/10 backdrop-blur-sm border border-blue-200/50 text-blue-700 px-6 py-3 rounded-full text-sm font-medium mb-8 shadow-lg">
+              <Sparkles className="h-4 w-4 text-blue-500" />
+              <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent font-semibold">
+                Limited Time: 30% Off All Paid Plans
+              </span>
             </div>
-            <h1 className="text-4xl lg:text-5xl font-bold tracking-tight bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
-              Simple, transparent pricing
+            
+            <h1 className="text-5xl lg:text-7xl font-bold tracking-tight mb-6">
+              <span className="bg-gradient-to-r from-gray-900 via-blue-900 to-purple-900 bg-clip-text text-transparent">
+                Simple, transparent
+              </span>
+              <br />
+              <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                pricing
+              </span>
             </h1>
-            <p className="mt-6 text-xl text-muted-foreground max-w-2xl mx-auto">
-              Choose the perfect plan for your needs. Start free, scale as you grow. No hidden fees,
-              cancel anytime.
+            
+            <p className="mt-8 text-xl lg:text-2xl text-slate-600 max-w-3xl mx-auto leading-relaxed">
+              Choose the perfect plan for your needs. Start free, scale as you grow. 
+              <span className="text-blue-600 font-medium"> No hidden fees, cancel anytime.</span>
             </p>
-            <div className="mt-6 flex flex-wrap items-center justify-center gap-4 text-sm text-muted-foreground">
-              <div className="flex items-center gap-2">
-                <Check className="h-4 w-4 text-green-500" />
-                14-day free trial
+            
+            <div className="mt-10 flex flex-wrap items-center justify-center gap-6 text-base text-slate-600">
+              <div className="flex items-center gap-2 bg-white/60 backdrop-blur-sm px-4 py-2 rounded-full border border-white/20">
+                <Check className="h-5 w-5 text-emerald-500" />
+                <span className="font-medium">14-day free trial</span>
               </div>
-              <div className="hidden sm:block">•</div>
-              <div className="flex items-center gap-2">
-                <Check className="h-4 w-4 text-green-500" />
-                No setup fees
+              <div className="flex items-center gap-2 bg-white/60 backdrop-blur-sm px-4 py-2 rounded-full border border-white/20">
+                <Check className="h-5 w-5 text-emerald-500" />
+                <span className="font-medium">No setup fees</span>
               </div>
-              <div className="hidden sm:block">•</div>
-              <div className="flex items-center gap-2">
-                <Check className="h-4 w-4 text-green-500" />
-                Cancel anytime
+              <div className="flex items-center gap-2 bg-white/60 backdrop-blur-sm px-4 py-2 rounded-full border border-white/20">
+                <Check className="h-5 w-5 text-emerald-500" />
+                <span className="font-medium">Cancel anytime</span>
               </div>
             </div>
           </div>
         </div>
 
         {/* Pricing Cards */}
-        <div className="mt-16 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
-          {pricingPlans.map((plan) => {
+        <div className="mt-20 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
+          {pricingPlans.map((plan, index) => {
             const IconComponent = plan.icon;
             return (
               <div
                 key={plan.name}
-                className={`relative rounded-2xl border bg-card text-card-foreground shadow-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-1 ${
-                  plan.featured ? 'ring-2 ring-blue-500 scale-105 lg:scale-105' : ''
+                className={`relative rounded-3xl bg-white/70 backdrop-blur-xl border border-white/20 shadow-xl transition-all duration-500 hover:shadow-2xl hover:-translate-y-2 group ${
+                  plan.featured 
+                    ? 'ring-2 ring-blue-500/50 scale-105 lg:scale-105 shadow-blue-500/25' 
+                    : 'hover:shadow-slate-500/25'
                 }`}
+                style={{
+                  animationDelay: `${index * 100}ms`,
+                  animation: 'fadeInUp 0.6s ease-out forwards',
+                }}
               >
                 {plan.badge && (
-                  <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 z-10">
-                    <span
-                      className={`bg-gradient-to-r ${plan.color} text-white text-sm font-semibold px-4 py-1 rounded-full shadow-lg`}
-                    >
-                      {plan.badge}
-                    </span>
+                  <div className="absolute -top-5 left-1/2 transform -translate-x-1/2 z-10">
+                    <div className={`bg-gradient-to-r ${plan.color} text-white text-sm font-bold px-6 py-2 rounded-full shadow-lg relative`}>
+                      <span className="relative z-10">{plan.badge}</span>
+                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent rounded-full"></div>
+                    </div>
                   </div>
                 )}
 
-                <div className="p-6">
-                  <div className={`inline-flex p-3 rounded-xl bg-gradient-to-r ${plan.color} mb-4`}>
-                    <IconComponent className="h-6 w-6 text-white" />
+                <div className="p-8">
+                  <div className={`inline-flex p-4 rounded-2xl bg-gradient-to-r ${plan.color} mb-6 shadow-lg group-hover:scale-110 transition-transform duration-300`}>
+                    <IconComponent className="h-7 w-7 text-white" />
                   </div>
 
-                  <h3 className="text-xl font-bold">{plan.name}</h3>
+                  <h3 className="text-2xl font-bold text-gray-900 mb-2">{plan.name}</h3>
 
-                  <div className="mt-4 flex items-baseline gap-2">
-                    <span className="text-4xl font-bold">{plan.price}</span>
+                  <div className="mt-6 flex items-baseline gap-2">
+                    <span className="text-5xl font-bold text-gray-900">{plan.price}</span>
                     {plan.price !== 'Custom' && (
-                      <span className="text-muted-foreground">/month</span>
+                      <span className="text-slate-500 text-lg">/month</span>
                     )}
                     {plan.originalPrice && (
-                      <span className="text-sm text-muted-foreground line-through ml-2">
+                      <span className="text-base text-slate-400 line-through ml-3 bg-red-50 px-2 py-1 rounded">
                         {plan.originalPrice}
                       </span>
                     )}
                   </div>
 
-                  <p className="mt-2 text-muted-foreground">{plan.description}</p>
+                  <p className="mt-4 text-slate-600 text-lg leading-relaxed">{plan.description}</p>
 
                   <Button
                     onClick={() => handleGetAccess(plan.name)}
-                    className={`w-full mt-6 h-12 font-semibold ${
+                    className={`w-full mt-8 h-14 font-semibold text-lg rounded-xl transition-all duration-300 ${
                       plan.featured
-                        ? `bg-gradient-to-r ${plan.color} hover:opacity-90 text-white border-0`
-                        : ''
+                        ? `bg-gradient-to-r ${plan.color} hover:opacity-90 text-white border-0 shadow-lg hover:shadow-xl hover:scale-105`
+                        : 'hover:scale-105 shadow-md hover:shadow-lg'
                     }`}
                     variant={plan.buttonVariant}
                     size="lg"
                   >
                     {plan.buttonText}
+                    <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
                   </Button>
                 </div>
 
-                <div className="border-t bg-muted/30 p-6 pt-4 rounded-b-2xl">
-                  <h4 className="text-sm font-medium mb-4">Key features:</h4>
-                  <ul className="space-y-3">
-                    {Object.keys(plan.features).map((feature, index) => (
+                <div className="border-t border-slate-200/50 bg-gradient-to-br from-slate-50/50 to-white/50 backdrop-blur-sm p-8 pt-6 rounded-b-3xl">
+                  <h4 className="text-base font-semibold mb-6 text-gray-900 flex items-center gap-2">
+                    <Award className="h-5 w-5 text-blue-500" />
+                    Key features
+                  </h4>
+                  <ul className="space-y-4">
+                    {Object.entries(plan.features).slice(0, 6).map(([key, value], idx) => (
                       <li
-                        key={index}
-                        className="flex items-start gap-2 text-sm"
+                        key={idx}
+                        className="flex items-start gap-3 text-sm text-slate-600"
                       >
-                        <CheckCircle className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
-                        <span>{plan.features[feature as keyof typeof plan.features]}</span>
+                        <CheckCircle className="h-5 w-5 text-emerald-500 mt-0.5 flex-shrink-0" />
+                        <span className="font-medium">{String(value)}</span>
                       </li>
                     ))}
                   </ul>
@@ -369,150 +384,199 @@ const Page = () => {
         </div>
 
         {/* Feature Comparison Table */}
-        <div className="mt-24">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold tracking-tight">Compare all features</h2>
-            <p className="mt-4 text-lg text-muted-foreground">
-              Everything you need to know about our plans
+        <div className="mt-32">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl lg:text-5xl font-bold tracking-tight bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
+              Compare all features
+            </h2>
+            <p className="mt-6 text-xl text-slate-600 max-w-2xl mx-auto">
+              Everything you need to know about our plans in one place
             </p>
           </div>
 
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm text-left">
-              <thead>
-                <tr className="border-b">
-                  <th className="py-4 font-medium">Feature</th>
-                  {pricingPlans.map((plan) => (
-                    <th
-                      key={plan.name}
-                      className="py-4 font-medium text-center min-w-[150px]"
-                    >
-                      {plan.name}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {features.map((feature) => (
-                  <tr
-                    key={feature.key}
-                    className="border-b hover:bg-muted/50"
-                  >
-                    <td className="py-4 pr-4">{feature.name}</td>
+          <div className="bg-white/60 backdrop-blur-xl rounded-3xl border border-white/20 shadow-2xl overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead className="bg-gradient-to-r from-slate-50 to-blue-50">
+                  <tr className="border-b border-slate-200">
+                    <th className="py-6 px-6 font-semibold text-left text-gray-900 text-base">Feature</th>
                     {pricingPlans.map((plan) => (
-                      <td
-                        key={`${plan.name}-${feature.key}`}
-                        className="py-4 text-center"
+                      <th
+                        key={plan.name}
+                        className="py-6 px-4 font-semibold text-center min-w-[150px] text-gray-900 text-base"
                       >
-                        {typeof plan.features[feature.key as keyof typeof plan.features] ===
-                        'boolean' ? (
-                          plan.features[feature.key as keyof typeof plan.features] ? (
-                            <CheckCircle className="h-5 w-5 text-green-500 mx-auto" />
-                          ) : (
-                            <XCircle className="h-5 w-5 text-muted-foreground/40 mx-auto" />
-                          )
-                        ) : (
-                          <span className="font-medium">
-                            {plan.features[feature.key as keyof typeof plan.features]}
-                          </span>
-                        )}
-                      </td>
+                        <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gradient-to-r ${plan.color} text-white text-sm`}>
+                          <plan.icon className="h-4 w-4" />
+                          {plan.name}
+                        </div>
+                      </th>
                     ))}
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {features.map((feature, idx) => (
+                    <tr
+                      key={feature.key}
+                      className={`border-b border-slate-100 hover:bg-slate-50/50 transition-colors ${
+                        idx % 2 === 0 ? 'bg-white/30' : 'bg-slate-50/30'
+                      }`}
+                    >
+                      <td className="py-5 px-6 font-medium text-gray-900">{feature.name}</td>
+                      {pricingPlans.map((plan) => (
+                        <td
+                          key={`${plan.name}-${feature.key}`}
+                          className="py-5 px-4 text-center"
+                        >
+                          {typeof plan.features[feature.key as keyof typeof plan.features] ===
+                          'boolean' ? (
+                            plan.features[feature.key as keyof typeof plan.features] ? (
+                              <CheckCircle className="h-6 w-6 text-emerald-500 mx-auto" />
+                            ) : (
+                              <XCircle className="h-6 w-6 text-slate-300 mx-auto" />
+                            )
+                          ) : (
+                            <span className="font-semibold text-gray-900 bg-slate-100 px-3 py-1 rounded-full">
+                              {plan.features[feature.key as keyof typeof plan.features]}
+                            </span>
+                          )}
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
 
         {/* Testimonials */}
-        <div className="mt-24 bg-gradient-to-r from-blue-50 to-purple-50 rounded-2xl p-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold tracking-tight">
-              Trusted by thousands of businesses
-            </h2>
-            <p className="mt-4 text-lg text-muted-foreground">
-              Join the growing list of successful companies using our platform
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-            {testimonials.map((testimonial, index) => (
-              <div
-                key={index}
-                className="bg-white p-6 rounded-xl shadow-sm"
-              >
-                <div className="flex gap-1 mb-4">
-                  {[...Array(5)].map((_, i) => (
-                    <Star
-                      key={i}
-                      className="h-5 w-5 fill-yellow-400 text-yellow-400"
-                    />
-                  ))}
-                </div>
-                <p className="text-muted-foreground italic mb-6">"{testimonial.quote}"</p>
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-semibold">
-                    {testimonial.avatar}
-                  </div>
-                  <div>
-                    <div className="font-medium">{testimonial.author}</div>
-                    <div className="text-sm text-muted-foreground">{testimonial.role}</div>
-                  </div>
-                </div>
+        <div className="mt-32">
+          <div className="bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 rounded-3xl p-12 relative overflow-hidden">
+            <div className="absolute inset-0 bg-black/10 backdrop-blur-sm"></div>
+            <div className="relative z-10">
+              <div className="text-center mb-16">
+                <h2 className="text-4xl lg:text-5xl font-bold tracking-tight text-white mb-4">
+                  Trusted by thousands of businesses
+                </h2>
+                <p className="text-xl text-blue-100 max-w-2xl mx-auto">
+                  Join the growing list of successful companies using our platform
+                </p>
               </div>
-            ))}
+
+              <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+                {testimonials.map((testimonial, index) => (
+                  <div
+                    key={index}
+                    className="bg-white/90 backdrop-blur-sm p-8 rounded-2xl shadow-xl border border-white/20 hover:shadow-2xl transition-all duration-300 hover:-translate-y-1"
+                  >
+                    <div className="flex gap-1 mb-6">
+                      {[...Array(5)].map((_, i) => (
+                        <Star
+                          key={i}
+                          className="h-6 w-6 fill-yellow-400 text-yellow-400"
+                        />
+                      ))}
+                    </div>
+                    <p className="text-slate-700 text-lg leading-relaxed mb-8 italic">
+                      "{testimonial.quote}"
+                    </p>
+                    <div className="flex items-center gap-4">
+                      <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 text-white rounded-full flex items-center justify-center font-bold text-lg">
+                        {testimonial.avatar}
+                      </div>
+                      <div>
+                        <div className="font-semibold text-gray-900 text-lg">{testimonial.author}</div>
+                        <div className="text-slate-600">{testimonial.role}</div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
 
         {/* FAQ Section */}
-        <div className="mt-24 text-center">
-          <h2 className="text-3xl font-bold tracking-tight">Frequently asked questions</h2>
-          <p className="mt-4 text-lg text-muted-foreground max-w-3xl mx-auto">
-            Everything you need to know about our pricing and plans
-          </p>
+        <div className="mt-32">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl lg:text-5xl font-bold tracking-tight bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
+              Frequently asked questions
+            </h2>
+            <p className="mt-6 text-xl text-slate-600 max-w-3xl mx-auto">
+              Everything you need to know about our pricing and plans
+            </p>
+          </div>
 
-          <div className="mt-12 max-w-3xl mx-auto space-y-6 text-left">
-            <div className="border-b pb-6">
-              <h3 className="text-lg font-medium">What payment methods do you accept?</h3>
-              <p className="mt-2 text-muted-foreground">
-                We accept all major credit cards including Visa, Mastercard, American Express, and
-                Discover. We also support payments through PayPal.
-              </p>
-            </div>
+          <div className="max-w-4xl mx-auto">
+            <div className="bg-white/60 backdrop-blur-xl rounded-3xl border border-white/20 shadow-2xl p-8 md:p-12">
+              <div className="space-y-8">
+                <div className="border-b border-slate-200 pb-8">
+                  <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-3">
+                    <TrendingUp className="h-6 w-6 text-blue-500" />
+                    What payment methods do you accept?
+                  </h3>
+                  <p className="text-slate-600 leading-relaxed text-lg">
+                    We accept all major credit cards including Visa, Mastercard, American Express, and
+                    Discover. We also support payments through PayPal for your convenience.
+                  </p>
+                </div>
 
-            <div className="border-b pb-6">
-              <h3 className="text-lg font-medium">Can I change plans later?</h3>
-              <p className="mt-2 text-muted-foreground">
-                Yes, you can upgrade or downgrade your plan at any time. Your subscription will be
-                prorated based on your current billing cycle.
-              </p>
-            </div>
+                <div className="border-b border-slate-200 pb-8">
+                  <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-3">
+                    <Users className="h-6 w-6 text-green-500" />
+                    Can I change plans later?
+                  </h3>
+                  <p className="text-slate-600 leading-relaxed text-lg">
+                    Yes, you can upgrade or downgrade your plan at any time. Your subscription will be
+                    prorated based on your current billing cycle, ensuring you only pay for what you use.
+                  </p>
+                </div>
 
-            <div className="border-b pb-6">
-              <h3 className="text-lg font-medium">Is there a free trial available?</h3>
-              <p className="mt-2 text-muted-foreground">
-                Yes, all paid plans come with a 14-day free trial. No credit card is required to
-                start your trial.
-              </p>
-            </div>
+                <div className="border-b border-slate-200 pb-8">
+                  <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-3">
+                    <Zap className="h-6 w-6 text-purple-500" />
+                    Is there a free trial available?
+                  </h3>
+                  <p className="text-slate-600 leading-relaxed text-lg">
+                    Yes, all paid plans come with a 14-day free trial. No credit card is required to
+                    start your trial, and you can cancel at any time during the trial period.
+                  </p>
+                </div>
 
-            <div>
-              <h3 className="text-lg font-medium">Need more information?</h3>
-              <p className="mt-2 text-muted-foreground">
-                Contact our sales team at{' '}
-                <a
-                  href="mailto:sales@waitlistnow.com"
-                  className="text-primary hover:underline"
-                >
-                  sales@waitlistnow.com
-                </a>{' '}
-                for more information about our enterprise plans.
-              </p>
+                <div>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-3">
+                    <Shield className="h-6 w-6 text-orange-500" />
+                    Need more information?
+                  </h3>
+                  <p className="text-slate-600 leading-relaxed text-lg">
+                    Contact our sales team at{' '}
+                    <a
+                      href="mailto:sales@waitlistnow.com"
+                      className="text-blue-600 hover:text-blue-700 font-semibold hover:underline transition-colors"
+                    >
+                      sales@waitlistnow.com
+                    </a>{' '}
+                    for more information about our enterprise plans and custom solutions.
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </MaxWidthWrapper>
+
+      <style jsx>{`
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(30px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+      `}</style>
     </div>
   );
 };

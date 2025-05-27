@@ -393,7 +393,7 @@ export default function NewWaitlistPage() {
       `data-form-layout="${formData.style.formLayout}"`,
       `data-show-labels="${formData.style.showLabels}"`,
       `data-show-branding="${showBranding.toString()}"`,
-      ...(formData.enableReferrals ? [`data-enable-referrals="true"`] : []),
+      ...(formData.enableReferrals ? ['data-enable-referrals="true"'] : []),
       ...(formData.referralReward ? [`data-referral-reward="${formData.referralReward}"`] : []),
       ...(formData.maxSignups ? [`data-max-signups="${formData.maxSignups}"`] : []),
     ];
@@ -1559,7 +1559,7 @@ function BehaviorSection({
             <div className="flex items-center gap-2">
               <Input
                 readOnly
-                value={`https://yourdomain.com/waitlist/new`}
+                value={'https://yourdomain.com/waitlist/new'}
                 className="bg-muted"
               />
               <Button

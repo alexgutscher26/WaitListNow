@@ -343,7 +343,7 @@ const onboardingSteps = [
                 </button>
               </div>
               <pre className="overflow-x-auto rounded-md bg-gray-900 p-3 text-sm">
-                <code className="text-blue-400">{`<div data-waitlist-embed></div>`}</code>
+                <code className="text-blue-400">{'<div data-waitlist-embed></div>'}</code>
               </pre>
             </div>
           </div>

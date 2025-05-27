@@ -34,7 +34,7 @@ interface ContentProps {
   setFormData: React.Dispatch<React.SetStateAction<FormData>>;
   errors: FormErrors;
   showPreview?: boolean;
-  setShowPreview?: React.Dispatch<React.SetStateAction<boolean>>;
+  setShowPreview?: (value: boolean) => void;
   copied?: string | null;
   setCopied?: React.Dispatch<React.SetStateAction<string | null>>;
 }

@@ -1,6 +1,5 @@
 ---
-trigger: manual
-glob:
-description:
+trigger: always_on
 ---
 
+Always use pnpm 

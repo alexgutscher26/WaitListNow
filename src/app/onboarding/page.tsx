@@ -95,7 +95,12 @@ const onboardingSteps = [
       <div className="space-y-6">
         <div className="space-y-4">
           <div className="space-y-2">
-            <label htmlFor="waitlist-name" className="text-sm font-semibold text-gray-700">Waitlist Name *</label>
+            <label
+              htmlFor="waitlist-name"
+              className="text-sm font-semibold text-gray-700"
+            >
+              Waitlist Name *
+            </label>
             <input
               id="waitlist-name"
               type="text"
@@ -117,7 +122,12 @@ const onboardingSteps = [
           </div>
 
           <div className="space-y-2">
-            <label htmlFor="website-url" className="text-sm font-semibold text-gray-700">Website URL *</label>
+            <label
+              htmlFor="website-url"
+              className="text-sm font-semibold text-gray-700"
+            >
+              Website URL *
+            </label>
             <input
               id="website-url"
               type="url"
@@ -139,7 +149,12 @@ const onboardingSteps = [
           </div>
 
           <div className="space-y-2">
-            <label htmlFor="launch-date" className="text-sm font-semibold text-gray-700">Expected Launch Date</label>
+            <label
+              htmlFor="launch-date"
+              className="text-sm font-semibold text-gray-700"
+            >
+              Expected Launch Date
+            </label>
             <input
               id="launch-date"
               type="date"
@@ -201,7 +216,12 @@ const onboardingSteps = [
           <div className="space-y-4 animate-in slide-in-from-top-2 duration-300">
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <label htmlFor="positions-to-skip" className="text-sm font-semibold text-gray-700">Positions to Skip</label>
+                <label
+                  htmlFor="positions-to-skip"
+                  className="text-sm font-semibold text-gray-700"
+                >
+                  Positions to Skip
+                </label>
                 <select
                   id="positions-to-skip"
                   className="w-full rounded-lg border-2 border-gray-200 p-3 transition-colors focus:border-blue-500 focus:outline-none focus:ring-0"
@@ -248,9 +268,13 @@ const onboardingSteps = [
     icon: <LinkIcon className="h-8 w-8 text-blue-500" />,
     content: ({
       showPreview = false,
-      setShowPreview = (_value: React.SetStateAction<boolean>) => { return; },
+      setShowPreview = (_value: React.SetStateAction<boolean>) => {
+        return;
+      },
       copied = null,
-      setCopied = (_value: React.SetStateAction<string | null>) => { return; },
+      setCopied = (_value: React.SetStateAction<string | null>) => {
+        return;
+      },
       errors = {},
     }: ContentProps) => {
       const waitlistId = `wl_${Math.random().toString(36).substr(2, 9)}`;

@@ -243,7 +243,7 @@ export default function NewWaitlistPage() {
   const isValidUrl = (url: string): boolean => {
     try {
       const parsedUrl = new URL(url);
-      return !!parsedUrl;
+      return Boolean(parsedUrl);
     } catch {
       return false;
     }

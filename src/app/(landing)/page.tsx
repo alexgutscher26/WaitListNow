@@ -102,12 +102,7 @@ const timeline = [
   },
 ];
 
-/**
- * @description This React component represents the homepage of WaitlistNow, a platform that helps founders build and manage waitlists for their products or services.
- * It includes sections such as an introduction to WaitlistNow, features highlights, customer success stories, and a call-to-action button encouraging users to start building their own waitlists.
- *
- * @component Homepage
- */
+
 export default function Page() {
   return (
     <div className="min-h-screen">

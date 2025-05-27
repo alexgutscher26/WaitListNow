@@ -6,7 +6,20 @@ import { Button } from '@/components/ui/button';
 import { client } from '@/lib/client';
 import { useUser } from '@clerk/nextjs';
 import { useMutation } from '@tanstack/react-query';
-import { Check, CheckCircle, XCircle, Star, Zap, Users, Shield, Crown, Sparkles, TrendingUp, Award, ArrowRight } from 'lucide-react';
+import {
+  Check,
+  CheckCircle,
+  XCircle,
+  Star,
+  Zap,
+  Users,
+  Shield,
+  Crown,
+  Sparkles,
+  TrendingUp,
+  Award,
+  ArrowRight,
+} from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { MaxWidthWrapper } from '@/components/max-width-wrapper';
 
@@ -252,8 +265,8 @@ const Page = () => {
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 relative overflow-hidden">
       {/* Background decorative elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-blue-400/20 to-purple-600/20 rounded-full blur-3xl"></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-br from-pink-400/20 to-orange-600/20 rounded-full blur-3xl"></div>
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-blue-400/20 to-purple-600/20 rounded-full blur-3xl" />
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-br from-pink-400/20 to-orange-600/20 rounded-full blur-3xl" />
       </div>
 
       <MaxWidthWrapper className="py-12 md:py-20 relative z-10">
@@ -266,7 +279,7 @@ const Page = () => {
                 Limited Time: 30% Off All Paid Plans
               </span>
             </div>
-            
+
             <h1 className="text-5xl lg:text-7xl font-bold tracking-tight mb-6">
               <span className="bg-gradient-to-r from-gray-900 via-blue-900 to-purple-900 bg-clip-text text-transparent">
                 Simple, transparent
@@ -276,12 +289,12 @@ const Page = () => {
                 pricing
               </span>
             </h1>
-            
+
             <p className="mt-8 text-xl lg:text-2xl text-slate-600 max-w-3xl mx-auto leading-relaxed">
-              Choose the perfect plan for your needs. Start free, scale as you grow. 
+              Choose the perfect plan for your needs. Start free, scale as you grow.
               <span className="text-blue-600 font-medium"> No hidden fees, cancel anytime.</span>
             </p>
-            
+
             <div className="mt-10 flex flex-wrap items-center justify-center gap-6 text-base text-slate-600">
               <div className="flex items-center gap-2 bg-white/60 backdrop-blur-sm px-4 py-2 rounded-full border border-white/20">
                 <Check className="h-5 w-5 text-emerald-500" />
@@ -307,8 +320,8 @@ const Page = () => {
               <div
                 key={plan.name}
                 className={`relative rounded-3xl bg-white/70 backdrop-blur-xl border border-white/20 shadow-xl transition-all duration-500 hover:shadow-2xl hover:-translate-y-2 group ${
-                  plan.featured 
-                    ? 'ring-2 ring-blue-500/50 scale-105 lg:scale-105 shadow-blue-500/25' 
+                  plan.featured
+                    ? 'ring-2 ring-blue-500/50 scale-105 lg:scale-105 shadow-blue-500/25'
                     : 'hover:shadow-slate-500/25'
                 }`}
                 style={{
@@ -318,15 +331,19 @@ const Page = () => {
               >
                 {plan.badge && (
                   <div className="absolute -top-5 left-1/2 transform -translate-x-1/2 z-10">
-                    <div className={`bg-gradient-to-r ${plan.color} text-white text-sm font-bold px-6 py-2 rounded-full shadow-lg relative`}>
+                    <div
+                      className={`bg-gradient-to-r ${plan.color} text-white text-sm font-bold px-6 py-2 rounded-full shadow-lg relative`}
+                    >
                       <span className="relative z-10">{plan.badge}</span>
-                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent rounded-full"></div>
+                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent rounded-full" />
                     </div>
                   </div>
                 )}
 
                 <div className="p-8">
-                  <div className={`inline-flex p-4 rounded-2xl bg-gradient-to-r ${plan.color} mb-6 shadow-lg group-hover:scale-110 transition-transform duration-300`}>
+                  <div
+                    className={`inline-flex p-4 rounded-2xl bg-gradient-to-r ${plan.color} mb-6 shadow-lg group-hover:scale-110 transition-transform duration-300`}
+                  >
                     <IconComponent className="h-7 w-7 text-white" />
                   </div>
 
@@ -367,15 +384,17 @@ const Page = () => {
                     Key features
                   </h4>
                   <ul className="space-y-4">
-                    {Object.entries(plan.features).slice(0, 6).map(([key, value], idx) => (
-                      <li
-                        key={idx}
-                        className="flex items-start gap-3 text-sm text-slate-600"
-                      >
-                        <CheckCircle className="h-5 w-5 text-emerald-500 mt-0.5 flex-shrink-0" />
-                        <span className="font-medium">{String(value)}</span>
-                      </li>
-                    ))}
+                    {Object.entries(plan.features)
+                      .slice(0, 6)
+                      .map(([key, value], idx) => (
+                        <li
+                          key={idx}
+                          className="flex items-start gap-3 text-sm text-slate-600"
+                        >
+                          <CheckCircle className="h-5 w-5 text-emerald-500 mt-0.5 flex-shrink-0" />
+                          <span className="font-medium">{String(value)}</span>
+                        </li>
+                      ))}
                   </ul>
                 </div>
               </div>
@@ -399,13 +418,17 @@ const Page = () => {
               <table className="w-full text-sm">
                 <thead className="bg-gradient-to-r from-slate-50 to-blue-50">
                   <tr className="border-b border-slate-200">
-                    <th className="py-6 px-6 font-semibold text-left text-gray-900 text-base">Feature</th>
+                    <th className="py-6 px-6 font-semibold text-left text-gray-900 text-base">
+                      Feature
+                    </th>
                     {pricingPlans.map((plan) => (
                       <th
                         key={plan.name}
                         className="py-6 px-4 font-semibold text-center min-w-[150px] text-gray-900 text-base"
                       >
-                        <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gradient-to-r ${plan.color} text-white text-sm`}>
+                        <div
+                          className={`inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gradient-to-r ${plan.color} text-white text-sm`}
+                        >
                           <plan.icon className="h-4 w-4" />
                           {plan.name}
                         </div>
@@ -452,7 +475,7 @@ const Page = () => {
         {/* Testimonials */}
         <div className="mt-32">
           <div className="bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 rounded-3xl p-12 relative overflow-hidden">
-            <div className="absolute inset-0 bg-black/10 backdrop-blur-sm"></div>
+            <div className="absolute inset-0 bg-black/10 backdrop-blur-sm" />
             <div className="relative z-10">
               <div className="text-center mb-16">
                 <h2 className="text-4xl lg:text-5xl font-bold tracking-tight text-white mb-4">
@@ -485,7 +508,9 @@ const Page = () => {
                         {testimonial.avatar}
                       </div>
                       <div>
-                        <div className="font-semibold text-gray-900 text-lg">{testimonial.author}</div>
+                        <div className="font-semibold text-gray-900 text-lg">
+                          {testimonial.author}
+                        </div>
                         <div className="text-slate-600">{testimonial.role}</div>
                       </div>
                     </div>
@@ -516,8 +541,8 @@ const Page = () => {
                     What payment methods do you accept?
                   </h3>
                   <p className="text-slate-600 leading-relaxed text-lg">
-                    We accept all major credit cards including Visa, Mastercard, American Express, and
-                    Discover. We also support payments through PayPal for your convenience.
+                    We accept all major credit cards including Visa, Mastercard, American Express,
+                    and Discover. We also support payments through PayPal for your convenience.
                   </p>
                 </div>
 
@@ -527,8 +552,9 @@ const Page = () => {
                     Can I change plans later?
                   </h3>
                   <p className="text-slate-600 leading-relaxed text-lg">
-                    Yes, you can upgrade or downgrade your plan at any time. Your subscription will be
-                    prorated based on your current billing cycle, ensuring you only pay for what you use.
+                    Yes, you can upgrade or downgrade your plan at any time. Your subscription will
+                    be prorated based on your current billing cycle, ensuring you only pay for what
+                    you use.
                   </p>
                 </div>
 

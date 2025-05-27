@@ -242,9 +242,9 @@ const onboardingSteps = [
     icon: <LinkIcon className="h-8 w-8 text-blue-500" />,
     content: ({
       showPreview = false,
-      setShowPreview = () => {},
+      setShowPreview = (_value: React.SetStateAction<boolean>) => {},
       copied = null,
-      setCopied = (value: React.SetStateAction<string | null>) => {},
+      setCopied = (_value: React.SetStateAction<string | null>) => {},
       errors = {},
     }: ContentProps) => {
       const waitlistId = 'wl_' + Math.random().toString(36).substr(2, 9);

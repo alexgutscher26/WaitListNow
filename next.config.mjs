@@ -13,7 +13,7 @@ const nextConfig = {
     domains: ['localhost'], // Add your image domains here
   },
   // Webpack configuration
-  webpack: (config, { }) => {
+  webpack: (config) => {
     // Ignore critical dependency warnings from require-in-the-middle and other modules
     config.ignoreWarnings = [
       // Ignore require-in-the-middle warnings

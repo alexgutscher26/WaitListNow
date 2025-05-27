@@ -233,7 +233,7 @@ const Page = () => {
 
   const { mutate: createCheckoutSession } = useMutation<{ url: string | null }, Error>({
     mutationFn: async () => {
-      const res = await client.payment.createCheckoutSession.$post();
+      const res = await client.payment.createCheckoutSession.$post({});
       return await res.json();
     },
     onSuccess: (data) => {

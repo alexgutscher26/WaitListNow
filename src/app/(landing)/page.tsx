@@ -252,7 +252,7 @@ export default function Page() {
         </MaxWidthWrapper>
       </section>
 
-       {/* Case Studies Section */}
+      {/* Case Studies Section */}
       <section className="py-20 bg-white">
         <MaxWidthWrapper>
           <div className="text-center max-w-3xl mx-auto mb-16">
@@ -331,7 +331,7 @@ export default function Page() {
         </MaxWidthWrapper>
       </section>
 
-       {/* FAQ Section */}
+      {/* FAQ Section */}
       <section
         id="faq"
         className="py-20 sm:py-28 bg-white"
@@ -709,20 +709,20 @@ export default function Page() {
             {/* Footer Links */}
             <div className="flex flex-wrap justify-center items-center gap-6 sm:gap-8 text-sm text-gray-400">
               <p>© {new Date().getFullYear()} WaitlistNow Inc. All rights reserved.</p>
-              <Link 
-                href="/terms" 
+              <Link
+                href="/terms"
                 className="hover:text-white transition-colors"
               >
                 Terms of service
               </Link>
-              <Link 
-                href="/privacy" 
+              <Link
+                href="/privacy"
                 className="hover:text-white transition-colors"
               >
                 Privacy Policy
               </Link>
-              <Link 
-                href="/help" 
+              <Link
+                href="/help"
                 className="hover:text-white transition-colors"
               >
                 Help Center

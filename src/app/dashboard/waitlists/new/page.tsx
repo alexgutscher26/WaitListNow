@@ -1559,7 +1559,7 @@ function BehaviorSection({
             <div className="flex items-center gap-2">
               <Input
                 readOnly
-                value={"https://yourdomain.com/waitlist/new"}
+                value={'https://yourdomain.com/waitlist/new'}
                 className="bg-muted"
               />
               <Button

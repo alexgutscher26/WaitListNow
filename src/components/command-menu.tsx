@@ -4,6 +4,12 @@ import { Command as CommandPrimitive } from 'cmdk';
 import { Search, X, ArrowUp, ArrowDown, Loader2 } from 'lucide-react';
 import * as React from 'react';
 
+declare module 'react' {
+  interface HTMLAttributes<T> extends React.AriaAttributes, React.DOMAttributes<T> {
+    'cmdk-input-wrapper'?: string;
+  }
+}
+
 import { cn } from '@/lib/utils';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 

@@ -52,7 +52,7 @@ export const router = <T extends Record<string, OperationType<any, any>>>(obj: T
        * Wraps middleware execution and updates context with results.
        */
       const wrapperFunction = async (c: Context, next: Next) => {
-        const ctx = c.get('__middleware_output') ?? {};
+        const ctx = c.get('__middleware_output') ?? {} as Record<string, never>;
 
         /**
          * Updates context with new arguments and sets middleware output.
@@ -132,8 +132,8 @@ export const router = <T extends Record<string, OperationType<any, any>>>(obj: T
     }
   });
 
-  type InferInput<T> = T extends OperationType<infer I, any> ? I : {};
-  type InferOutput<T> = T extends OperationType<any, infer I> ? I : {};
+  type InferInput<T> = T extends OperationType<infer I, any> ? I : Record<string, never>;
+  type InferOutput<T> = T extends OperationType<any, infer I> ? I : Record<string, never>;
 
   return route as Hono<
     { Bindings: Bindings; Variables: Variables },

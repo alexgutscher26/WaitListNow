@@ -176,6 +176,10 @@ interface PageProps {
  * @returns A React functional component that renders the appropriate icon with given className.
  */
 const getActivityIcon = (type: Activity['type']): React.ComponentType<{ className?: string }> => {
+  const _exhaustiveCheck = (type: never): never => {
+    throw new Error(`Unexpected activity type: ${type}`);
+  };
+
   switch (type) {
     case 'new_subscriber':
       return ({ className }) => <Users className={cn('h-4 w-4 text-blue-600', className)} />;
@@ -188,7 +192,7 @@ const getActivityIcon = (type: Activity['type']): React.ComponentType<{ classNam
     case 'milestone':
       return ({ className }) => <TrendingUp className={cn('h-4 w-4 text-orange-600', className)} />;
     default:
-      const _exhaustiveCheck: never = type;
+      _exhaustiveCheck(type);
       return ({ className }) => <Bell className={cn('h-4 w-4 text-gray-600', className)} />;
   }
 };

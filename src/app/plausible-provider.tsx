@@ -13,5 +13,5 @@ export function PlausibleProvider({ children }: { children: React.ReactNode }) {
     plausible.initialize();
   }, []);
 
-  return <>{children}</>;
+  return children;
 }

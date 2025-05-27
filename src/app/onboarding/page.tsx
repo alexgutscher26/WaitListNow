@@ -95,8 +95,9 @@ const onboardingSteps = [
       <div className="space-y-6">
         <div className="space-y-4">
           <div className="space-y-2">
-            <label className="text-sm font-semibold text-gray-700">Waitlist Name *</label>
+            <label htmlFor="waitlist-name" className="text-sm font-semibold text-gray-700">Waitlist Name *</label>
             <input
+              id="waitlist-name"
               type="text"
               className={`w-full rounded-lg border-2 p-3 transition-colors focus:outline-none focus:ring-0 ${
                 errors.waitlistName
@@ -116,8 +117,9 @@ const onboardingSteps = [
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm font-semibold text-gray-700">Website URL *</label>
+            <label htmlFor="website-url" className="text-sm font-semibold text-gray-700">Website URL *</label>
             <input
+              id="website-url"
               type="url"
               className={`w-full rounded-lg border-2 p-3 transition-colors focus:outline-none focus:ring-0 ${
                 errors.websiteUrl
@@ -137,8 +139,9 @@ const onboardingSteps = [
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm font-semibold text-gray-700">Expected Launch Date</label>
+            <label htmlFor="launch-date" className="text-sm font-semibold text-gray-700">Expected Launch Date</label>
             <input
+              id="launch-date"
               type="date"
               className="w-full rounded-lg border-2 border-gray-200 p-3 transition-colors focus:border-blue-500 focus:outline-none focus:ring-0"
               value={formData.launchDate}
@@ -179,9 +182,11 @@ const onboardingSteps = [
               </p>
             </div>
             <label className="relative inline-flex cursor-pointer items-center">
+              <span className="sr-only">Enable referral rewards</span>
               <input
                 type="checkbox"
                 className="peer sr-only"
+                aria-label="Enable referral rewards"
                 checked={formData.referralEnabled}
                 onChange={(e) =>
                   setFormData((prev) => ({ ...prev, referralEnabled: e.target.checked }))
@@ -196,8 +201,9 @@ const onboardingSteps = [
           <div className="space-y-4 animate-in slide-in-from-top-2 duration-300">
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <label className="text-sm font-semibold text-gray-700">Positions to Skip</label>
+                <label htmlFor="positions-to-skip" className="text-sm font-semibold text-gray-700">Positions to Skip</label>
                 <select
+                  id="positions-to-skip"
                   className="w-full rounded-lg border-2 border-gray-200 p-3 transition-colors focus:border-blue-500 focus:outline-none focus:ring-0"
                   value={formData.referralReward}
                   onChange={(e) =>
@@ -211,7 +217,7 @@ const onboardingSteps = [
                 </select>
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-semibold text-gray-700">Per Referral</label>
+                <h4 className="text-sm font-semibold text-gray-700">Per Referral</h4>
                 <div className="rounded-lg border-2 border-gray-200 p-3 bg-gray-50">
                   <span className="text-gray-600">Each successful invite</span>
                 </div>
@@ -242,12 +248,12 @@ const onboardingSteps = [
     icon: <LinkIcon className="h-8 w-8 text-blue-500" />,
     content: ({
       showPreview = false,
-      setShowPreview = (_value: React.SetStateAction<boolean>) => {},
+      setShowPreview = (_value: React.SetStateAction<boolean>) => { return; },
       copied = null,
-      setCopied = (_value: React.SetStateAction<string | null>) => {},
+      setCopied = (_value: React.SetStateAction<string | null>) => { return; },
       errors = {},
     }: ContentProps) => {
-      const waitlistId = 'wl_' + Math.random().toString(36).substr(2, 9);
+      const waitlistId = `wl_${Math.random().toString(36).substr(2, 9)}`;
 
       /**
        * Copies text to clipboard and sets copied state with a timeout.

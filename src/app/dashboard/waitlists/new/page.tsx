@@ -130,11 +130,11 @@ const BORDER_RADIUS: { value: ButtonRounded; label: string }[] = [
 ];
 
 /**
- * This component renders a page for creating a new waitlist, allowing users to input basic information,
- * customize fields, adjust appearance settings, and define behavior options. It includes validation,
- * form submission handling, preview mode, tab navigation, and various UI components for different sections.
+ * This component is responsible for creating a new waitlist in the dashboard.
+ * It includes various sections such as basic information, custom fields, appearance settings,
+ * and behavior settings. Users can navigate between these tabs to customize their waitlist form.
  *
- * @returns {JSX.Element} - The rendered dashboard page with tabs for different sections of the waitlist creation process.
+ * @returns {JSX.Element} - The rendered React component for creating a new waitlist.
  */
 export default function NewWaitlistPage() {
   const router = useRouter();

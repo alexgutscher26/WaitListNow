@@ -252,7 +252,7 @@ export default function Page() {
         </MaxWidthWrapper>
       </section>
 
-       {/* Case Studies Section */}
+      {/* Case Studies Section */}
       <section className="py-20 bg-white">
         <MaxWidthWrapper>
           <div className="text-center max-w-3xl mx-auto mb-16">
@@ -331,7 +331,7 @@ export default function Page() {
         </MaxWidthWrapper>
       </section>
 
-       {/* FAQ Section */}
+      {/* FAQ Section */}
       <section
         id="faq"
         className="py-20 sm:py-28 bg-white"

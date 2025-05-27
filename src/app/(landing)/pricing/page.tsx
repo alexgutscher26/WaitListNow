@@ -252,8 +252,8 @@ const Page = () => {
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 relative overflow-hidden">
       {/* Background decorative elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-blue-400/20 to-purple-600/20 rounded-full blur-3xl"></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-br from-pink-400/20 to-orange-600/20 rounded-full blur-3xl"></div>
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-blue-400/20 to-purple-600/20 rounded-full blur-3xl" />
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-br from-pink-400/20 to-orange-600/20 rounded-full blur-3xl" />
       </div>
 
       <MaxWidthWrapper className="py-12 md:py-20 relative z-10">
@@ -320,7 +320,7 @@ const Page = () => {
                   <div className="absolute -top-5 left-1/2 transform -translate-x-1/2 z-10">
                     <div className={`bg-gradient-to-r ${plan.color} text-white text-sm font-bold px-6 py-2 rounded-full shadow-lg relative`}>
                       <span className="relative z-10">{plan.badge}</span>
-                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent rounded-full"></div>
+                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent rounded-full" />
                     </div>
                   </div>
                 )}
@@ -452,7 +452,7 @@ const Page = () => {
         {/* Testimonials */}
         <div className="mt-32">
           <div className="bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 rounded-3xl p-12 relative overflow-hidden">
-            <div className="absolute inset-0 bg-black/10 backdrop-blur-sm"></div>
+            <div className="absolute inset-0 bg-black/10 backdrop-blur-sm" />
             <div className="relative z-10">
               <div className="text-center mb-16">
                 <h2 className="text-4xl lg:text-5xl font-bold tracking-tight text-white mb-4">

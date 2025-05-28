@@ -12,6 +12,18 @@ const isValidUrl = (url: string): boolean => {
     return false;
   }
 };
+
+// Shared style utility functions
+const getBorderRadiusValue = (size: ButtonRounded): string => {
+  const radiusMap = {
+    none: '0px',
+    sm: '0.25rem',
+    md: '0.375rem',
+    lg: '0.5rem',
+    full: '9999px',
+  };
+  return radiusMap[size] || '0.375rem';
+};
 // Simple Badge component
 /**
  * Renders a badge component with customizable variant and class name.
@@ -94,7 +106,6 @@ interface WaitlistStyle {
 }
 
 interface FormData {
-  [x: string]: Color | undefined;
   name: string;
   description: string;
   websiteUrl: string;
@@ -213,14 +224,7 @@ export default function NewWaitlistPage() {
 
   // Helper functions
   const getBorderRadius = useCallback((size: ButtonRounded): string => {
-    const radiusMap = {
-      none: '0px',
-      sm: '0.25rem',
-      md: '0.375rem',
-      lg: '0.5rem',
-      full: '9999px',
-    };
-    return radiusMap[size] || '0.375rem';
+    return getBorderRadiusValue(size);
   }, []);
 
   // Validation
@@ -369,8 +373,26 @@ export default function NewWaitlistPage() {
     setIsSubmitting(true);
 
     try {
+      // Ensure all style properties are properly formatted for database storage
+      const formattedData = {
+        ...formData,
+        style: {
+          ...formData.style,
+          // Ensure color values have # prefix if needed
+          primaryColor: formData.style.primaryColor.startsWith('#') 
+            ? formData.style.primaryColor 
+            : `#${formData.style.primaryColor}`,
+          backgroundColor: formData.style.backgroundColor.startsWith('#') 
+            ? formData.style.backgroundColor 
+            : `#${formData.style.backgroundColor}`,
+          textColor: formData.style.textColor.startsWith('#') 
+            ? formData.style.textColor 
+            : `#${formData.style.textColor}`,
+        }
+      };
+
       // TODO: Replace with actual API call
-      console.log('Submitting form:', formData);
+      console.log('Submitting form:', formattedData);
 
       // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 2000));
@@ -389,18 +411,35 @@ export default function NewWaitlistPage() {
   const showBranding = formData.showBranding !== false; // Default to true if undefined
 
   // Generate embed code based on selected type
+  // This code ensures all styling properties are passed to the public link
+  // to maintain consistency between the preview and the embedded form
   const embedCode = useMemo(() => {
     const baseUrl = 'https://yourdomain.com'; // Replace with your actual domain
     const waitlistId = 'new'; // This would be the actual waitlist ID in a real app
 
     const dataAttributes = [
+      // Identification
       `data-waitlist-id="${waitlistId}"`,
+      
+      // Button styling
       `data-button-text="${formData.style.buttonText}"`,
       `data-button-variant="${formData.style.buttonVariant}"`,
       `data-button-rounded="${formData.style.buttonRounded}"`,
+      
+      // Colors and typography
       `data-primary-color="${formData.style.primaryColor.replace('#', '')}"`,
+      `data-background-color="${formData.style.backgroundColor.replace('#', '')}"`,
+      `data-text-color="${formData.style.textColor.replace('#', '')}"`,
+      `data-font-family="${formData.style.fontFamily}"`,
+      
+      // Layout and spacing
       `data-form-layout="${formData.style.formLayout}"`,
       `data-show-labels="${formData.style.showLabels}"`,
+      `data-padding="${formData.style.padding}"`,
+      `data-border-radius="${formData.style.borderRadius}"`,
+      `data-box-shadow="${formData.style.boxShadow}"`,
+      
+      // Branding and features
       `data-show-branding="${showBranding.toString()}"`,
       ...(formData.enableReferrals ? ['data-enable-referrals="true"'] : []),
       ...(formData.referralReward ? [`data-referral-reward="${formData.referralReward}"`] : []),
@@ -1602,6 +1641,10 @@ interface WaitlistPreviewProps {
  * referrals, and email verification requirements. The form's style is determined by props from
  * formData, including background color, text color, font family, padding, border radius, button
  * styles, and layout options.
+ * 
+ * IMPORTANT: Any style changes made here should be reflected in the embedCode generation to ensure
+ * consistency between the preview and the public link. The embedCode function passes all style
+ * properties as data attributes to the public link, which are then used to style the embedded form.
  *
  * @param {WaitlistPreviewProps} formData - An object containing all necessary data to render the form preview.
  */
@@ -1610,14 +1653,7 @@ function WaitlistPreview({ formData }: WaitlistPreviewProps) {
    * Retrieves the border radius value based on the specified size.
    */
   const getBorderRadius = (size: ButtonRounded): string => {
-    const radiusMap = {
-      none: '0px',
-      sm: '0.25rem',
-      md: '0.375rem',
-      lg: '0.5rem',
-      full: '9999px',
-    };
-    return radiusMap[size] || '0.375rem';
+    return getBorderRadiusValue(size);
   };
 
   return (
@@ -1637,7 +1673,7 @@ function WaitlistPreview({ formData }: WaitlistPreviewProps) {
               maxWidth: '100%',
               width: '100%',
               backgroundColor: formData.style.backgroundColor,
-              color: formData.textColor,
+              color: formData.style.textColor,
               fontFamily: formData.style.fontFamily,
               boxShadow:
                 formData.style.boxShadow === 'none'

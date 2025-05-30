@@ -1733,7 +1733,7 @@ function BehaviorSection({
               className="text-gray-400 hover:text-gray-600"
               onClick={() => {
                 // TODO: Show help tooltip
-                console.log('Show advanced settings help');
+                // console.log('Show advanced settings help');
               }}
               aria-label="Help"
             >

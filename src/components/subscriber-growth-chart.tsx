@@ -262,7 +262,7 @@ export function SubscriberGrowthChart({
   }
 
   // Debug log the raw data
-  console.log('Raw data from API:', data);
+  // console.log('Raw data from API:', data);
 
   // Format the data for the chart with proper timezone handling
   const chartData = data.map((item) => {
@@ -303,7 +303,7 @@ export function SubscriberGrowthChart({
     }
   });
 
-  console.log('Formatted chart data:', chartData);
+  // console.log('Formatted chart data:', chartData);
 
   // Calculate the max value for the Y-axis with some padding
   const maxValue = Math.max(...data.map((item) => item.cumulative), 10) * 1.1;

@@ -14,14 +14,14 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 export async function POST(request: NextRequest) {
   const origin = request.headers.get('origin') || 'http://localhost:3000';
 
-  console.log('Request origin:', origin);
+  // console.log('Request origin:', origin);
 
   try {
     // Verify authentication
     const auth = getAuth(request);
     const userId = auth.userId;
     if (!userId) {
-      console.log('Unauthorized: No user ID found');
+      // console.log('Unauthorized: No user ID found');
       return new NextResponse('Unauthorized', { status: 401 });
     }
 
@@ -67,12 +67,12 @@ export async function POST(request: NextRequest) {
 
     // Send verification email
     try {
-      console.log('Sending verification email to:', email);
+      // console.log('Sending verification email to:', email);
       // Use the full URL for the verification endpoint
       const verifyUrl = new URL('/api/verify-email', origin).toString();
       const verificationUrl = `${verifyUrl}?token=${verificationToken}&email=${encodeURIComponent(email)}`;
-      console.log('Full verification URL:', verificationUrl);
-      console.log('Verification URL:', verifyUrl);
+      // console.log('Full verification URL:', verificationUrl);
+      // console.log('Verification URL:', verifyUrl);
 
       const emailData = {
         from: 'WaitListNow <onboarding@resend.dev>',
@@ -318,10 +318,10 @@ Need help? Contact us at support@waitlistnow.app
         `,
       };
 
-      console.log('Sending email with data:', JSON.stringify(emailData, null, 2));
+      // console.log('Sending email with data:', JSON.stringify(emailData, null, 2));
 
       const response = await resend.emails.send(emailData);
-      console.log('Resend API response:', JSON.stringify(response, null, 2));
+      // console.log('Resend API response:', JSON.stringify(response, null, 2));
 
       if (!response) {
         throw new Error('No response from Resend API');

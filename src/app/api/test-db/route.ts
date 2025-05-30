@@ -24,7 +24,7 @@ export const runtime = 'nodejs';
 export async function GET() {
   try {
     // Rate limiting check
-    const identifier = getHeaders().get('x-forwarded-for') || 'unknown';
+    const identifier = (await getHeaders()).get('x-forwarded-for') || 'unknown';
     const { success } = await limiter.check(10, identifier); // 10 requests per minute
 
     if (!success) {
@@ -54,7 +54,7 @@ export async function GET() {
     }
 
     // Debug: Log the Clerk user ID
-    console.log('Clerk User ID:', user.id);
+    // console.log('Clerk User ID:', user.id);
 
     // Verify user exists in our database
     let dbUser: UserData | null = null;
@@ -71,7 +71,7 @@ export async function GET() {
 
       // If not found by Clerk ID, try to find by email
       if (!dbUser && user.emailAddresses?.[0]?.emailAddress) {
-        console.log('Trying to find user by email:', user.emailAddresses[0].emailAddress);
+        // console.log('Trying to find user by email:', user.emailAddresses[0].emailAddress);
         const userByEmail = await db.user.findFirst({
           where: { email: user.emailAddresses[0].emailAddress },
           select: {
@@ -85,12 +85,12 @@ export async function GET() {
 
       // Debug: Log all users if still not found
       if (!dbUser) {
-        console.log('User not found, listing all users:');
+        // console.log('User not found, listing all users:');
         const allUsers = await db.user.findMany({
           select: { id: true, email: true, createdAt: true },
           take: 10,
         });
-        console.log('First 10 users in DB:', allUsers);
+        // console.log('First 10 users in DB:', allUsers);
 
         return NextResponse.json(
           {

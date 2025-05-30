@@ -118,24 +118,24 @@ export async function GET(req: NextRequest) {
     console.log('[WAITLISTS_GET] Fetching waitlists...');
 
     const { userId } = getAuth(req);
-    console.log('[WAITLISTS_GET] User ID from auth:', userId);
+    // console.log('[WAITLISTS_GET] User ID from auth:', userId);
 
     if (!userId) {
-      console.error('[WAITLISTS_GET] No user ID found in session');
+      // console.error('[WAITLISTS_GET] No user ID found in session');
       return new NextResponse('Unauthorized', { status: 401 });
     }
 
     const user = await db.user.findUnique({
       where: { externalId: userId },
     });
-    console.log('[WAITLISTS_GET] Found user:', user?.id);
+    // console.log('[WAITLISTS_GET] Found user:', user?.id);
 
     if (!user) {
       console.error('[WAITLISTS_GET] User not found in database');
       return new NextResponse('User not found', { status: 404 });
     }
 
-    console.log('[WAITLISTS_GET] Querying waitlists for user:', user.id);
+    // console.log('[WAITLISTS_GET] Querying waitlists for user:', user.id);
     const waitlists = await db.waitlist.findMany({
       where: {
         userId: user.id,
@@ -152,7 +152,7 @@ export async function GET(req: NextRequest) {
       },
     });
 
-    console.log(`[WAITLISTS_GET] Found ${waitlists.length} waitlists`);
+    // console.log(`[WAITLISTS_GET] Found ${waitlists.length} waitlists`);
     return NextResponse.json(waitlists);
   } catch (error) {
     console.error('[WAITLISTS_GET]', error);

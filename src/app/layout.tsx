@@ -6,6 +6,7 @@ import { SpeedInsights } from '@vercel/speed-insights/next';
 import { PlausibleProvider } from './plausible-provider';
 import { HeroUIProvider } from '@heroui/react';
 import { QueryProvider } from '@/providers/query-provider';
+import { PostHogProvider } from '@/providers/posthog-provider';
 import { cn } from '@/lib/utils';
 import './globals.css';
 import { Inter } from 'next/font/google';
@@ -76,28 +77,27 @@ interface RootLayoutProps {
  */
 export default function RootLayout({ children, modal }: RootLayoutProps) {
   return (
-    <html
-      lang="en"
-      className={cn('h-full', inter.variable)}
-    >
+    <html lang="en" className={cn('h-full', inter.variable)}>
       <body className={cn('min-h-full bg-background font-sans antialiased')}>
-        <ClerkProvider>
-          <QueryProvider>
-            <HeroUIProvider>
-              <PlausibleProvider>
-                <div className="relative flex min-h-screen flex-col">
-                  <main className="flex-1">
-                    {children}
-                    {modal}
-                  </main>
-                </div>
-                <Toaster />
-                <Analytics />
-                <SpeedInsights />
-              </PlausibleProvider>
-            </HeroUIProvider>
-          </QueryProvider>
-        </ClerkProvider>
+        <PostHogProvider>
+          <ClerkProvider>
+            <QueryProvider>
+              <HeroUIProvider>
+                <PlausibleProvider>
+                  <div className="relative flex min-h-screen flex-col">
+                    <main className="flex-1">
+                      {children}
+                      {modal}
+                    </main>
+                  </div>
+                  <Toaster />
+                  <Analytics />
+                  <SpeedInsights />
+                </PlausibleProvider>
+              </HeroUIProvider>
+            </QueryProvider>
+          </ClerkProvider>
+        </PostHogProvider>
       </body>
     </html>
   );

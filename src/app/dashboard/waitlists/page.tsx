@@ -104,7 +104,7 @@ export default function WaitlistsPage() {
   } = useQuery<WaitlistWithCount[]>({
     queryKey: ['waitlists'],
     queryFn: async (): Promise<WaitlistWithCount[]> => {
-      console.log('[WaitlistsPage] Fetching waitlists...');
+      // console.log('[WaitlistsPage] Fetching waitlists...');
       const res = await fetch('/api/waitlists', {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
@@ -112,7 +112,7 @@ export default function WaitlistsPage() {
         credentials: 'include',
       });
 
-      console.log('[WaitlistsPage] Response status:', res.status);
+      // console.log('[WaitlistsPage] Response status:', res.status);
 
       if (!res.ok) {
         const errorText = await res.text();
@@ -129,14 +129,14 @@ export default function WaitlistsPage() {
       }
 
       const data = await res.json();
-      console.log('[WaitlistsPage] Raw API response:', data);
+      // console.log('[WaitlistsPage] Raw API response:', data);
 
       if (!Array.isArray(data)) {
         console.error('[WaitlistsPage] Invalid response format:', data);
         throw new Error('Invalid response format from server: expected an array');
       }
 
-      console.log(`[WaitlistsPage] Successfully fetched ${data.length} waitlists`);
+      // console.log(`[WaitlistsPage] Successfully fetched ${data.length} waitlists`);
       return data;
     },
     refetchOnWindowFocus: false,
@@ -261,14 +261,14 @@ export default function WaitlistsPage() {
       return isValid;
     });
 
-    console.log(
-      `[WaitlistsPage] Filtered ${filtered.length} valid waitlists out of ${waitlists.length}`,
-    );
+   // console.log(
+   //    `[WaitlistsPage] Filtered ${filtered.length} valid waitlists out of ${waitlists.length}`,
+   // );
     return filtered;
   })();
 
   const hasWaitlists = safeWaitlists.length > 0;
-  console.log(`[WaitlistsPage] hasWaitlists: ${hasWaitlists} (${safeWaitlists.length} waitlists)`);
+  // console.log(`[WaitlistsPage] hasWaitlists: ${hasWaitlists} (${safeWaitlists.length} waitlists)`);
 
   // Calculate total subscribers safely
   const totalSubscribers = safeWaitlists.reduce<number>((sum, wl) => {

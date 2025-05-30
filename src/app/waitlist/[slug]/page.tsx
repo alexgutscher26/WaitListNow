@@ -9,7 +9,7 @@ interface WaitlistPageProps {
 }
 
 export default async function WaitlistPage({ params }: WaitlistPageProps) {
-  console.log('Fetching waitlist with slug:', params.slug);
+  // console.log('Fetching waitlist with slug:', params.slug);
 
   try {
     // First try to find the waitlist by slug without status filter
@@ -26,10 +26,10 @@ export default async function WaitlistPage({ params }: WaitlistPageProps) {
       },
     });
 
-    console.log('Found waitlist (any status):', waitlist);
+    // console.log('Found waitlist (any status):', waitlist);
 
     if (!waitlist) {
-      console.log('Waitlist not found, showing ended message for slug:', params.slug);
+      // console.log('Waitlist not found, showing ended message for slug:', params.slug);
       return (
         <div className="min-h-screen flex items-center justify-center p-4 bg-gray-100">
           <div className="max-w-md w-full space-y-6 text-center">
@@ -49,7 +49,7 @@ export default async function WaitlistPage({ params }: WaitlistPageProps) {
 
     if (waitlist.status !== 'ACTIVE') {
       // Don't log an error since we're handling this case gracefully
-      console.log(`Waitlist found with status: ${waitlist.status}. Showing appropriate message.`);
+      // console.log(`Waitlist found with status: ${waitlist.status}. Showing appropriate message.`);
       return (
         <div className="min-h-screen flex items-center justify-center p-4 bg-gray-100">
           <div className="max-w-md w-full space-y-6 text-center">

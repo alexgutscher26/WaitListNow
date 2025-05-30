@@ -42,12 +42,14 @@ export function BehaviorSection({ formData, onSettingsChange }: BehaviorSectionP
     <Card>
       <CardHeader>
         <CardTitle>Behavior</CardTitle>
-        <CardDescription>
-          Configure how your waitlist behaves.
-        </CardDescription>
+        <CardDescription>Configure how your waitlist behaves.</CardDescription>
       </CardHeader>
       <CardContent>
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+        <Tabs
+          value={activeTab}
+          onValueChange={setActiveTab}
+          className="space-y-6"
+        >
           <TabsList>
             <TabsTrigger value="confirmation">Confirmation</TabsTrigger>
             <TabsTrigger value="verification">Verification</TabsTrigger>
@@ -55,7 +57,10 @@ export function BehaviorSection({ formData, onSettingsChange }: BehaviorSectionP
             <TabsTrigger value="embed">Embed</TabsTrigger>
           </TabsList>
 
-          <TabsContent value="confirmation" className="space-y-6">
+          <TabsContent
+            value="confirmation"
+            className="space-y-6"
+          >
             <div className="space-y-4">
               <div>
                 <Label>After Signup</Label>
@@ -68,7 +73,10 @@ export function BehaviorSection({ formData, onSettingsChange }: BehaviorSectionP
                       onChange={() => onSettingsChange('confirmationType', 'message')}
                       className="h-4 w-4 text-indigo-600 focus:ring-indigo-500"
                     />
-                    <Label htmlFor="confirmation-message" className="font-normal">
+                    <Label
+                      htmlFor="confirmation-message"
+                      className="font-normal"
+                    >
                       Show confirmation message
                     </Label>
                   </div>
@@ -80,7 +88,10 @@ export function BehaviorSection({ formData, onSettingsChange }: BehaviorSectionP
                       onChange={() => onSettingsChange('confirmationType', 'redirect')}
                       className="h-4 w-4 text-indigo-600 focus:ring-indigo-500"
                     />
-                    <Label htmlFor="confirmation-redirect" className="font-normal">
+                    <Label
+                      htmlFor="confirmation-redirect"
+                      className="font-normal"
+                    >
                       Redirect to URL
                     </Label>
                   </div>
@@ -115,7 +126,10 @@ export function BehaviorSection({ formData, onSettingsChange }: BehaviorSectionP
             </div>
           </TabsContent>
 
-          <TabsContent value="verification" className="space-y-6">
+          <TabsContent
+            value="verification"
+            className="space-y-6"
+          >
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <div>
@@ -127,21 +141,27 @@ export function BehaviorSection({ formData, onSettingsChange }: BehaviorSectionP
                 <Switch
                   id="email-verification"
                   checked={formData.settings.requireEmailVerification}
-                  onCheckedChange={(checked) => onSettingsChange('requireEmailVerification', checked)}
+                  onCheckedChange={(checked) =>
+                    onSettingsChange('requireEmailVerification', checked)
+                  }
                 />
               </div>
 
               {formData.settings.requireEmailVerification && (
                 <div className="p-4 bg-blue-50 rounded-md border border-blue-200">
                   <p className="text-sm text-blue-700">
-                    Users will receive an email with a verification link. They must click the link to confirm their subscription.
+                    Users will receive an email with a verification link. They must click the link
+                    to confirm their subscription.
                   </p>
                 </div>
               )}
             </div>
           </TabsContent>
 
-          <TabsContent value="referrals" className="space-y-6">
+          <TabsContent
+            value="referrals"
+            className="space-y-6"
+          >
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <div>
@@ -166,7 +186,9 @@ export function BehaviorSection({ formData, onSettingsChange }: BehaviorSectionP
                       type="number"
                       min="0"
                       value={formData.settings.maxReferrals}
-                      onChange={(e) => onSettingsChange('maxReferrals', parseInt(e.target.value) || 0)}
+                      onChange={(e) =>
+                        onSettingsChange('maxReferrals', parseInt(e.target.value) || 0)
+                      }
                       className="mt-2 w-32"
                     />
                     <p className="mt-1 text-sm text-muted-foreground">
@@ -176,7 +198,8 @@ export function BehaviorSection({ formData, onSettingsChange }: BehaviorSectionP
 
                   <div className="p-4 bg-blue-50 rounded-md border border-blue-200">
                     <p className="text-sm text-blue-700">
-                      Users will receive a unique referral link to share with friends. You can track referrals in the dashboard.
+                      Users will receive a unique referral link to share with friends. You can track
+                      referrals in the dashboard.
                     </p>
                   </div>
                 </div>
@@ -184,7 +207,10 @@ export function BehaviorSection({ formData, onSettingsChange }: BehaviorSectionP
             </div>
           </TabsContent>
 
-          <TabsContent value="embed" className="space-y-6">
+          <TabsContent
+            value="embed"
+            className="space-y-6"
+          >
             <div className="space-y-4">
               <div>
                 <Label>Embed Code</Label>
@@ -214,7 +240,9 @@ export function BehaviorSection({ formData, onSettingsChange }: BehaviorSectionP
               <div className="p-4 bg-yellow-50 rounded-md border border-yellow-200">
                 <h4 className="text-sm font-medium text-yellow-800 mb-1">Note</h4>
                 <p className="text-sm text-yellow-700">
-                  Make sure to replace <code className="bg-yellow-100 px-1 rounded">yourdomain.com</code> with your actual domain.
+                  Make sure to replace{' '}
+                  <code className="bg-yellow-100 px-1 rounded">yourdomain.com</code> with your
+                  actual domain.
                 </p>
               </div>
             </div>

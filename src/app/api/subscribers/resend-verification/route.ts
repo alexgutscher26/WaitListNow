@@ -13,9 +13,9 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(request: NextRequest) {
   const origin = request.headers.get('origin') || 'http://localhost:3000';
-  
+
   console.log('Request origin:', origin);
-  
+
   try {
     // Verify authentication
     const auth = getAuth(request);
@@ -26,7 +26,7 @@ export async function POST(request: NextRequest) {
     }
 
     const { email } = await request.json();
-    
+
     if (!email) {
       return new NextResponse('Email is required', { status: 400 });
     }
@@ -38,11 +38,11 @@ export async function POST(request: NextRequest) {
         waitlist: {
           include: {
             user: {
-              select: { externalId: true }
-            }
-          }
-        }
-      }
+              select: { externalId: true },
+            },
+          },
+        },
+      },
     });
 
     // Verify the user owns the waitlist
@@ -52,17 +52,17 @@ export async function POST(request: NextRequest) {
 
     // Generate a new verification token
     const verificationToken = require('crypto').randomBytes(32).toString('hex');
-    
+
     // Update subscriber with verification token
     const currentFields = (subscriber.customFields || {}) as CustomFields;
     await db.subscriber.update({
       where: { id: subscriber.id },
-      data: { 
+      data: {
         customFields: {
           ...currentFields,
-          verificationToken
-        } as CustomFields
-      }
+          verificationToken,
+        } as CustomFields,
+      },
     });
 
     // Send verification email
@@ -73,7 +73,7 @@ export async function POST(request: NextRequest) {
       const verificationUrl = `${verifyUrl}?token=${verificationToken}&email=${encodeURIComponent(email)}`;
       console.log('Full verification URL:', verificationUrl);
       console.log('Verification URL:', verifyUrl);
-      
+
       const emailData = {
         from: 'WaitListNow <onboarding@resend.dev>',
         to: email,
@@ -315,40 +315,36 @@ If you didn't request to join this waitlist, you can safely ignore this email.
 Need help? Contact us at support@waitlistnow.app
 
 © ${new Date().getFullYear()} WaitListNow. All rights reserved.
-        `
+        `,
       };
-      
+
       console.log('Sending email with data:', JSON.stringify(emailData, null, 2));
-      
+
       const response = await resend.emails.send(emailData);
       console.log('Resend API response:', JSON.stringify(response, null, 2));
-      
+
       if (!response) {
         throw new Error('No response from Resend API');
       }
-      
-      return NextResponse.json({ 
+
+      return NextResponse.json({
         success: true,
-        message: 'Verification email sent successfully'
+        message: 'Verification email sent successfully',
       });
-      
     } catch (emailError: any) {
       console.error('Failed to send email:');
       console.error('Error name:', emailError.name);
       console.error('Error message:', emailError.message);
       console.error('Error stack:', emailError.stack);
-      
+
       if (emailError.response) {
         console.error('Error response data:', await emailError.response.text());
       }
-      
+
       throw emailError; // This will be caught by the outer try-catch
     }
   } catch (error) {
     console.error('Error resending verification email:', error);
-    return NextResponse.json(
-      { error: 'Failed to resend verification email' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to resend verification email' }, { status: 500 });
   }
 }

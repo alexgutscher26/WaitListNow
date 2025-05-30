@@ -42,6 +42,7 @@ enum DomainStatus {
 ### Day 3-5: API Endpoints
 
 - [ ] Create domain controller with the following methods:
+
   - [ ] `createDomain` - Add a new custom domain
   - [ ] `listDomains` - List all domains for a user
   - [ ] `getDomain` - Get details for a specific domain
@@ -50,6 +51,7 @@ enum DomainStatus {
   - [ ] `setPrimaryDomain` - Set domain as primary
 
 - [ ] Implement domain verification service:
+
   - [ ] DNS TXT record verification
   - [ ] CNAME verification
   - [ ] Verification token generation
@@ -79,25 +81,25 @@ import { db } from '@/lib/db';
 
 export async function middleware(request: NextRequest) {
   const hostname = request.headers.get('host') || '';
-  
+
   // Skip for known application hostnames
   if (hostname.includes('waitlistnow.com') || hostname.includes('localhost')) {
     return NextResponse.next();
   }
-  
+
   // Check if this is a custom domain
   const customDomain = await db.customDomain.findUnique({
     where: { domain: hostname, status: 'ACTIVE' },
     include: { waitlist: true },
   });
-  
+
   if (customDomain) {
     // Rewrite the request to the waitlist page
     const url = request.nextUrl.clone();
     url.pathname = `/waitlist/${customDomain.waitlist.slug}`;
     return NextResponse.rewrite(url);
   }
-  
+
   // Continue with normal processing if not a custom domain
   return NextResponse.next();
 }
@@ -209,10 +211,10 @@ export async function middleware(request: NextRequest) {
 
 ## Risk Assessment
 
-| Risk | Impact | Likelihood | Mitigation |
-|------|--------|------------|------------|
-| DNS propagation delays | Medium | High | Clear user communication about potential delays |
-| SSL certificate failures | High | Medium | Automated retry system and fallback to default domain |
-| Domain verification complexity | Medium | Medium | Simplified instructions and multiple verification methods |
-| Performance impact of domain routing | Medium | Low | Implement efficient caching and database indexing |
-| User DNS configuration errors | High | High | Clear documentation and validation checks |
+| Risk                                 | Impact | Likelihood | Mitigation                                                |
+| ------------------------------------ | ------ | ---------- | --------------------------------------------------------- |
+| DNS propagation delays               | Medium | High       | Clear user communication about potential delays           |
+| SSL certificate failures             | High   | Medium     | Automated retry system and fallback to default domain     |
+| Domain verification complexity       | Medium | Medium     | Simplified instructions and multiple verification methods |
+| Performance impact of domain routing | Medium | Low        | Implement efficient caching and database indexing         |
+| User DNS configuration errors        | High   | High       | Clear documentation and validation checks                 |

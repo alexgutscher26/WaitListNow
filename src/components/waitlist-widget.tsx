@@ -27,11 +27,7 @@ export interface WaitlistWidgetProps {
   className?: string;
 }
 
-export function WaitlistWidget({ 
-  waitlistId, 
-  style = {}, 
-  className = '' 
-}: WaitlistWidgetProps) {
+export function WaitlistWidget({ waitlistId, style = {}, className = '' }: WaitlistWidgetProps) {
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -39,7 +35,7 @@ export function WaitlistWidget({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!email) {
       toast({
         title: 'Error',
@@ -70,7 +66,7 @@ export function WaitlistWidget({
         title: 'Success!',
         description: 'You have been added to the waitlist',
       });
-      
+
       setEmail('');
       setName('');
     } catch (error) {
@@ -115,22 +111,27 @@ export function WaitlistWidget({
   };
 
   return (
-    <div 
+    <div
       className={cn(
         styles['waitlist-widget'],
-        formLayout === 'inline' ? styles['waitlist-widget--inline'] : styles['waitlist-widget--stacked'],
+        formLayout === 'inline'
+          ? styles['waitlist-widget--inline']
+          : styles['waitlist-widget--stacked'],
         !showLabels && styles['waitlist-widget--no-labels'],
-        className
+        className,
       )}
       style={cssVariables}
     >
-      <form 
-        onSubmit={handleSubmit} 
+      <form
+        onSubmit={handleSubmit}
         className={styles['waitlist-widget__form']}
       >
         <div className={styles['waitlist-widget__field']}>
           {showLabels && (
-            <Label htmlFor="name" className={styles['waitlist-widget__label']}>
+            <Label
+              htmlFor="name"
+              className={styles['waitlist-widget__label']}
+            >
               Name (Optional)
             </Label>
           )}
@@ -144,10 +145,13 @@ export function WaitlistWidget({
             className={styles['waitlist-widget__input']}
           />
         </div>
-        
+
         <div className={styles['waitlist-widget__field']}>
           {showLabels && (
-            <Label htmlFor="email" className={styles['waitlist-widget__label']}>
+            <Label
+              htmlFor="email"
+              className={styles['waitlist-widget__label']}
+            >
               Email *
             </Label>
           )}
@@ -163,8 +167,8 @@ export function WaitlistWidget({
           />
         </div>
 
-        <Button 
-          type="submit" 
+        <Button
+          type="submit"
           disabled={isLoading}
           className={styles['waitlist-widget__button']}
         >

@@ -8,10 +8,7 @@ const updateSubscriberSchema = z.object({
   status: z.enum(['PENDING', 'VERIFIED', 'APPROVED', 'REJECTED']).optional(),
 });
 
-export async function PATCH(
-  req: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) {
   try {
     // Verify authentication
     const { userId } = getAuth(req);
@@ -26,7 +23,7 @@ export async function PATCH(
     if (!validation.success) {
       return new NextResponse(
         JSON.stringify({ error: 'Invalid request body', details: validation.error.issues }),
-        { status: 400, headers: { 'Content-Type': 'application/json' } }
+        { status: 400, headers: { 'Content-Type': 'application/json' } },
       );
     }
 
@@ -72,15 +69,12 @@ export async function PATCH(
         error: 'Internal server error',
         details: process.env.NODE_ENV === 'development' ? error : undefined,
       }),
-      { status: 500, headers: { 'Content-Type': 'application/json' } }
+      { status: 500, headers: { 'Content-Type': 'application/json' } },
     );
   }
 }
 
-export async function DELETE(
-  req: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
   try {
     // Verify authentication
     const { userId } = getAuth(req);
@@ -132,7 +126,7 @@ export async function DELETE(
         error: 'Internal server error',
         details: process.env.NODE_ENV === 'development' ? error : undefined,
       }),
-      { status: 500, headers: { 'Content-Type': 'application/json' } }
+      { status: 500, headers: { 'Content-Type': 'application/json' } },
     );
   }
 }

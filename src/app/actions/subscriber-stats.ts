@@ -52,37 +52,37 @@ export async function getSubscriberGrowth(waitlistId: string, days: number = 30)
     // Format the data for the chart
     let cumulativeCount = 0;
     const result: SubscriberGrowthData = [];
-    
+
     // Generate all dates in the range to ensure we have entries for all days
     const dateMap = new Map<string, number>();
     const currentDate = new Date(startDate);
-    
+
     while (currentDate <= endDate) {
       const dateStr = currentDate.toISOString().split('T')[0];
       dateMap.set(dateStr, 0);
       currentDate.setDate(currentDate.getDate() + 1);
     }
-    
+
     // Fill in the actual counts
-    dailyCounts.forEach(item => {
+    dailyCounts.forEach((item) => {
       const dateStr = new Date(item.date).toISOString().split('T')[0];
       dateMap.set(dateStr, Number(item.count));
     });
-    
+
     // Convert to array and calculate cumulative
     let runningTotal = await db.subscriber.count({
       where: {
         waitlistId,
-        createdAt: { lt: startDate }
-      }
+        createdAt: { lt: startDate },
+      },
     });
-    
+
     Array.from(dateMap.entries()).forEach(([date, count]) => {
       runningTotal += count;
       result.push({
         date,
         count,
-        cumulative: runningTotal
+        cumulative: runningTotal,
       });
     });
 

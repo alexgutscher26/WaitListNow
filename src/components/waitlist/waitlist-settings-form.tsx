@@ -13,10 +13,14 @@ import { toast } from '@/components/ui/use-toast';
 // Define the form schema using Zod
 const waitlistFormSchema = z.object({
   name: z.string().min(1, 'Name is required').max(100),
-  slug: z.string().min(1, 'Slug is required').max(50).regex(
-    /^[a-z0-9]+(?:-[a-z0-9]+)*$/,
-    'Slug can only contain lowercase letters, numbers, and hyphens, and cannot start or end with a hyphen.'
-  ),
+  slug: z
+    .string()
+    .min(1, 'Slug is required')
+    .max(50)
+    .regex(
+      /^[a-z0-9]+(?:-[a-z0-9]+)*$/,
+      'Slug can only contain lowercase letters, numbers, and hyphens, and cannot start or end with a hyphen.',
+    ),
   description: z.string().max(500).optional(),
 });
 
@@ -47,7 +51,7 @@ export function WaitlistSettingsForm({ waitlist }: WaitlistSettingsFormProps) {
   async function onSubmit(data: WaitlistFormValues) {
     try {
       setIsLoading(true);
-      
+
       const response = await fetch(`/api/waitlists/${waitlist.id}`, {
         method: 'PATCH',
         headers: {
@@ -62,7 +66,7 @@ export function WaitlistSettingsForm({ waitlist }: WaitlistSettingsFormProps) {
 
       // Refresh the page to show updated data
       router.refresh();
-      
+
       toast({
         title: 'Success',
         description: 'Waitlist updated successfully',
@@ -80,10 +84,16 @@ export function WaitlistSettingsForm({ waitlist }: WaitlistSettingsFormProps) {
   }
 
   return (
-    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+    <form
+      onSubmit={form.handleSubmit(onSubmit)}
+      className="space-y-4"
+    >
       <div className="grid gap-4 md:grid-cols-2">
         <div className="space-y-2">
-          <label htmlFor="name" className="text-sm font-medium leading-none">
+          <label
+            htmlFor="name"
+            className="text-sm font-medium leading-none"
+          >
             Waitlist Name
           </label>
           <Input
@@ -93,13 +103,14 @@ export function WaitlistSettingsForm({ waitlist }: WaitlistSettingsFormProps) {
             disabled={isLoading}
           />
           {form.formState.errors.name && (
-            <p className="text-sm text-red-500">
-              {form.formState.errors.name.message}
-            </p>
+            <p className="text-sm text-red-500">{form.formState.errors.name.message}</p>
           )}
         </div>
         <div className="space-y-2">
-          <label htmlFor="slug" className="text-sm font-medium leading-none">
+          <label
+            htmlFor="slug"
+            className="text-sm font-medium leading-none"
+          >
             Slug
           </label>
           <div className="flex rounded-md shadow-sm">
@@ -115,14 +126,15 @@ export function WaitlistSettingsForm({ waitlist }: WaitlistSettingsFormProps) {
             />
           </div>
           {form.formState.errors.slug && (
-            <p className="text-sm text-red-500">
-              {form.formState.errors.slug.message}
-            </p>
+            <p className="text-sm text-red-500">{form.formState.errors.slug.message}</p>
           )}
         </div>
       </div>
       <div className="space-y-2">
-        <label htmlFor="description" className="text-sm font-medium leading-none">
+        <label
+          htmlFor="description"
+          className="text-sm font-medium leading-none"
+        >
           Description
         </label>
         <Textarea
@@ -133,13 +145,14 @@ export function WaitlistSettingsForm({ waitlist }: WaitlistSettingsFormProps) {
           disabled={isLoading}
         />
         {form.formState.errors.description && (
-          <p className="text-sm text-red-500">
-            {form.formState.errors.description.message}
-          </p>
+          <p className="text-sm text-red-500">{form.formState.errors.description.message}</p>
         )}
       </div>
       <div className="flex justify-end">
-        <Button type="submit" disabled={isLoading}>
+        <Button
+          type="submit"
+          disabled={isLoading}
+        >
           {isLoading ? 'Saving...' : 'Save Changes'}
         </Button>
       </div>

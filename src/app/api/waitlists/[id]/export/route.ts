@@ -6,16 +6,16 @@ import { db } from '@/lib/db';
 // Helper function to convert array of objects to CSV string
 function convertToCSV(data: Record<string, any>[]): string {
   if (data.length === 0) return '';
-  
+
   // Get headers from the first object
   const headers = Object.keys(data[0]);
-  
+
   // Create CSV header
   let csv = headers.join(',') + '\n';
-  
+
   // Add rows
-  data.forEach(row => {
-    const values = headers.map(header => {
+  data.forEach((row) => {
+    const values = headers.map((header) => {
       const value = row[header] ?? '';
       // Escape quotes and wrap in quotes if contains comma or quote
       const escaped = String(value).replace(/"/g, '""');
@@ -23,14 +23,11 @@ function convertToCSV(data: Record<string, any>[]): string {
     });
     csv += values.join(',') + '\n';
   });
-  
+
   return csv;
 }
 
-export async function GET(
-  req: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
   try {
     // Verify authentication
     const { userId } = getAuth(req);
@@ -77,13 +74,13 @@ export async function GET(
     });
 
     // Transform data for CSV
-    const csvData = subscribers.map(subscriber => ({
+    const csvData = subscribers.map((subscriber) => ({
       id: subscriber.id,
       email: subscriber.email,
       name: subscriber.name || '',
       status: subscriber.status,
       joined_at: subscriber.createdAt.toISOString(),
-      ...(subscriber.customFields as Record<string, unknown> || {}),
+      ...((subscriber.customFields as Record<string, unknown>) || {}),
     }));
 
     // Convert to CSV
@@ -101,14 +98,14 @@ export async function GET(
   } catch (error) {
     console.error('[WAITLIST_EXPORT_ERROR]', error);
     return new NextResponse(
-      JSON.stringify({ 
+      JSON.stringify({
         error: 'Internal server error',
-        details: process.env.NODE_ENV === 'development' ? String(error) : undefined 
-      }), 
-      { 
+        details: process.env.NODE_ENV === 'development' ? String(error) : undefined,
+      }),
+      {
         status: 500,
-        headers: { 'Content-Type': 'application/json' }
-      }
+        headers: { 'Content-Type': 'application/json' },
+      },
     );
   }
 }

@@ -26,18 +26,18 @@ export async function POST(req: NextRequest) {
     // Get the current user from Clerk to get their email
     const clerkUser = await currentUser();
     if (!clerkUser) {
-      return new NextResponse(
-        JSON.stringify({ error: 'Unauthorized' }), 
-        { status: 401, headers: { 'Content-Type': 'application/json' } }
-      );
+      return new NextResponse(JSON.stringify({ error: 'Unauthorized' }), {
+        status: 401,
+        headers: { 'Content-Type': 'application/json' },
+      });
     }
 
     const userEmail = clerkUser.emailAddresses?.[0]?.emailAddress;
     if (!userEmail) {
-      return new NextResponse(
-        JSON.stringify({ error: 'Email address not found' }), 
-        { status: 400, headers: { 'Content-Type': 'application/json' } }
-      );
+      return new NextResponse(JSON.stringify({ error: 'Email address not found' }), {
+        status: 400,
+        headers: { 'Content-Type': 'application/json' },
+      });
     }
 
     // Find or create the user in the database
@@ -59,10 +59,10 @@ export async function POST(req: NextRequest) {
         log('Created new user:', user.id);
       } catch (createError) {
         console.error('Error creating user:', createError);
-        return new NextResponse(
-          JSON.stringify({ error: 'Failed to create user' }), 
-          { status: 500, headers: { 'Content-Type': 'application/json' } }
-        );
+        return new NextResponse(JSON.stringify({ error: 'Failed to create user' }), {
+          status: 500,
+          headers: { 'Content-Type': 'application/json' },
+        });
       }
     } else {
       log('Found existing user:', user.id);
@@ -71,7 +71,7 @@ export async function POST(req: NextRequest) {
     // Prepare the update data with the correct field names from Prisma schema
     const updateData = {
       onboardingComplete: true,
-      onboardingCompletedAt: new Date()
+      onboardingCompletedAt: new Date(),
     };
 
     // Alternative: Store in separate onboarding fields if you have them
@@ -112,71 +112,71 @@ export async function POST(req: NextRequest) {
   } catch (error) {
     console.error('[ONBOARDING_COMPLETE]', error);
     log('Error details:', error);
-    
+
     // Handle Prisma errors specifically
     if (error && typeof error === 'object' && 'code' in error) {
       const prismaError = error as any;
       if (prismaError.code === 'P2002') {
         return new NextResponse(
-          JSON.stringify({ 
+          JSON.stringify({
             error: 'Unique constraint violation',
-            details: isDev ? prismaError.message : undefined
+            details: isDev ? prismaError.message : undefined,
           }),
-          { 
-            status: 409, 
-            headers: { 'Content-Type': 'application/json' } 
-          }
+          {
+            status: 409,
+            headers: { 'Content-Type': 'application/json' },
+          },
         );
       }
       if (prismaError.code === 'P2025') {
         return new NextResponse(
-          JSON.stringify({ 
+          JSON.stringify({
             error: 'Record not found',
-            details: isDev ? prismaError.message : undefined
+            details: isDev ? prismaError.message : undefined,
           }),
-          { 
-            status: 404, 
-            headers: { 'Content-Type': 'application/json' } 
-          }
+          {
+            status: 404,
+            headers: { 'Content-Type': 'application/json' },
+          },
         );
       }
     }
-    
+
     if (error instanceof z.ZodError) {
       return new NextResponse(
-        JSON.stringify({ 
+        JSON.stringify({
           error: 'Validation error',
-          details: error.errors 
+          details: error.errors,
         }),
-        { 
-          status: 400, 
-          headers: { 'Content-Type': 'application/json' } 
-        }
+        {
+          status: 400,
+          headers: { 'Content-Type': 'application/json' },
+        },
       );
     }
-    
+
     if (error instanceof Error) {
       return new NextResponse(
-        JSON.stringify({ 
+        JSON.stringify({
           error: error.message,
-          stack: isDev ? error.stack : undefined 
-        }), 
-        { 
+          stack: isDev ? error.stack : undefined,
+        }),
+        {
           status: 500,
-          headers: { 'Content-Type': 'application/json' }
-        }
+          headers: { 'Content-Type': 'application/json' },
+        },
       );
     }
-    
+
     return new NextResponse(
-      JSON.stringify({ 
+      JSON.stringify({
         error: 'Internal server error',
-        details: isDev ? String(error) : undefined 
-      }), 
-      { 
+        details: isDev ? String(error) : undefined,
+      }),
+      {
         status: 500,
-        headers: { 'Content-Type': 'application/json' }
-      }
+        headers: { 'Content-Type': 'application/json' },
+      },
     );
   }
 }

@@ -17,14 +17,14 @@ This separation leads to inconsistencies in how user customizations are applied.
 
 The waitlist system allows users to customize the following styling aspects:
 
-| Category | Options |
-|----------|---------|
-| **Colors** | Primary color, Background color, Text color |
-| **Typography** | Font family, Font size |
+| Category           | Options                                                                                                    |
+| ------------------ | ---------------------------------------------------------------------------------------------------------- |
+| **Colors**         | Primary color, Background color, Text color                                                                |
+| **Typography**     | Font family, Font size                                                                                     |
 | **Button Styling** | Button text, Button variant (default, outline, ghost, link), Button corner radius (none, sm, md, lg, full) |
-| **Form Layout** | Stacked/inline layout, Field spacing, Show/hide labels |
-| **Container** | Box shadow, Border radius, Padding |
-| **Branding** | Show/hide "Powered by WaitlistNow" |
+| **Form Layout**    | Stacked/inline layout, Field spacing, Show/hide labels                                                     |
+| **Container**      | Box shadow, Border radius, Padding                                                                         |
+| **Branding**       | Show/hide "Powered by WaitlistNow"                                                                         |
 
 ## Implementation Strategy
 
@@ -39,26 +39,26 @@ export interface WaitlistStyleConfig {
   primaryColor: string;
   backgroundColor: string;
   textColor: string;
-  
+
   // Typography
   fontFamily: string;
   fontSize?: 'sm' | 'md' | 'lg';
-  
+
   // Button
   buttonText: string;
   buttonVariant: 'default' | 'outline' | 'ghost' | 'link';
   buttonRounded: 'none' | 'sm' | 'md' | 'lg' | 'full';
-  
+
   // Layout
   formLayout: 'stacked' | 'inline';
   fieldSpacing: 'tight' | 'normal' | 'relaxed';
   showLabels: boolean;
-  
+
   // Container
   boxShadow: 'none' | 'sm' | 'md' | 'lg';
   containerRadius: 'none' | 'sm' | 'md' | 'lg';
   padding: 'sm' | 'md' | 'lg';
-  
+
   // Branding
   hideBranding: boolean;
 }
@@ -100,68 +100,68 @@ export function styleConfigToCssVars(config: WaitlistStyleConfig): Record<string
 // Apply CSS variables to an element
 export function applyStyleConfig(element: HTMLElement, config: WaitlistStyleConfig): void {
   const cssVars = styleConfigToCssVars(config);
-  
+
   Object.entries(cssVars).forEach(([key, value]) => {
     element.style.setProperty(key, value);
   });
-  
+
   // Apply classes based on configuration
   if (config.formLayout === 'inline') {
     element.classList.add('inline-layout');
   } else {
     element.classList.remove('inline-layout');
   }
-  
+
   if (!config.showLabels) {
     element.classList.add('hide-labels');
   } else {
     element.classList.remove('hide-labels');
   }
-  
+
   // Apply other class-based styling
 }
 
 // Helper functions for specific style properties
 export function getBorderRadius(size: 'none' | 'sm' | 'md' | 'lg' | 'full'): string {
   const radiusMap = {
-    'none': '0',
-    'sm': '0.25rem',
-    'md': '0.375rem',
-    'lg': '0.5rem',
-    'full': '9999px',
+    none: '0',
+    sm: '0.25rem',
+    md: '0.375rem',
+    lg: '0.5rem',
+    full: '9999px',
   };
-  
+
   return radiusMap[size] || '0.375rem';
 }
 
 export function getBoxShadow(size: 'none' | 'sm' | 'md' | 'lg'): string {
   const shadowMap = {
-    'none': 'none',
-    'sm': '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
-    'md': '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
-    'lg': '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+    none: 'none',
+    sm: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
+    md: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+    lg: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
   };
-  
+
   return shadowMap[size] || 'none';
 }
 
 export function getPadding(size: 'sm' | 'md' | 'lg'): string {
   const paddingMap = {
-    'sm': '1rem',
-    'md': '1.5rem',
-    'lg': '2rem',
+    sm: '1rem',
+    md: '1.5rem',
+    lg: '2rem',
   };
-  
+
   return paddingMap[size] || '1.5rem';
 }
 
 export function getSpacing(spacing: 'tight' | 'normal' | 'relaxed'): string {
   const spacingMap = {
-    'tight': '0.5rem',
-    'normal': '1rem',
-    'relaxed': '1.5rem',
+    tight: '0.5rem',
+    normal: '1rem',
+    relaxed: '1.5rem',
   };
-  
+
   return spacingMap[spacing] || '1rem';
 }
 
@@ -248,35 +248,35 @@ interface WaitlistFormProps {
 
 export function WaitlistForm({ config, isPreview = false, onSubmit }: WaitlistFormProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  
+
   useEffect(() => {
     if (containerRef.current) {
       applyStyleConfig(containerRef.current, config.style);
     }
   }, [config.style]);
-  
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (isPreview) {
       // In preview mode, just show a message
       alert('This is a preview. Form submission is disabled.');
       return;
     }
-    
+
     // Get form data
     const formData = new FormData(e.target as HTMLFormElement);
     const data = Object.fromEntries(formData.entries());
-    
+
     // Call onSubmit callback if provided
     if (onSubmit) {
       onSubmit(data);
     }
   };
-  
+
   return (
-    <div 
-      ref={containerRef} 
+    <div
+      ref={containerRef}
       className={`waitlist-container ${config.style.formLayout === 'inline' ? 'inline-layout' : ''} ${!config.style.showLabels ? 'hide-labels' : ''}`}
     >
       {/* Form header */}
@@ -284,43 +284,46 @@ export function WaitlistForm({ config, isPreview = false, onSubmit }: WaitlistFo
         <h3>{config.name || 'Join Our Waitlist'}</h3>
         {config.description && <p>{config.description}</p>}
       </div>
-      
+
       {/* Form fields */}
       <form onSubmit={handleSubmit}>
         <div className="form-fields">
           {/* Email field (always present) */}
           <div className="form-field">
             <label htmlFor="email">Email</label>
-            <input 
-              type="email" 
-              id="email" 
-              name="email" 
-              placeholder="Enter your email" 
-              required 
+            <input
+              type="email"
+              id="email"
+              name="email"
+              placeholder="Enter your email"
+              required
             />
           </div>
-          
+
           {/* Custom fields */}
           {config.customFields.map((field) => (
-            <div key={field.id} className="form-field">
+            <div
+              key={field.id}
+              className="form-field"
+            >
               <label htmlFor={field.id}>{field.name}</label>
               {field.type === 'text' && (
-                <input 
-                  type="text" 
-                  id={field.id} 
-                  name={field.id} 
-                  placeholder={field.placeholder} 
-                  required={field.required} 
+                <input
+                  type="text"
+                  id={field.id}
+                  name={field.id}
+                  placeholder={field.placeholder}
+                  required={field.required}
                 />
               )}
               {/* Add other field types (select, textarea, etc.) */}
             </div>
           ))}
-          
+
           {/* Submit button */}
           <div className="form-field">
-            <button 
-              type="submit" 
+            <button
+              type="submit"
               className={`submit-button ${config.style.buttonVariant}`}
             >
               {config.style.buttonText || 'Join Waitlist'}
@@ -328,14 +331,21 @@ export function WaitlistForm({ config, isPreview = false, onSubmit }: WaitlistFo
           </div>
         </div>
       </form>
-      
+
       {/* Branding */}
       {!config.style.hideBranding && (
         <div className="waitlist-branding">
-          Powered by <a href="https://waitlistnow.com" target="_blank" rel="noopener noreferrer">WaitlistNow</a>
+          Powered by{' '}
+          <a
+            href="https://waitlistnow.com"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            WaitlistNow
+          </a>
         </div>
       )}
-      
+
       {/* Preview notice */}
       {isPreview && (
         <div className="preview-notice">
@@ -366,7 +376,10 @@ function WaitlistPreview({ formData }) {
         <CardDescription>How your waitlist form will look to visitors</CardDescription>
       </CardHeader>
       <CardContent>
-        <WaitlistForm config={formData} isPreview={true} />
+        <WaitlistForm
+          config={formData}
+          isPreview={true}
+        />
       </CardContent>
     </Card>
   );
@@ -543,7 +556,7 @@ export async function GET() {
         });
     })();
   `;
-  
+
   return new NextResponse(script, {
     headers: {
       'Content-Type': 'application/javascript',
@@ -571,62 +584,62 @@ export default function EmbedPage() {
   const [config, setConfig] = useState<WaitlistConfig | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  
+
   useEffect(() => {
     const waitlistId = searchParams.get('waitlist-id');
-    
+
     if (!waitlistId) {
       setError('Waitlist ID is required');
       setLoading(false);
       return;
     }
-    
+
     // Fetch the waitlist configuration
     fetch(`/api/waitlists/${waitlistId}`)
-      .then(response => {
+      .then((response) => {
         if (!response.ok) {
           throw new Error('Failed to load waitlist');
         }
         return response.json();
       })
-      .then(data => {
+      .then((data) => {
         // Merge with query parameters for style overrides
         const mergedConfig = {
           ...data,
           style: {
             ...data.style,
-            primaryColor: searchParams.get('primary-color') 
-              ? `#${searchParams.get('primary-color')}` 
+            primaryColor: searchParams.get('primary-color')
+              ? `#${searchParams.get('primary-color')}`
               : data.style.primaryColor,
             // Other style overrides
-          }
+          },
         };
-        
+
         setConfig(mergedConfig);
         setLoading(false);
       })
-      .catch(err => {
+      .catch((err) => {
         setError(err.message);
         setLoading(false);
       });
   }, [searchParams]);
-  
+
   if (loading) {
     return <div className="loading">Loading waitlist...</div>;
   }
-  
+
   if (error) {
     return <div className="error">{error}</div>;
   }
-  
+
   if (!config) {
     return <div className="error">Waitlist configuration not found</div>;
   }
-  
+
   return (
     <div className="iframe-container">
-      <WaitlistForm 
-        config={config} 
+      <WaitlistForm
+        config={config}
         onSubmit={async (data) => {
           try {
             const response = await fetch(`/api/waitlists/${config.id}/signup`, {
@@ -636,12 +649,12 @@ export default function EmbedPage() {
               },
               body: JSON.stringify(data),
             });
-            
+
             const result = await response.json();
-            
+
             if (result.success) {
               // Show success message
-              document.querySelector('.iframe-container')!.innerHTML = 
+              document.querySelector('.iframe-container')!.innerHTML =
                 `<div class="success-message">${config.successMessage || 'Thank you for joining our waitlist!'}</div>`;
             } else {
               // Show error message
@@ -651,7 +664,7 @@ export default function EmbedPage() {
             console.error('Form submission error:', error);
             alert('An error occurred. Please try again.');
           }
-        }} 
+        }}
       />
     </div>
   );
@@ -668,7 +681,7 @@ const embedCode = useMemo(() => {
   // Get the domain (default or custom)
   const domain = selectedDomain ? selectedDomain.domain : 'waitlistnow.com';
   const baseUrl = `https://${domain}`;
-  
+
   // Create a string of data attributes for all style options
   const dataAttributes = [
     `data-waitlist-id="${waitlistId}"`,
@@ -685,7 +698,7 @@ const embedCode = useMemo(() => {
     `data-padding="${formData.style.padding}"`,
     `data-hide-branding="${formData.style.hideBranding}"`,
   ].join(' ');
-  
+
   if (embedType === 'js') {
     return `<script src="${baseUrl}/widget.js" ${dataAttributes} async></script>`;
   } else {
@@ -695,7 +708,7 @@ const embedCode = useMemo(() => {
     params.append('primary-color', formData.style.primaryColor.replace('#', ''));
     params.append('background-color', formData.style.backgroundColor.replace('#', ''));
     // Add other parameters
-    
+
     const iframeUrl = `${baseUrl}/widget/embed?${params.toString()}`;
     return `<iframe src="${iframeUrl}" width="100%" height="500" frameborder="0" style="border: none; border-radius: 8px;" scrolling="no"></iframe>`;
   }
@@ -707,14 +720,17 @@ const embedCode = useMemo(() => {
 To ensure consistency between the preview and embedded widget:
 
 1. **Visual Comparison Testing**:
+
    - Create a test page that shows both the preview and embedded widget side by side
    - Verify that they look identical with various configuration options
 
 2. **Cross-Browser Testing**:
+
    - Test in Chrome, Firefox, Safari, and Edge
    - Verify that styling is consistent across browsers
 
 3. **Responsive Testing**:
+
    - Test at different viewport sizes
    - Ensure that both preview and embedded widget respond similarly
 
@@ -734,6 +750,7 @@ To ensure consistency between the preview and embedded widget:
 By implementing this shared styling approach, we can ensure that the waitlist preview in the dashboard exactly matches the live embedded widget on customer websites. This will improve user experience, reduce confusion, and build trust in the product.
 
 The key principles are:
+
 1. Single source of truth for styling configuration
 2. Shared styling logic between preview and embedded widget
 3. Complete parameter passing in embed code

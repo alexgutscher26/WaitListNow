@@ -45,20 +45,23 @@ export async function POST(req: NextRequest) {
     }
 
     // Group subscribers by waitlist ID for batch updates
-    const waitlistUpdates = subscribers.reduce((acc, subscriber) => {
-      if (!acc[subscriber.waitlistId]) {
-        acc[subscriber.waitlistId] = 0;
-      }
-      acc[subscriber.waitlistId]++;
-      return acc;
-    }, {} as Record<string, number>);
+    const waitlistUpdates = subscribers.reduce(
+      (acc, subscriber) => {
+        if (!acc[subscriber.waitlistId]) {
+          acc[subscriber.waitlistId] = 0;
+        }
+        acc[subscriber.waitlistId]++;
+        return acc;
+      },
+      {} as Record<string, number>,
+    );
 
     // Delete subscribers in a transaction
     await db.$transaction([
       // Delete the subscribers
       db.subscriber.deleteMany({
         where: {
-          id: { in: subscribers.map(s => s.id) },
+          id: { in: subscribers.map((s) => s.id) },
         },
       }),
       // Update waitlist counts
@@ -70,7 +73,7 @@ export async function POST(req: NextRequest) {
               decrement: count,
             },
           },
-        })
+        }),
       ),
     ]);
 
@@ -79,7 +82,7 @@ export async function POST(req: NextRequest) {
         success: true,
         deletedCount: subscribers.length,
       }),
-      { status: 200, headers: { 'Content-Type': 'application/json' } }
+      { status: 200, headers: { 'Content-Type': 'application/json' } },
     );
   } catch (error) {
     console.error('[SUBSCRIBERS_BULK_DELETE]', error);
@@ -88,7 +91,7 @@ export async function POST(req: NextRequest) {
         error: 'Internal server error',
         details: process.env.NODE_ENV === 'development' ? error : undefined,
       }),
-      { status: 500, headers: { 'Content-Type': 'application/json' } }
+      { status: 500, headers: { 'Content-Type': 'application/json' } },
     );
   }
 }

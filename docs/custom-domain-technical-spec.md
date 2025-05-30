@@ -53,6 +53,7 @@ model Waitlist {
 ### Domain Management
 
 1. **Add Domain**
+
    - Endpoint: `POST /api/domains`
    - Request Body: `{ domain: string }`
    - Response: `{ id: string, domain: string, verified: boolean, verificationCode: string }`
@@ -60,17 +61,20 @@ model Waitlist {
    - Validation: Check if domain is valid and not already registered
 
 2. **Verify Domain**
+
    - Endpoint: `POST /api/domains/:id/verify`
    - Response: `{ success: boolean, message: string }`
    - Authorization: Requires authentication
    - Action: Checks DNS records for verification TXT record
 
 3. **List Domains**
+
    - Endpoint: `GET /api/domains`
    - Response: `{ domains: Domain[] }`
    - Authorization: Requires authentication
 
 4. **Delete Domain**
+
    - Endpoint: `DELETE /api/domains/:id`
    - Response: `{ success: boolean }`
    - Authorization: Requires authentication
@@ -108,17 +112,17 @@ export const domainRouter = new Hono()
   .post('/', zValidator('json', domainSchema), async (c) => {
     const { domain } = await c.req.json();
     const userId = c.get('userId'); // From auth middleware
-    
+
     // Check user's plan for domain limits
     const user = await prisma.user.findUnique({
       where: { id: userId },
       include: { customDomains: true },
     });
-    
+
     if (!user) {
       return c.json({ error: 'User not found' }, 404);
     }
-    
+
     // Check domain limits based on plan
     const domainCount = user.customDomains.length;
     const domainLimits = {
@@ -126,22 +130,25 @@ export const domainRouter = new Hono()
       pro: 3,
       business: 10,
     };
-    
+
     if (domainCount >= domainLimits[user.plan]) {
-      return c.json({ 
-        error: `Your plan allows a maximum of ${domainLimits[user.plan]} custom domains. Please upgrade to add more.` 
-      }, 403);
+      return c.json(
+        {
+          error: `Your plan allows a maximum of ${domainLimits[user.plan]} custom domains. Please upgrade to add more.`,
+        },
+        403,
+      );
     }
-    
+
     // Check if domain is already registered
     const existingDomain = await prisma.customDomain.findUnique({
       where: { domain },
     });
-    
+
     if (existingDomain) {
       return c.json({ error: 'Domain already registered' }, 400);
     }
-    
+
     // Create new domain record
     const newDomain = await prisma.customDomain.create({
       data: {
@@ -151,94 +158,94 @@ export const domainRouter = new Hono()
         verificationCode: `waitlist-verify-${Math.random().toString(36).substring(2, 15)}`,
       },
     });
-    
-    return c.json({ 
+
+    return c.json({
       id: newDomain.id,
       domain: newDomain.domain,
       verified: newDomain.verified,
       verificationCode: newDomain.verificationCode,
     });
   })
-  
+
   // Verify domain ownership
   .post('/:id/verify', async (c) => {
     const domainId = c.req.param('id');
     const userId = c.get('userId'); // From auth middleware
-    
+
     const domain = await prisma.customDomain.findFirst({
       where: {
         id: domainId,
         userId,
       },
     });
-    
+
     if (!domain) {
       return c.json({ error: 'Domain not found' }, 404);
     }
-    
+
     // Verify domain ownership (DNS check)
     const isVerified = await verifyDomain(domain.domain, domain.verificationCode);
-    
+
     if (isVerified) {
       await prisma.customDomain.update({
         where: { id: domainId },
         data: { verified: true },
       });
-      
-      return c.json({ 
-        success: true, 
-        message: 'Domain verified successfully' 
+
+      return c.json({
+        success: true,
+        message: 'Domain verified successfully',
       });
     }
-    
-    return c.json({ 
-      success: false, 
-      message: 'Domain verification failed. Please check your DNS settings.' 
+
+    return c.json({
+      success: false,
+      message: 'Domain verification failed. Please check your DNS settings.',
     });
   })
-  
+
   // List user's domains
   .get('/', async (c) => {
     const userId = c.get('userId'); // From auth middleware
-    
+
     const domains = await prisma.customDomain.findMany({
       where: { userId },
       orderBy: { createdAt: 'desc' },
       include: { waitlist: { select: { id: true, name: true } } },
     });
-    
+
     return c.json({ domains });
   })
-  
+
   // Delete a domain
   .delete('/:id', async (c) => {
     const domainId = c.req.param('id');
     const userId = c.get('userId'); // From auth middleware
-    
+
     const domain = await prisma.customDomain.findFirst({
       where: {
         id: domainId,
         userId,
       },
     });
-    
+
     if (!domain) {
       return c.json({ error: 'Domain not found' }, 404);
     }
-    
+
     await prisma.customDomain.delete({
       where: { id: domainId },
     });
-    
+
     return c.json({ success: true });
   })
-  
+
   // Assign domain to waitlist
   .post('/:id/assign', zValidator('json', assignSchema), async (c) => {
     const domainId = c.req.param('id');
     const { waitlistId } = await c.req.json();
     const userId = c.get('userId'); // From auth middleware
-    
+
     // Check if domain exists and belongs to user
     const domain = await prisma.customDomain.findFirst({
       where: {
@@ -246,11 +253,11 @@ export const domainRouter = new Hono()
         userId,
       },
     });
-    
+
     if (!domain) {
       return c.json({ error: 'Domain not found' }, 404);
     }
-    
+
     // Check if waitlist exists and belongs to user
     const waitlist = await prisma.waitlist.findFirst({
       where: {
@@ -258,22 +265,25 @@ export const domainRouter = new Hono()
         userId,
       },
     });
-    
+
     if (!waitlist) {
       return c.json({ error: 'Waitlist not found' }, 404);
     }
-    
+
     // Check if domain is verified
     if (!domain.verified) {
-      return c.json({ error: 'Domain must be verified before it can be assigned to a waitlist' }, 400);
+      return c.json(
+        { error: 'Domain must be verified before it can be assigned to a waitlist' },
+        400,
+      );
     }
-    
+
     // Update domain with waitlist assignment
     await prisma.customDomain.update({
       where: { id: domainId },
       data: { waitlistId },
     });
-    
+
     return c.json({ success: true });
   });
 ```
@@ -299,14 +309,12 @@ export async function verifyDomain(domain: string, verificationCode: string): Pr
   try {
     // Construct the verification domain
     const verificationDomain = `_waitlistnow-verification.${domain}`;
-    
+
     // Resolve TXT records
     const records = await resolveTxt(verificationDomain);
-    
+
     // Check if any record matches the verification code
-    return records.some(record => 
-      record.some(value => value === verificationCode)
-    );
+    return records.some((record) => record.some((value) => value === verificationCode));
   } catch (error) {
     console.error(`Error verifying domain ${domain}:`, error);
     return false;
@@ -329,18 +337,18 @@ const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
 
 async function getVerifiedDomains(): Promise<string[]> {
   const now = Date.now();
-  
+
   // Update cache if expired
   if (now - lastCacheUpdate > CACHE_TTL) {
     const domains = await prisma.customDomain.findMany({
       where: { verified: true },
       select: { domain: true },
     });
-    
-    verifiedDomains = domains.map(d => d.domain);
+
+    verifiedDomains = domains.map((d) => d.domain);
     lastCacheUpdate = now;
   }
-  
+
   return verifiedDomains;
 }
 
@@ -360,15 +368,12 @@ const corsOptions = {
   origin: async (origin) => {
     // Allow requests with no origin (like mobile apps, curl requests)
     if (!origin) return true;
-    
-    const allowedOrigins = [
-      'http://localhost:3000',
-      'https://waitlistnow.com',
-    ];
-    
+
+    const allowedOrigins = ['http://localhost:3000', 'https://waitlistnow.com'];
+
     // Check if the origin is an allowed origin
-    if (allowedOrigins.some(allowed => origin.startsWith(allowed))) return true;
-    
+    if (allowedOrigins.some((allowed) => origin.startsWith(allowed))) return true;
+
     // Check if the origin is a verified custom domain
     return await isVerifiedCustomDomain(origin);
   },
@@ -391,30 +396,30 @@ import { prisma } from '../db';
 
 export async function customDomainMiddleware(c, next) {
   const host = c.req.header('host');
-  
+
   // Skip for default domain
   if (host === 'waitlistnow.com' || host.includes('localhost')) {
     return next();
   }
-  
+
   // Look up the custom domain
   const customDomain = await prisma.customDomain.findUnique({
     where: { domain: host },
     include: { waitlist: true },
   });
-  
+
   if (!customDomain || !customDomain.verified) {
     return c.text('Domain not configured or verified', 404);
   }
-  
+
   // Add the custom domain info to the context
   c.set('customDomain', customDomain);
-  
+
   // If this domain is tied to a specific waitlist, set that as well
   if (customDomain.waitlistId) {
     c.set('waitlistId', customDomain.waitlistId);
   }
-  
+
   return next();
 }
 ```
@@ -432,7 +437,14 @@ Create a page for users to manage their custom domains:
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { AlertCircle, CheckCircle, Trash, RefreshCw } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
@@ -443,12 +455,12 @@ export default function DomainsPage() {
   const [loading, setLoading] = useState(true);
   const [verifying, setVerifying] = useState(null);
   const { toast } = useToast();
-  
+
   // Fetch domains on page load
   useEffect(() => {
     fetchDomains();
   }, []);
-  
+
   // Fetch domains from API
   const fetchDomains = async () => {
     setLoading(true);
@@ -466,13 +478,13 @@ export default function DomainsPage() {
       setLoading(false);
     }
   };
-  
+
   // Add a new domain
   const addDomain = async (e) => {
     e.preventDefault();
-    
+
     if (!newDomain) return;
-    
+
     try {
       const response = await fetch('/api/domains', {
         method: 'POST',
@@ -481,18 +493,18 @@ export default function DomainsPage() {
         },
         body: JSON.stringify({ domain: newDomain }),
       });
-      
+
       const data = await response.json();
-      
+
       if (!response.ok) {
         throw new Error(data.error || 'Failed to add domain');
       }
-      
+
       toast({
         title: 'Domain added',
         description: 'Please add the verification record to your DNS settings',
       });
-      
+
       setNewDomain('');
       fetchDomains();
     } catch (error) {
@@ -503,18 +515,18 @@ export default function DomainsPage() {
       });
     }
   };
-  
+
   // Verify a domain
   const verifyDomain = async (domainId) => {
     setVerifying(domainId);
-    
+
     try {
       const response = await fetch(`/api/domains/${domainId}/verify`, {
         method: 'POST',
       });
-      
+
       const data = await response.json();
-      
+
       if (data.success) {
         toast({
           title: 'Success',
@@ -538,28 +550,28 @@ export default function DomainsPage() {
       setVerifying(null);
     }
   };
-  
+
   // Delete a domain
   const deleteDomain = async (domainId) => {
     if (!confirm('Are you sure you want to delete this domain?')) {
       return;
     }
-    
+
     try {
       const response = await fetch(`/api/domains/${domainId}`, {
         method: 'DELETE',
       });
-      
+
       if (!response.ok) {
         const data = await response.json();
         throw new Error(data.error || 'Failed to delete domain');
       }
-      
+
       toast({
         title: 'Domain deleted',
         description: 'The domain has been removed',
       });
-      
+
       fetchDomains();
     } catch (error) {
       toast({
@@ -569,20 +581,24 @@ export default function DomainsPage() {
       });
     }
   };
-  
+
   return (
     <div className="container mx-auto py-8">
       <h1 className="text-3xl font-bold mb-6">Custom Domains</h1>
-      
+
       <Card className="mb-8">
         <CardHeader>
           <CardTitle>Add a Custom Domain</CardTitle>
           <CardDescription>
-            Use your own domain for your waitlist forms. You'll need to verify ownership by adding a TXT record to your DNS settings.
+            Use your own domain for your waitlist forms. You'll need to verify ownership by adding a
+            TXT record to your DNS settings.
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={addDomain} className="flex gap-4">
+          <form
+            onSubmit={addDomain}
+            className="flex gap-4"
+          >
             <Input
               placeholder="waitlist.yourdomain.com"
               value={newDomain}
@@ -593,9 +609,9 @@ export default function DomainsPage() {
           </form>
         </CardContent>
       </Card>
-      
+
       <h2 className="text-2xl font-bold mb-4">Your Domains</h2>
-      
+
       {loading ? (
         <div className="flex justify-center py-8">
           <RefreshCw className="animate-spin h-8 w-8 text-primary" />
@@ -620,9 +636,7 @@ export default function DomainsPage() {
                   </Badge>
                 </div>
                 {domain.waitlist && (
-                  <CardDescription>
-                    Assigned to: {domain.waitlist.name}
-                  </CardDescription>
+                  <CardDescription>Assigned to: {domain.waitlist.name}</CardDescription>
                 )}
               </CardHeader>
               <CardContent>
@@ -637,7 +651,9 @@ export default function DomainsPage() {
                     </p>
                     <div className="bg-background p-2 rounded border mb-2">
                       <p className="text-sm font-mono mb-1">Name:</p>
-                      <p className="text-sm font-mono font-bold">_waitlistnow-verification.{domain.domain}</p>
+                      <p className="text-sm font-mono font-bold">
+                        _waitlistnow-verification.{domain.domain}
+                      </p>
                     </div>
                     <div className="bg-background p-2 rounded border">
                       <p className="text-sm font-mono mb-1">Value:</p>
@@ -658,8 +674,8 @@ export default function DomainsPage() {
               </CardContent>
               <CardFooter className="flex justify-between">
                 {!domain.verified && (
-                  <Button 
-                    variant="outline" 
+                  <Button
+                    variant="outline"
                     onClick={() => verifyDomain(domain.id)}
                     disabled={verifying === domain.id}
                   >
@@ -673,8 +689,8 @@ export default function DomainsPage() {
                     )}
                   </Button>
                 )}
-                <Button 
-                  variant="destructive" 
+                <Button
+                  variant="destructive"
                   size="icon"
                   onClick={() => deleteDomain(domain.id)}
                 >
@@ -708,11 +724,11 @@ useEffect(() => {
     try {
       const response = await fetch('/api/domains');
       const data = await response.json();
-      
+
       // Filter to only verified domains
-      const verified = data.domains.filter(domain => domain.verified);
+      const verified = data.domains.filter((domain) => domain.verified);
       setVerifiedDomains(verified);
-      
+
       // If editing an existing waitlist, set the selected domain
       if (waitlistData?.customDomainId) {
         setSelectedDomainId(waitlistData.customDomainId);
@@ -721,7 +737,7 @@ useEffect(() => {
       console.error('Failed to load domains:', error);
     }
   }
-  
+
   fetchDomains();
 }, [waitlistData]);
 
@@ -738,19 +754,25 @@ useEffect(() => {
     <SelectContent>
       <SelectItem value="">Default (waitlistnow.com)</SelectItem>
       {verifiedDomains.map((domain) => (
-        <SelectItem key={domain.id} value={domain.id}>
+        <SelectItem
+          key={domain.id}
+          value={domain.id}
+        >
           {domain.domain}
         </SelectItem>
       ))}
     </SelectContent>
   </Select>
   <p className="text-sm text-muted-foreground">
-    Select a domain to use for your embedded waitlist. 
-    <Link href="/dashboard/domains" className="text-primary ml-1">
+    Select a domain to use for your embedded waitlist.
+    <Link
+      href="/dashboard/domains"
+      className="text-primary ml-1"
+    >
       Manage domains
     </Link>
   </p>
-</div>
+</div>;
 
 // Update the form submission to include the selected domain
 const formData = {
@@ -764,6 +786,7 @@ const formData = {
 ### DNS Configuration
 
 1. **Custom Domain Handling**:
+
    - Configure the web server (Nginx, etc.) to handle requests for custom domains
    - Set up wildcard SSL certificates or use Let's Encrypt for dynamic SSL provisioning
 
@@ -773,6 +796,7 @@ const formData = {
 ### SSL Certificates
 
 1. **Automatic SSL Provisioning**:
+
    - Implement automatic SSL certificate provisioning for verified domains
    - Use Let's Encrypt or a similar service for free SSL certificates
 
@@ -783,11 +807,13 @@ const formData = {
 ## Testing Plan
 
 1. **Unit Tests**:
+
    - Test domain validation logic
    - Test DNS verification utility
    - Test CORS configuration
 
 2. **Integration Tests**:
+
    - Test domain management API endpoints
    - Test domain assignment to waitlists
    - Test custom domain middleware
@@ -800,20 +826,24 @@ const formData = {
 ## Rollout Plan
 
 1. **Phase 1 - Database Migration**:
+
    - Add CustomDomain model to the database
    - Run migrations
 
 2. **Phase 2 - Backend Implementation**:
+
    - Implement domain management API
    - Implement domain verification
    - Update CORS configuration
 
 3. **Phase 3 - Frontend Implementation**:
+
    - Create domain management UI
    - Add domain selection to waitlist form
    - Update embed code generation
 
 4. **Phase 4 - Testing and Deployment**:
+
    - Test all functionality
    - Deploy to staging environment
    - Conduct beta testing with select users

@@ -52,7 +52,7 @@ import { getWaitlistStyles } from '@/lib/waitlist-styles';
 
 export function WaitlistForm({ config, isPreview = false }) {
   const styles = getWaitlistStyles(config);
-  
+
   return (
     <div className="waitlist-container" style={{ backgroundColor: styles.backgroundColor }}>
       {/* Form header */}
@@ -60,21 +60,21 @@ export function WaitlistForm({ config, isPreview = false }) {
         <h3 style={{ color: styles.primaryColor }}>{config.name || 'Join Our Waitlist'}</h3>
         {config.description && <p>{config.description}</p>}
       </div>
-      
+
       {/* Form fields */}
       <div className={`waitlist-fields ${config.style.formLayout === 'inline' ? 'inline-layout' : ''}`}>
         {/* Email field */}
         {/* Custom fields */}
         {/* Submit button */}
       </div>
-      
+
       {/* Branding */}
       {!config.hideBranding && (
         <div className="waitlist-branding">
           Powered by <span>WaitlistNow</span>
         </div>
       )}
-      
+
       {/* Preview notice */}
       {isPreview && (
         <div className="preview-notice">
@@ -120,7 +120,7 @@ const embedCode = useMemo(() => {
 
   // Use the same styling logic as the preview
   const styles = getWaitlistStyles(formData);
-  
+
   // Create a JSON configuration that matches the structure used by the preview
   const widgetConfig = JSON.stringify({
     id: waitlistId,
@@ -130,7 +130,7 @@ const embedCode = useMemo(() => {
     customFields: formData.customFields,
     // Other configuration options
   });
-  
+
   if (embedType === 'js') {
     return `<script src="${baseUrl}/widget.js" data-config='${widgetConfig}' async></script>`;
   } else {
@@ -185,15 +185,12 @@ const corsOptions = {
   origin: (origin) => {
     // Allow requests with no origin (like mobile apps, curl requests)
     if (!origin) return true;
-    
-    const allowedOrigins = [
-      'http://localhost:3000',
-      'https://waitlistnow.com',
-    ];
-    
+
+    const allowedOrigins = ['http://localhost:3000', 'https://waitlistnow.com'];
+
     // Check if the origin is an allowed origin
     if (allowedOrigins.includes(origin)) return true;
-    
+
     // Check if the origin is a verified custom domain
     // This would be an async function in a real implementation
     return isVerifiedCustomDomain(origin);
@@ -214,16 +211,16 @@ export const domainRouter = new Hono()
   .post('/add', async (c) => {
     const { domain } = await c.req.json();
     const userId = c.get('userId'); // From auth middleware
-    
+
     // Check if domain is already registered
     const existingDomain = await prisma.customDomain.findUnique({
       where: { domain },
     });
-    
+
     if (existingDomain) {
       return c.json({ error: 'Domain already registered' }, 400);
     }
-    
+
     // Create new domain record
     const newDomain = await prisma.customDomain.create({
       data: {
@@ -232,73 +229,73 @@ export const domainRouter = new Hono()
         verified: false,
       },
     });
-    
+
     return c.json({ domain: newDomain });
   })
-  
+
   .post('/verify', async (c) => {
     const { domainId } = await c.req.json();
     const userId = c.get('userId'); // From auth middleware
-    
+
     const domain = await prisma.customDomain.findFirst({
       where: {
         id: domainId,
         userId,
       },
     });
-    
+
     if (!domain) {
       return c.json({ error: 'Domain not found' }, 404);
     }
-    
+
     // Verify domain ownership (DNS check)
     const isVerified = await verifyDomain(domain.domain);
-    
+
     if (isVerified) {
       await prisma.customDomain.update({
         where: { id: domainId },
         data: { verified: true },
       });
-      
+
       return c.json({ success: true, domain });
     }
-    
-    return c.json({ 
-      success: false, 
-      message: 'Domain verification failed. Please check your DNS settings.' 
+
+    return c.json({
+      success: false,
+      message: 'Domain verification failed. Please check your DNS settings.',
     });
   })
-  
+
   .get('/list', async (c) => {
     const userId = c.get('userId'); // From auth middleware
-    
+
     const domains = await prisma.customDomain.findMany({
       where: { userId },
       orderBy: { createdAt: 'desc' },
     });
-    
+
     return c.json({ domains });
   })
-  
+
   .delete('/:id', async (c) => {
     const domainId = c.req.param('id');
     const userId = c.get('userId'); // From auth middleware
-    
+
     const domain = await prisma.customDomain.findFirst({
       where: {
         id: domainId,
         userId,
       },
     });
-    
+
     if (!domain) {
       return c.json({ error: 'Domain not found' }, 404);
     }
-    
+
     await prisma.customDomain.delete({
       where: { id: domainId },
     });
-    
+
     return c.json({ success: true });
   });
 ```
@@ -319,14 +316,20 @@ Add a dropdown to select a custom domain when creating or editing a waitlist:
   >
     <option value="">Default (waitlistnow.com)</option>
     {verifiedDomains.map((domain) => (
-      <option key={domain.id} value={domain.id}>
+      <option
+        key={domain.id}
+        value={domain.id}
+      >
         {domain.domain}
       </option>
     ))}
   </select>
   <p className="text-sm text-muted-foreground">
-    Select a domain to use for your embedded waitlist. 
-    <Link href="/dashboard/domains" className="text-primary ml-1">
+    Select a domain to use for your embedded waitlist.
+    <Link
+      href="/dashboard/domains"
+      className="text-primary ml-1"
+    >
       Manage domains
     </Link>
   </p>
@@ -340,7 +343,7 @@ const embedCode = useMemo(() => {
   // Get the selected domain or use the default
   const domain = selectedDomain ? selectedDomain.domain : 'waitlistnow.com';
   const baseUrl = `https://${domain}`;
-  
+
   // Rest of the embed code generation
   // ...
 }, [formData, embedType, selectedDomain]);
@@ -354,30 +357,30 @@ Create a middleware to handle requests from custom domains:
 // src/server/middleware/custom-domain.ts
 export async function customDomainMiddleware(c, next) {
   const host = c.req.header('host');
-  
+
   // Skip for default domain
   if (host === 'waitlistnow.com' || host.includes('localhost')) {
     return next();
   }
-  
+
   // Look up the custom domain
   const customDomain = await prisma.customDomain.findUnique({
     where: { domain: host },
     include: { waitlist: true },
   });
-  
+
   if (!customDomain || !customDomain.verified) {
     return c.text('Domain not configured or verified', 404);
   }
-  
+
   // Add the custom domain info to the context
   c.set('customDomain', customDomain);
-  
+
   // If this domain is tied to a specific waitlist, set that as well
   if (customDomain.waitlistId) {
     c.set('waitlistId', customDomain.waitlistId);
   }
-  
+
   return next();
 }
 ```
@@ -387,10 +390,12 @@ export async function customDomainMiddleware(c, next) {
 To use a custom domain with WaitlistNow, you'll need to configure your DNS settings:
 
 1. **Add a CNAME Record**:
+
    - Create a CNAME record pointing your domain or subdomain to `custom.waitlistnow.com`
    - Example: `waitlist.yourdomain.com` → `custom.waitlistnow.com`
 
 2. **Verify Domain Ownership**:
+
    - Add a TXT record to verify domain ownership
    - Name: `_waitlistnow-verification.yourdomain.com`
    - Value: The verification code provided in your dashboard

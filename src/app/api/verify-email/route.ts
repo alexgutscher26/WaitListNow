@@ -13,14 +13,14 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 // Endpoint to send verification email
 export async function POST(request: Request) {
   const { email, verificationToken } = await request.json();
-  
+
   if (!email || !verificationToken) {
     return NextResponse.json(
       { error: 'Email and verification token are required' },
-      { status: 400 }
+      { status: 400 },
     );
   }
-  
+
   try {
     await resend.emails.send({
       from: 'WaitListNow <verification@waitlistnow.app>',
@@ -130,15 +130,12 @@ If you didn't create an account with WaitListNow, you can safely ignore this ema
 Need help? Contact us at support@waitlistnow.app
 
 © ${new Date().getFullYear()} WaitListNow. All rights reserved.
-      `
+      `,
     });
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error('Error sending verification email:', error);
-    return NextResponse.json(
-      { error: 'Failed to send verification email' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to send verification email' }, { status: 500 });
   }
 }
 
@@ -149,60 +146,48 @@ export async function GET(request: Request) {
   const email = searchParams.get('email');
 
   if (!token || !email) {
-    return NextResponse.json(
-      { error: 'Token and email are required' },
-      { status: 400 }
-    );
+    return NextResponse.json({ error: 'Token and email are required' }, { status: 400 });
   }
 
   try {
     // Find subscriber by email
     const subscriber = await db.subscriber.findFirst({
       where: { email },
-      select: { 
-        id: true, 
+      select: {
+        id: true,
         customFields: true,
-        status: true 
-      }
+        status: true,
+      },
     });
 
     if (!subscriber) {
-      return NextResponse.json(
-        { error: 'Subscriber not found' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: 'Subscriber not found' }, { status: 404 });
     }
 
     // Check if token matches
     const customFields = subscriber.customFields as CustomFields | null;
     const storedToken = customFields?.verificationToken;
     if (storedToken !== token) {
-      return NextResponse.json(
-        { error: 'Invalid or expired verification token' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Invalid or expired verification token' }, { status: 400 });
     }
 
     // Update subscriber status to VERIFIED
     const currentFields = (subscriber.customFields || {}) as CustomFields;
     await db.subscriber.update({
       where: { id: subscriber.id },
-      data: { 
+      data: {
         status: 'VERIFIED',
         customFields: {
           ...currentFields,
           emailVerified: true,
-          emailVerifiedAt: new Date().toISOString()
-        } as CustomFields
-      }
+          emailVerifiedAt: new Date().toISOString(),
+        } as CustomFields,
+      },
     });
 
     return NextResponse.redirect(new URL('/verification-success', request.url));
   } catch (error) {
     console.error('Error verifying email:', error);
-    return NextResponse.json(
-      { error: 'Failed to verify email' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to verify email' }, { status: 500 });
   }
 }

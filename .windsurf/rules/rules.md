@@ -114,5 +114,4 @@ Unused variables are generally considered a code smell and should be avoided.
 
 Removing unused references - It prevents unused modules from being loaded at runtime, improving performance, and preventing the compiler from loading metadata that will never be used. - It prevents conflicts that may occur when trying to reference another variable.
 
-NOTE: If you have intentionally left a variable unused, we suggest you to prefix the variable name with a _ to prevent them from being flagged by DeepSource.
-
+NOTE: If you have intentionally left a variable unused, we suggest you to prefix the variable name with a \_ to prevent them from being flagged by DeepSource.

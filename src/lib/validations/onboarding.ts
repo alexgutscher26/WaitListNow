@@ -7,25 +7,25 @@ export const onboardingCompleteSchema = z.object({
   description: z.string().max(500).optional(),
   websiteUrl: z.string().url('Please enter a valid URL').optional().or(z.literal('')),
   redirectUrl: z.string().url('Please enter a valid URL').optional().or(z.literal('')),
-  
+
   // Custom Fields
   customFields: z.array(customFieldSchema).default([]),
-  
+
   // Styling
   style: waitlistStyleSchema.default({}),
-  
+
   // Settings
   settings: waitlistSettingsSchema.default({
     emailVerification: true,
     allowDuplicates: false,
     referralEnabled: false,
   }),
-  
+
   // Terms Acceptance
-  termsAccepted: z.boolean().refine(val => val === true, {
+  termsAccepted: z.boolean().refine((val) => val === true, {
     message: 'You must accept the terms and conditions',
   }),
-  
+
   // Notification Preferences
   emailNotifications: z.boolean().default(true),
   marketingEmails: z.boolean().default(false),

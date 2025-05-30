@@ -160,7 +160,8 @@ const getStats = async (): Promise<{
 };
 
 interface PageProps {
-  searchParams: {
+  searchParams?: {
+    upgrade?: string;
     [key: string]: string | string[] | undefined;
   };
 }
@@ -358,7 +359,8 @@ export default async function Page({ searchParams }: PageProps) {
   }
 
   const isPremium = user.privateMetadata?.premium === true;
-  const showUpgradeBanner = searchParams.upgrade === 'success';
+  const upgradeParam = searchParams?.upgrade;
+  const showUpgradeBanner = upgradeParam === 'success';
 
   // Fetch waitlists with subscribers count
   const waitlists = await db.waitlist.findMany({

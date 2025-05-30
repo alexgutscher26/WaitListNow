@@ -1,14 +1,34 @@
 import { z } from 'zod';
+import { customFieldSchema, waitlistStyleSchema, waitlistSettingsSchema } from './waitlist';
 
-export const onboardingCompleteSchema = z
-  .object({
-    // Add any additional fields needed for onboarding completion
-    // For example:
-    // fullName: z.string().min(2, 'Full name is required'),
-    // companyName: z.string().min(2, 'Company name is required'),
-    // website: z.string().url('Please enter a valid URL').optional(),
-    // For now, we'll just require an empty object as we don't have specific fields yet
-  })
-  .strict();
+export const onboardingCompleteSchema = z.object({
+  // Basic Waitlist Information
+  name: z.string().min(3, 'Name must be at least 3 characters').max(100),
+  description: z.string().max(500).optional(),
+  websiteUrl: z.string().url('Please enter a valid URL').optional().or(z.literal('')),
+  redirectUrl: z.string().url('Please enter a valid URL').optional().or(z.literal('')),
+  
+  // Custom Fields
+  customFields: z.array(customFieldSchema).default([]),
+  
+  // Styling
+  style: waitlistStyleSchema.default({}),
+  
+  // Settings
+  settings: waitlistSettingsSchema.default({
+    emailVerification: true,
+    allowDuplicates: false,
+    referralEnabled: false,
+  }),
+  
+  // Terms Acceptance
+  termsAccepted: z.boolean().refine(val => val === true, {
+    message: 'You must accept the terms and conditions',
+  }),
+  
+  // Notification Preferences
+  emailNotifications: z.boolean().default(true),
+  marketingEmails: z.boolean().default(false),
+});
 
 export type OnboardingCompleteData = z.infer<typeof onboardingCompleteSchema>;

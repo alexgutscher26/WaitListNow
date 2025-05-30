@@ -104,10 +104,36 @@ export async function POST(req: NextRequest) {
 
     log('User updated successfully:', updatedUser.id);
 
+    // Generate a slug from the waitlist name
+    const waitlistName = data.name || 'My Waitlist';
+    const slug = waitlistName
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/(^-|-$)/g, '');
+
+    // Create a default waitlist for the user
+    const waitlist = await db.waitlist.create({
+      data: {
+        name: waitlistName,
+        slug: `${slug}-${Math.random().toString(36).substring(2, 8)}`,
+        description: data.description || null,
+        websiteUrl: data.websiteUrl || null,
+        redirectUrl: data.redirectUrl || null,
+        userId: user.id,
+        status: 'DRAFT',
+        customFields: [],
+        style: {},
+        settings: {},
+      },
+    });
+
+    log('Created default waitlist:', waitlist.id);
+
     return NextResponse.json({
       success: true,
       message: 'Onboarding completed successfully',
       user: updatedUser,
+      waitlist,
     });
   } catch (error) {
     console.error('[ONBOARDING_COMPLETE]', error);

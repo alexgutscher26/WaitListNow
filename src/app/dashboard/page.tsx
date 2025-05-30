@@ -160,11 +160,13 @@ const getStats = async (): Promise<{
 };
 
 interface PageProps {
-  searchParams?: {
-    upgrade?: string;
-    [key: string]: string | string[] | undefined;
-  };
+  searchParams?: SearchParams;
 }
+
+type SearchParams = {
+  upgrade?: string;
+  [key: string]: string | string[] | undefined;
+};
 
 /**
  * Returns a React component for rendering an activity icon based on the given type.
@@ -350,7 +352,7 @@ const ActivityItem = ({ activity }: { activity: Activity }) => {
  * 4. Fetches the user's recent waitlists with subscriber counts.
  * 5. Renders various cards, tables, and components displaying statistics, recent activity, and waitlist details.
  */
-export default async function Page({ searchParams }: PageProps) {
+export default async function Page({ searchParams = {} }: PageProps) {
   const stats = await getStats();
 
   const user = await currentUser();
@@ -358,8 +360,10 @@ export default async function Page({ searchParams }: PageProps) {
     redirect('/sign-in');
   }
 
+  // Safely access searchParams with proper typing
+  const safeSearchParams = searchParams as SearchParams;
   const isPremium = user.privateMetadata?.premium === true;
-  const upgradeParam = searchParams?.upgrade;
+  const upgradeParam = safeSearchParams?.upgrade;
   const showUpgradeBanner = upgradeParam === 'success';
 
   // Fetch waitlists with subscribers count

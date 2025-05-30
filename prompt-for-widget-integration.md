@@ -3,6 +3,8 @@
 ## Task Overview
 Implement the waitlist widget integration functionality in the WaitListNow application at http://localhost:3000/dashboard/waitlists/new. Make both the JavaScript Snippet and iFrame embedding options fully functional while ensuring a cohesive brand experience between embedded widgets and direct waitlist links.
 
+@prompt-for-widget-integration.md follow this build the widget functions Module 
+
 ## Specific Requirements
 
 ### 1. JavaScript Snippet Implementation

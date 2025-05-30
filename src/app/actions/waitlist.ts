@@ -3,11 +3,20 @@
 import { auth } from '@clerk/nextjs/server';
 import { db } from '@/lib/db';
 
+// Type for the auth response
+type AuthResponse = {
+  userId: string | null;
+  sessionId: string | null;
+  getToken: () => Promise<string | null>;
+};
+
 export async function getWaitlistStats() {
   try {
-    const { userId } = auth();
+    const authResponse = await auth() as AuthResponse;
+    const userId = authResponse.userId;
+    
     if (!userId) {
-      throw new Error('Unauthorized');
+      throw new Error('Unauthorized: You must be signed in to view waitlist stats');
     }
 
     // Get waitlists with subscriber counts

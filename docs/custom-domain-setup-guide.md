@@ -33,17 +33,17 @@ To verify ownership of your domain and enable it for use with WaitlistNow, you'l
 
 This record directs traffic from your domain to WaitlistNow servers:
 
-| Type  | Name                      | Value                    | TTL      |
-|-------|---------------------------|--------------------------|----------|
+| Type  | Name                         | Value                  | TTL       |
+| ----- | ---------------------------- | ---------------------- | --------- |
 | CNAME | waitlist (or your subdomain) | custom.waitlistnow.com | 3600 (1h) |
 
 #### TXT Record for Verification
 
 This record verifies that you own the domain:
 
-| Type | Name                                  | Value                           | TTL      |
-|------|---------------------------------------|----------------------------------|----------|
-| TXT  | _waitlistnow-verification.yourdomain.com | [Your verification code from dashboard] | 3600 (1h) |
+| Type | Name                                      | Value                                   | TTL       |
+| ---- | ----------------------------------------- | --------------------------------------- | --------- |
+| TXT  | \_waitlistnow-verification.yourdomain.com | [Your verification code from dashboard] | 3600 (1h) |
 
 > **Important**: The exact steps to add these records will vary depending on your DNS provider. Common providers include Cloudflare, GoDaddy, Namecheap, and Google Domains.
 

@@ -77,7 +77,10 @@ interface RootLayoutProps {
  */
 export default function RootLayout({ children, modal }: RootLayoutProps) {
   return (
-    <html lang="en" className={cn('h-full', inter.variable)}>
+    <html
+      lang="en"
+      className={cn('h-full', inter.variable)}
+    >
       <body className={cn('min-h-full bg-background font-sans antialiased')}>
         <PostHogProvider>
           <ClerkProvider>

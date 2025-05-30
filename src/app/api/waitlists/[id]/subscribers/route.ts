@@ -221,8 +221,7 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
       log('Error stack:', error.stack);
       return new NextResponse(
         JSON.stringify({
-          error: error.message,
-          stack: isDev ? error.stack : undefined,
+          error: 'Internal server error',
         }),
         {
           status: 500,
@@ -234,7 +233,6 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
     return new NextResponse(
       JSON.stringify({
         error: 'Internal server error',
-        details: isDev ? String(error) : undefined,
       }),
       {
         status: 500,

@@ -1,0 +1,108 @@
+.waitlist-widget {
+  /* Base variables with fallbacks */
+  --button-bg: var(--brand-primary, #3b82f6);
+  --button-text: var(--text-on-primary, #ffffff);
+  --input-bg: var(--background-muted, rgba(0, 0, 0, 0.05));
+  --input-border: var(--border-color, rgba(0, 0, 0, 0.1));
+  --text-color: var(--text-primary, #1f2937);
+  --border-radius: var(--radius-md, 8px);
+  --font-family: var(--font-sans, system-ui, -apple-system, sans-serif);
+  
+  font-family: var(--font-family);
+  color: var(--text-color);
+  width: 100%;
+  background-color: var(--background, #ffffff);
+}
+
+.waitlist-widget__form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+}
+
+.waitlist-widget--inline .waitlist-widget__form {
+  flex-direction: row;
+  align-items: flex-end;
+  gap: 0.5rem;
+}
+
+.waitlist-widget__field {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.waitlist-widget--inline .waitlist-widget__field {
+  flex: 1;
+}
+
+.waitlist-widget__label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  font-size: 0.875rem;
+  color: var(--text-color);
+  opacity: 0.9;
+}
+
+.waitlist-widget--no-labels .waitlist-widget__label {
+  display: none;
+}
+
+.waitlist-widget__input {
+  width: 100%;
+  background-color: var(--input-bg);
+  border: 1px solid var(--input-border);
+  border-radius: var(--border-radius);
+  padding: 0.75rem 1rem;
+  font-family: var(--font-family);
+  color: var(--text-color);
+  font-size: var(--text-sm, 0.9375rem);
+  transition: all 0.2s ease-in-out;
+  box-sizing: border-box;
+}
+
+.waitlist-widget__input:focus {
+  outline: none;
+  border-color: var(--button-bg);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--button-bg) 25%, transparent);
+}
+
+.waitlist-widget__button {
+  background-color: var(--button-bg);
+  color: var(--button-text);
+  border: none;
+  border-radius: var(--border-radius);
+  padding: 0.75rem 1.5rem;
+  font-size: var(--text-base, 1rem);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  font-family: inherit;
+  line-height: 1.5;
+}
+
+.waitlist-widget--inline .waitlist-widget__button {
+  width: auto;
+  height: 42px;
+}
+
+.waitlist-widget__button:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.waitlist-widget__button:active {
+  transform: translateY(0);
+}
+
+.waitlist-widget__button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}

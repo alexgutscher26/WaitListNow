@@ -99,64 +99,64 @@ type Activity =
   | ConversionActivity
   | MilestoneActivity;
 
+import { getWaitlistStats } from '@/app/actions/waitlist';
+
+// Define the stats type
+type WaitlistStats = Awaited<ReturnType<typeof getWaitlistStats>>;
+
 // Enhanced stats with growth indicators and more detailed metrics
-const stats = {
-  totalSubscribers: 1245,
-  newThisWeek: 42,
-  growthRate: 15.8, // percentage growth
-  activeWaitlists: 3,
-  completedWaitlists: 7,
-  averageWaitTime: '2.5 days',
-  conversionRate: 68.5, // percentage
-  totalRevenue: 12840,
-  monthlyGrowth: 23.4,
-  recentActivity: [
-    {
-      id: 1,
-      type: 'new_subscriber' as const,
-      name: 'John Doe',
-      email: 'john@example.com',
-      time: new Date(Date.now() - 2 * 60 * 1000), // 2 minutes ago
-      avatar: 'JD',
-      waitlist: 'Beta Launch',
-    } satisfies NewSubscriberActivity,
-    {
-      id: 2,
-      type: 'waitlist_created' as const,
-      name: 'Premium Features Beta',
-      time: new Date(Date.now() - 60 * 60 * 1000), // 1 hour ago
-      subscribers: 0,
-    } satisfies WaitlistCreatedActivity,
-    {
-      id: 3,
-      type: 'referral' as const,
-      name: 'Jane Smith',
-      referrer: 'Jane Smith',
-      referred: 'jane@example.com',
-      time: new Date(Date.now() - 3 * 60 * 60 * 1000), // 3 hours ago
-      reward: '$10',
-    } satisfies ReferralActivity,
-    {
-      id: 4,
-      type: 'conversion' as const,
-      name: 'Mike Johnson',
-      time: new Date(Date.now() - 5 * 60 * 60 * 1000), // 5 hours ago
-      revenue: 99.99,
-      waitlist: 'Premium Features',
-    } satisfies ConversionActivity,
-    {
-      id: 5,
-      type: 'milestone' as const,
-      name: '1000 Subscribers',
-      time: new Date(Date.now() - 24 * 60 * 60 * 1000), // 1 day ago
-      message: 'Reached 1000 subscribers on your waitlist!',
-    } satisfies MilestoneActivity,
-  ],
-  topWaitlists: [
-    { id: '1', name: 'Beta Launch', subscribers: 842, growth: 12.5 },
-    { id: '2', name: 'Premium Features', subscribers: 276, growth: 8.2 },
-    { id: '3', name: 'Mobile App', subscribers: 127, growth: -2.4 },
-  ],
+const getStats = async (): Promise<{
+  totalSubscribers: number;
+  newThisWeek: number;
+  growthRate: number;
+  activeWaitlists: number;
+  completedWaitlists: number;
+  averageWaitTime: string;
+  conversionRate: number;
+  totalRevenue: number;
+  monthlyGrowth: number;
+  recentActivity: any[];
+  topWaitlists: Array<{ id: string; name: string; subscribers: number; growth: number }>;
+}> => {
+  try {
+    const stats = await getWaitlistStats();
+    
+    // For now, we'll keep some placeholder values for metrics we don't have data for yet
+    return {
+      totalSubscribers: stats.totalSubscribers,
+      newThisWeek: stats.newThisWeek,
+      growthRate: stats.growthRate,
+      activeWaitlists: stats.activeWaitlists,
+      completedWaitlists: stats.completedWaitlists,
+      averageWaitTime: '2.5 days', // TODO: Calculate this from actual data
+      conversionRate: 68.5, // TODO: Calculate this from actual data
+      totalRevenue: 0, // TODO: Implement revenue tracking
+      monthlyGrowth: 0, // TODO: Calculate this from actual data
+      recentActivity: [], // TODO: Implement activity feed
+      topWaitlists: stats.waitlists.map(wl => ({
+        id: wl.id,
+        name: wl.name,
+        subscribers: wl.subscribers,
+        growth: 0, // TODO: Calculate growth
+      })),
+    };
+  } catch (error) {
+    console.error('Error loading stats:', error);
+    // Return empty stats if there's an error
+    return {
+      totalSubscribers: 0,
+      newThisWeek: 0,
+      growthRate: 0,
+      activeWaitlists: 0,
+      completedWaitlists: 0,
+      averageWaitTime: '0 days',
+      conversionRate: 0,
+      totalRevenue: 0,
+      monthlyGrowth: 0,
+      recentActivity: [],
+      topWaitlists: [],
+    };
+  }
 };
 
 interface PageProps {
@@ -350,6 +350,8 @@ const ActivityItem = ({ activity }: { activity: Activity }) => {
  * 5. Renders various cards, tables, and components displaying statistics, recent activity, and waitlist details.
  */
 export default async function Page({ searchParams }: PageProps) {
+  const stats = await getStats();
+
   const user = await currentUser();
   if (!user) {
     redirect('/sign-in');

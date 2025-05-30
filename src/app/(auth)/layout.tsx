@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { Navbar } from '@/components/navbar';
+import { NavbarClient } from '@/components/navbar-client';
 
 /**
  * Renders a layout including a Navbar and child components.
@@ -7,7 +7,7 @@ import { Navbar } from '@/components/navbar';
 const Layout = ({ children }: { children: ReactNode }) => {
   return (
     <>
-      <Navbar />
+      <NavbarClient />
       {children}
     </>
   );

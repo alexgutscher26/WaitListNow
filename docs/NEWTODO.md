@@ -4,12 +4,14 @@ This document outlines the planned improvements and enhancements for the WaitLis
 
 ## 1. Core Functionality Improvements
 
-- [ ] **Complete the Waitlist API Endpoints**
+- [X] **Complete the Waitlist API Endpoints**
 
-  - [ ] Implement POST `/api/waitlists` endpoint for creating new waitlists
-  - [ ] Add POST `/api/onboarding/complete` endpoint
-  - [ ] Create GET endpoints for retrieving waitlist data
-  - [ ] Implement PUT/PATCH endpoints for updating waitlist settings
+  - [X] Implement POST `/api/waitlists` endpoint for creating new waitlists
+  - [X] Add POST `/api/onboarding/complete` endpoint
+  - [X] Create GET endpoints for retrieving waitlist data
+  - [X] Implement PUT/PATCH /api/waitlists/[id] - Update a waitlist
+  - [X] Implement DELETE /api/waitlists/[id] - Delete a waitlist
+  - [X] Implement GET /api/waitlists/[id]/subscribers - Retrieve waitlist subscribers
 
 - [ ] **Embeddable Widget Implementation**
 

@@ -76,24 +76,23 @@ interface RootLayoutProps {
  */
 export default function RootLayout({ children, modal }: RootLayoutProps) {
   return (
-    <html
-      lang="en"
-      suppressHydrationWarning
-    >
-      <body className={cn('min-h-screen bg-background font-sans antialiased', inter.variable)}>
+    <html lang="en" className={cn('h-full', inter.variable)}>
+      <body className={cn('min-h-full bg-background font-sans antialiased')}>
         <ClerkProvider>
           <QueryProvider>
-            <PlausibleProvider>
-              <HeroUIProvider>
-                <div className="flex-1">
-                  {children}
-                  {modal}
+            <HeroUIProvider>
+              <PlausibleProvider>
+                <div className="relative flex min-h-screen flex-col">
+                  <main className="flex-1">
+                    {children}
+                    {modal}
+                  </main>
                 </div>
                 <Toaster />
                 <Analytics />
                 <SpeedInsights />
-              </HeroUIProvider>
-            </PlausibleProvider>
+              </PlausibleProvider>
+            </HeroUIProvider>
           </QueryProvider>
         </ClerkProvider>
       </body>

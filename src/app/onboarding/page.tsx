@@ -1,5 +1,7 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
+
 import {
   CheckCircle2,
   ArrowRight,
@@ -406,6 +408,7 @@ const onboardingSteps = [
 export default function ImprovedOnboarding() {
   const [currentStep, setCurrentStep] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [formData, setFormData] = useState<FormData>({
     waitlistName: '',
     websiteUrl: '',
@@ -455,15 +458,46 @@ export default function ImprovedOnboarding() {
    * Regardless of the outcome, it sets `isLoading` to false.
    * If the current step is not the last one, it increments the `currentStep` by 1.
    */
+  const router = useRouter();
+
   const handleNext = async () => {
     if (currentStep === onboardingSteps.length - 1) {
       setIsLoading(true);
+      setError('');
+      
       try {
-        // Simulate API call
-        await new Promise((resolve) => setTimeout(resolve, 1500));
+        // Call the API to mark onboarding as complete
+        const response = await fetch('/api/onboarding/complete', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+          },
+          body: JSON.stringify({})
+        });
+
+        // Handle both JSON and text responses
+        const responseText = await response.text();
+        let result;
+        try {
+          result = responseText ? JSON.parse(responseText) : {};
+        } catch (e) {
+          // If response is not JSON, treat it as an error message
+          throw new Error(responseText || 'Failed to complete onboarding');
+        }
+        
+        if (!response.ok) {
+          throw new Error(result.error || result.message || 'Failed to complete onboarding');
+        }
+
+        // Show success message and redirect
         alert('🎉 Onboarding completed! Redirecting to dashboard...');
+        router.push('/dashboard');
       } catch (error) {
         console.error('Error completing onboarding:', error);
+        const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
+        setError(errorMessage);
+        alert(`Failed to complete onboarding: ${errorMessage}`);
       } finally {
         setIsLoading(false);
       }

@@ -17,16 +17,18 @@ enum UserRole {
 }
 
 model User {
-  id              String          @id @default(cuid())
-  externalId      String?         @unique
-  plan            Plan            @default(FREE)
-  email           String          @unique
-  apiKey          String          @unique @default(cuid())
-  role            UserRole        @default(USER)
-  createdAt       DateTime        @default(now())
-  updatedAt       DateTime        @updatedAt
-  waitlists       Waitlist[]
-  subscribers     Subscriber[]
+  id                  String          @id @default(cuid())
+  externalId          String?         @unique
+  plan                Plan            @default(FREE)
+  email               String          @unique
+  apiKey              String          @unique @default(cuid())
+  role                UserRole        @default(USER)
+  onboardingComplete  Boolean         @default(false)
+  onboardingCompletedAt DateTime?
+  createdAt           DateTime        @default(now())
+  updatedAt           DateTime        @updatedAt
+  waitlists           Waitlist[]
+  subscribers         Subscriber[]
 
   @@index([email, apiKey])
 }
@@ -44,9 +46,10 @@ model Waitlist {
   customFields Json?
   style        Json?
   settings     Json?
-  subscribers  Subscriber[]
-  createdAt    DateTime     @default(now())
-  updatedAt    DateTime     @updatedAt
+  subscribers     Subscriber[]
+  subscriberCount Int         @default(0)
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
 
   @@index([slug, userId])
 }
@@ -63,6 +66,7 @@ model Subscriber {
   referralCode  String?        @unique
   referredBy    String?
   status       SubscriberStatus @default(PENDING)
+  verificationToken String?        @unique
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
 

@@ -8,15 +8,17 @@ import { useRouter } from 'next/navigation';
 
 interface DashboardPageProps {
   title: string;
+  description?: string;
   children?: ReactNode;
   hideBackButton?: boolean;
   cta?: ReactNode;
+  actions?: ReactNode;
 }
 
 /**
  * Renders a dashboard page with optional navigation and CTA button.
  */
-export const DashboardPage = ({ title, children, cta, hideBackButton }: DashboardPageProps) => {
+export const DashboardPage = ({ title, description, children, cta, actions, hideBackButton }: DashboardPageProps) => {
   const router = useRouter();
 
   return (
@@ -34,10 +36,20 @@ export const DashboardPage = ({ title, children, cta, hideBackButton }: Dashboar
               </Button>
             )}
 
-            <Heading>{title}</Heading>
+            <div className="flex flex-col">
+              <Heading>{title}</Heading>
+              {description && (
+                <p className="text-sm text-muted-foreground mt-1">
+                  {description}
+                </p>
+              )}
+            </div>
           </div>
 
-          {cta ? <div className="w-full">{cta}</div> : null}
+          <div className="flex items-center gap-4">
+            {actions}
+            {cta}
+          </div>
         </div>
       </div>
 

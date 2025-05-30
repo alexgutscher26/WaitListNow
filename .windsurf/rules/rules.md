@@ -91,3 +91,19 @@ trigger: always_on
 - Keep README.md up to date
 - Add JSDoc comments for complex functions
 - Document environment variables in .env.example
+
+## Use Supports Color for consolelogs Usage
+
+import supportsColor from 'supports-color';
+
+if (supportsColor.stdout) {
+	console.log('Terminal stdout supports color');
+}
+
+if (supportsColor.stdout.has256) {
+	console.log('Terminal stdout supports 256 colors');
+}
+
+if (supportsColor.stderr.has16m) {
+	console.log('Terminal stderr supports 16 million colors (truecolor)');
+}

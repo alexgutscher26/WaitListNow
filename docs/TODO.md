@@ -61,3 +61,8 @@ Setting up the database schema for waitlists
 Creating the embeddable widget
 Adding authentication checks to the API routes
 Implementing the dashboard to manage waitlists
+
+Enhance Onboarding:
+Add more fields to the onboarding form
+Update the validation schema with required fields
+Add steps or progress tracking

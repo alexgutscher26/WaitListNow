@@ -18,23 +18,14 @@ import { client } from '@/lib/client';
 const Page = () => {
   const router = useRouter();
 
-  const { data } = useQuery({
-    queryFn: async () => {
-      const res = await client.auth.getDatabaseSyncStatus.$get();
-      return await res.json();
-    },
-    queryKey: ['get-database-sync-status'],
-    refetchInterval: (query) => {
-      return query.state.data?.isSynced ? false : 1000;
-    },
-  });
-
+    // Redirect to onboarding immediately since we don't have the sync status endpoint
   useEffect(() => {
-    if (data?.isSynced) {
-      // Redirect to onboarding first, then to dashboard after completion
+    const timer = setTimeout(() => {
       router.push('/onboarding');
-    }
-  }, [data, router]);
+    }, 1000);
+    
+    return () => clearTimeout(timer);
+  }, [router]);
 
   return (
     <div className="flex w-full flex-1 items-center justify-center px-4">

@@ -1,10 +1,12 @@
 'use client';
 
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback, useMemo, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
 
 // URL validation helper
 const isValidUrl = (url: string): boolean => {
+  if (!url) return false;
   try {
     new URL(url);
     return true;
@@ -45,6 +47,7 @@ const Badge = ({
   );
 };
 
+import { cn } from '@/utils';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -58,9 +61,10 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ArrowLeft, Plus, Zap, Eye, Copy, Trash2, GripVertical, Check, X } from 'lucide-react';
+import { ArrowLeft, Plus, Zap, Eye, Copy, Trash2, GripVertical, Check, X, Loader2, Pencil, ExternalLink, CheckCircle } from 'lucide-react';
 import { DashboardPage } from '@/components/dashboard-page';
 import Link from 'next/link';
+import { DialogHeader, Dialog, DialogContent, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 
 // Types
 type FieldType = 'text' | 'email' | 'number' | 'url' | 'tel' | 'textarea' | 'select';
@@ -81,6 +85,8 @@ interface CustomField {
 interface WaitlistStyle {
   primaryColor: string;
   buttonText: string;
+  buttonColor: string;
+  buttonTextColor: string;
   buttonVariant: ButtonVariant;
   buttonRounded: ButtonRounded;
   formLayout: FormLayout;
@@ -106,10 +112,18 @@ interface FormData {
   enableNotifications: boolean;
   enableReferrals: boolean;
   referralReward: string;
-  allowDuplicates: boolean;
   requireEmailVerification: boolean;
   maxSignups?: number;
   showBranding: boolean;
+  settings: {
+    maxSignups?: number;
+    emailVerification: boolean;
+    allowDuplicates: boolean;
+    referralEnabled: boolean;
+    referralReward?: string;
+    customCss?: string;
+    customJs?: string;
+  };
 }
 
 // Constants
@@ -148,68 +162,75 @@ const BORDER_RADIUS: { value: ButtonRounded; label: string }[] = [
  */
 export default function NewWaitlistPage() {
   const router = useRouter();
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [activeTab, setActiveTab] = useState<'basic' | 'fields' | 'appearance' | 'behavior'>(
     'basic',
   );
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [previewMode, setPreviewMode] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [embedType, setEmbedType] = useState<'js' | 'iframe'>('js');
-
-  // Initial form data
-  const [formData, setFormData] = useState<FormData>({
-    name: 'My Waitlist',
-    description: 'Join our waitlist to get early access',
-    websiteUrl: '',
-    redirectUrl: '',
-    customFields: [
-      {
-        id: '1',
-        name: 'Name',
-        type: 'text',
-        required: true,
-        placeholder: 'Enter your name',
-      },
-      {
-        id: '2',
-        name: 'Email',
-        type: 'email',
-        required: true,
-        placeholder: 'Enter your email',
-      },
-    ],
-    style: {
-      primaryColor: '#3b82f6',
-      buttonText: 'Join Waitlist',
-      buttonVariant: 'default',
-      buttonRounded: 'md',
-      formLayout: 'stacked',
-      showLabels: true,
-      backgroundColor: '#ffffff',
-      textColor: '#1f2937',
-      fontFamily: 'Inter',
-      boxShadow: 'md',
-      padding: '1.5rem',
-      borderRadius: '0.5rem',
-    },
-    confirmationType: 'message',
-    confirmationMessage: 'Thank you for joining our waitlist!',
-    enableNotifications: true,
-    enableReferrals: false,
-    referralReward: 'Get early access',
-    allowDuplicates: false,
-    requireEmailVerification: false,
-    maxSignups: undefined,
-    showBranding: true, // Always true by default for non-paying users
-  });
-
   const [newField, setNewField] = useState<Partial<CustomField>>({
-    name: '',
     type: 'text',
     required: false,
-    placeholder: '',
-    options: [],
   });
+  const [showFieldEditor, setShowFieldEditor] = useState(false);
+  const [formData, setFormData] = useState<FormData>({
+    name: '',
+    description: '',
+    websiteUrl: '',
+    redirectUrl: '',
+    customFields: [],
+    confirmationType: 'message',
+    confirmationMessage: 'Thank you for joining the waitlist!',
+    enableNotifications: false,
+    enableReferrals: false,
+    referralReward: '',
+    requireEmailVerification: true,
+    showBranding: true,
+    style: {
+      buttonText: 'Join Waitlist',
+      buttonColor: '#3b82f6',
+      buttonTextColor: '#ffffff',
+      backgroundColor: '#ffffff',
+      textColor: '#1f2937',
+      borderRadius: '8',
+      fontFamily: 'Inter',
+      showLabels: true,
+      formLayout: 'stacked',
+      primaryColor: '#3b82f6',
+      buttonVariant: 'default',
+      buttonRounded: 'md',
+      boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)',
+      padding: '1.5rem'
+    },
+    settings: {
+      maxSignups: undefined,
+      emailVerification: true,
+      allowDuplicates: false,
+      referralEnabled: false,
+      referralReward: '',
+      customCss: '',
+      customJs: '',
+    },
+  });
+  const [embedType, setEmbedType] = useState<'js' | 'iframe'>('js');
+
+  const handleTestConfirmation = () => {
+    // Removed from here
+    setIsTesting(true);
+    setShowConfirmation(true);
+  };
+
+  const handleCloseTest = () => {
+    setShowConfirmation(false);
+    // Small delay to allow the modal to close before resetting the testing state
+    setTimeout(() => setIsTesting(false), 300);
+  };
+
+  const handleRedirect = () => {
+    if (formData.confirmationType === 'redirect' && formData.redirectUrl) {
+      window.open(formData.redirectUrl, '_blank');
+    }
+  };
 
   // Helper functions
   const getBorderRadius = useCallback((size: ButtonRounded): string => {
@@ -247,64 +268,73 @@ export default function NewWaitlistPage() {
     return Object.keys(newErrors).length === 0;
   }, [formData]);
 
-  /**
-   * Validates whether a given string is a valid URL by attempting to construct it with the URL class.
-   */
-  const isValidUrl = (url: string): boolean => {
-    try {
-      const parsedUrl = new URL(url);
-      return Boolean(parsedUrl);
-    } catch {
-      return false;
-    }
-  };
-
-  // Event handlers
-  const handleInputChange = useCallback(
+  // Form change handlers
+  const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-      const target = e.target as HTMLInputElement;
-      const { name, value, type, checked } = target;
+      const target = e.target as HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement;
+      const { name, value, type } = target;
+      const checked = 'checked' in target ? target.checked : undefined;
 
-      setFormData((prev) => {
-        const newState = { ...prev };
+      // Handle nested objects in form data (style, settings, etc.)
+      if (name.includes('.')) {
+        const [parent, child] = name.split('.');
+        setFormData((prev) => ({
+          ...prev,
+          [parent]: {
+            ...(prev[parent as keyof FormData] as object || {}),
+            [child]: type === 'checkbox' ? checked : (type === 'number' ? Number(value) : value),
+          },
+        }));
+      } else {
+        setFormData((prev) => ({
+          ...prev,
+          [name]: type === 'checkbox' ? checked : (type === 'number' ? Number(value) : value),
+        }));
+      }
 
-        // Handle nested style properties
-        if (name.startsWith('style.')) {
-          const styleField = name.split('.')[1] as keyof WaitlistStyle;
-          newState.style = {
-            ...newState.style,
-            [styleField]: type === 'checkbox' ? checked : value,
-          };
-          return newState;
-        }
-
-        // Handle checkbox inputs
-        if (type === 'checkbox') {
-          return { ...newState, [name]: checked };
-        }
-
-        // Handle number inputs
-        if (type === 'number') {
-          return { ...newState, [name]: value ? Number(value) : undefined };
-        }
-
-        // Handle all other inputs
-        return { ...newState, [name]: value };
-      });
-
-      // Clear error when user starts typing
+      // Clear error when field is edited
       if (errors[name]) {
         setErrors((prev) => {
-          const { [name]: _, ...rest } = prev;
-          return rest;
+          const newErrors = { ...prev };
+          delete newErrors[name];
+          return newErrors;
         });
       }
     },
     [errors],
   );
 
-  const addCustomField = useCallback(() => {
-    if (!newField.name?.trim()) return;
+  // Handle color picker changes
+  const handleColorChange = (name: string, value: string) => {
+    if (name.includes('.')) {
+      const [parent, child] = name.split('.');
+      setFormData((prev) => ({
+        ...prev,
+        [parent]: {
+          ...(prev[parent as keyof FormData] as object || {}),
+          [child]: value,
+        },
+      }));
+    } else {
+      setFormData((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    }
+  };
+
+  // Add a new custom field
+  const addCustomField = () => {
+    if (!newField.name) {
+      toast.error('Field name is required');
+      return;
+    }
+
+    // Check if field with this name already exists
+    if (formData.customFields.some((field) => field.name === newField.name)) {
+      toast.error('A field with this name already exists');
+      return;
+    }
 
     const field: CustomField = {
       id: `field-${Date.now()}`,
@@ -312,7 +342,7 @@ export default function NewWaitlistPage() {
       type: newField.type || 'text',
       required: newField.required || false,
       placeholder: newField.placeholder || '',
-      options: newField.type === 'select' ? newField.options || [] : undefined,
+      options: newField.type === 'select' ? (newField.options || ['']) : undefined,
     };
 
     setFormData((prev) => ({
@@ -320,9 +350,16 @@ export default function NewWaitlistPage() {
       customFields: [...prev.customFields, field],
     }));
 
-    setNewField({ name: '', type: 'text', required: false, placeholder: '', options: [] });
-  }, [newField]);
+    // Reset the new field form
+    setNewField({
+      type: 'text',
+      required: false,
+    });
+    setShowFieldEditor(false);
+    toast.success('Custom field added');
+  };
 
+  // Remove a custom field
   const removeCustomField = useCallback((id: string) => {
     setFormData((prev) => ({
       ...prev,
@@ -330,15 +367,29 @@ export default function NewWaitlistPage() {
     }));
   }, []);
 
-  const updateCustomField = useCallback((id: string, updates: Partial<CustomField>) => {
+  // Update a custom field
+  const updateCustomField = (id: string, updates: Partial<CustomField>) => {
     setFormData((prev) => ({
       ...prev,
       customFields: prev.customFields.map((field) =>
         field.id === id ? { ...field, ...updates } : field,
       ),
     }));
-  }, []);
 
+    // If updating options for a select field, ensure at least one option exists
+    if (updates.type === 'select' && !updates.options?.length) {
+      setFormData((prev) => ({
+        ...prev,
+        customFields: prev.customFields.map((field) =>
+          field.id === id
+            ? { ...field, ...updates, options: [''] }
+            : field,
+        ),
+      }));
+    }
+  };
+
+  // Reorder custom fields
   const reorderCustomFields = useCallback((dragIndex: number, dropIndex: number) => {
     setFormData((prev) => {
       const fields = [...prev.customFields];
@@ -351,35 +402,108 @@ export default function NewWaitlistPage() {
 
   /**
    * Handles form submission by preventing default form behavior, validating input,
-   * and redirecting to a waitlist page upon successful API call.
-   *
-   * The function validates the form using `validateForm()`. If validation fails,
-   * it returns early. Otherwise, it sets the submitting state to true and simulates
-   * an API call with a timeout. On success, it redirects to a waitlist dashboard page.
-   * If there's an error during the API call, it logs the error and updates the errors
-   * state. Finally, regardless of outcome, it resets the submitting state.
+   * and making an API call to create a new waitlist.
    */
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
+    
+    // Client-side validation
     if (!validateForm()) {
       return;
     }
-
+    
     setIsSubmitting(true);
+    setErrors({});
 
     try {
-      // TODO: Replace with actual API call
-      console.log('Submitting form:', formData);
+      // Generate verification token if email verification is enabled
+      const verificationToken = formData.requireEmailVerification 
+        ? crypto.randomUUID()
+        : undefined;
 
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      // Prepare the data for the API
+      const waitlistData = {
+        name: formData.name,
+        description: formData.description,
+        websiteUrl: formData.websiteUrl || '',
+        redirectUrl: formData.redirectUrl || '',
+        customFields: formData.customFields,
+        style: {
+          ...formData.style,
+          borderRadius: Number(formData.style.borderRadius) || 8, // Ensure borderRadius is a number
+        },
+        settings: {
+          ...formData.settings,
+          maxSignups: formData.settings.maxSignups || undefined,
+          emailVerification: formData.requireEmailVerification,
+          allowDuplicates: formData.settings.allowDuplicates || false,
+          referralEnabled: formData.enableReferrals,
+          referralReward: formData.referralReward || '',
+          customCss: formData.settings.customCss || '',
+          customJs: formData.settings.customJs || ''
+        },
+        verificationToken,
+      };
 
-      // Redirect to the new waitlist's page
-      router.push('/dashboard/waitlists/1'); // Replace with actual waitlist ID
+      // Call the API to create the waitlist
+      const response = await fetch('/api/waitlists', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(waitlistData),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        if (response.status === 400 && data.error) {
+          setErrors((prev) => ({
+            ...prev,
+            ...(typeof data.error === 'string' ? { _form: data.error } : data.error),
+          }));
+          toast.error('Please fix the errors in the form');
+        } else {
+          throw new Error(data.error || 'Failed to create waitlist');
+        }
+        return;
+      }
+
+      // If email verification is enabled, send verification email
+      if (formData.requireEmailVerification && verificationToken) {
+        try {
+          const emailResponse = await fetch('/api/verify-email', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              email: data.email, // Assuming the API returns the email
+              verificationToken,
+            }),
+          });
+          
+          if (!emailResponse.ok) {
+            console.error('Failed to send verification email');
+            // Continue with success flow even if email fails
+          }
+        } catch (emailError) {
+          console.error('Error sending verification email:', emailError);
+          // Continue with success flow even if email fails
+        }
+      }
+
+      // Success! Redirect to the waitlists page
+      toast.success('Waitlist created successfully!');
+      // Use replace to prevent going back to the form
+      router.replace('/dashboard/waitlists');
+      // Trigger a refresh of the waitlists data
+      router.refresh();
     } catch (error) {
       console.error('Error creating waitlist:', error);
-      setErrors({ submit: 'Failed to create waitlist. Please try again.' });
+      toast.error(
+        error instanceof Error ? error.message : 'Failed to create waitlist',
+      );
     } finally {
       setIsSubmitting(false);
     }
@@ -393,14 +517,24 @@ export default function NewWaitlistPage() {
     const baseUrl = 'https://yourdomain.com'; // Replace with your actual domain
     const waitlistId = 'new'; // This would be the actual waitlist ID in a real app
 
+    // Ensure all style properties have default values
+    const style = {
+      buttonText: formData.style?.buttonText || 'Join Waitlist',
+      buttonVariant: formData.style?.buttonVariant || 'default',
+      buttonRounded: formData.style?.buttonRounded || 'md',
+      primaryColor: formData.style?.primaryColor || '#3b82f6',
+      formLayout: formData.style?.formLayout || 'stacked',
+      showLabels: formData.style?.showLabels ?? true,
+    };
+
     const dataAttributes = [
       `data-waitlist-id="${waitlistId}"`,
-      `data-button-text="${formData.style.buttonText}"`,
-      `data-button-variant="${formData.style.buttonVariant}"`,
-      `data-button-rounded="${formData.style.buttonRounded}"`,
-      `data-primary-color="${formData.style.primaryColor.replace('#', '')}"`,
-      `data-form-layout="${formData.style.formLayout}"`,
-      `data-show-labels="${formData.style.showLabels}"`,
+      `data-button-text="${style.buttonText}"`,
+      `data-button-variant="${style.buttonVariant}"`,
+      `data-button-rounded="${style.buttonRounded}"`,
+      `data-primary-color="${style.primaryColor.replace('#', '')}"`,
+      `data-form-layout="${style.formLayout}"`,
+      `data-show-labels="${style.showLabels}"`,
       `data-show-branding="${showBranding.toString()}"`,
       ...(formData.enableReferrals ? ['data-enable-referrals="true"'] : []),
       ...(formData.referralReward ? [`data-referral-reward="${formData.referralReward}"`] : []),
@@ -449,49 +583,43 @@ export default function NewWaitlistPage() {
    */
   const resetForm = () => {
     setFormData({
-      name: 'My Waitlist',
-      description: 'Join our waitlist to get early access',
+      name: '',
+      description: '',
       websiteUrl: '',
       redirectUrl: '',
-      customFields: [
-        {
-          id: '1',
-          name: 'Name',
-          type: 'text',
-          required: true,
-          placeholder: 'Enter your name',
-        },
-        {
-          id: '2',
-          name: 'Email',
-          type: 'email',
-          required: true,
-          placeholder: 'Enter your email',
-        },
-      ],
+      customFields: [],
+      confirmationType: 'message',
+      confirmationMessage: 'Thank you for joining the waitlist!',
+      enableNotifications: false,
+      enableReferrals: false,
+      referralReward: '',
+      requireEmailVerification: true,
+      showBranding: true,
       style: {
-        primaryColor: '#3b82f6',
         buttonText: 'Join Waitlist',
-        buttonVariant: 'default',
-        buttonRounded: 'md',
-        formLayout: 'stacked',
-        showLabels: true,
+        buttonColor: '#3b82f6',
+        buttonTextColor: '#ffffff',
         backgroundColor: '#ffffff',
         textColor: '#1f2937',
+        borderRadius: '8',
         fontFamily: 'Inter',
-        boxShadow: 'md',
-        padding: '1.5rem',
-        borderRadius: '0.5rem',
+        showLabels: true,
+        formLayout: 'stacked',
+        primaryColor: '#3b82f6',
+        buttonVariant: 'default',
+        buttonRounded: 'md',
+        boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)',
+        padding: '1.5rem'
       },
-      confirmationType: 'message',
-      confirmationMessage: 'Thank you for joining our waitlist!',
-      enableNotifications: true,
-      enableReferrals: false,
-      referralReward: 'Get early access',
-      allowDuplicates: false,
-      requireEmailVerification: false,
-      maxSignups: undefined,
-      showBranding: true,
+      settings: {
+        maxSignups: undefined,
+        emailVerification: true,
+        allowDuplicates: false,
+        referralEnabled: false,
+        referralReward: '',
+        customCss: '',
+        customJs: '',
+      },
     });
     setErrors({});
   };
@@ -525,7 +653,7 @@ export default function NewWaitlistPage() {
           >
             {isSubmitting ? (
               <>
-                <span className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 Creating...
               </>
             ) : (
@@ -544,8 +672,31 @@ export default function NewWaitlistPage() {
         </div>
       )}
 
+      <div className="flex justify-end mb-4">
+        <Button
+          type="button"
+          variant="outline"
+          onClick={() => setPreviewMode(!previewMode)}
+          className="flex items-center gap-2"
+        >
+          {previewMode ? (
+            <>
+              <Pencil className="h-4 w-4" />
+              Edit Form
+            </>
+          ) : (
+            <>
+              <Eye className="h-4 w-4" />
+              Preview
+            </>
+          )}
+        </Button>
+      </div>
+
       {previewMode ? (
-        <WaitlistPreview formData={formData} />
+        <div className="border rounded-lg p-6 bg-card">
+          <WaitlistPreview formData={formData} />
+        </div>
       ) : (
         <form
           id="waitlist-form"
@@ -603,7 +754,7 @@ export default function NewWaitlistPage() {
               <BasicInfoSection
                 formData={formData}
                 errors={errors}
-                onChange={handleInputChange}
+                onChange={handleChange}
               />
             </TabsContent>
 
@@ -1084,6 +1235,60 @@ function AppearanceSection({ formData, setFormData, getBorderRadius }: Appearanc
             </div>
 
             <div className="space-y-2">
+              <Label>Button Color</Label>
+              <div className="flex items-center gap-2">
+                <input
+                  type="color"
+                  value={formData.style.buttonColor}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      style: { ...prev.style, buttonColor: e.target.value },
+                    }))
+                  }
+                  className="h-10 w-16 cursor-pointer rounded border"
+                />
+                <Input
+                  value={formData.style.buttonColor}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      style: { ...prev.style, buttonColor: e.target.value },
+                    }))
+                  }
+                  className="w-32"
+                />
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label>Button Text Color</Label>
+              <div className="flex items-center gap-2">
+                <input
+                  type="color"
+                  value={formData.style.buttonTextColor}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      style: { ...prev.style, buttonTextColor: e.target.value },
+                    }))
+                  }
+                  className="h-10 w-16 cursor-pointer rounded border"
+                />
+                <Input
+                  value={formData.style.buttonTextColor}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      style: { ...prev.style, buttonTextColor: e.target.value },
+                    }))
+                  }
+                  className="w-32"
+                />
+              </div>
+            </div>
+
+            <div className="space-y-2">
               <Label>Button Corners</Label>
               <select
                 className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
@@ -1177,25 +1382,65 @@ function AppearanceSection({ formData, setFormData, getBorderRadius }: Appearanc
               </div>
             </div>
 
-            <div className="flex items-center gap-2">
-              <input
-                type="checkbox"
-                id="showLabels"
-                checked={formData.style.showLabels}
-                onChange={(e) =>
-                  setFormData((prev) => ({
-                    ...prev,
-                    style: { ...prev.style, showLabels: e.target.checked },
-                  }))
-                }
-                className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
-              />
-              <label
-                htmlFor="showLabels"
-                className="text-sm font-medium"
+            <div className="space-y-4">
+              <div className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  id="showLabels"
+                  checked={formData.style.showLabels}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      style: { ...prev.style, showLabels: e.target.checked },
+                    }))
+                  }
+                  className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
+                />
+                <label
+                  htmlFor="showLabels"
+                  className="text-sm font-medium"
+                >
+                  Show field labels
+                </label>
+              </div>
+              
+              <div className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  id="showBranding"
+                  checked={formData.showBranding}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      showBranding: e.target.checked,
+                    }))
+                  }
+                  className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
+                />
+                <label
+                  htmlFor="showBranding"
+                  className="text-sm font-medium"
+                >
+                  Show "Powered by WaitlistNow"
+                </label>
+                {!formData.showBranding && (
+                  <span className="ml-2 text-xs bg-yellow-100 text-yellow-800 px-2 py-0.5 rounded">
+                    Pro Feature
+                  </span>
+                )}
+              </div>
+              
+              {/* TODO: Add upgrade modal for branding removal */}
+              {/* <button 
+                type="button" 
+                className="text-xs text-blue-600 hover:underline mt-1 ml-6"
+                onClick={() => {
+                  // TODO: Open upgrade modal
+                  console.log('Open upgrade modal');
+                }}
               >
-                Show field labels
-              </label>
+                Upgrade to remove branding
+              </button> */}
             </div>
           </CardContent>
         </Card>
@@ -1241,6 +1486,25 @@ function BehaviorSection({
   showBranding = true,
 }: BehaviorSectionProps) {
   const [embedType, setEmbedType] = useState<'js' | 'iframe'>('js');
+  const [showConfirmation, setShowConfirmation] = useState(false);
+  const [isTesting, setIsTesting] = useState(false);
+
+  const handleTestConfirmation = () => {
+    setIsTesting(true);
+    setShowConfirmation(true);
+  };
+
+  const handleCloseTest = () => {
+    setShowConfirmation(false);
+    // Small delay to allow the modal to close before resetting the testing state
+    setTimeout(() => setIsTesting(false), 300);
+  };
+
+  const handleRedirect = () => {
+    if (formData.confirmationType === 'redirect' && formData.redirectUrl) {
+      window.open(formData.redirectUrl, '_blank');
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -1251,64 +1515,186 @@ function BehaviorSection({
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-4">
-            <div className="flex items-center gap-2">
-              <input
-                type="radio"
-                id="confirmationMessage"
-                value="message"
-                checked={formData.confirmationType === 'message'}
-                onChange={() =>
-                  setFormData((prev) => ({
-                    ...prev,
-                    confirmationType: 'message',
-                  }))
-                }
-                className="h-4 w-4 text-primary focus:ring-primary"
-              />
-              <label
-                htmlFor="confirmationMessage"
-                className="text-sm font-medium"
-              >
-                Show confirmation message
-              </label>
-            </div>
-
-            {formData.confirmationType === 'message' && (
-              <div className="ml-6">
-                <Textarea
-                  value={formData.confirmationMessage}
-                  onChange={(e) =>
+            <div className="space-y-2">
+              <div className="flex items-center gap-2">
+                <input
+                  type="radio"
+                  id="confirmationMessage"
+                  name="confirmationType"
+                  value="message"
+                  checked={formData.confirmationType === 'message'}
+                  onChange={() =>
                     setFormData((prev) => ({
                       ...prev,
-                      confirmationMessage: e.target.value,
+                      confirmationType: 'message',
                     }))
                   }
-                  rows={3}
-                  placeholder="Thanks for joining! We'll be in touch soon."
+                  className="h-4 w-4 text-primary focus:ring-primary"
                 />
+                <label
+                  htmlFor="confirmationMessage"
+                  className="text-sm font-medium"
+                >
+                  Show confirmation message
+                </label>
               </div>
-            )}
 
-            <div className="flex items-center gap-2">
-              <input
-                type="radio"
-                id="confirmationRedirect"
-                value="redirect"
-                checked={formData.confirmationType === 'redirect'}
-                onChange={() =>
-                  setFormData((prev) => ({
-                    ...prev,
-                    confirmationType: 'redirect',
-                  }))
-                }
-                className="h-4 w-4 text-primary focus:ring-primary"
-              />
-              <label
-                htmlFor="confirmationRedirect"
-                className="text-sm font-medium"
+              {formData.confirmationType === 'message' && (
+                <div className="ml-6 space-y-2">
+                  <Textarea
+                    value={formData.confirmationMessage}
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        confirmationMessage: e.target.value,
+                      }))
+                    }
+                    rows={3}
+                    placeholder="Thanks for joining! We'll be in touch soon."
+                    className="w-full"
+                  />
+                  <p className="text-xs text-gray-500">
+                    This message will be shown after form submission
+                  </p>
+                </div>
+              )}
+            </div>
+
+            <div className="space-y-2">
+              <div className="flex items-center gap-2">
+                <input
+                  type="radio"
+                  id="confirmationRedirect"
+                  name="confirmationType"
+                  value="redirect"
+                  checked={formData.confirmationType === 'redirect'}
+                  onChange={() =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      confirmationType: 'redirect',
+                    }))
+                  }
+                  className="h-4 w-4 text-primary focus:ring-primary"
+                />
+                <label
+                  htmlFor="confirmationRedirect"
+                  className="text-sm font-medium"
+                >
+                  Redirect to URL
+                </label>
+              </div>
+
+              {formData.confirmationType === 'redirect' && (
+                <div className="ml-6 space-y-2">
+                  <input
+                    type="url"
+                    value={formData.redirectUrl || ''}
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        redirectUrl: e.target.value,
+                      }))
+                    }
+                    placeholder="https://example.com/thank-you"
+                    className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                  />
+                  <p className="text-xs text-gray-500">
+                    Users will be redirected to this URL after submission
+                  </p>
+                </div>
+              )}
+            </div>
+            
+            <div className="pt-2">
+              <button
+                type="button"
+                onClick={handleTestConfirmation}
+                className="text-sm text-primary hover:underline flex items-center gap-1"
               >
-                Redirect to thank you page
-              </label>
+                <span>Test confirmation</span>
+                <ExternalLink className="w-3.5 h-3.5" />
+              </button>
+              
+              {/* Confirmation Preview Modal */}
+              <Dialog open={showConfirmation} onOpenChange={handleCloseTest}>
+                <DialogContent className="sm:max-w-md">
+                  <DialogHeader>
+                    <DialogTitle className="text-xl font-semibold">
+                      {formData.confirmationType === 'message' 
+                        ? 'Confirmation Message Preview'
+                        : 'Redirect Confirmation'}
+                    </DialogTitle>
+                    <DialogDescription>
+                      {formData.confirmationType === 'message'
+                        ? 'This is how your confirmation message will appear to users.'
+                        : 'Users will be redirected to the following URL after submission:'}
+                    </DialogDescription>
+                  </DialogHeader>
+                  
+                  <div className="py-4">
+                    {formData.confirmationType === 'message' ? (
+                      <div className="space-y-4">
+                        <div className="bg-green-50 p-4 rounded-lg border border-green-100">
+                          <div className="flex items-start">
+                            <CheckCircle className="h-5 w-5 text-green-500 mt-0.5 mr-2 flex-shrink-0" />
+                            <div>
+                              <h4 className="text-green-800 font-medium">Success!</h4>
+                              <p className="text-green-700 mt-1">
+                                {formData.confirmationMessage || 'Your submission was successful.'}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="text-sm text-gray-500">
+                          <p>This is a preview of your confirmation message. Users will see this after submitting the form.</p>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="space-y-4">
+                        <div className="p-4 bg-blue-50 rounded-lg border border-blue-100">
+                          <p className="text-blue-800 break-all">
+                            {formData.redirectUrl || 'No redirect URL provided'}
+                          </p>
+                          {formData.redirectUrl && !isValidUrl(formData.redirectUrl) && (
+                            <p className="text-red-500 text-sm mt-2">
+                              Warning: This does not appear to be a valid URL
+                            </p>
+                          )}
+                        </div>
+                        <div className="text-sm text-gray-500">
+                          <p>Users will be automatically redirected to this URL after submission.</p>
+                          {formData.redirectUrl && isValidUrl(formData.redirectUrl) && (
+                            <button
+                              onClick={handleRedirect}
+                              className="mt-2 inline-flex items-center text-blue-600 hover:underline text-sm"
+                            >
+                              Test redirect <ExternalLink className="w-3.5 h-3.5 ml-1" />
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                  
+                  <div className="flex justify-end pt-2">
+                    <Button 
+                      onClick={handleCloseTest}
+                      variant="outline" 
+                      className="mr-2"
+                    >
+                      Close
+                    </Button>
+                    {formData.confirmationType === 'redirect' && formData.redirectUrl && isValidUrl(formData.redirectUrl) && (
+                      <Button 
+                        onClick={handleRedirect}
+                        className="bg-blue-600 hover:bg-blue-700"
+                      >
+                        Open URL
+                      </Button>
+                    )}
+                  </div>
+                </DialogContent>
+              </Dialog>
             </div>
           </div>
         </CardContent>
@@ -1316,131 +1702,190 @@ function BehaviorSection({
 
       <Card>
         <CardHeader>
-          <CardTitle>Advanced Settings</CardTitle>
+          <div className="flex items-center gap-2">
+            <CardTitle>Advanced Settings</CardTitle>
+            <button 
+              type="button" 
+              className="text-gray-400 hover:text-gray-600"
+              onClick={() => {
+                // TODO: Show help tooltip
+                console.log('Show advanced settings help');
+              }}
+              aria-label="Help"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
+              </svg>
+            </button>
+          </div>
           <CardDescription>Additional options for your waitlist</CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="flex items-center gap-2">
-              <input
-                type="checkbox"
-                id="enableNotifications"
-                checked={formData.enableNotifications}
-                onChange={(e) =>
-                  setFormData((prev) => ({
-                    ...prev,
-                    enableNotifications: e.target.checked,
-                  }))
-                }
-                className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
-              />
-              <label
-                htmlFor="enableNotifications"
-                className="text-sm font-medium"
-              >
-                Email notifications for new signups
-              </label>
-            </div>
+        <CardContent className="space-y-6">
+          <div className="space-y-4">
+            <h3 className="text-sm font-medium">Signup Settings</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="flex items-start gap-3">
+                <div className="flex items-center h-5 mt-0.5">
+                  <input
+                    type="checkbox"
+                    id="enableNotifications"
+                    checked={formData.enableNotifications}
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        enableNotifications: e.target.checked,
+                      }))
+                    }
+                    className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="enableNotifications" className="text-sm font-medium">
+                    Email notifications
+                  </label>
+                  <p className="text-xs text-gray-500 mt-0.5">
+                    Get notified when someone joins the waitlist
+                  </p>
+                </div>
+              </div>
 
-            <div className="flex items-center gap-2">
-              <input
-                type="checkbox"
-                id="requireEmailVerification"
-                checked={formData.requireEmailVerification}
-                onChange={(e) =>
-                  setFormData((prev) => ({
-                    ...prev,
-                    requireEmailVerification: e.target.checked,
-                  }))
-                }
-                className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
-              />
-              <label
-                htmlFor="requireEmailVerification"
-                className="text-sm font-medium"
-              >
-                Require email verification
-              </label>
-            </div>
+              <div className="flex items-start gap-3">
+                <div className="flex items-center h-5 mt-0.5">
+                  <input
+                    type="checkbox"
+                    id="requireEmailVerification"
+                    checked={formData.requireEmailVerification}
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        requireEmailVerification: e.target.checked,
+                      }))
+                    }
+                    className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="requireEmailVerification" className="text-sm font-medium">
+                    Email verification
+                  </label>
+                  <p className="text-xs text-gray-500 mt-0.5">
+                    Require users to verify their email address
+                  </p>
+                </div>
+              </div>
 
-            <div className="flex items-center gap-2">
-              <input
-                type="checkbox"
-                id="allowDuplicates"
-                checked={formData.allowDuplicates}
-                onChange={(e) =>
-                  setFormData((prev) => ({
-                    ...prev,
-                    allowDuplicates: e.target.checked,
-                  }))
-                }
-                className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
-              />
-              <label
-                htmlFor="allowDuplicates"
-                className="text-sm font-medium"
-              >
-                Allow duplicate email addresses
-              </label>
-            </div>
+              <div className="flex items-start gap-3">
+                <div className="flex items-center h-5 mt-0.5">
+                  <input
+                    type="checkbox"
+                    id="allowDuplicates"
+                    checked={formData.settings.allowDuplicates}
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        settings: {
+                          ...prev.settings,
+                          allowDuplicates: e.target.checked,
+                        },
+                      }))
+                    }
+                    className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="allowDuplicates" className="text-sm font-medium">
+                    Allow duplicate emails
+                  </label>
+                  <p className="text-xs text-gray-500 mt-0.5">
+                    Let the same email sign up multiple times
+                  </p>
+                </div>
+              </div>
 
-            <div className="flex items-center gap-2">
-              <input
-                type="checkbox"
-                id="enableReferrals"
-                checked={formData.enableReferrals}
-                onChange={(e) =>
-                  setFormData((prev) => ({
-                    ...prev,
-                    enableReferrals: e.target.checked,
-                  }))
-                }
-                className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
-              />
-              <label
-                htmlFor="enableReferrals"
-                className="text-sm font-medium"
-              >
-                Enable referral program
-              </label>
+              <div className="flex items-start gap-3">
+                <div className="flex items-center h-5 mt-0.5">
+                  <input
+                    type="checkbox"
+                    id="enableReferrals"
+                    checked={formData.enableReferrals}
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        enableReferrals: e.target.checked,
+                      }))
+                    }
+                    className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="enableReferrals" className="text-sm font-medium">
+                    Enable referrals
+                  </label>
+                  <p className="text-xs text-gray-500 mt-0.5">
+                    Let users refer friends to move up the list
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
 
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="maxSignups">Maximum Signups (optional)</Label>
-              <Input
-                id="maxSignups"
-                type="number"
-                min="1"
-                value={formData.maxSignups || ''}
-                onChange={(e) =>
-                  setFormData((prev) => ({
-                    ...prev,
-                    maxSignups: e.target.value ? Number(e.target.value) : undefined,
-                  }))
-                }
-                placeholder="Leave empty for unlimited"
-                className={errors?.maxSignups ? 'border-red-500' : ''}
-              />
-              {errors?.maxSignups && <p className="text-red-500 text-sm">{errors.maxSignups}</p>}
+              <div className="flex items-center gap-2">
+                <Label htmlFor="maxSignups">Maximum Signups</Label>
+                <span className="text-xs text-gray-500">(optional)</span>
+              </div>
+              <div className="relative">
+                <Input
+                  id="maxSignups"
+                  type="number"
+                  min="1"
+                  value={formData.maxSignups || ''}
+                  onChange={(e) => {
+                    const value = e.target.value ? Math.max(1, Number(e.target.value)) : undefined;
+                    setFormData((prev) => ({
+                      ...prev,
+                      maxSignups: value,
+                    }));
+                  }}
+                  placeholder="Leave empty for unlimited"
+                  className={`pr-16 ${errors?.maxSignups ? 'border-red-500' : ''}`}
+                />
+                {formData.maxSignups && (
+                  <div className="absolute inset-y-0 right-0 flex items-center pr-3 text-xs text-gray-500">
+                    {formData.maxSignups.toLocaleString()} {formData.maxSignups === 1 ? 'signup' : 'signups'}
+                  </div>
+                )}
+              </div>
+              {errors?.maxSignups ? (
+                <p className="text-red-500 text-sm">{errors.maxSignups}</p>
+              ) : (
+                <p className="text-xs text-gray-500">
+                  Set a limit on total signups. Leave empty for no limit.
+                </p>
+              )}
             </div>
 
             {formData.enableReferrals && (
               <div className="space-y-2">
-                <Label htmlFor="referralReward">Referral Reward</Label>
+                <div className="flex items-center gap-2">
+                  <Label htmlFor="referralReward">Referral Reward</Label>
+                  <span className="text-xs px-2 py-0.5 bg-blue-50 text-blue-700 rounded-full">
+                    Beta
+                  </span>
+                </div>
                 <Input
                   id="referralReward"
-                  value={formData.referralReward}
+                  value={formData.referralReward || ''}
                   onChange={(e) =>
                     setFormData((prev) => ({
                       ...prev,
                       referralReward: e.target.value,
                     }))
                   }
-                  placeholder="e.g., Get 1 month free"
+                  placeholder="e.g., Get 1 month free, Earn 100 points, etc."
                 />
-                <p className="text-xs text-muted-foreground">
+                <p className="text-xs text-gray-500">
                   What will users get for referring others?
                 </p>
               </div>
@@ -1606,10 +2051,8 @@ interface WaitlistPreviewProps {
  * @param {WaitlistPreviewProps} formData - An object containing all necessary data to render the form preview.
  */
 function WaitlistPreview({ formData }: WaitlistPreviewProps) {
-  /**
-   * Retrieves the border radius value based on the specified size.
-   */
-  const getBorderRadius = (size: ButtonRounded): string => {
+  // Helper function to get border radius value based on buttonRounded option
+  const getBorderRadius = (size: ButtonRounded = 'md'): string => {
     const radiusMap = {
       none: '0px',
       sm: '0.25rem',
@@ -1619,212 +2062,226 @@ function WaitlistPreview({ formData }: WaitlistPreviewProps) {
     };
     return radiusMap[size] || '0.375rem';
   };
+  
+  // Determine form layout classes
+  const formLayoutClass = formData.style?.formLayout === 'inline' 
+    ? 'flex flex-wrap gap-4 items-end' 
+    : 'space-y-4';
+    
+  // Determine if we should show field labels
+  const showLabels = formData.style?.showLabels !== false; // Default to true if not specified
+  // Set CSS variables for primary color
+  const style = {
+    '--primary': formData.style?.primaryColor || '#3b82f6',
+    '--primary-foreground': formData.style?.buttonTextColor || '#ffffff',
+  } as React.CSSProperties;
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <Eye className="h-5 w-5" />
-          Preview
-        </CardTitle>
-        <CardDescription>How your waitlist form will look to visitors</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <div className="relative">
-          <div
-            className="relative rounded-lg border"
-            style={{
-              maxWidth: '100%',
-              width: '100%',
-              backgroundColor: formData.style.backgroundColor,
-              color: formData.textColor,
-              fontFamily: formData.style.fontFamily,
-              boxShadow:
-                formData.style.boxShadow === 'none'
-                  ? 'none'
-                  : formData.style.boxShadow === 'sm'
-                    ? '0 1px 2px 0 rgb(0 0 0 / 0.05)'
-                    : formData.style.boxShadow === 'md'
-                      ? '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)'
-                      : '0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)',
-              padding: formData.style.padding,
-              borderRadius: getBorderRadius(formData.style.buttonRounded),
-              paddingBottom: '2.5rem', // Add extra padding at the bottom for the badge
-            }}
-          >
-            <div
-              className="absolute bottom-0 right-1 px-2 py-1 text-xs text-muted-foreground flex items-center"
-              style={{
-                zIndex: 10,
-              }}
-            >
-              <span>Powered by </span>
-              <span className="font-medium">WaitlistNow</span>
-              <span className="ml-1.5 rounded-full bg-amber-100 px-1.5 py-0.5 text-[10px] font-medium text-amber-800 dark:bg-amber-900/30 dark:text-amber-300">
-                PRO
-              </span>
-            </div>
-            <div className="text-center">
-              <h3
-                className="text-xl font-semibold mb-2"
-                style={{ color: formData.style.primaryColor }}
-              >
-                {formData.name || 'Join Our Waitlist'}
-              </h3>
-              {formData.description && (
-                <p className="text-sm text-muted-foreground mb-4">{formData.description}</p>
-              )}
-            </div>
-
-            <div
-              className={`space-y-3 ${formData.style.formLayout === 'inline' ? 'md:flex md:flex-wrap md:gap-2 md:space-y-0' : ''}`}
-            >
-              {/* Email field (always present) */}
-              <div className={formData.style.formLayout === 'inline' ? 'flex-1 min-w-0' : ''}>
-                {formData.style.showLabels && (
-                  <label
-                    htmlFor="email-preview"
-                    className="block text-sm font-medium mb-1"
-                  >
-                    Email Address <span className="text-red-500">*</span>
-                  </label>
-                )}
-                <Input
-                  id="email-preview"
-                  placeholder={formData.style.showLabels ? '' : 'Your email address'}
-                  style={{
-                    borderRadius: getBorderRadius(formData.style.buttonRounded),
-                  }}
-                  className="w-full"
-                />
-              </div>
-
-              {/* Custom fields */}
-              {formData.customFields.map((field) => (
-                <div
-                  key={field.id}
-                  className={formData.style.formLayout === 'inline' ? 'flex-1 min-w-0' : ''}
-                >
-                  {formData.style.showLabels && (
-                    <label className="block text-sm font-medium mb-1">
-                      {field.name}
-                      {field.required && <span className="text-red-500"> *</span>}
-                    </label>
-                  )}
-                  {field.type === 'textarea' ? (
-                    <Textarea
-                      placeholder={
-                        formData.style.showLabels
-                          ? field.placeholder || ''
-                          : field.name + (field.required ? ' *' : '')
-                      }
-                      rows={3}
-                      style={{
-                        borderRadius: getBorderRadius(formData.style.buttonRounded),
-                      }}
-                    />
-                  ) : field.type === 'select' ? (
-                    <select
-                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-                      style={{
-                        borderRadius: getBorderRadius(formData.style.buttonRounded),
-                      }}
-                    >
-                      <option value="">
-                        {formData.style.showLabels
-                          ? field.placeholder || `Choose ${field.name}`
-                          : field.name}
-                      </option>
-                      {field.options?.map((option, index) => (
-                        <option
-                          key={index}
-                          value={option}
-                        >
-                          {option}
-                        </option>
-                      ))}
-                    </select>
-                  ) : (
-                    <Input
-                      placeholder={
-                        formData.style.showLabels
-                          ? field.placeholder || ''
-                          : field.name + (field.required ? ' *' : '')
-                      }
-                      type={field.type}
-                      style={{
-                        borderRadius: getBorderRadius(formData.style.buttonRounded),
-                      }}
-                    />
-                  )}
-                </div>
-              ))}
-
-              {/* Submit button */}
-              <div className={formData.style.formLayout === 'inline' ? 'flex-shrink-0' : ''}>
-                <Button
-                  className="w-full"
-                  variant={formData.style.buttonVariant}
-                  style={{
-                    borderRadius: getBorderRadius(formData.style.buttonRounded),
-                    backgroundColor:
-                      formData.style.buttonVariant === 'default'
-                        ? formData.style.primaryColor
-                        : undefined,
-                    borderColor:
-                      formData.style.buttonVariant === 'outline'
-                        ? formData.style.primaryColor
-                        : undefined,
-                    color:
-                      formData.style.buttonVariant === 'outline'
-                        ? formData.style.primaryColor
-                        : undefined,
-                  }}
-                >
-                  {formData.style.buttonText}
-                </Button>
-              </div>
-            </div>
-
-            {/* Additional info */}
-            <div className="space-y-2 text-xs text-muted-foreground">
-              {formData.maxSignups && (
-                <p className="text-center">
-                  Limited to {formData.maxSignups.toLocaleString()} spots
-                </p>
-              )}
-
-              {formData.enableReferrals && (
-                <p className="text-center">
-                  💡 Refer friends and {formData.referralReward?.toLowerCase() || 'get rewards'}!
-                </p>
-              )}
-
-              {formData.requireEmailVerification && (
-                <p className="text-center text-amber-600">⚠️ Email verification required</p>
-              )}
-            </div>
-
-            {/* Success state preview */}
-            {formData.confirmationType === 'message' && (
-              <div className="mt-4 p-3 bg-green-50 border border-green-200 text-green-800 text-sm rounded-md">
-                <div className="flex items-center gap-2">
-                  <Check className="h-4 w-4 text-green-600" />
-                  <span className="font-medium">Success!</span>
-                </div>
-                <p className="mt-1">{formData.confirmationMessage}</p>
-              </div>
-            )}
+    <div 
+      className="min-h-screen flex items-center justify-center p-6"
+      style={{
+        ...style,
+        backgroundColor: formData.style?.backgroundColor || '#f3f4f6',
+        fontFamily: formData.style?.fontFamily || 'Inter, sans-serif',
+      }}
+    >
+      <div className="w-full max-w-md">
+        {/* Browser-style header */}
+        <div className="bg-gray-200 rounded-t-xl px-4 py-3 flex items-center space-x-3">
+          <div className="flex space-x-2">
+            <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+            <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
+            <div className="w-3 h-3 bg-green-500 rounded-full"></div>
           </div>
-
-          <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-md">
-            <p className="text-blue-800 text-sm">
-              <strong>Preview Note:</strong> This is how your form will appear to visitors. The
-              actual form will be fully functional when embedded on your website.
-            </p>
+          <div className="flex-1 text-center">
+            <span className="text-gray-700 text-sm font-normal">waitlist.yourdomain.com</span>
           </div>
         </div>
-      </CardContent>
-    </Card>
+
+        {/* Main content card */}
+        <div 
+          className="rounded-b-xl shadow-lg overflow-hidden transition-colors duration-200"
+          style={{
+            backgroundColor: formData.style?.backgroundColor || '#ffffff',
+            color: formData.style?.textColor || '#1f2937',
+          }}
+        >
+          <div className="px-12 py-16 text-center">
+            <h1 
+              className="text-4xl font-bold mb-6 leading-tight"
+              style={{
+                color: formData.style?.textColor || '#111827',
+              }}
+            >
+              {formData.name || 'Join the Waitlist'}
+            </h1>
+            
+            {formData.description ? (
+              <p 
+                className="text-lg mb-12 leading-relaxed font-normal"
+                style={{
+                  color: formData.style?.textColor ? `${formData.style.textColor}CC` : '#4b5563',
+                }}
+              >
+                {formData.description}
+              </p>
+            ) : (
+              <p 
+                className="text-lg mb-12 leading-relaxed font-normal"
+                style={{
+                  color: formData.style?.textColor ? `${formData.style.textColor}CC` : '#4b5563',
+                }}
+              >
+                Be the first to know when we launch. Early adopters get exclusive perks!
+              </p>
+            )}
+            
+            <div className={`mb-8 ${formLayoutClass}`}>
+              {/* Email input */}
+              <div className={formData.style?.formLayout === 'inline' ? 'flex-1 min-w-[200px]' : 'w-full'}>
+                {showLabels && (
+                  <label 
+                    htmlFor="email" 
+                    className="block text-left mb-2 text-sm font-medium"
+                    style={{
+                      color: formData.style?.textColor || '#374151',
+                    }}
+                  >
+                    Email Address
+                  </label>
+                )}
+                <div className="relative">
+                  <input 
+                    id="email"
+                    type="email" 
+                    placeholder="Enter your email"
+                    className={`w-full px-6 py-4 border rounded-xl text-base transition-all duration-200 focus:outline-none focus:ring-2 placeholder-gray-400 font-normal`}
+                    style={{
+                      backgroundColor: formData.style?.backgroundColor === formData.style?.textColor 
+                        ? '#ffffff' 
+                        : (formData.style?.backgroundColor || '#ffffff'),
+                      color: formData.style?.textColor || '#1f2937',
+                      borderColor: formData.style?.primaryColor ? `${formData.style.primaryColor}40` : '#e5e7eb',
+                      borderWidth: '1px',
+                      borderRadius: formData.style?.buttonRounded ? getBorderRadius(formData.style.buttonRounded as ButtonRounded) : '0.5rem',
+                      '--tw-ring-color': formData.style?.primaryColor || '#3b82f6',
+                      '--tw-ring-opacity': '0.2',
+                      '--tw-ring-offset-shadow': 'var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color)',
+                      '--tw-ring-shadow': 'var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color)',
+                      '--tw-ring-offset-width': '0px',
+                      '--tw-ring-offset-color': '#fff',
+                    } as React.CSSProperties}
+                  />
+                  <div className="absolute right-5 top-1/2 transform -translate-y-1/2">
+                    <span className="text-xl">🎯</span>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Custom fields */}
+              {formData.customFields.map((field) => (
+                <div 
+                  key={field.id} 
+                  className={formData.style?.formLayout === 'inline' ? 'flex-1 min-w-[200px]' : 'w-full'}
+                >
+                  {showLabels && (
+                    <label 
+                      htmlFor={field.id}
+                      className="block text-left mb-2 text-sm font-medium"
+                      style={{
+                        color: formData.style?.textColor || '#374151',
+                      }}
+                    >
+                      {field.name}
+                      {field.required && <span className="text-red-500 ml-1">*</span>}
+                    </label>
+                  )}
+                  <input
+                    id={field.id}
+                    type={field.type === 'email' ? 'email' : 'text'}
+                    placeholder={field.placeholder || field.name}
+                    className={`w-full px-6 py-4 border text-base transition-all duration-200 focus:outline-none focus:ring-2 placeholder-gray-400 font-normal`}
+                    style={{
+                      backgroundColor: formData.style?.backgroundColor === formData.style?.textColor 
+                        ? '#ffffff' 
+                        : (formData.style?.backgroundColor || '#ffffff'),
+                      color: formData.style?.textColor || '#1f2937',
+                      borderColor: formData.style?.primaryColor ? `${formData.style.primaryColor}40` : '#e5e7eb',
+                      borderWidth: '1px',
+                      borderRadius: formData.style?.buttonRounded ? getBorderRadius(formData.style.buttonRounded as ButtonRounded) : '0.5rem',
+                      '--tw-ring-color': formData.style?.primaryColor || '#3b82f6',
+                      '--tw-ring-opacity': '0.2',
+                      '--tw-ring-offset-shadow': 'var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color)',
+                      '--tw-ring-shadow': 'var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color)',
+                      '--tw-ring-offset-width': '0px',
+                      '--tw-ring-offset-color': formData.style?.backgroundColor || '#ffffff',
+                    } as React.CSSProperties}
+                  />
+                </div>
+              ))}
+              
+              {/* Join button */}
+              <div className={formData.style?.formLayout === 'inline' ? 'flex-1 min-w-[200px]' : 'w-full'}>
+                <button 
+                  className={cn(
+                    'w-full px-8 py-4 text-base font-semibold cursor-pointer transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-offset-2',
+                    {
+                      'bg-[--primary] text-[--primary-foreground] hover:bg-opacity-90': formData.style?.buttonVariant === 'default',
+                      'border border-[--primary] text-[--primary] hover:bg-[--primary] hover:bg-opacity-10': formData.style?.buttonVariant === 'outline',
+                      'bg-secondary text-secondary-foreground': formData.style?.buttonVariant === 'secondary',
+                      'text-[--primary] hover:bg-[--primary] hover:bg-opacity-10': formData.style?.buttonVariant === 'ghost',
+                      'text-[--primary] underline-offset-4 hover:underline p-0': formData.style?.buttonVariant === 'link',
+                    }
+                  )}
+                  style={{
+                    backgroundColor: formData.style?.buttonVariant === 'default' || formData.style?.buttonVariant === 'secondary' 
+                      ? formData.style?.buttonColor 
+                      : 'transparent',
+                    color: formData.style?.buttonVariant === 'default' || formData.style?.buttonVariant === 'secondary'
+                      ? formData.style?.buttonTextColor
+                      : formData.style?.buttonColor || formData.style?.primaryColor,
+                    borderColor: formData.style?.buttonVariant === 'outline' 
+                      ? formData.style?.buttonColor 
+                      : 'transparent',
+                    borderRadius: formData.style?.buttonRounded ? getBorderRadius(formData.style.buttonRounded as ButtonRounded) : '0.5rem',
+                    fontFamily: formData.style?.fontFamily || 'Inter, sans-serif',
+                    borderWidth: formData.style?.buttonVariant === 'outline' ? '1px' : '0',
+                    ...(formData.style?.buttonVariant === 'link' ? {
+                      padding: 0,
+                      height: 'auto',
+                      display: 'inline',
+                      width: 'auto',
+                    } : {}),
+                  }}
+                >
+                  {formData.style?.buttonText || 'Join Waitlist'}
+                </button>
+              </div>
+            </div>
+            
+            <div className="space-y-4">
+              <p className="text-gray-500 text-base font-normal">
+                Join {formData.maxSignups ? `${formData.maxSignups.toLocaleString()}` : '1,247'} others on the waitlist
+              </p>
+              
+              {formData.showBranding && (
+                <div className="flex items-center justify-center gap-2 text-gray-400 text-sm">
+                  <span>Powered by</span>
+                  <span className="font-semibold text-gray-600">WaitlistNow</span>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
+function setIsTesting(arg0: boolean) {
+  throw new Error('Function not implemented.');
+}
+
+function setShowConfirmation(arg0: boolean) {
+  throw new Error('Function not implemented.');
+}
+

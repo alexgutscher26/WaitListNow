@@ -9,13 +9,13 @@ This guide explains how to use the WaitListNow embeddable widget on your website
 Add this script tag to your HTML where you want the waitlist form to appear:
 
 ```html
-<script 
+<script
   src="https://waitlist.yourdomain.com/widget.js"
   data-waitlist-id="your-waitlist-id"
   data-button-text="Join Waitlist"
   data-primary-color="3b82f6"
-  async>
-</script>
+  async
+></script>
 ```
 
 ### Option 2: iFrame Embed
@@ -23,13 +23,14 @@ Add this script tag to your HTML where you want the waitlist form to appear:
 Alternatively, you can use an iframe to embed your waitlist:
 
 ```html
-<iframe 
+<iframe
   src="https://waitlist.yourdomain.com/widget/embed?waitlist-id=your-waitlist-id&button-text=Join%20Waitlist"
-  width="100%" 
-  height="500" 
-  frameborder="0" 
+  width="100%"
+  height="500"
+  frameborder="0"
   style="border: none; border-radius: 8px;"
-  scrolling="no">
+  scrolling="no"
+>
 </iframe>
 ```
 
@@ -37,19 +38,19 @@ Alternatively, you can use an iframe to embed your waitlist:
 
 You can customize the appearance and behavior of your waitlist widget by adding data attributes to the script tag:
 
-| Attribute | Description | Default | Example |
-|-----------|-------------|---------|---------|
-| `data-waitlist-id` | Your unique waitlist ID | (required) | `data-waitlist-id="abc123"` |
-| `data-button-text` | Text for the submit button | "Join Waitlist" | `data-button-text="Get Early Access"` |
-| `data-button-variant` | Button style | "default" | `data-button-variant="outline"` |
-| `data-button-rounded` | Button corner radius | "md" | `data-button-rounded="full"` |
-| `data-primary-color` | Primary color (hex without #) | "3b82f6" | `data-primary-color="ff4500"` |
-| `data-form-layout` | Form field layout | "stacked" | `data-form-layout="inline"` |
-| `data-show-labels` | Show field labels | "true" | `data-show-labels="false"` |
-| `data-show-branding` | Show "Powered by" branding | "true" | `data-show-branding="false"` |
-| `data-enable-referrals` | Enable referral system | "false" | `data-enable-referrals="true"` |
-| `data-referral-reward` | Referral reward text | "Get early access" | `data-referral-reward="Skip the line"` |
-| `data-max-signups` | Maximum signups allowed | (unlimited) | `data-max-signups="1000"` |
+| Attribute               | Description                   | Default            | Example                                |
+| ----------------------- | ----------------------------- | ------------------ | -------------------------------------- |
+| `data-waitlist-id`      | Your unique waitlist ID       | (required)         | `data-waitlist-id="abc123"`            |
+| `data-button-text`      | Text for the submit button    | "Join Waitlist"    | `data-button-text="Get Early Access"`  |
+| `data-button-variant`   | Button style                  | "default"          | `data-button-variant="outline"`        |
+| `data-button-rounded`   | Button corner radius          | "md"               | `data-button-rounded="full"`           |
+| `data-primary-color`    | Primary color (hex without #) | "3b82f6"           | `data-primary-color="ff4500"`          |
+| `data-form-layout`      | Form field layout             | "stacked"          | `data-form-layout="inline"`            |
+| `data-show-labels`      | Show field labels             | "true"             | `data-show-labels="false"`             |
+| `data-show-branding`    | Show "Powered by" branding    | "true"             | `data-show-branding="false"`           |
+| `data-enable-referrals` | Enable referral system        | "false"            | `data-enable-referrals="true"`         |
+| `data-referral-reward`  | Referral reward text          | "Get early access" | `data-referral-reward="Skip the line"` |
+| `data-max-signups`      | Maximum signups allowed       | (unlimited)        | `data-max-signups="1000"`              |
 
 ## Using Custom Domains
 
@@ -79,13 +80,13 @@ To use your own domain for your waitlist:
 Once your custom domain is verified and active, your embed code will automatically update to use your custom domain:
 
 ```html
-<script 
+<script
   src="https://waitlist.example.com/widget.js"
   data-waitlist-id="your-waitlist-id"
   data-button-text="Join Waitlist"
   data-primary-color="3b82f6"
-  async>
-</script>
+  async
+></script>
 ```
 
 You can also manually update any existing embed codes to use your custom domain.
@@ -97,6 +98,7 @@ To set up your custom domain, you'll need to add the following DNS records:
 #### For a subdomain (e.g., waitlist.example.com):
 
 Add a CNAME record:
+
 - Type: CNAME
 - Name: waitlist
 - Value: waitlist.yourdomain.com
@@ -105,12 +107,14 @@ Add a CNAME record:
 #### For a root domain (e.g., example.com):
 
 Add an A record:
+
 - Type: A
 - Name: @
 - Value: [Our server IP address]
 - TTL: 3600 (or default)
 
 Also add a CNAME record for www:
+
 - Type: CNAME
 - Name: www
 - Value: waitlist.yourdomain.com
@@ -137,7 +141,7 @@ async function submitToWaitlist(email, name, referralCode = null) {
       referralCode,
     }),
   });
-  
+
   return response.json();
 }
 ```
@@ -155,7 +159,7 @@ For more advanced styling beyond the data attributes, you can add custom CSS:
     border-radius: 1rem;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   }
-  
+
   .waitlistnow-button {
     /* Custom button styles */
     text-transform: uppercase;

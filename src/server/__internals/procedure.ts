@@ -28,7 +28,10 @@ export class Procedure<ctx = Record<string, never>> {
    * Optional, but recommended:
    * This makes "c.superjson" available to your API routes
    */
-  private static async superjsonMiddleware({ c, next }: Parameters<Middleware<any>>[0]): Promise<any> {
+  private static async superjsonMiddleware({
+    c,
+    next,
+  }: Parameters<Middleware<any>>[0]): Promise<any> {
     type JSONRespond = typeof c.json;
 
     c.superjson = ((data: unknown, status?: StatusCode): Response => {

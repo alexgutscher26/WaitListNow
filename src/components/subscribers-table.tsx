@@ -344,14 +344,14 @@ export function SubscribersTable({ waitlistId }: SubscribersTableProps) {
       header: ({ table }) => (
         <Checkbox
           checked={table.getIsAllPageRowsSelected()}
-          onCheckedChange={(value: boolean) => table.toggleAllPageRowsSelected(!!value)}
+          onCheckedChange={(value: boolean) => table.toggleAllPageRowsSelected(Boolean(value))}
           aria-label="Select all"
         />
       ),
       cell: ({ row }) => (
         <Checkbox
           checked={row.getIsSelected()}
-          onCheckedChange={(value: boolean) => row.toggleSelected(!!value)}
+          onCheckedChange={(value: boolean) => row.toggleSelected(Boolean(value))}
           aria-label="Select row"
         />
       ),
@@ -591,7 +591,7 @@ export function SubscribersTable({ waitlistId }: SubscribersTableProps) {
                           key={column.id}
                           className="capitalize"
                           checked={column.getIsVisible()}
-                          onCheckedChange={(value) => column.toggleVisibility(!!value)}
+                          onCheckedChange={(value) => column.toggleVisibility(Boolean(value))}
                         >
                           {column.id}
                         </DropdownMenuCheckboxItem>

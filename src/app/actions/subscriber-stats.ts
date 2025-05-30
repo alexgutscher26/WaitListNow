@@ -9,7 +9,7 @@ type SubscriberGrowthData = Array<{
   cumulative: number;
 }>;
 
-export async function getSubscriberGrowth(waitlistId: string, days: number = 30) {
+export async function getSubscriberGrowth(waitlistId: string, days = 30) {
   try {
     const { userId } = auth();
     if (!userId) {

@@ -2202,7 +2202,7 @@ function WaitlistPreview({ formData }: WaitlistPreviewProps) {
                     id="email"
                     type="email"
                     placeholder="Enter your email"
-                    className={`w-full px-6 py-4 border rounded-xl text-base transition-all duration-200 focus:outline-none focus:ring-2 placeholder-gray-400 font-normal`}
+                    className={"w-full px-6 py-4 border rounded-xl text-base transition-all duration-200 focus:outline-none focus:ring-2 placeholder-gray-400 font-normal"}
                     style={
                       {
                         backgroundColor:
@@ -2258,7 +2258,7 @@ function WaitlistPreview({ formData }: WaitlistPreviewProps) {
                     id={field.id}
                     type={field.type === 'email' ? 'email' : 'text'}
                     placeholder={field.placeholder || field.name}
-                    className={`w-full px-6 py-4 border text-base transition-all duration-200 focus:outline-none focus:ring-2 placeholder-gray-400 font-normal`}
+                    className={"w-full px-6 py-4 border text-base transition-all duration-200 focus:outline-none focus:ring-2 placeholder-gray-400 font-normal"}
                     style={
                       {
                         backgroundColor:

@@ -295,7 +295,7 @@ export function WaitlistPreview({ formData }: WaitlistPreviewProps) {
                     id="email"
                     type="email"
                     placeholder="Enter your email"
-                    className={`w-full px-6 py-4 border rounded-xl text-base transition-all duration-200 focus:outline-none focus:ring-2 placeholder-gray-400 font-normal`}
+                    className={"w-full px-6 py-4 border rounded-xl text-base transition-all duration-200 focus:outline-none focus:ring-2 placeholder-gray-400 font-normal"}
                     style={
                       {
                         backgroundColor:
@@ -351,7 +351,7 @@ export function WaitlistPreview({ formData }: WaitlistPreviewProps) {
                     id={field.id}
                     type={field.type === 'email' ? 'email' : 'text'}
                     placeholder={field.placeholder || `Enter your ${field.name.toLowerCase()}`}
-                    className={`w-full px-6 py-4 border rounded-xl text-base transition-all duration-200 focus:outline-none focus:ring-2 placeholder-gray-400 font-normal`}
+                    className={"w-full px-6 py-4 border rounded-xl text-base transition-all duration-200 focus:outline-none focus:ring-2 placeholder-gray-400 font-normal"}
                     style={
                       {
                         backgroundColor:
@@ -388,7 +388,7 @@ export function WaitlistPreview({ formData }: WaitlistPreviewProps) {
               >
                 <button
                   type="button"
-                  className={`w-full px-8 py-4 text-base font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2`}
+                  className={"w-full px-8 py-4 text-base font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2"}
                   style={
                     {
                       backgroundColor:

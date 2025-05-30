@@ -464,16 +464,16 @@ export default function ImprovedOnboarding() {
     if (currentStep === onboardingSteps.length - 1) {
       setIsLoading(true);
       setError('');
-      
+
       try {
         // Call the API to mark onboarding as complete
         const response = await fetch('/api/onboarding/complete', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Accept': 'application/json',
+            Accept: 'application/json',
           },
-          body: JSON.stringify({})
+          body: JSON.stringify({}),
         });
 
         // Handle both JSON and text responses
@@ -485,7 +485,7 @@ export default function ImprovedOnboarding() {
           // If response is not JSON, treat it as an error message
           throw new Error(responseText || 'Failed to complete onboarding');
         }
-        
+
         if (!response.ok) {
           throw new Error(result.error || result.message || 'Failed to complete onboarding');
         }

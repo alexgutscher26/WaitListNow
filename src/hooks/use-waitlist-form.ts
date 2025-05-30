@@ -56,22 +56,19 @@ export function useWaitlistForm(initialValues: Partial<WaitlistFormValues> = {})
     [errors],
   );
 
-  const handleCustomFieldChange = useCallback(
-    (index: number, field: string, value: any) => {
-      setFormData((prev) => {
-        const updatedFields = [...prev.customFields];
-        updatedFields[index] = {
-          ...updatedFields[index],
-          [field]: value,
-        };
-        return {
-          ...prev,
-          customFields: updatedFields,
-        };
-      });
-    },
-    [],
-  );
+  const handleCustomFieldChange = useCallback((index: number, field: string, value: any) => {
+    setFormData((prev) => {
+      const updatedFields = [...prev.customFields];
+      updatedFields[index] = {
+        ...updatedFields[index],
+        [field]: value,
+      };
+      return {
+        ...prev,
+        customFields: updatedFields,
+      };
+    });
+  }, []);
 
   const addCustomField = useCallback(() => {
     setFormData((prev) => ({
@@ -151,12 +148,12 @@ export function useWaitlistForm(initialValues: Partial<WaitlistFormValues> = {})
 
     try {
       const data = await createWaitlist(formData);
-      
+
       toast({
         title: 'Success!',
         description: 'Your waitlist has been created successfully.',
       });
-      
+
       router.push(`/dashboard/waitlists/${data.id}`);
       return { success: true, data };
     } catch (error) {

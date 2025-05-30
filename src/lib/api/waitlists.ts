@@ -1,4 +1,4 @@
-import { CreateWaitlistData } from "@/types/waitlist";
+import { CreateWaitlistData } from '@/types/waitlist';
 
 const API_URL = '/api/waitlists';
 
@@ -7,12 +7,12 @@ const API_URL = '/api/waitlists';
  */
 export async function getWaitlists() {
   const response = await fetch(API_URL);
-  
+
   if (!response.ok) {
     const error = await response.json();
     throw new Error(error.message || 'Failed to fetch waitlists');
   }
-  
+
   return response.json();
 }
 

@@ -27,36 +27,55 @@ interface ChartProps {
 const RechartsComponents = dynamic<ChartProps>(
   () =>
     import('recharts').then((recharts) => {
-      const ChartComponent = ({
-        data,
-        isDark,
-        maxValue,
-        CustomTooltip,
-      }: ChartProps) => {
-        const {
-          AreaChart,
-          Area,
-          XAxis,
-          YAxis,
-          CartesianGrid,
-          Tooltip,
-          ResponsiveContainer,
-        } = recharts;
+      const ChartComponent = ({ data, isDark, maxValue, CustomTooltip }: ChartProps) => {
+        const { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } =
+          recharts;
 
         return (
-          <ResponsiveContainer width="100%" height="100%">
+          <ResponsiveContainer
+            width="100%"
+            height="100%"
+          >
             <AreaChart
               data={data}
               margin={{ top: 10, right: 10, left: 0, bottom: 0 }}
             >
               <defs>
-                <linearGradient id="colorCount" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#8884d8" stopOpacity={0.8} />
-                  <stop offset="95%" stopColor="#8884d8" stopOpacity={0} />
+                <linearGradient
+                  id="colorCount"
+                  x1="0"
+                  y1="0"
+                  x2="0"
+                  y2="1"
+                >
+                  <stop
+                    offset="5%"
+                    stopColor="#8884d8"
+                    stopOpacity={0.8}
+                  />
+                  <stop
+                    offset="95%"
+                    stopColor="#8884d8"
+                    stopOpacity={0}
+                  />
                 </linearGradient>
-                <linearGradient id="colorCumulative" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#82ca9d" stopOpacity={0.8} />
-                  <stop offset="95%" stopColor="#82ca9d" stopOpacity={0} />
+                <linearGradient
+                  id="colorCumulative"
+                  x1="0"
+                  y1="0"
+                  x2="0"
+                  y2="1"
+                >
+                  <stop
+                    offset="5%"
+                    stopColor="#82ca9d"
+                    stopOpacity={0.8}
+                  />
+                  <stop
+                    offset="95%"
+                    stopColor="#82ca9d"
+                    stopOpacity={0}
+                  />
                 </linearGradient>
               </defs>
               <XAxis
@@ -76,14 +95,19 @@ const RechartsComponents = dynamic<ChartProps>(
                 domain={[0, maxValue]}
                 width={40}
               />
-              <CartesianGrid strokeDasharray="3 3" className="stroke-muted" vertical={false} />
+              <CartesianGrid
+                strokeDasharray="3 3"
+                className="stroke-muted"
+                vertical={false}
+              />
               <Tooltip
                 content={(props: any) => <CustomTooltip {...props} />}
                 contentStyle={{
                   backgroundColor: isDark ? '#1e293b' : '#ffffff',
                   border: 'none',
                   borderRadius: '0.5rem',
-                  boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
+                  boxShadow:
+                    '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
                 }}
               />
               <Area
@@ -108,13 +132,13 @@ const RechartsComponents = dynamic<ChartProps>(
           </ResponsiveContainer>
         );
       };
-      
+
       return ChartComponent;
     }),
   {
     ssr: false,
     loading: () => <Skeleton className="h-[300px] w-full" />,
-  }
+  },
 );
 
 interface ChartDataPoint {
@@ -132,11 +156,11 @@ interface SubscriberGrowthChartProps {
 
 const CustomTooltip = ({ active, payload, label }: any) => {
   if (!active || !payload?.length) return null;
-  
+
   // Find the original data point to get the correct date
   const originalDate = payload[0]?.payload?.date;
   let formattedDate = label;
-  
+
   if (originalDate) {
     try {
       // Parse the date correctly
@@ -146,22 +170,29 @@ const CustomTooltip = ({ active, payload, label }: any) => {
       console.error('Error formatting tooltip date:', error);
     }
   }
-  
+
   return (
     <div className="bg-card p-3 border border-border rounded-md shadow-sm">
-      <p className="font-medium text-sm">
-        {formattedDate}
-      </p>
+      <p className="font-medium text-sm">{formattedDate}</p>
       {payload.map((entry: any, index: number) => (
-        <p key={`tooltip-${index}`} className="text-sm" style={{ color: entry.color }}>
-          {entry.dataKey === 'count' ? 'New Subscribers' : 'Total Subscribers'}: <span className="font-medium">{entry.value.toLocaleString()}</span>
+        <p
+          key={`tooltip-${index}`}
+          className="text-sm"
+          style={{ color: entry.color }}
+        >
+          {entry.dataKey === 'count' ? 'New Subscribers' : 'Total Subscribers'}:{' '}
+          <span className="font-medium">{entry.value.toLocaleString()}</span>
         </p>
       ))}
     </div>
   );
 };
 
-export function SubscriberGrowthChart({ waitlistId, className, days = 30 }: SubscriberGrowthChartProps) {
+export function SubscriberGrowthChart({
+  waitlistId,
+  className,
+  days = 30,
+}: SubscriberGrowthChartProps) {
   const { theme } = useTheme();
   const [isMounted, setIsMounted] = useState(false);
   const [data, setData] = useState<ChartDataPoint[]>([]);
@@ -178,15 +209,15 @@ export function SubscriberGrowthChart({ waitlistId, className, days = 30 }: Subs
       try {
         setIsLoading(true);
         setError(null);
-        
+
         const response = await fetch(
-          `/api/waitlists/${waitlistId}/subscribers/growth?days=${days}`
+          `/api/waitlists/${waitlistId}/subscribers/growth?days=${days}`,
         );
-        
+
         if (!response.ok) {
           throw new Error('Failed to load growth data');
         }
-        
+
         const result = await response.json();
         setData(Array.isArray(result) ? result : []);
       } catch (err) {
@@ -196,7 +227,7 @@ export function SubscriberGrowthChart({ waitlistId, className, days = 30 }: Subs
         setIsLoading(false);
       }
     };
-    
+
     if (waitlistId && isMounted) {
       fetchData();
     } else if (!waitlistId) {
@@ -216,7 +247,7 @@ export function SubscriberGrowthChart({ waitlistId, className, days = 30 }: Subs
       </Card>
     );
   }
-  
+
   if (error) {
     return (
       <Card className={className}>
@@ -234,14 +265,14 @@ export function SubscriberGrowthChart({ waitlistId, className, days = 30 }: Subs
   console.log('Raw data from API:', data);
 
   // Format the data for the chart with proper timezone handling
-  const chartData = data.map(item => {
+  const chartData = data.map((item) => {
     try {
       // Keep the original date string as-is for data integrity
       const originalDate = item.date;
-      
+
       // Parse the date by adding time component to avoid timezone issues
       const date = new Date(originalDate + 'T00:00:00');
-      
+
       // Verify the date is valid
       if (isNaN(date.getTime())) {
         console.error('Invalid date:', originalDate);
@@ -254,9 +285,9 @@ export function SubscriberGrowthChart({ waitlistId, className, days = 30 }: Subs
       // Format the date as 'MMM d' (e.g., 'May 28')
       const formattedDate = date.toLocaleDateString('en-US', {
         month: 'short',
-        day: 'numeric'
+        day: 'numeric',
       });
-      
+
       // Return the formatted data, keeping original date
       return {
         ...item,
@@ -271,11 +302,11 @@ export function SubscriberGrowthChart({ waitlistId, className, days = 30 }: Subs
       };
     }
   });
-  
+
   console.log('Formatted chart data:', chartData);
 
   // Calculate the max value for the Y-axis with some padding
-  const maxValue = Math.max(...data.map(item => item.cumulative), 10) * 1.1;
+  const maxValue = Math.max(...data.map((item) => item.cumulative), 10) * 1.1;
 
   if (data.length === 0) {
     return (
@@ -296,7 +327,7 @@ export function SubscriberGrowthChart({ waitlistId, className, days = 30 }: Subs
         <CardTitle className="text-lg">Subscriber Growth</CardTitle>
       </CardHeader>
       <CardContent className="h-[300px] -mt-2">
-        <RechartsComponents 
+        <RechartsComponents
           data={chartData}
           isDark={isDark}
           maxValue={maxValue}

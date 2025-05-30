@@ -120,7 +120,7 @@ const getStats = async (): Promise<{
 }> => {
   try {
     const stats = await getWaitlistStats();
-    
+
     // For now, we'll keep some placeholder values for metrics we don't have data for yet
     return {
       totalSubscribers: stats.totalSubscribers,
@@ -133,7 +133,7 @@ const getStats = async (): Promise<{
       totalRevenue: 0, // TODO: Implement revenue tracking
       monthlyGrowth: 0, // TODO: Calculate this from actual data
       recentActivity: [], // TODO: Implement activity feed
-      topWaitlists: stats.waitlists.map(wl => ({
+      topWaitlists: stats.waitlists.map((wl) => ({
         id: wl.id,
         name: wl.name,
         subscribers: wl.subscribers,

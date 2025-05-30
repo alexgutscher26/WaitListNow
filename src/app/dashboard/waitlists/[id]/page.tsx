@@ -17,13 +17,11 @@ interface WaitlistDetailPageProps {
   params: { id: string };
 }
 
-export default async function WaitlistDetailPage({
-  params,
-}: WaitlistDetailPageProps) {
+export default async function WaitlistDetailPage({ params }: WaitlistDetailPageProps) {
   const { id } = params;
   // Get the authenticated user
   const { userId } = auth();
-  
+
   if (!userId) {
     redirect('/sign-in');
   }
@@ -73,11 +71,13 @@ export default async function WaitlistDetailPage({
         SUM(CASE WHEN "createdAt" > ${oneDayAgo} THEN 1 ELSE 0 END) as new_today
       FROM "Subscriber"
       WHERE "waitlistId" = ${waitlist.id}
-    ` as Promise<Array<{
-      total: bigint;
-      new_this_week: bigint;
-      new_today: bigint;
-    }>>
+    ` as Promise<
+      Array<{
+        total: bigint;
+        new_this_week: bigint;
+        new_today: bigint;
+      }>
+    >,
   ]);
 
   // Growth data will be loaded client-side by the SubscriberGrowthChart component
@@ -86,13 +86,13 @@ export default async function WaitlistDetailPage({
   const totalSubscribers = Number(stats.total);
   const newThisWeek = Number(stats.new_this_week);
   const newToday = Number(stats.new_today);
-  
+
   // Calculate growth rate (this week vs last week)
   const lastWeekStart = new Date();
   lastWeekStart.setDate(lastWeekStart.getDate() - 14);
   const lastWeekEnd = new Date();
   lastWeekEnd.setDate(lastWeekEnd.getDate() - 7);
-  
+
   const lastWeekCount = await db.subscriber.count({
     where: {
       waitlistId: waitlist.id,
@@ -102,35 +102,50 @@ export default async function WaitlistDetailPage({
       },
     },
   });
-  
-  const growthRate = lastWeekCount > 0 
-    ? Math.round(((newThisWeek - lastWeekCount) / lastWeekCount) * 100) 
-    : newThisWeek > 0 ? 100 : 0;
+
+  const growthRate =
+    lastWeekCount > 0
+      ? Math.round(((newThisWeek - lastWeekCount) / lastWeekCount) * 100)
+      : newThisWeek > 0
+        ? 100
+        : 0;
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-4">
-          <Button variant="ghost" size="icon" asChild>
+          <Button
+            variant="ghost"
+            size="icon"
+            asChild
+          >
             <Link href="/dashboard/waitlists">
               <ArrowLeft className="h-4 w-4" />
             </Link>
           </Button>
           <div>
             <h1 className="text-2xl font-bold">{waitlist.name}</h1>
-            <p className="text-muted-foreground">
-              {waitlist._count.subscribers} total subscribers
-            </p>
+            <p className="text-muted-foreground">{waitlist._count.subscribers} total subscribers</p>
           </div>
         </div>
         <div className="flex space-x-2">
-          <Button variant="outline" size="sm" asChild>
-            <Link href={`/waitlist/${waitlist.slug}`} target="_blank">
+          <Button
+            variant="outline"
+            size="sm"
+            asChild
+          >
+            <Link
+              href={`/waitlist/${waitlist.slug}`}
+              target="_blank"
+            >
               <Eye className="mr-2 h-4 w-4" />
               View Live
             </Link>
           </Button>
-          <Button size="sm" asChild>
+          <Button
+            size="sm"
+            asChild
+          >
             <Link href={`/dashboard/waitlists/${waitlist.id}/edit`}>
               <Settings className="mr-2 h-4 w-4" />
               Settings
@@ -139,7 +154,10 @@ export default async function WaitlistDetailPage({
         </div>
       </div>
 
-      <Tabs defaultValue="overview" className="space-y-4">
+      <Tabs
+        defaultValue="overview"
+        className="space-y-4"
+      >
         <TabsList>
           <TabsTrigger value="overview">
             <BarChart className="mr-2 h-4 w-4" />
@@ -155,7 +173,10 @@ export default async function WaitlistDetailPage({
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="overview" className="space-y-4">
+        <TabsContent
+          value="overview"
+          className="space-y-4"
+        >
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -176,7 +197,8 @@ export default async function WaitlistDetailPage({
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">
-                  {growthRate >= 0 ? '+' : ''}{growthRate}%
+                  {growthRate >= 0 ? '+' : ''}
+                  {growthRate}%
                 </div>
                 <p className="text-xs text-muted-foreground">
                   {newThisWeek > 0 ? `+${newThisWeek} this week` : 'No growth'}
@@ -203,7 +225,8 @@ export default async function WaitlistDetailPage({
               <CardContent>
                 <div className="text-2xl font-bold capitalize">{waitlist.status.toLowerCase()}</div>
                 <p className="text-xs text-muted-foreground">
-                  Last updated {formatDistanceToNow(new Date(waitlist.updatedAt), { addSuffix: true })}
+                  Last updated{' '}
+                  {formatDistanceToNow(new Date(waitlist.updatedAt), { addSuffix: true })}
                 </p>
               </CardContent>
             </Card>
@@ -211,7 +234,7 @@ export default async function WaitlistDetailPage({
 
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
             <div className="col-span-4">
-              <SubscriberGrowthChart 
+              <SubscriberGrowthChart
                 waitlistId={id}
                 className="w-full"
                 days={30}
@@ -225,11 +248,12 @@ export default async function WaitlistDetailPage({
                 {recentSubscribers.length > 0 ? (
                   <div className="space-y-4">
                     {recentSubscribers.map((subscriber) => (
-                      <div key={subscriber.id} className="flex items-center">
+                      <div
+                        key={subscriber.id}
+                        className="flex items-center"
+                      >
                         <div className="space-y-1">
-                          <p className="text-sm font-medium leading-none">
-                            {subscriber.email}
-                          </p>
+                          <p className="text-sm font-medium leading-none">{subscriber.email}</p>
                           <p className="text-sm text-muted-foreground">
                             {new Date(subscriber.createdAt).toLocaleDateString()}
                           </p>
@@ -245,7 +269,10 @@ export default async function WaitlistDetailPage({
           </div>
         </TabsContent>
 
-        <TabsContent value="subscribers" className="space-y-4">
+        <TabsContent
+          value="subscribers"
+          className="space-y-4"
+        >
           <Card>
             <CardHeader>
               <CardTitle>Subscribers</CardTitle>
@@ -259,7 +286,10 @@ export default async function WaitlistDetailPage({
           </Card>
         </TabsContent>
 
-        <TabsContent value="settings" className="space-y-6">
+        <TabsContent
+          value="settings"
+          className="space-y-6"
+        >
           <div className="space-y-6">
             {/* General Settings */}
             <Card>
@@ -267,13 +297,13 @@ export default async function WaitlistDetailPage({
                 <CardTitle>General Settings</CardTitle>
               </CardHeader>
               <CardContent>
-                <WaitlistSettingsForm 
+                <WaitlistSettingsForm
                   waitlist={{
                     id: waitlist.id,
                     name: waitlist.name,
                     slug: waitlist.slug,
-                    description: waitlist.description
-                  }} 
+                    description: waitlist.description,
+                  }}
                 />
               </CardContent>
             </Card>
@@ -282,17 +312,19 @@ export default async function WaitlistDetailPage({
             <Card>
               <CardHeader>
                 <CardTitle>Email Settings</CardTitle>
-                <p className="text-sm text-muted-foreground">Customize email notifications and confirmations</p>
+                <p className="text-sm text-muted-foreground">
+                  Customize email notifications and confirmations
+                </p>
               </CardHeader>
               <CardContent>
-                <EmailSettingsForm 
+                <EmailSettingsForm
                   waitlist={{
                     id: waitlist.id,
                     customFields: waitlist.customFields as {
                       sendConfirmationEmail?: boolean;
                       customThankYouMessage?: string;
-                    } | null
-                  }} 
+                    } | null,
+                  }}
                 />
               </CardContent>
             </Card>
@@ -301,10 +333,15 @@ export default async function WaitlistDetailPage({
             <Card className="border-red-200 bg-red-50">
               <CardHeader>
                 <CardTitle className="text-red-700">Danger Zone</CardTitle>
-                <p className="text-sm text-red-600">These actions are irreversible. Proceed with caution.</p>
+                <p className="text-sm text-red-600">
+                  These actions are irreversible. Proceed with caution.
+                </p>
               </CardHeader>
               <CardContent>
-                <DangerZone waitlistId={waitlist.id} waitlistName={waitlist.name} />
+                <DangerZone
+                  waitlistId={waitlist.id}
+                  waitlistName={waitlist.name}
+                />
               </CardContent>
             </Card>
           </div>

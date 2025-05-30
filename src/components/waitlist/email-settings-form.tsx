@@ -37,14 +37,16 @@ export function EmailSettingsForm({ waitlist }: EmailSettingsFormProps) {
     resolver: zodResolver(emailSettingsSchema),
     defaultValues: {
       sendConfirmationEmail: waitlist.customFields?.sendConfirmationEmail ?? true,
-      customThankYouMessage: waitlist.customFields?.customThankYouMessage || "Thank you for joining our waitlist! We'll notify you when we launch.",
+      customThankYouMessage:
+        waitlist.customFields?.customThankYouMessage ||
+        "Thank you for joining our waitlist! We'll notify you when we launch.",
     },
   });
 
   async function onSubmit(data: EmailSettingsValues) {
     try {
       setIsLoading(true);
-      
+
       const response = await fetch(`/api/waitlists/${waitlist.id}/email-settings`, {
         method: 'PATCH',
         headers: {
@@ -65,7 +67,7 @@ export function EmailSettingsForm({ waitlist }: EmailSettingsFormProps) {
 
       // Refresh the page to show updated data
       router.refresh();
-      
+
       toast({
         title: 'Success',
         description: 'Email settings updated successfully',
@@ -83,7 +85,10 @@ export function EmailSettingsForm({ waitlist }: EmailSettingsFormProps) {
   }
 
   return (
-    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+    <form
+      onSubmit={form.handleSubmit(onSubmit)}
+      className="space-y-4"
+    >
       <div className="flex items-center space-x-2">
         <Switch
           id="send-confirmation-email"
@@ -91,11 +96,14 @@ export function EmailSettingsForm({ waitlist }: EmailSettingsFormProps) {
           onCheckedChange={(checked) => form.setValue('sendConfirmationEmail', checked)}
           disabled={isLoading}
         />
-        <Label htmlFor="send-confirmation-email" className="cursor-pointer">
+        <Label
+          htmlFor="send-confirmation-email"
+          className="cursor-pointer"
+        >
           Send confirmation emails to new subscribers
         </Label>
       </div>
-      
+
       <div className="space-y-2">
         <Label htmlFor="custom-thank-you">Custom Thank You Message</Label>
         <Textarea
@@ -109,9 +117,12 @@ export function EmailSettingsForm({ waitlist }: EmailSettingsFormProps) {
           This message will be shown to users after they sign up for your waitlist.
         </p>
       </div>
-      
+
       <div className="flex justify-end">
-        <Button type="submit" disabled={isLoading}>
+        <Button
+          type="submit"
+          disabled={isLoading}
+        >
           {isLoading ? 'Saving...' : 'Save Email Settings'}
         </Button>
       </div>

@@ -136,9 +136,7 @@ export function DangerZone({ waitlistId, waitlistName }: DangerZoneProps) {
         <div className="flex items-center justify-between">
           <div>
             <h4 className="font-medium text-amber-800">Export Subscribers</h4>
-            <p className="text-sm text-amber-600">
-              Download all subscriber data as a CSV file.
-            </p>
+            <p className="text-sm text-amber-600">Download all subscriber data as a CSV file.</p>
           </div>
           <Button
             variant="outline"
@@ -161,13 +159,16 @@ export function DangerZone({ waitlistId, waitlistName }: DangerZoneProps) {
         </div>
       </div>
 
-      <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+      <AlertDialog
+        open={showDeleteDialog}
+        onOpenChange={setShowDeleteDialog}
+      >
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
             <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete the "{waitlistName}" waitlist
-              and remove all associated subscriber data from our servers.
+              This action cannot be undone. This will permanently delete the "{waitlistName}"
+              waitlist and remove all associated subscriber data from our servers.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

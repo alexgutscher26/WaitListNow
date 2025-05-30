@@ -20,9 +20,7 @@ export function BasicInfoSection({ formData, onChange, errors }: BasicInfoSectio
     <Card>
       <CardHeader>
         <CardTitle>Basic Information</CardTitle>
-        <CardDescription>
-          Set up the basic details for your waitlist.
-        </CardDescription>
+        <CardDescription>Set up the basic details for your waitlist.</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="space-y-2">

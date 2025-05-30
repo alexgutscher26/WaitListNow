@@ -25,10 +25,7 @@ const isDev = process.env.NODE_ENV === 'development';
 const log = (...args: any[]) => isDev && console.log('[Waitlist API]', ...args);
 
 // GET /api/waitlists/[id] - Get a specific waitlist
-export async function GET(
-  req: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
   try {
     // Verify authentication
     const { userId } = getAuth(req);
@@ -71,55 +68,46 @@ export async function GET(
   } catch (error) {
     console.error('[WAITLISTS_GET_ONE]', error);
     log('Error details:', error);
-    
+
     if (error instanceof Error) {
       log('Error stack:', error.stack);
       return new NextResponse(
-        JSON.stringify({ 
+        JSON.stringify({
           error: error.message,
-          stack: isDev ? error.stack : undefined 
-        }), 
-        { 
+          stack: isDev ? error.stack : undefined,
+        }),
+        {
           status: 500,
-          headers: { 'Content-Type': 'application/json' }
-        }
+          headers: { 'Content-Type': 'application/json' },
+        },
       );
     }
-    
+
     return new NextResponse(
-      JSON.stringify({ 
+      JSON.stringify({
         error: 'Internal server error',
-        details: isDev ? String(error) : undefined 
-      }), 
-      { 
+        details: isDev ? String(error) : undefined,
+      }),
+      {
         status: 500,
-        headers: { 'Content-Type': 'application/json' }
-      }
+        headers: { 'Content-Type': 'application/json' },
+      },
     );
   }
 }
 
 // PATCH /api/waitlists/[id] - Partially update a waitlist
-export async function PATCH(
-  req: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) {
   return handleUpdateWaitlist(req, params.id, false);
 }
 
 // PUT /api/waitlists/[id] - Replace a waitlist (full update)
-export async function PUT(
-  req: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function PUT(req: NextRequest, { params }: { params: { id: string } }) {
   return handleUpdateWaitlist(req, params.id, true);
 }
 
 // DELETE /api/waitlists/[id] - Delete a waitlist
-export async function DELETE(
-  req: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
   try {
     // Verify authentication
     const { userId } = getAuth(req);
@@ -138,7 +126,6 @@ export async function DELETE(
     if (!user) {
       return new NextResponse('User not found', { status: 404 });
     }
-
 
     // Check if the waitlist exists and belongs to the user
     const existingWaitlist = await db.waitlist.findFirst({
@@ -168,39 +155,35 @@ export async function DELETE(
     return new NextResponse(null, { status: 204 });
   } catch (error) {
     console.error('[WAITLISTS_DELETE]', error);
-    
+
     if (error instanceof Error) {
       return new NextResponse(
-        JSON.stringify({ 
+        JSON.stringify({
           error: error.message,
-          stack: isDev ? error.stack : undefined 
-        }), 
-        { 
+          stack: isDev ? error.stack : undefined,
+        }),
+        {
           status: 500,
-          headers: { 'Content-Type': 'application/json' }
-        }
+          headers: { 'Content-Type': 'application/json' },
+        },
       );
     }
-    
+
     return new NextResponse(
-      JSON.stringify({ 
+      JSON.stringify({
         error: 'Internal server error',
-        details: isDev ? String(error) : undefined 
-      }), 
-      { 
+        details: isDev ? String(error) : undefined,
+      }),
+      {
         status: 500,
-        headers: { 'Content-Type': 'application/json' }
-      }
+        headers: { 'Content-Type': 'application/json' },
+      },
     );
   }
 }
 
 // Shared handler for both PUT and PATCH
-async function handleUpdateWaitlist(
-  req: NextRequest,
-  waitlistId: string,
-  isFullUpdate: boolean
-) {
+async function handleUpdateWaitlist(req: NextRequest, waitlistId: string, isFullUpdate: boolean) {
   try {
     // Verify authentication
     const { userId } = getAuth(req);
@@ -231,20 +214,18 @@ async function handleUpdateWaitlist(
 
     // Parse and validate request body
     const json = await req.json();
-    
+
     // For PATCH, merge with existing data; for PUT, use the provided data directly
-    const updateData = isFullUpdate 
-      ? json 
-      : { ...json }; // Don't spread existingWaitlist to avoid including internal fields
-    
+    const updateData = isFullUpdate ? json : { ...json }; // Don't spread existingWaitlist to avoid including internal fields
+
     // For PATCH requests, we'll only validate and update the provided fields
     const updatedData: Partial<Waitlist> = {};
-    
+
     // Only validate and include fields that were actually provided in the request
     if (updateData.status !== undefined) {
       updatedData.status = updateData.status;
     }
-    
+
     // If this is a full update (PUT), validate all required fields
     if (isFullUpdate) {
       const body = waitlistFormSchema.parse(updateData);
@@ -252,14 +233,14 @@ async function handleUpdateWaitlist(
     } else if (updateData.name !== undefined) {
       updatedData.name = updateData.name;
     }
-    
+
     // Handle slug update if name is being changed
     if (updatedData.name && updatedData.name !== existingWaitlist.name) {
       const slug = updatedData.name
         .toLowerCase()
         .replace(/[^a-z0-9]+/g, '-')
         .replace(/(^-|-$)/g, '');
-      
+
       // Check if the new slug is already in use by another waitlist of the same user
       const slugInUse = await db.waitlist.findFirst({
         where: {
@@ -294,51 +275,51 @@ async function handleUpdateWaitlist(
     return NextResponse.json(updatedWaitlist);
   } catch (error) {
     console.error('[WAITLISTS_UPDATE]', error);
-    
+
     // Log the full error in development
     if (isDev) {
       console.error('Full error details:', {
         message: error instanceof Error ? error.message : 'Unknown error',
         stack: error instanceof Error ? error.stack : undefined,
-        error
+        error,
       });
     }
-    
+
     if (error instanceof z.ZodError) {
       return new NextResponse(
-        JSON.stringify({ 
+        JSON.stringify({
           error: 'Validation error',
-          details: error.errors 
+          details: error.errors,
         }),
-        { 
-          status: 400, 
-          headers: { 'Content-Type': 'application/json' } 
-        }
+        {
+          status: 400,
+          headers: { 'Content-Type': 'application/json' },
+        },
       );
     }
-    
+
     if (error instanceof Error) {
       return new NextResponse(
-        JSON.stringify({ 
+        JSON.stringify({
           error: error.message,
-          stack: isDev ? error.stack : undefined 
-        }), 
-        { 
+          stack: isDev ? error.stack : undefined,
+        }),
+        {
           status: 500,
-          headers: { 'Content-Type': 'application/json' }
-        }
+          headers: { 'Content-Type': 'application/json' },
+        },
       );
     }
-    
+
     return new NextResponse(
-      JSON.stringify({ 
+      JSON.stringify({
         error: 'Internal server error',
-        details: isDev ? String(error) : undefined 
-      }), 
-      { 
+        details: isDev ? String(error) : undefined,
+      }),
+      {
         status: 500,
-        headers: { 'Content-Type': 'application/json' }
-      }
+        headers: { 'Content-Type': 'application/json' },
+      },
     );
   }
 }

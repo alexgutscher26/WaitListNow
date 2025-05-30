@@ -11,10 +11,7 @@ const emailSettingsSchema = z.object({
   }),
 });
 
-export async function PATCH(
-  req: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) {
   try {
     // Verify authentication
     const { userId } = getAuth(req);
@@ -28,11 +25,11 @@ export async function PATCH(
     // Validate request body
     const body = await req.json();
     const validation = emailSettingsSchema.safeParse(body);
-    
+
     if (!validation.success) {
       return new NextResponse(
         JSON.stringify({ error: 'Invalid request data', details: validation.error }),
-        { status: 400, headers: { 'Content-Type': 'application/json' } }
+        { status: 400, headers: { 'Content-Type': 'application/json' } },
       );
     }
 
@@ -58,7 +55,7 @@ export async function PATCH(
 
     // Merge existing customFields with new ones
     const updatedCustomFields = {
-      ...(currentWaitlist.customFields as Record<string, unknown> || {}),
+      ...((currentWaitlist.customFields as Record<string, unknown>) || {}),
       ...customFields,
     };
 
@@ -77,14 +74,14 @@ export async function PATCH(
   } catch (error) {
     console.error('[WAITLIST_EMAIL_SETTINGS_UPDATE]', error);
     return new NextResponse(
-      JSON.stringify({ 
+      JSON.stringify({
         error: 'Internal server error',
-        details: process.env.NODE_ENV === 'development' ? String(error) : undefined 
-      }), 
-      { 
+        details: process.env.NODE_ENV === 'development' ? String(error) : undefined,
+      }),
+      {
         status: 500,
-        headers: { 'Content-Type': 'application/json' }
-      }
+        headers: { 'Content-Type': 'application/json' },
+      },
     );
   }
 }

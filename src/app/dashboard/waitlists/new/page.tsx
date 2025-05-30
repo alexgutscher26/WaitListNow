@@ -61,10 +61,30 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ArrowLeft, Plus, Zap, Eye, Copy, Trash2, GripVertical, Check, X, Loader2, Pencil, ExternalLink, CheckCircle } from 'lucide-react';
+import {
+  ArrowLeft,
+  Plus,
+  Zap,
+  Eye,
+  Copy,
+  Trash2,
+  GripVertical,
+  Check,
+  X,
+  Loader2,
+  Pencil,
+  ExternalLink,
+  CheckCircle,
+} from 'lucide-react';
 import { DashboardPage } from '@/components/dashboard-page';
 import Link from 'next/link';
-import { DialogHeader, Dialog, DialogContent, DialogTitle, DialogDescription } from '@/components/ui/dialog';
+import {
+  DialogHeader,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogDescription,
+} from '@/components/ui/dialog';
 
 // Types
 type FieldType = 'text' | 'email' | 'number' | 'url' | 'tel' | 'textarea' | 'select';
@@ -200,7 +220,7 @@ export default function NewWaitlistPage() {
       buttonVariant: 'default',
       buttonRounded: 'md',
       boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)',
-      padding: '1.5rem'
+      padding: '1.5rem',
     },
     settings: {
       maxSignups: undefined,
@@ -281,14 +301,14 @@ export default function NewWaitlistPage() {
         setFormData((prev) => ({
           ...prev,
           [parent]: {
-            ...(prev[parent as keyof FormData] as object || {}),
-            [child]: type === 'checkbox' ? checked : (type === 'number' ? Number(value) : value),
+            ...((prev[parent as keyof FormData] as object) || {}),
+            [child]: type === 'checkbox' ? checked : type === 'number' ? Number(value) : value,
           },
         }));
       } else {
         setFormData((prev) => ({
           ...prev,
-          [name]: type === 'checkbox' ? checked : (type === 'number' ? Number(value) : value),
+          [name]: type === 'checkbox' ? checked : type === 'number' ? Number(value) : value,
         }));
       }
 
@@ -311,7 +331,7 @@ export default function NewWaitlistPage() {
       setFormData((prev) => ({
         ...prev,
         [parent]: {
-          ...(prev[parent as keyof FormData] as object || {}),
+          ...((prev[parent as keyof FormData] as object) || {}),
           [child]: value,
         },
       }));
@@ -342,7 +362,7 @@ export default function NewWaitlistPage() {
       type: newField.type || 'text',
       required: newField.required || false,
       placeholder: newField.placeholder || '',
-      options: newField.type === 'select' ? (newField.options || ['']) : undefined,
+      options: newField.type === 'select' ? newField.options || [''] : undefined,
     };
 
     setFormData((prev) => ({
@@ -381,9 +401,7 @@ export default function NewWaitlistPage() {
       setFormData((prev) => ({
         ...prev,
         customFields: prev.customFields.map((field) =>
-          field.id === id
-            ? { ...field, ...updates, options: [''] }
-            : field,
+          field.id === id ? { ...field, ...updates, options: [''] } : field,
         ),
       }));
     }
@@ -406,20 +424,18 @@ export default function NewWaitlistPage() {
    */
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     // Client-side validation
     if (!validateForm()) {
       return;
     }
-    
+
     setIsSubmitting(true);
     setErrors({});
 
     try {
       // Generate verification token if email verification is enabled
-      const verificationToken = formData.requireEmailVerification 
-        ? crypto.randomUUID()
-        : undefined;
+      const verificationToken = formData.requireEmailVerification ? crypto.randomUUID() : undefined;
 
       // Prepare the data for the API
       const waitlistData = {
@@ -440,7 +456,7 @@ export default function NewWaitlistPage() {
           referralEnabled: formData.enableReferrals,
           referralReward: formData.referralReward || '',
           customCss: formData.settings.customCss || '',
-          customJs: formData.settings.customJs || ''
+          customJs: formData.settings.customJs || '',
         },
         verificationToken,
       };
@@ -482,7 +498,7 @@ export default function NewWaitlistPage() {
               verificationToken,
             }),
           });
-          
+
           if (!emailResponse.ok) {
             console.error('Failed to send verification email');
             // Continue with success flow even if email fails
@@ -501,9 +517,7 @@ export default function NewWaitlistPage() {
       router.refresh();
     } catch (error) {
       console.error('Error creating waitlist:', error);
-      toast.error(
-        error instanceof Error ? error.message : 'Failed to create waitlist',
-      );
+      toast.error(error instanceof Error ? error.message : 'Failed to create waitlist');
     } finally {
       setIsSubmitting(false);
     }
@@ -609,7 +623,7 @@ export default function NewWaitlistPage() {
         buttonVariant: 'default',
         buttonRounded: 'md',
         boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)',
-        padding: '1.5rem'
+        padding: '1.5rem',
       },
       settings: {
         maxSignups: undefined,
@@ -1403,7 +1417,7 @@ function AppearanceSection({ formData, setFormData, getBorderRadius }: Appearanc
                   Show field labels
                 </label>
               </div>
-              
+
               <div className="flex items-center gap-2">
                 <input
                   type="checkbox"
@@ -1429,7 +1443,7 @@ function AppearanceSection({ formData, setFormData, getBorderRadius }: Appearanc
                   </span>
                 )}
               </div>
-              
+
               {/* TODO: Add upgrade modal for branding removal */}
               {/* <button 
                 type="button" 
@@ -1604,7 +1618,7 @@ function BehaviorSection({
                 </div>
               )}
             </div>
-            
+
             <div className="pt-2">
               <button
                 type="button"
@@ -1614,13 +1628,16 @@ function BehaviorSection({
                 <span>Test confirmation</span>
                 <ExternalLink className="w-3.5 h-3.5" />
               </button>
-              
+
               {/* Confirmation Preview Modal */}
-              <Dialog open={showConfirmation} onOpenChange={handleCloseTest}>
+              <Dialog
+                open={showConfirmation}
+                onOpenChange={handleCloseTest}
+              >
                 <DialogContent className="sm:max-w-md">
                   <DialogHeader>
                     <DialogTitle className="text-xl font-semibold">
-                      {formData.confirmationType === 'message' 
+                      {formData.confirmationType === 'message'
                         ? 'Confirmation Message Preview'
                         : 'Redirect Confirmation'}
                     </DialogTitle>
@@ -1630,7 +1647,7 @@ function BehaviorSection({
                         : 'Users will be redirected to the following URL after submission:'}
                     </DialogDescription>
                   </DialogHeader>
-                  
+
                   <div className="py-4">
                     {formData.confirmationType === 'message' ? (
                       <div className="space-y-4">
@@ -1646,7 +1663,10 @@ function BehaviorSection({
                           </div>
                         </div>
                         <div className="text-sm text-gray-500">
-                          <p>This is a preview of your confirmation message. Users will see this after submitting the form.</p>
+                          <p>
+                            This is a preview of your confirmation message. Users will see this
+                            after submitting the form.
+                          </p>
                         </div>
                       </div>
                     ) : (
@@ -1662,7 +1682,9 @@ function BehaviorSection({
                           )}
                         </div>
                         <div className="text-sm text-gray-500">
-                          <p>Users will be automatically redirected to this URL after submission.</p>
+                          <p>
+                            Users will be automatically redirected to this URL after submission.
+                          </p>
                           {formData.redirectUrl && isValidUrl(formData.redirectUrl) && (
                             <button
                               onClick={handleRedirect}
@@ -1675,23 +1697,25 @@ function BehaviorSection({
                       </div>
                     )}
                   </div>
-                  
+
                   <div className="flex justify-end pt-2">
-                    <Button 
+                    <Button
                       onClick={handleCloseTest}
-                      variant="outline" 
+                      variant="outline"
                       className="mr-2"
                     >
                       Close
                     </Button>
-                    {formData.confirmationType === 'redirect' && formData.redirectUrl && isValidUrl(formData.redirectUrl) && (
-                      <Button 
-                        onClick={handleRedirect}
-                        className="bg-blue-600 hover:bg-blue-700"
-                      >
-                        Open URL
-                      </Button>
-                    )}
+                    {formData.confirmationType === 'redirect' &&
+                      formData.redirectUrl &&
+                      isValidUrl(formData.redirectUrl) && (
+                        <Button
+                          onClick={handleRedirect}
+                          className="bg-blue-600 hover:bg-blue-700"
+                        >
+                          Open URL
+                        </Button>
+                      )}
                   </div>
                 </DialogContent>
               </Dialog>
@@ -1704,8 +1728,8 @@ function BehaviorSection({
         <CardHeader>
           <div className="flex items-center gap-2">
             <CardTitle>Advanced Settings</CardTitle>
-            <button 
-              type="button" 
+            <button
+              type="button"
               className="text-gray-400 hover:text-gray-600"
               onClick={() => {
                 // TODO: Show help tooltip
@@ -1713,8 +1737,17 @@ function BehaviorSection({
               }}
               aria-label="Help"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-4 w-4"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z"
+                  clipRule="evenodd"
+                />
               </svg>
             </button>
           </div>
@@ -1740,7 +1773,10 @@ function BehaviorSection({
                   />
                 </div>
                 <div>
-                  <label htmlFor="enableNotifications" className="text-sm font-medium">
+                  <label
+                    htmlFor="enableNotifications"
+                    className="text-sm font-medium"
+                  >
                     Email notifications
                   </label>
                   <p className="text-xs text-gray-500 mt-0.5">
@@ -1765,7 +1801,10 @@ function BehaviorSection({
                   />
                 </div>
                 <div>
-                  <label htmlFor="requireEmailVerification" className="text-sm font-medium">
+                  <label
+                    htmlFor="requireEmailVerification"
+                    className="text-sm font-medium"
+                  >
                     Email verification
                   </label>
                   <p className="text-xs text-gray-500 mt-0.5">
@@ -1793,7 +1832,10 @@ function BehaviorSection({
                   />
                 </div>
                 <div>
-                  <label htmlFor="allowDuplicates" className="text-sm font-medium">
+                  <label
+                    htmlFor="allowDuplicates"
+                    className="text-sm font-medium"
+                  >
                     Allow duplicate emails
                   </label>
                   <p className="text-xs text-gray-500 mt-0.5">
@@ -1818,7 +1860,10 @@ function BehaviorSection({
                   />
                 </div>
                 <div>
-                  <label htmlFor="enableReferrals" className="text-sm font-medium">
+                  <label
+                    htmlFor="enableReferrals"
+                    className="text-sm font-medium"
+                  >
                     Enable referrals
                   </label>
                   <p className="text-xs text-gray-500 mt-0.5">
@@ -1853,7 +1898,8 @@ function BehaviorSection({
                 />
                 {formData.maxSignups && (
                   <div className="absolute inset-y-0 right-0 flex items-center pr-3 text-xs text-gray-500">
-                    {formData.maxSignups.toLocaleString()} {formData.maxSignups === 1 ? 'signup' : 'signups'}
+                    {formData.maxSignups.toLocaleString()}{' '}
+                    {formData.maxSignups === 1 ? 'signup' : 'signups'}
                   </div>
                 )}
               </div>
@@ -1885,9 +1931,7 @@ function BehaviorSection({
                   }
                   placeholder="e.g., Get 1 month free, Earn 100 points, etc."
                 />
-                <p className="text-xs text-gray-500">
-                  What will users get for referring others?
-                </p>
+                <p className="text-xs text-gray-500">What will users get for referring others?</p>
               </div>
             )}
           </div>
@@ -2062,12 +2106,11 @@ function WaitlistPreview({ formData }: WaitlistPreviewProps) {
     };
     return radiusMap[size] || '0.375rem';
   };
-  
+
   // Determine form layout classes
-  const formLayoutClass = formData.style?.formLayout === 'inline' 
-    ? 'flex flex-wrap gap-4 items-end' 
-    : 'space-y-4';
-    
+  const formLayoutClass =
+    formData.style?.formLayout === 'inline' ? 'flex flex-wrap gap-4 items-end' : 'space-y-4';
+
   // Determine if we should show field labels
   const showLabels = formData.style?.showLabels !== false; // Default to true if not specified
   // Set CSS variables for primary color
@@ -2077,7 +2120,7 @@ function WaitlistPreview({ formData }: WaitlistPreviewProps) {
   } as React.CSSProperties;
 
   return (
-    <div 
+    <div
       className="min-h-screen flex items-center justify-center p-6"
       style={{
         ...style,
@@ -2099,7 +2142,7 @@ function WaitlistPreview({ formData }: WaitlistPreviewProps) {
         </div>
 
         {/* Main content card */}
-        <div 
+        <div
           className="rounded-b-xl shadow-lg overflow-hidden transition-colors duration-200"
           style={{
             backgroundColor: formData.style?.backgroundColor || '#ffffff',
@@ -2107,7 +2150,7 @@ function WaitlistPreview({ formData }: WaitlistPreviewProps) {
           }}
         >
           <div className="px-12 py-16 text-center">
-            <h1 
+            <h1
               className="text-4xl font-bold mb-6 leading-tight"
               style={{
                 color: formData.style?.textColor || '#111827',
@@ -2115,9 +2158,9 @@ function WaitlistPreview({ formData }: WaitlistPreviewProps) {
             >
               {formData.name || 'Join the Waitlist'}
             </h1>
-            
+
             {formData.description ? (
-              <p 
+              <p
                 className="text-lg mb-12 leading-relaxed font-normal"
                 style={{
                   color: formData.style?.textColor ? `${formData.style.textColor}CC` : '#4b5563',
@@ -2126,7 +2169,7 @@ function WaitlistPreview({ formData }: WaitlistPreviewProps) {
                 {formData.description}
               </p>
             ) : (
-              <p 
+              <p
                 className="text-lg mb-12 leading-relaxed font-normal"
                 style={{
                   color: formData.style?.textColor ? `${formData.style.textColor}CC` : '#4b5563',
@@ -2135,13 +2178,17 @@ function WaitlistPreview({ formData }: WaitlistPreviewProps) {
                 Be the first to know when we launch. Early adopters get exclusive perks!
               </p>
             )}
-            
+
             <div className={`mb-8 ${formLayoutClass}`}>
               {/* Email input */}
-              <div className={formData.style?.formLayout === 'inline' ? 'flex-1 min-w-[200px]' : 'w-full'}>
+              <div
+                className={
+                  formData.style?.formLayout === 'inline' ? 'flex-1 min-w-[200px]' : 'w-full'
+                }
+              >
                 {showLabels && (
-                  <label 
-                    htmlFor="email" 
+                  <label
+                    htmlFor="email"
                     className="block text-left mb-2 text-sm font-medium"
                     style={{
                       color: formData.style?.textColor || '#374151',
@@ -2151,41 +2198,52 @@ function WaitlistPreview({ formData }: WaitlistPreviewProps) {
                   </label>
                 )}
                 <div className="relative">
-                  <input 
+                  <input
                     id="email"
-                    type="email" 
+                    type="email"
                     placeholder="Enter your email"
                     className={`w-full px-6 py-4 border rounded-xl text-base transition-all duration-200 focus:outline-none focus:ring-2 placeholder-gray-400 font-normal`}
-                    style={{
-                      backgroundColor: formData.style?.backgroundColor === formData.style?.textColor 
-                        ? '#ffffff' 
-                        : (formData.style?.backgroundColor || '#ffffff'),
-                      color: formData.style?.textColor || '#1f2937',
-                      borderColor: formData.style?.primaryColor ? `${formData.style.primaryColor}40` : '#e5e7eb',
-                      borderWidth: '1px',
-                      borderRadius: formData.style?.buttonRounded ? getBorderRadius(formData.style.buttonRounded as ButtonRounded) : '0.5rem',
-                      '--tw-ring-color': formData.style?.primaryColor || '#3b82f6',
-                      '--tw-ring-opacity': '0.2',
-                      '--tw-ring-offset-shadow': 'var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color)',
-                      '--tw-ring-shadow': 'var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color)',
-                      '--tw-ring-offset-width': '0px',
-                      '--tw-ring-offset-color': '#fff',
-                    } as React.CSSProperties}
+                    style={
+                      {
+                        backgroundColor:
+                          formData.style?.backgroundColor === formData.style?.textColor
+                            ? '#ffffff'
+                            : formData.style?.backgroundColor || '#ffffff',
+                        color: formData.style?.textColor || '#1f2937',
+                        borderColor: formData.style?.primaryColor
+                          ? `${formData.style.primaryColor}40`
+                          : '#e5e7eb',
+                        borderWidth: '1px',
+                        borderRadius: formData.style?.buttonRounded
+                          ? getBorderRadius(formData.style.buttonRounded as ButtonRounded)
+                          : '0.5rem',
+                        '--tw-ring-color': formData.style?.primaryColor || '#3b82f6',
+                        '--tw-ring-opacity': '0.2',
+                        '--tw-ring-offset-shadow':
+                          'var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color)',
+                        '--tw-ring-shadow':
+                          'var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color)',
+                        '--tw-ring-offset-width': '0px',
+                        '--tw-ring-offset-color': '#fff',
+                      } as React.CSSProperties
+                    }
                   />
                   <div className="absolute right-5 top-1/2 transform -translate-y-1/2">
                     <span className="text-xl">🎯</span>
                   </div>
                 </div>
               </div>
-              
+
               {/* Custom fields */}
               {formData.customFields.map((field) => (
-                <div 
-                  key={field.id} 
-                  className={formData.style?.formLayout === 'inline' ? 'flex-1 min-w-[200px]' : 'w-full'}
+                <div
+                  key={field.id}
+                  className={
+                    formData.style?.formLayout === 'inline' ? 'flex-1 min-w-[200px]' : 'w-full'
+                  }
                 >
                   {showLabels && (
-                    <label 
+                    <label
                       htmlFor={field.id}
                       className="block text-left mb-2 text-sm font-medium"
                       style={{
@@ -2201,69 +2259,97 @@ function WaitlistPreview({ formData }: WaitlistPreviewProps) {
                     type={field.type === 'email' ? 'email' : 'text'}
                     placeholder={field.placeholder || field.name}
                     className={`w-full px-6 py-4 border text-base transition-all duration-200 focus:outline-none focus:ring-2 placeholder-gray-400 font-normal`}
-                    style={{
-                      backgroundColor: formData.style?.backgroundColor === formData.style?.textColor 
-                        ? '#ffffff' 
-                        : (formData.style?.backgroundColor || '#ffffff'),
-                      color: formData.style?.textColor || '#1f2937',
-                      borderColor: formData.style?.primaryColor ? `${formData.style.primaryColor}40` : '#e5e7eb',
-                      borderWidth: '1px',
-                      borderRadius: formData.style?.buttonRounded ? getBorderRadius(formData.style.buttonRounded as ButtonRounded) : '0.5rem',
-                      '--tw-ring-color': formData.style?.primaryColor || '#3b82f6',
-                      '--tw-ring-opacity': '0.2',
-                      '--tw-ring-offset-shadow': 'var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color)',
-                      '--tw-ring-shadow': 'var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color)',
-                      '--tw-ring-offset-width': '0px',
-                      '--tw-ring-offset-color': formData.style?.backgroundColor || '#ffffff',
-                    } as React.CSSProperties}
+                    style={
+                      {
+                        backgroundColor:
+                          formData.style?.backgroundColor === formData.style?.textColor
+                            ? '#ffffff'
+                            : formData.style?.backgroundColor || '#ffffff',
+                        color: formData.style?.textColor || '#1f2937',
+                        borderColor: formData.style?.primaryColor
+                          ? `${formData.style.primaryColor}40`
+                          : '#e5e7eb',
+                        borderWidth: '1px',
+                        borderRadius: formData.style?.buttonRounded
+                          ? getBorderRadius(formData.style.buttonRounded as ButtonRounded)
+                          : '0.5rem',
+                        '--tw-ring-color': formData.style?.primaryColor || '#3b82f6',
+                        '--tw-ring-opacity': '0.2',
+                        '--tw-ring-offset-shadow':
+                          'var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color)',
+                        '--tw-ring-shadow':
+                          'var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color)',
+                        '--tw-ring-offset-width': '0px',
+                        '--tw-ring-offset-color': formData.style?.backgroundColor || '#ffffff',
+                      } as React.CSSProperties
+                    }
                   />
                 </div>
               ))}
-              
+
               {/* Join button */}
-              <div className={formData.style?.formLayout === 'inline' ? 'flex-1 min-w-[200px]' : 'w-full'}>
-                <button 
+              <div
+                className={
+                  formData.style?.formLayout === 'inline' ? 'flex-1 min-w-[200px]' : 'w-full'
+                }
+              >
+                <button
                   className={cn(
                     'w-full px-8 py-4 text-base font-semibold cursor-pointer transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-offset-2',
                     {
-                      'bg-[--primary] text-[--primary-foreground] hover:bg-opacity-90': formData.style?.buttonVariant === 'default',
-                      'border border-[--primary] text-[--primary] hover:bg-[--primary] hover:bg-opacity-10': formData.style?.buttonVariant === 'outline',
-                      'bg-secondary text-secondary-foreground': formData.style?.buttonVariant === 'secondary',
-                      'text-[--primary] hover:bg-[--primary] hover:bg-opacity-10': formData.style?.buttonVariant === 'ghost',
-                      'text-[--primary] underline-offset-4 hover:underline p-0': formData.style?.buttonVariant === 'link',
-                    }
+                      'bg-[--primary] text-[--primary-foreground] hover:bg-opacity-90':
+                        formData.style?.buttonVariant === 'default',
+                      'border border-[--primary] text-[--primary] hover:bg-[--primary] hover:bg-opacity-10':
+                        formData.style?.buttonVariant === 'outline',
+                      'bg-secondary text-secondary-foreground':
+                        formData.style?.buttonVariant === 'secondary',
+                      'text-[--primary] hover:bg-[--primary] hover:bg-opacity-10':
+                        formData.style?.buttonVariant === 'ghost',
+                      'text-[--primary] underline-offset-4 hover:underline p-0':
+                        formData.style?.buttonVariant === 'link',
+                    },
                   )}
                   style={{
-                    backgroundColor: formData.style?.buttonVariant === 'default' || formData.style?.buttonVariant === 'secondary' 
-                      ? formData.style?.buttonColor 
-                      : 'transparent',
-                    color: formData.style?.buttonVariant === 'default' || formData.style?.buttonVariant === 'secondary'
-                      ? formData.style?.buttonTextColor
-                      : formData.style?.buttonColor || formData.style?.primaryColor,
-                    borderColor: formData.style?.buttonVariant === 'outline' 
-                      ? formData.style?.buttonColor 
-                      : 'transparent',
-                    borderRadius: formData.style?.buttonRounded ? getBorderRadius(formData.style.buttonRounded as ButtonRounded) : '0.5rem',
+                    backgroundColor:
+                      formData.style?.buttonVariant === 'default' ||
+                      formData.style?.buttonVariant === 'secondary'
+                        ? formData.style?.buttonColor
+                        : 'transparent',
+                    color:
+                      formData.style?.buttonVariant === 'default' ||
+                      formData.style?.buttonVariant === 'secondary'
+                        ? formData.style?.buttonTextColor
+                        : formData.style?.buttonColor || formData.style?.primaryColor,
+                    borderColor:
+                      formData.style?.buttonVariant === 'outline'
+                        ? formData.style?.buttonColor
+                        : 'transparent',
+                    borderRadius: formData.style?.buttonRounded
+                      ? getBorderRadius(formData.style.buttonRounded as ButtonRounded)
+                      : '0.5rem',
                     fontFamily: formData.style?.fontFamily || 'Inter, sans-serif',
                     borderWidth: formData.style?.buttonVariant === 'outline' ? '1px' : '0',
-                    ...(formData.style?.buttonVariant === 'link' ? {
-                      padding: 0,
-                      height: 'auto',
-                      display: 'inline',
-                      width: 'auto',
-                    } : {}),
+                    ...(formData.style?.buttonVariant === 'link'
+                      ? {
+                          padding: 0,
+                          height: 'auto',
+                          display: 'inline',
+                          width: 'auto',
+                        }
+                      : {}),
                   }}
                 >
                   {formData.style?.buttonText || 'Join Waitlist'}
                 </button>
               </div>
             </div>
-            
+
             <div className="space-y-4">
               <p className="text-gray-500 text-base font-normal">
-                Join {formData.maxSignups ? `${formData.maxSignups.toLocaleString()}` : '1,247'} others on the waitlist
+                Join {formData.maxSignups ? `${formData.maxSignups.toLocaleString()}` : '1,247'}{' '}
+                others on the waitlist
               </p>
-              
+
               {formData.showBranding && (
                 <div className="flex items-center justify-center gap-2 text-gray-400 text-sm">
                   <span>Powered by</span>
@@ -2284,4 +2370,3 @@ function setIsTesting(arg0: boolean) {
 function setShowConfirmation(arg0: boolean) {
   throw new Error('Function not implemented.');
 }
-

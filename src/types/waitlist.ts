@@ -1,5 +1,5 @@
-import { WaitlistStatus } from "@prisma/client";
-import { WaitlistFormValues } from "@/lib/validations/waitlist";
+import { WaitlistStatus } from '@prisma/client';
+import { WaitlistFormValues } from '@/lib/validations/waitlist';
 
 export interface Waitlist extends Omit<WaitlistFormValues, 'style' | 'settings'> {
   id: string;

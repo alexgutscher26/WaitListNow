@@ -53,10 +53,10 @@ export async function POST(req: NextRequest) {
 
     // Format subscribers for CSV
     const headers = ['Email', 'Name', 'Status', 'Referral Code', 'Referred By', 'Joined At'];
-    
+
     const csvRows = [];
     csvRows.push(headers.join(','));
-    
+
     for (const sub of subscribers) {
       const row = [
         `"${sub.email}"`,
@@ -86,7 +86,7 @@ export async function POST(req: NextRequest) {
         error: 'Internal server error',
         details: process.env.NODE_ENV === 'development' ? error : undefined,
       }),
-      { status: 500, headers: { 'Content-Type': 'application/json' } }
+      { status: 500, headers: { 'Content-Type': 'application/json' } },
     );
   }
 }

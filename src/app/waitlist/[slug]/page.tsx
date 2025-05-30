@@ -174,7 +174,7 @@ export default async function WaitlistPage({ params }: WaitlistPageProps) {
                 Join{' '}
                 {waitlist.subscriberCount > 0
                   ? waitlist.subscriberCount.toLocaleString()
-                  : '0'}{' '}
+                  : '1,247'}{' '}
                 others on the waitlist
               </p>
 

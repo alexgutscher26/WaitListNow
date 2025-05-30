@@ -9,7 +9,17 @@ import { useQuery, useMutation, useQueryClient, UseQueryResult } from '@tanstack
 import { useToast } from '@/components/ui/use-toast';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSub, DropdownMenuSubTrigger, DropdownMenuPortal, DropdownMenuSubContent, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+  DropdownMenuSub,
+  DropdownMenuSubTrigger,
+  DropdownMenuPortal,
+  DropdownMenuSubContent,
+  DropdownMenuSeparator,
+} from '@/components/ui/dropdown-menu';
 import { DashboardPage } from '@/components/dashboard-page';
 
 // Define the Waitlist type based on the Prisma model
@@ -44,7 +54,10 @@ function WaitlistSkeleton() {
   return (
     <div className="space-y-4">
       {[1, 2, 3].map((i) => (
-        <Card key={i} className="animate-pulse">
+        <Card
+          key={i}
+          className="animate-pulse"
+        >
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div className="space-y-2">
@@ -80,7 +93,7 @@ export default function WaitlistsPage() {
   const { toast } = useToast();
   const router = useRouter();
   const queryClient = useQueryClient();
-  
+
   // Fetch waitlists with proper typing and error handling
   const {
     data: waitlists = [],
@@ -98,9 +111,9 @@ export default function WaitlistsPage() {
         cache: 'no-store',
         credentials: 'include',
       });
-      
+
       console.log('[WaitlistsPage] Response status:', res.status);
-      
+
       if (!res.ok) {
         const errorText = await res.text();
         console.error('[WaitlistsPage] Error response:', errorText);
@@ -111,19 +124,18 @@ export default function WaitlistsPage() {
           errorData = { message: 'Failed to parse error response' };
         }
         throw new Error(
-          errorData.message || 
-          `Failed to fetch waitlists (${res.status} ${res.statusText})`
+          errorData.message || `Failed to fetch waitlists (${res.status} ${res.statusText})`,
         );
       }
-      
+
       const data = await res.json();
       console.log('[WaitlistsPage] Raw API response:', data);
-      
+
       if (!Array.isArray(data)) {
         console.error('[WaitlistsPage] Invalid response format:', data);
         throw new Error('Invalid response format from server: expected an array');
       }
-      
+
       console.log(`[WaitlistsPage] Successfully fetched ${data.length} waitlists`);
       return data;
     },
@@ -132,7 +144,7 @@ export default function WaitlistsPage() {
     retry: 1,
     retryDelay: 1500,
   });
-  
+
   // Delete mutation
   const deleteMutation = useMutation({
     mutationFn: deleteWaitlist,
@@ -203,16 +215,16 @@ export default function WaitlistsPage() {
   // Format date helper with proper type checking
   const formatDate = (dateInput: string | Date | null | undefined): string => {
     if (!dateInput) return 'N/A';
-    
+
     try {
       const date = dateInput instanceof Date ? dateInput : new Date(dateInput);
-      
+
       // Check if date is valid
       if (isNaN(date.getTime())) {
         console.warn('Invalid date provided to formatDate:', dateInput);
         return 'Invalid date';
       }
-      
+
       // Format the date
       return date.toLocaleDateString('en-US', {
         year: 'numeric',
@@ -231,30 +243,33 @@ export default function WaitlistsPage() {
       console.error('[WaitlistsPage] waitlists is not an array:', waitlists);
       return [];
     }
-    
+
     const filtered = waitlists.filter((wl): wl is WaitlistWithCount => {
-      const isValid = wl !== null && 
-        typeof wl === 'object' && 
+      const isValid =
+        wl !== null &&
+        typeof wl === 'object' &&
         'id' in wl &&
         '_count' in wl &&
         wl._count !== null &&
         typeof wl._count === 'object' &&
         'subscribers' in wl._count;
-        
+
       if (!isValid) {
         console.warn('[WaitlistsPage] Invalid waitlist item:', wl);
       }
-      
+
       return isValid;
     });
-    
-    console.log(`[WaitlistsPage] Filtered ${filtered.length} valid waitlists out of ${waitlists.length}`);
+
+    console.log(
+      `[WaitlistsPage] Filtered ${filtered.length} valid waitlists out of ${waitlists.length}`,
+    );
     return filtered;
   })();
-  
+
   const hasWaitlists = safeWaitlists.length > 0;
   console.log(`[WaitlistsPage] hasWaitlists: ${hasWaitlists} (${safeWaitlists.length} waitlists)`);
-  
+
   // Calculate total subscribers safely
   const totalSubscribers = safeWaitlists.reduce<number>((sum, wl) => {
     try {
@@ -265,25 +280,23 @@ export default function WaitlistsPage() {
       return sum;
     }
   }, 0);
-    
+
   // Count active waitlists
-  const activeWaitlists = safeWaitlists.filter(
-    (wl) => wl.status === 'ACTIVE'
-  ).length;
-    
+  const activeWaitlists = safeWaitlists.filter((wl) => wl.status === 'ACTIVE').length;
+
   // Get the most recent update time with proper type checking
   const lastUpdated = (() => {
     if (!hasWaitlists) return formatDate(new Date());
-    
+
     try {
       const sorted = [...safeWaitlists]
-        .filter(wl => wl.updatedAt)
+        .filter((wl) => wl.updatedAt)
         .sort((a, b) => {
           const dateA = a.updatedAt ? new Date(a.updatedAt).getTime() : 0;
           const dateB = b.updatedAt ? new Date(b.updatedAt).getTime() : 0;
           return dateB - dateA;
         });
-      
+
       const mostRecent = sorted[0]?.updatedAt;
       return mostRecent ? formatDate(mostRecent) : formatDate(new Date());
     } catch (error) {
@@ -513,8 +526,11 @@ export default function WaitlistsPage() {
                           <MoreVertical className="h-4 w-4" />
                         </Button>
                       </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end" className="w-48">
-                        <DropdownMenuItem 
+                      <DropdownMenuContent
+                        align="end"
+                        className="w-48"
+                      >
+                        <DropdownMenuItem
                           onClick={(e) => {
                             e.stopPropagation();
                             router.push(`/dashboard/waitlists/${waitlist.id}`);
@@ -523,7 +539,7 @@ export default function WaitlistsPage() {
                           <Eye className="mr-2 h-4 w-4" />
                           View Details
                         </DropdownMenuItem>
-                        <DropdownMenuItem 
+                        <DropdownMenuItem
                           onClick={(e) => {
                             e.stopPropagation();
                             const waitlistUrl = `${window.location.origin}/waitlist/${waitlist.slug}`;
@@ -537,15 +553,21 @@ export default function WaitlistsPage() {
                         <DropdownMenuSub>
                           <DropdownMenuSubTrigger className="cursor-pointer">
                             <span className="flex items-center">
-                              <span className="mr-2 h-2 w-2 rounded-full" 
+                              <span
+                                className="mr-2 h-2 w-2 rounded-full"
                                 style={{
-                                  backgroundColor: 
-                                    waitlist.status === 'ACTIVE' ? '#10B981' : 
-                                    waitlist.status === 'PAUSED' ? '#F59E0B' :
-                                    waitlist.status === 'ARCHIVED' ? '#6B7280' : '#9CA3AF'
+                                  backgroundColor:
+                                    waitlist.status === 'ACTIVE'
+                                      ? '#10B981'
+                                      : waitlist.status === 'PAUSED'
+                                        ? '#F59E0B'
+                                        : waitlist.status === 'ARCHIVED'
+                                          ? '#6B7280'
+                                          : '#9CA3AF',
                                 }}
                               />
-                              Status: {waitlist.status.charAt(0) + waitlist.status.slice(1).toLowerCase()}
+                              Status:{' '}
+                              {waitlist.status.charAt(0) + waitlist.status.slice(1).toLowerCase()}
                             </span>
                           </DropdownMenuSubTrigger>
                           <DropdownMenuPortal>
@@ -562,13 +584,17 @@ export default function WaitlistsPage() {
                                   }}
                                 >
                                   <span className="flex items-center">
-                                    <span 
-                                      className="mr-2 h-2 w-2 rounded-full" 
+                                    <span
+                                      className="mr-2 h-2 w-2 rounded-full"
                                       style={{
-                                        backgroundColor: 
-                                          status === 'ACTIVE' ? '#10B981' : 
-                                          status === 'PAUSED' ? '#F59E0B' :
-                                          status === 'ARCHIVED' ? '#6B7280' : '#9CA3AF'
+                                        backgroundColor:
+                                          status === 'ACTIVE'
+                                            ? '#10B981'
+                                            : status === 'PAUSED'
+                                              ? '#F59E0B'
+                                              : status === 'ARCHIVED'
+                                                ? '#6B7280'
+                                                : '#9CA3AF',
                                       }}
                                     />
                                     {status.charAt(0) + status.slice(1).toLowerCase()}
@@ -579,11 +605,15 @@ export default function WaitlistsPage() {
                           </DropdownMenuPortal>
                         </DropdownMenuSub>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem 
+                        <DropdownMenuItem
                           className="text-destructive"
                           onClick={(e) => {
                             e.stopPropagation();
-                            if (confirm('Are you sure you want to delete this waitlist? This action cannot be undone.')) {
+                            if (
+                              confirm(
+                                'Are you sure you want to delete this waitlist? This action cannot be undone.',
+                              )
+                            ) {
                               deleteMutation.mutate(waitlist.id);
                             }
                           }}

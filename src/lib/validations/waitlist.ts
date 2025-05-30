@@ -34,16 +34,8 @@ export const waitlistSettingsSchema = z.object({
 export const waitlistFormSchema = z.object({
   name: z.string().min(3, 'Name must be at least 3 characters').max(100),
   description: z.string().max(500).optional(),
-  websiteUrl: z
-    .string()
-    .url('Please enter a valid URL')
-    .optional()
-    .or(z.literal('')),
-  redirectUrl: z
-    .string()
-    .url('Please enter a valid URL')
-    .optional()
-    .or(z.literal('')),
+  websiteUrl: z.string().url('Please enter a valid URL').optional().or(z.literal('')),
+  redirectUrl: z.string().url('Please enter a valid URL').optional().or(z.literal('')),
   status: z.enum(['DRAFT', 'ACTIVE', 'PAUSED', 'ARCHIVED']).optional(),
   customFields: z.array(customFieldSchema).default([]),
   style: waitlistStyleSchema.default({}),

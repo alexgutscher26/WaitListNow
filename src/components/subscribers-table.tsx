@@ -3,15 +3,16 @@
 import { useState, useCallback } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { format } from 'date-fns';
-import { 
-  ChevronDown, 
-  MoreHorizontal, 
-  Mail, 
-  RefreshCw, 
-  Copy, 
-  Download, 
-  Check, 
-  X} from 'lucide-react';
+import {
+  ChevronDown,
+  MoreHorizontal,
+  Mail,
+  RefreshCw,
+  Copy,
+  Download,
+  Check,
+  X,
+} from 'lucide-react';
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -81,18 +82,18 @@ interface SubscribersTableProps {
 
 export function SubscribersTable({ waitlistId }: SubscribersTableProps) {
   const queryClient = useQueryClient();
-  
+
   // State for table controls
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState<Record<string, boolean>>({});
-  
+
   // State for delete operations
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [subscriberToDelete, setSubscriberToDelete] = useState<Subscriber | null>(null);
   const [bulkDeleteDialogOpen, setBulkDeleteDialogOpen] = useState(false);
-  
+
   // Pagination state
   const [pagination, setPagination] = useState({
     pageIndex: 0,
@@ -104,7 +105,7 @@ export function SubscribersTable({ waitlistId }: SubscribersTableProps) {
     queryKey: ['subscribers', waitlistId, pagination],
     queryFn: async () => {
       const response = await fetch(
-        `/api/waitlists/${waitlistId}/subscribers?page=${pagination.pageIndex + 1}&limit=${pagination.pageSize}`
+        `/api/waitlists/${waitlistId}/subscribers?page=${pagination.pageIndex + 1}&limit=${pagination.pageSize}`,
       );
       if (!response.ok) {
         throw new Error('Failed to fetch subscribers');
@@ -116,163 +117,178 @@ export function SubscribersTable({ waitlistId }: SubscribersTableProps) {
   const { toast } = useToast();
 
   // Handle resend verification email
-  const handleResendVerification = useCallback(async (email: string) => {
-    try {
-      const response = await fetch('/api/subscribers/resend-verification', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email }),
-      });
+  const handleResendVerification = useCallback(
+    async (email: string) => {
+      try {
+        const response = await fetch('/api/subscribers/resend-verification', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ email }),
+        });
 
-      if (!response.ok) {
-        throw new Error('Failed to resend verification email');
+        if (!response.ok) {
+          throw new Error('Failed to resend verification email');
+        }
+
+        toast({
+          title: 'Email sent',
+          description: 'Verification email has been resent',
+        });
+      } catch (error) {
+        console.error('Error resending verification email:', error);
+        toast({
+          title: 'Error',
+          description: 'Failed to resend verification email',
+          variant: 'destructive',
+        });
       }
-
-      toast({
-        title: 'Email sent',
-        description: 'Verification email has been resent',
-      });
-    } catch (error) {
-      console.error('Error resending verification email:', error);
-      toast({
-        title: 'Error',
-        description: 'Failed to resend verification email',
-        variant: 'destructive',
-      });
-    }
-  }, [toast]);
+    },
+    [toast],
+  );
 
   // Handle update subscriber status
-  const handleUpdateStatus = useCallback(async (id: string, newStatus: 'PENDING' | 'VERIFIED' | 'BOUNCED') => {
-    try {
-      const response = await fetch(`/api/subscribers/${id}`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ status: newStatus }),
-      });
+  const handleUpdateStatus = useCallback(
+    async (id: string, newStatus: 'PENDING' | 'VERIFIED' | 'BOUNCED') => {
+      try {
+        const response = await fetch(`/api/subscribers/${id}`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ status: newStatus }),
+        });
 
-      if (!response.ok) {
-        throw new Error('Failed to update subscriber status');
+        if (!response.ok) {
+          throw new Error('Failed to update subscriber status');
+        }
+
+        await queryClient.invalidateQueries({ queryKey: ['subscribers', waitlistId] });
+
+        toast({
+          title: 'Status updated',
+          description: `Subscriber status updated to ${newStatus.toLowerCase()}`,
+        });
+      } catch (error) {
+        console.error('Error updating subscriber status:', error);
+        toast({
+          title: 'Error',
+          description: 'Failed to update subscriber status',
+          variant: 'destructive',
+        });
       }
-
-      await queryClient.invalidateQueries({ queryKey: ['subscribers', waitlistId] });
-      
-      toast({
-        title: 'Status updated',
-        description: `Subscriber status updated to ${newStatus.toLowerCase()}`,
-      });
-    } catch (error) {
-      console.error('Error updating subscriber status:', error);
-      toast({
-        title: 'Error',
-        description: 'Failed to update subscriber status',
-        variant: 'destructive',
-      });
-    }
-  }, [queryClient, waitlistId, toast]);
+    },
+    [queryClient, waitlistId, toast],
+  );
 
   // Handle copy to clipboard
-  const copyToClipboard = useCallback((text: string, message: string) => {
-    navigator.clipboard.writeText(text);
-    toast({
-      title: 'Copied',
-      description: message,
-    });
-  }, [toast]);
+  const copyToClipboard = useCallback(
+    (text: string, message: string) => {
+      navigator.clipboard.writeText(text);
+      toast({
+        title: 'Copied',
+        description: message,
+      });
+    },
+    [toast],
+  );
 
   // Handle delete subscriber
-  const handleDeleteSubscriber = useCallback(async (id: string) => {
-    try {
-      const response = await fetch(`/api/subscribers/${id}`, {
-        method: 'DELETE',
-      });
+  const handleDeleteSubscriber = useCallback(
+    async (id: string) => {
+      try {
+        const response = await fetch(`/api/subscribers/${id}`, {
+          method: 'DELETE',
+        });
 
-      if (!response.ok) {
-        throw new Error('Failed to delete subscriber');
+        if (!response.ok) {
+          throw new Error('Failed to delete subscriber');
+        }
+
+        // Invalidate the query to refetch the data
+        await queryClient.invalidateQueries({ queryKey: ['subscribers', waitlistId] });
+
+        toast({
+          title: 'Success',
+          description: 'Subscriber deleted successfully',
+        });
+      } catch (error) {
+        console.error('Error deleting subscriber:', error);
+        toast({
+          title: 'Error',
+          description: 'Failed to delete subscriber',
+          variant: 'destructive',
+        });
+      } finally {
+        setSubscriberToDelete(null);
+        setDeleteDialogOpen(false);
       }
-
-      // Invalidate the query to refetch the data
-      await queryClient.invalidateQueries({ queryKey: ['subscribers', waitlistId] });
-      
-      toast({
-        title: 'Success',
-        description: 'Subscriber deleted successfully',
-      });
-    } catch (error) {
-      console.error('Error deleting subscriber:', error);
-      toast({
-        title: 'Error',
-        description: 'Failed to delete subscriber',
-        variant: 'destructive',
-      });
-    } finally {
-      setSubscriberToDelete(null);
-      setDeleteDialogOpen(false);
-    }
-  }, [queryClient, waitlistId]);
+    },
+    [queryClient, waitlistId],
+  );
 
   // Handle export subscribers
-  const handleExportSubscribers = useCallback(async (selectedOnly = false) => {
-    try {
-      const selectedIds = selectedOnly 
-        ? Object.keys(rowSelection).filter(key => rowSelection[key] as boolean)
-        : [];
+  const handleExportSubscribers = useCallback(
+    async (selectedOnly = false) => {
+      try {
+        const selectedIds = selectedOnly
+          ? Object.keys(rowSelection).filter((key) => rowSelection[key] as boolean)
+          : [];
 
-      const response = await fetch('/api/subscribers/export', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          waitlistId,
-          subscriberIds: selectedOnly ? selectedIds : undefined,
-        }),
-      });
+        const response = await fetch('/api/subscribers/export', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            waitlistId,
+            subscriberIds: selectedOnly ? selectedIds : undefined,
+          }),
+        });
 
-      if (!response.ok) {
-        throw new Error('Failed to export subscribers');
+        if (!response.ok) {
+          throw new Error('Failed to export subscribers');
+        }
+
+        // Create a download link for the CSV file
+        const blob = await response.blob();
+        const contentDisposition = response.headers.get('content-disposition');
+        const filenameMatch = contentDisposition?.match(/filename="?([^"]+)"?/);
+        const filename = filenameMatch
+          ? filenameMatch[1]
+          : `subscribers-${new Date().toISOString().split('T')[0]}.csv`;
+
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        a.remove();
+
+        toast({
+          title: 'Export successful',
+          description: selectedOnly
+            ? `Exported ${selectedIds.length} subscribers`
+            : 'Exported all subscribers',
+        });
+      } catch (error) {
+        console.error('Error exporting subscribers:', error);
+        toast({
+          title: 'Export failed',
+          description: 'Failed to export subscribers',
+          variant: 'destructive',
+        });
       }
-
-      // Create a download link for the CSV file
-      const blob = await response.blob();
-      const contentDisposition = response.headers.get('content-disposition');
-      const filenameMatch = contentDisposition?.match(/filename="?([^"]+)"?/);
-      const filename = filenameMatch ? filenameMatch[1] : `subscribers-${new Date().toISOString().split('T')[0]}.csv`;
-      
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = filename;
-      document.body.appendChild(a);
-      a.click();
-      window.URL.revokeObjectURL(url);
-      a.remove();
-
-      toast({
-        title: 'Export successful',
-        description: selectedOnly 
-          ? `Exported ${selectedIds.length} subscribers`
-          : 'Exported all subscribers',
-      });
-    } catch (error) {
-      console.error('Error exporting subscribers:', error);
-      toast({
-        title: 'Export failed',
-        description: 'Failed to export subscribers',
-        variant: 'destructive',
-      });
-    }
-  }, [rowSelection, waitlistId, toast]);
+    },
+    [rowSelection, waitlistId, toast],
+  );
 
   // Handle bulk delete
   const handleBulkDelete = useCallback(async () => {
-    const selectedIds = Object.keys(rowSelection).filter(
-      (key) => rowSelection[key]
-    );
+    const selectedIds = Object.keys(rowSelection).filter((key) => rowSelection[key]);
 
     if (selectedIds.length === 0) {
       toast({
@@ -300,13 +316,13 @@ export function SubscribersTable({ waitlistId }: SubscribersTableProps) {
 
       // Invalidate the query to refetch the data
       await queryClient.invalidateQueries({ queryKey: ['subscribers', waitlistId] });
-      
+
       // Clear row selection
       setRowSelection({});
       setBulkDeleteDialogOpen(false);
-      
+
       const result = await response.json();
-      
+
       toast({
         title: 'Success',
         description: `Deleted ${result.deletedCount} subscribers`,
@@ -372,26 +388,20 @@ export function SubscribersTable({ waitlistId }: SubscribersTableProps) {
       accessorKey: 'referralCode',
       header: 'Referral Code',
       cell: ({ row }) => (
-        <div className="font-mono text-sm">
-          {row.getValue('referralCode') || '-'}
-        </div>
+        <div className="font-mono text-sm">{row.getValue('referralCode') || '-'}</div>
       ),
     },
     {
       accessorKey: 'referredBy',
       header: 'Referred By',
       cell: ({ row }) => (
-        <div className="font-mono text-sm">
-          {row.getValue('referredBy') || '-'}
-        </div>
+        <div className="font-mono text-sm">{row.getValue('referredBy') || '-'}</div>
       ),
     },
     {
       accessorKey: 'createdAt',
       header: 'Joined',
-      cell: ({ row }) => (
-        <div>{format(new Date(row.getValue('createdAt')), 'MMM d, yyyy')}</div>
-      ),
+      cell: ({ row }) => <div>{format(new Date(row.getValue('createdAt')), 'MMM d, yyyy')}</div>,
     },
     {
       id: 'actions',
@@ -401,22 +411,28 @@ export function SubscribersTable({ waitlistId }: SubscribersTableProps) {
         return (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="h-8 w-8 p-0">
+              <Button
+                variant="ghost"
+                className="h-8 w-8 p-0"
+              >
                 <span className="sr-only">Open menu</span>
                 <MoreHorizontal className="h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-56">
+            <DropdownMenuContent
+              align="end"
+              className="w-56"
+            >
               <DropdownMenuLabel>Subscriber Actions</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              
-              <DropdownMenuItem 
+
+              <DropdownMenuItem
                 onClick={() => copyToClipboard(subscriber.email, 'Email copied to clipboard')}
               >
                 <Copy className="mr-2 h-4 w-4" />
                 <span>Copy email</span>
               </DropdownMenuItem>
-              
+
               <DropdownMenuItem
                 onClick={() => handleResendVerification(subscriber.email)}
                 disabled={subscriber.status === 'VERIFIED'}
@@ -424,7 +440,7 @@ export function SubscribersTable({ waitlistId }: SubscribersTableProps) {
                 <Mail className="mr-2 h-4 w-4" />
                 <span>Resend verification</span>
               </DropdownMenuItem>
-              
+
               <DropdownMenuSub>
                 <DropdownMenuSubTrigger>
                   <RefreshCw className="mr-2 h-4 w-4" />
@@ -432,7 +448,7 @@ export function SubscribersTable({ waitlistId }: SubscribersTableProps) {
                 </DropdownMenuSubTrigger>
                 <DropdownMenuPortal>
                   <DropdownMenuSubContent>
-                    <DropdownMenuItem 
+                    <DropdownMenuItem
                       onClick={() => handleUpdateStatus(subscriber.id, 'PENDING')}
                       className={subscriber.status === 'PENDING' ? 'bg-accent' : ''}
                     >
@@ -441,7 +457,7 @@ export function SubscribersTable({ waitlistId }: SubscribersTableProps) {
                         <span>Pending</span>
                       </span>
                     </DropdownMenuItem>
-                    <DropdownMenuItem 
+                    <DropdownMenuItem
                       onClick={() => handleUpdateStatus(subscriber.id, 'VERIFIED')}
                       className={subscriber.status === 'VERIFIED' ? 'bg-accent' : ''}
                     >
@@ -450,7 +466,7 @@ export function SubscribersTable({ waitlistId }: SubscribersTableProps) {
                         <span>Verified</span>
                       </span>
                     </DropdownMenuItem>
-                    <DropdownMenuItem 
+                    <DropdownMenuItem
                       onClick={() => handleUpdateStatus(subscriber.id, 'BOUNCED')}
                       className={subscriber.status === 'BOUNCED' ? 'bg-accent' : ''}
                     >
@@ -462,9 +478,10 @@ export function SubscribersTable({ waitlistId }: SubscribersTableProps) {
                   </DropdownMenuSubContent>
                 </DropdownMenuPortal>
               </DropdownMenuSub>
-              
+
               <DropdownMenuSeparator />
-              <DropdownMenuItem className="text-red-600"
+              <DropdownMenuItem
+                className="text-red-600"
                 onClick={() => {
                   setSubscriberToDelete(subscriber);
                   setDeleteDialogOpen(true);
@@ -511,9 +528,7 @@ export function SubscribersTable({ waitlistId }: SubscribersTableProps) {
           <Input
             placeholder="Filter subscribers..."
             value={(table.getColumn('email')?.getFilterValue() as string) ?? ''}
-            onChange={(event) =>
-              table.getColumn('email')?.setFilterValue(event.target.value)
-            }
+            onChange={(event) => table.getColumn('email')?.setFilterValue(event.target.value)}
             className="max-w-sm"
           />
         </div>
@@ -529,8 +544,8 @@ export function SubscribersTable({ waitlistId }: SubscribersTableProps) {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuItem 
-                  onClick={() => handleExportSubscribers(true)} 
+                <DropdownMenuItem
+                  onClick={() => handleExportSubscribers(true)}
                   disabled={Object.keys(rowSelection).length === 0}
                 >
                   <span>Export selected ({Object.keys(rowSelection).length})</span>
@@ -552,7 +567,10 @@ export function SubscribersTable({ waitlistId }: SubscribersTableProps) {
           </div>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="ml-auto">
+              <Button
+                variant="outline"
+                className="ml-auto"
+              >
                 <MoreHorizontal className="mr-2 h-4 w-4" />
                 <span>View</span>
                 <ChevronDown className="ml-2 h-4 w-4" />
@@ -573,9 +591,7 @@ export function SubscribersTable({ waitlistId }: SubscribersTableProps) {
                           key={column.id}
                           className="capitalize"
                           checked={column.getIsVisible()}
-                          onCheckedChange={(value) =>
-                            column.toggleVisibility(!!value)
-                          }
+                          onCheckedChange={(value) => column.toggleVisibility(!!value)}
                         >
                           {column.id}
                         </DropdownMenuCheckboxItem>
@@ -583,7 +599,7 @@ export function SubscribersTable({ waitlistId }: SubscribersTableProps) {
                   </DropdownMenuSubContent>
                 </DropdownMenuPortal>
               </DropdownMenuSub>
-              <DropdownMenuItem 
+              <DropdownMenuItem
                 onClick={() => {
                   // Export all subscribers logic
                   toast({
@@ -608,10 +624,7 @@ export function SubscribersTable({ waitlistId }: SubscribersTableProps) {
                   <TableHead key={header.id}>
                     {header.isPlaceholder
                       ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
+                      : flexRender(header.column.columnDef.header, header.getContext())}
                   </TableHead>
                 ))}
               </TableRow>
@@ -626,10 +639,7 @@ export function SubscribersTable({ waitlistId }: SubscribersTableProps) {
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </TableCell>
                   ))}
                 </TableRow>
@@ -649,7 +659,7 @@ export function SubscribersTable({ waitlistId }: SubscribersTableProps) {
       </div>
       <div className="flex items-center justify-end space-x-2 py-4">
         <div className="flex-1 text-sm text-muted-foreground">
-          {table.getFilteredSelectedRowModel().rows.length} of{" "}
+          {table.getFilteredSelectedRowModel().rows.length} of{' '}
           {table.getFilteredRowModel().rows.length} row(s) selected.
         </div>
         <div className="space-x-2">
@@ -681,16 +691,14 @@ export function SubscribersTable({ waitlistId }: SubscribersTableProps) {
           <AlertDialogHeader>
             <AlertDialogTitle>Are you sure?</AlertDialogTitle>
             <AlertDialogDescription>
-              This will permanently delete the subscriber and all associated data.
-              This action cannot be undone.
+              This will permanently delete the subscriber and all associated data. This action
+              cannot be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction
-              onClick={() =>
-                subscriberToDelete && handleDeleteSubscriber(subscriberToDelete.id)
-              }
+              onClick={() => subscriberToDelete && handleDeleteSubscriber(subscriberToDelete.id)}
               className="bg-red-600 hover:bg-red-700"
             >
               Delete
@@ -708,8 +716,8 @@ export function SubscribersTable({ waitlistId }: SubscribersTableProps) {
           <AlertDialogHeader>
             <AlertDialogTitle>Are you sure?</AlertDialogTitle>
             <AlertDialogDescription>
-              This will permanently delete the selected subscribers and all
-              associated data. This action cannot be undone.
+              This will permanently delete the selected subscribers and all associated data. This
+              action cannot be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

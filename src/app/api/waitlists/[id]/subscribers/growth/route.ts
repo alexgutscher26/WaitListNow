@@ -12,14 +12,11 @@ interface RouteParams {
   params: { id: string };
 }
 
-export async function GET(
-  request: Request,
-  { params }: RouteParams
-) {
+export async function GET(request: Request, { params }: RouteParams) {
   try {
     const { id } = params;
     const { userId } = auth();
-    
+
     if (!userId) {
       return new NextResponse('Unauthorized', { status: 401 });
     }
@@ -65,41 +62,41 @@ export async function GET(
     const initialCount = await db.subscriber.count({
       where: {
         waitlistId: id,
-        createdAt: { lt: startDate }
-      }
+        createdAt: { lt: startDate },
+      },
     });
 
     // Generate data points for all days in the range, even if there are no subscribers
     const dateMap = new Map<string, number>();
     const currentDate = new Date(startDate);
-    
+
     while (currentDate <= endDate) {
       const dateStr = currentDate.toISOString().split('T')[0];
       dateMap.set(dateStr, 0);
       currentDate.setDate(currentDate.getDate() + 1);
     }
-    
+
     // Fill in the actual counts
-    dailyCounts.forEach(item => {
+    dailyCounts.forEach((item) => {
       const dateStr = new Date(item.date).toISOString().split('T')[0];
       dateMap.set(dateStr, Number(item.count));
     });
-    
+
     // Convert to array and calculate cumulative
     let runningTotal = initialCount;
     const result: SubscriberGrowthData[] = [];
-    
+
     // Sort dates in ascending order
-    const sortedDates = Array.from(dateMap.entries()).sort((a, b) => 
-      new Date(a[0]).getTime() - new Date(b[0]).getTime()
+    const sortedDates = Array.from(dateMap.entries()).sort(
+      (a, b) => new Date(a[0]).getTime() - new Date(b[0]).getTime(),
     );
-    
+
     for (const [date, count] of sortedDates) {
       runningTotal += count;
       result.push({
         date,
         count,
-        cumulative: runningTotal
+        cumulative: runningTotal,
       });
     }
 

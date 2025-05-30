@@ -25,10 +25,14 @@ export default function VerificationSuccess() {
         </div>
         <h1 className="text-2xl font-bold text-gray-900">Email Verified Successfully!</h1>
         <p className="text-gray-600">
-          Thank you for verifying your email address. You can now access all the features of our platform.
+          Thank you for verifying your email address. You can now access all the features of our
+          platform.
         </p>
         <div className="pt-4">
-          <Button asChild className="w-full">
+          <Button
+            asChild
+            className="w-full"
+          >
             <Link href="/dashboard">Go to Dashboard</Link>
           </Button>
         </div>

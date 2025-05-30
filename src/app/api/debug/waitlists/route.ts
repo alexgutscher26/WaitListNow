@@ -12,7 +12,7 @@ export async function GET() {
 
     // Get database connection info
     const dbInfo = await db.$queryRaw`SELECT current_database(), current_user, version()`;
-    
+
     // Get all waitlists with subscriber counts
     const waitlists = await db.waitlist.findMany({
       select: {
@@ -53,12 +53,15 @@ export async function GET() {
   } catch (error) {
     console.error('Error in debug endpoint:', error);
     return NextResponse.json(
-      { 
+      {
         error: 'Debug endpoint error',
         message: error instanceof Error ? error.message : 'Unknown error',
-        stack: process.env.NODE_ENV === 'development' && error instanceof Error ? error.stack : undefined,
+        stack:
+          process.env.NODE_ENV === 'development' && error instanceof Error
+            ? error.stack
+            : undefined,
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

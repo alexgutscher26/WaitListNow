@@ -19,10 +19,7 @@ import { useEffect, useState } from 'react';
 /**
  * Renders a command button that opens a dialog with a list of pages.
  */
-export function CommandButton({
-  className,
-  ...props
-}: React.HTMLAttributes<HTMLButtonElement>) {
+export function CommandButton({ className, ...props }: React.HTMLAttributes<HTMLButtonElement>) {
   const { open, setOpen, pages } = useCommandMenu();
   const router = useRouter();
   const [isMounted, setIsMounted] = useState(false);

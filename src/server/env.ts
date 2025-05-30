@@ -18,10 +18,6 @@ const envSchema = z.object({
   STRIPE_SECRET_KEY: z.string().min(1, 'STRIPE_SECRET_KEY is required'),
   STRIPE_WEBHOOK_SECRET: z.string().min(1, 'STRIPE_WEBHOOK_SECRET is required'),
 
-  // Sentry
-  SENTRY_DSN: z.string().url('Invalid Sentry DSN'),
-  NEXT_PUBLIC_SENTRY_DSN: z.string().url('Invalid public Sentry DSN'),
-
   // Application
   NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
   VERCEL_URL: z.string().optional(),
@@ -32,6 +28,13 @@ const envSchema = z.object({
 
   // Next.js Runtime
   NEXT_RUNTIME: z.enum(['nodejs', 'edge', 'client']).optional(),
+
+  // AI
+  OPENAI_API_KEY: z.string().min(1, 'OPENAI_API_KEY is required'),
+  CLAUDE_API_KEY: z.string().min(1, 'CLAUDE_API_KEY is required'),
+
+  // Email
+  RESEND_API_KEY: z.string().min(1, 'RESEND_API_KEY is required'),
 });
 
 /**

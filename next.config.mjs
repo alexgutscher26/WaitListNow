@@ -26,22 +26,6 @@ const nextConfig = {
   env: {
     NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000',
   },
-  // Sentry configuration - only in production
-  ...(process.env.SENTRY_DSN && process.env.NODE_ENV === 'production'
-    ? {
-        sentry: {
-          disableServerWebpackPlugin: false,
-          disableClientWebpackPlugin: false,
-          hideSourceMaps: false,
-        },
-      }
-    : {}),
 };
 
-// Conditionally use Sentry configuration if SENTRY_DSN is set
-const withSentry =
-  process.env.SENTRY_DSN && process.env.NODE_ENV === 'production'
-    ? require('@sentry/nextjs').withSentryConfig
-    : (config) => config;
-
-export default withSentry(nextConfig);
+export default nextConfig;

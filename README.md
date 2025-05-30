@@ -130,7 +130,6 @@ WaitListNow/
 - **State Management**: [React Query](https://tanstack.com/query)
 - **Form Handling**: [React Hook Form](https://react-hook-form.com/) with [Zod](https://zod.dev/)
 - **Email**: [React Email](https://react.email/) with [Resend](https://resend.com/)
-- **Monitoring**: [Sentry](https://sentry.io/)
 - **Payments**: [Stripe](https://stripe.com/)
 - **Deployment**: [Vercel](https://vercel.com/)
 
@@ -138,7 +137,7 @@ WaitListNow/
 
 Deploy your waitlist application to Vercel with one click:
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Falexgutscher26%2FWaitListNow&env=DATABASE_URL,NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY,CLERK_SECRET_KEY,NEXT_PUBLIC_APP_URL,STRIPE_SECRET_KEY,NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,NEXT_PUBLIC_SENTRY_DSN&project-name=waitlistnow&repository-name=waitlistnow)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Falexgutscher26%2FWaitListNow&env=DATABASE_URL,NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY,CLERK_SECRET_KEY,NEXT_PUBLIC_APP_URL,STRIPE_SECRET_KEY,NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY&project-name=waitlistnow&repository-name=waitlistnow)
 
 ## 🤝 Contributing
 

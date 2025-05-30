@@ -2132,9 +2132,9 @@ function WaitlistPreview({ formData }: WaitlistPreviewProps) {
         {/* Browser-style header */}
         <div className="bg-gray-200 rounded-t-xl px-4 py-3 flex items-center space-x-3">
           <div className="flex space-x-2">
-            <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-            <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
-            <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+            <div className="w-3 h-3 bg-red-500 rounded-full" />
+            <div className="w-3 h-3 bg-yellow-500 rounded-full" />
+            <div className="w-3 h-3 bg-green-500 rounded-full" />
           </div>
           <div className="flex-1 text-center">
             <span className="text-gray-700 text-sm font-normal">waitlist.yourdomain.com</span>
@@ -2202,7 +2202,9 @@ function WaitlistPreview({ formData }: WaitlistPreviewProps) {
                     id="email"
                     type="email"
                     placeholder="Enter your email"
-                    className={`w-full px-6 py-4 border rounded-xl text-base transition-all duration-200 focus:outline-none focus:ring-2 placeholder-gray-400 font-normal`}
+                    className={
+                      'w-full px-6 py-4 border rounded-xl text-base transition-all duration-200 focus:outline-none focus:ring-2 placeholder-gray-400 font-normal'
+                    }
                     style={
                       {
                         backgroundColor:
@@ -2258,7 +2260,9 @@ function WaitlistPreview({ formData }: WaitlistPreviewProps) {
                     id={field.id}
                     type={field.type === 'email' ? 'email' : 'text'}
                     placeholder={field.placeholder || field.name}
-                    className={`w-full px-6 py-4 border text-base transition-all duration-200 focus:outline-none focus:ring-2 placeholder-gray-400 font-normal`}
+                    className={
+                      'w-full px-6 py-4 border text-base transition-all duration-200 focus:outline-none focus:ring-2 placeholder-gray-400 font-normal'
+                    }
                     style={
                       {
                         backgroundColor:

@@ -129,9 +129,9 @@ export default async function WaitlistPage({ params }: WaitlistPageProps) {
           {/* Browser-style header */}
           <div className="bg-gray-200 rounded-t-xl px-4 py-3 flex items-center space-x-3">
             <div className="flex space-x-2">
-              <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-              <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
-              <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+              <div className="w-3 h-3 bg-red-500 rounded-full" />
+              <div className="w-3 h-3 bg-yellow-500 rounded-full" />
+              <div className="w-3 h-3 bg-green-500 rounded-full" />
             </div>
             <div className="flex-1 text-center">
               <span className="text-gray-700 text-sm font-normal">waitlist.yourdomain.com</span>

@@ -31,7 +31,10 @@ export const NavbarClient = () => {
     <nav className="sticky z-[100] h-16 inset-x-0 top-0 w-full border-b border-gray-200 bg-white/80 backdrop-blur-lg transition-all">
       <MaxWidthWrapper>
         <div className="flex h-16 items-center justify-between">
-          <Link href="/" className="flex z-40 font-semibold">
+          <Link
+            href="/"
+            className="flex z-40 font-semibold"
+          >
             Waitlist<span className="text-brand-700">Now</span>
           </Link>
 
@@ -39,7 +42,10 @@ export const NavbarClient = () => {
             {isSignedIn ? (
               <>
                 <SignOutButton>
-                  <Button size="sm" variant="ghost">
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                  >
                     Sign out
                   </Button>
                 </SignOutButton>

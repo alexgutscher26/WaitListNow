@@ -71,8 +71,10 @@ export default function EditWaitlistPage() {
   const router = useRouter();
   const params = useParams();
   const waitlistId = params.id as string;
-  
-  const [activeTab, setActiveTab] = useState<'basic' | 'fields' | 'appearance' | 'behavior'>('basic');
+
+  const [activeTab, setActiveTab] = useState<'basic' | 'fields' | 'appearance' | 'behavior'>(
+    'basic',
+  );
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
@@ -119,7 +121,7 @@ export default function EditWaitlistPage() {
           throw new Error('Failed to fetch waitlist');
         }
         const data = await response.json();
-        
+
         // Transform the API data to match our form data structure
         setFormData({
           name: data.name,
@@ -147,7 +149,8 @@ export default function EditWaitlistPage() {
           },
           settings: {
             confirmationType: data.settings?.confirmationType || 'message',
-            confirmationMessage: data.settings?.confirmationMessage || 'Thanks for joining the waitlist!',
+            confirmationMessage:
+              data.settings?.confirmationMessage || 'Thanks for joining the waitlist!',
             redirectUrl: data.settings?.redirectUrl || '',
             requireEmailVerification: data.settings?.requireEmailVerification || false,
             enableReferrals: data.settings?.enableReferrals || false,
@@ -167,72 +170,75 @@ export default function EditWaitlistPage() {
     }
   }, [waitlistId]);
 
-  const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    const { name, value, type } = e.target as HTMLInputElement;
-    
-    setFormData(prev => ({
-      ...prev,
-      [name]: type === 'checkbox' ? (e.target as HTMLInputElement).checked : value,
-    }));
-  }, []);
+  const handleChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+      const { name, value, type } = e.target as HTMLInputElement;
+
+      setFormData((prev) => ({
+        ...prev,
+        [name]: type === 'checkbox' ? (e.target as HTMLInputElement).checked : value,
+      }));
+    },
+    [],
+  );
 
   const handleStyleChange = useCallback((name: string, value: any) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       style: {
         ...prev.style,
-        [name]: value
-      }
+        [name]: value,
+      },
     }));
   }, []);
 
   const handleSettingsChange = useCallback((name: string, value: any) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       settings: {
         ...prev.settings,
-        [name]: value
-      }
+        [name]: value,
+      },
     }));
   }, []);
 
   const addCustomField = useCallback((field: Omit<CustomField, 'id'>) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       customFields: [
         ...prev.customFields,
         {
           ...field,
-          id: `field-${Date.now()}`
-        }
-      ]
+          id: `field-${Date.now()}`,
+        },
+      ],
     }));
   }, []);
 
   const updateCustomField = useCallback((id: string, updates: Partial<CustomField>) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      customFields: prev.customFields.map(field => 
-        field.id === id ? { ...field, ...updates } : field
-      )
+      customFields: prev.customFields.map((field) =>
+        field.id === id ? { ...field, ...updates } : field,
+      ),
     }));
   }, []);
 
   const removeCustomField = useCallback((id: string) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      customFields: prev.customFields.filter(field => field.id !== id)
+      customFields: prev.customFields.filter((field) => field.id !== id),
     }));
   }, []);
 
   const reorderCustomFields = useCallback((dragIndex: number, dropIndex: number) => {
-    setFormData(prev => {
+    setFormData((prev) => {
       const newFields = [...prev.customFields];
       const [removed] = newFields.splice(dragIndex, 1);
       newFields.splice(dropIndex, 0, removed);
       return {
         ...prev,
-        customFields: newFields
+        customFields: newFields,
       };
     });
   }, []);
@@ -266,12 +272,18 @@ export default function EditWaitlistPage() {
 
   const getBorderRadius = (size: ButtonRounded) => {
     switch (size) {
-      case 'none': return '0';
-      case 'sm': return '0.25rem';
-      case 'md': return '0.375rem';
-      case 'lg': return '0.5rem';
-      case 'full': return '9999px';
-      default: return '0.375rem';
+      case 'none':
+        return '0';
+      case 'sm':
+        return '0.25rem';
+      case 'md':
+        return '0.375rem';
+      case 'lg':
+        return '0.5rem';
+      case 'full':
+        return '9999px';
+      default:
+        return '0.375rem';
     }
   };
 
@@ -297,7 +309,12 @@ export default function EditWaitlistPage() {
           >
             Preview
           </Button>
-          <Button size="sm" type="submit" form="waitlist-form" disabled={isSaving}>
+          <Button
+            size="sm"
+            type="submit"
+            form="waitlist-form"
+            disabled={isSaving}
+          >
             {isSaving ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -310,25 +327,37 @@ export default function EditWaitlistPage() {
         </div>
       }
     >
-      <form id="waitlist-form" onSubmit={handleSubmit} className="space-y-8">
-        <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as any)}>
+      <form
+        id="waitlist-form"
+        onSubmit={handleSubmit}
+        className="space-y-8"
+      >
+        <Tabs
+          value={activeTab}
+          onValueChange={(v) => setActiveTab(v as any)}
+        >
           <TabsList className="w-full justify-start overflow-x-auto">
             <TabsTrigger value="basic">Basic Info</TabsTrigger>
             <TabsTrigger value="fields">Custom Fields</TabsTrigger>
-            <TabsTrigger id="appearance-tab" value="appearance">Appearance</TabsTrigger>
+            <TabsTrigger
+              id="appearance-tab"
+              value="appearance"
+            >
+              Appearance
+            </TabsTrigger>
             <TabsTrigger value="behavior">Behavior</TabsTrigger>
           </TabsList>
 
           <div className="mt-6">
             <TabsContent value="basic">
-              <BasicInfoSection 
+              <BasicInfoSection
                 formData={formData}
                 onChange={handleChange}
               />
             </TabsContent>
 
             <TabsContent value="fields">
-              <CustomFieldsSection 
+              <CustomFieldsSection
                 formData={formData}
                 onAddField={addCustomField}
                 onUpdateField={updateCustomField}
@@ -338,7 +367,7 @@ export default function EditWaitlistPage() {
             </TabsContent>
 
             <TabsContent value="appearance">
-              <AppearanceSection 
+              <AppearanceSection
                 formData={formData}
                 onStyleChange={handleStyleChange}
                 getBorderRadius={getBorderRadius}
@@ -346,7 +375,7 @@ export default function EditWaitlistPage() {
             </TabsContent>
 
             <TabsContent value="behavior">
-              <BehaviorSection 
+              <BehaviorSection
                 formData={formData}
                 onSettingsChange={handleSettingsChange}
               />
@@ -362,16 +391,16 @@ export default function EditWaitlistPage() {
             <div className="p-6 border-b border-gray-200 dark:border-gray-800 flex justify-between items-center">
               <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Waitlist Preview</h2>
               <div className="flex items-center gap-2">
-                <Button 
-                  variant="outline" 
-                  size="sm" 
+                <Button
+                  variant="outline"
+                  size="sm"
                   onClick={() => setShowPreview(false)}
                   className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
                 >
                   Close
                 </Button>
-                <Button 
-                  variant="default" 
+                <Button
+                  variant="default"
                   size="sm"
                   onClick={() => {
                     // Scroll to the appearance tab when clicking "Customize"
@@ -379,7 +408,9 @@ export default function EditWaitlistPage() {
                     setShowPreview(false);
                     // Small delay to ensure tab is active before scrolling
                     setTimeout(() => {
-                      document.getElementById('appearance-tab')?.scrollIntoView({ behavior: 'smooth' });
+                      document
+                        .getElementById('appearance-tab')
+                        ?.scrollIntoView({ behavior: 'smooth' });
                     }, 100);
                   }}
                 >
@@ -387,7 +418,10 @@ export default function EditWaitlistPage() {
                 </Button>
               </div>
             </div>
-            <div className="p-8 overflow-auto" style={{ maxHeight: 'calc(90vh - 80px)' }}>
+            <div
+              className="p-8 overflow-auto"
+              style={{ maxHeight: 'calc(90vh - 80px)' }}
+            >
               <div className="flex justify-center">
                 <div className="w-full max-w-md">
                   <WaitlistPreview formData={formData} />
@@ -395,7 +429,9 @@ export default function EditWaitlistPage() {
               </div>
               <div className="mt-8 text-center text-sm text-gray-500 dark:text-gray-400">
                 <p>This is a preview of how your waitlist will appear to visitors.</p>
-                <p className="mt-1">Changes are saved automatically when you click outside the preview.</p>
+                <p className="mt-1">
+                  Changes are saved automatically when you click outside the preview.
+                </p>
               </div>
             </div>
           </div>

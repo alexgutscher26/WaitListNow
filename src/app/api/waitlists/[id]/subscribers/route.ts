@@ -32,10 +32,7 @@ const log = (...args: any[]) => isDev && console.log('[Waitlist Subscribers API]
 
 // GET /api/waitlists/[id]/subscribers - Get subscribers for a specific waitlist
 // POST /api/waitlists/[id]/subscribers - Add a new subscriber to a waitlist
-export async function POST(
-  req: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function POST(req: NextRequest, { params }: { params: { id: string } }) {
   try {
     // Get the waitlist ID from the URL parameters
     const waitlistId = params.id;
@@ -59,7 +56,7 @@ export async function POST(
     // Check if email already exists for this waitlist if duplicates are not allowed
     const settings = getWaitlistSettings(waitlist.settings);
     const allowDuplicates = settings.allowDuplicates === true;
-    
+
     if (!allowDuplicates) {
       const existingSubscriber = await db.subscriber.findFirst({
         where: {
@@ -97,7 +94,7 @@ export async function POST(
     return NextResponse.json(subscriber);
   } catch (error) {
     console.error('[WAITLIST_SUBSCRIBER_POST]', error);
-    
+
     if (error instanceof z.ZodError) {
       return new NextResponse(JSON.stringify({ errors: error.errors }), {
         status: 422,
@@ -110,15 +107,12 @@ export async function POST(
         error: 'Internal server error',
         details: process.env.NODE_ENV === 'development' ? error : undefined,
       }),
-      { status: 500, headers: { 'Content-Type': 'application/json' } }
+      { status: 500, headers: { 'Content-Type': 'application/json' } },
     );
   }
 }
 
-export async function GET(
-  req: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
   try {
     // Verify authentication
     const { userId } = getAuth(req);
@@ -222,30 +216,30 @@ export async function GET(
   } catch (error) {
     console.error('[WAITLISTS_GET_SUBSCRIBERS]', error);
     log('Error details:', error);
-    
+
     if (error instanceof Error) {
       log('Error stack:', error.stack);
       return new NextResponse(
-        JSON.stringify({ 
+        JSON.stringify({
           error: error.message,
-          stack: isDev ? error.stack : undefined 
-        }), 
-        { 
+          stack: isDev ? error.stack : undefined,
+        }),
+        {
           status: 500,
-          headers: { 'Content-Type': 'application/json' }
-        }
+          headers: { 'Content-Type': 'application/json' },
+        },
       );
     }
-    
+
     return new NextResponse(
-      JSON.stringify({ 
+      JSON.stringify({
         error: 'Internal server error',
-        details: isDev ? String(error) : undefined 
-      }), 
-      { 
+        details: isDev ? String(error) : undefined,
+      }),
+      {
         status: 500,
-        headers: { 'Content-Type': 'application/json' }
-      }
+        headers: { 'Content-Type': 'application/json' },
+      },
     );
   }
 }

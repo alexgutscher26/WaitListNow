@@ -18,12 +18,12 @@ import { client } from '@/lib/client';
 const Page = () => {
   const router = useRouter();
 
-    // Redirect to onboarding immediately since we don't have the sync status endpoint
+  // Redirect to onboarding immediately since we don't have the sync status endpoint
   useEffect(() => {
     const timer = setTimeout(() => {
       router.push('/onboarding');
     }, 1000);
-    
+
     return () => clearTimeout(timer);
   }, [router]);
 

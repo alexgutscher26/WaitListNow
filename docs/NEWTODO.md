@@ -4,14 +4,14 @@ This document outlines the planned improvements and enhancements for the WaitLis
 
 ## 1. Core Functionality Improvements
 
-- [X] **Complete the Waitlist API Endpoints**
+- [x] **Complete the Waitlist API Endpoints**
 
-  - [X] Implement POST `/api/waitlists` endpoint for creating new waitlists
-  - [X] Add POST `/api/onboarding/complete` endpoint
-  - [X] Create GET endpoints for retrieving waitlist data
-  - [X] Implement PUT/PATCH /api/waitlists/[id] - Update a waitlist
-  - [X] Implement DELETE /api/waitlists/[id] - Delete a waitlist
-  - [X] Implement GET /api/waitlists/[id]/subscribers - Retrieve waitlist subscribers
+  - [x] Implement POST `/api/waitlists` endpoint for creating new waitlists
+  - [x] Add POST `/api/onboarding/complete` endpoint
+  - [x] Create GET endpoints for retrieving waitlist data
+  - [x] Implement PUT/PATCH /api/waitlists/[id] - Update a waitlist
+  - [x] Implement DELETE /api/waitlists/[id] - Delete a waitlist
+  - [x] Implement GET /api/waitlists/[id]/subscribers - Retrieve waitlist subscribers
 
 - [ ] **Embeddable Widget Implementation**
 
@@ -258,12 +258,14 @@ This document outlines the planned improvements and enhancements for the WaitLis
 ## 9. Feature Details
 
 ### ✅ 2. Referral Tracking System
+
 - [ ] Unique referral link for each user
 - [ ] Tracks signups driven by each user
 - [ ] Shows referral count and rank
 - [ ] Handles duplicate entries gracefully
 
 ### ✅ 3. Thank You / Referral Page
+
 - [ ] After signing up, user sees:
   - [ ] Their current position in the waitlist
   - [ ] Number of referrals
@@ -274,6 +276,7 @@ This document outlines the planned improvements and enhancements for the WaitLis
   - [ ] Optional: Referral leaderboard
 
 ### ✅ 4. Admin Dashboard
+
 - [ ] View/export waitlist entries
 - [ ] Sort by referral count, signup date
 - [ ] Manually add/edit/remove users
@@ -283,12 +286,14 @@ This document outlines the planned improvements and enhancements for the WaitLis
 ## 🧩 Nice-to-Have Features
 
 ### 🖌️ 5. Widget Customization
+
 - [ ] Light/dark mode
 - [ ] Customize copy: title, placeholder text
 - [ ] Change submit button style
 - [ ] Add logo
 
 ### 🔗 6. Webhooks & Integrations
+
 - [ ] Webhooks on new signup
 - [ ] Integrate with:
   - [ ] Mailchimp / ConvertKit / SendGrid / Resend
@@ -296,6 +301,7 @@ This document outlines the planned improvements and enhancements for the WaitLis
   - [ ] Zapier / Make.com support
 
 ### 📈 7. Analytics
+
 - [ ] Total signups
 - [ ] Daily/weekly growth charts
 - [ ] Conversion rate from referral clicks to signups
@@ -303,28 +309,34 @@ This document outlines the planned improvements and enhancements for the WaitLis
 ## 🧠 Advanced / Premium Features
 
 ### 🎁 8. Reward Tiers / Milestones
+
 - [ ] Define rewards for certain referral thresholds (e.g. 5, 10, 20)
 - [ ] Show users which rewards they've unlocked
 - [ ] Email users when they hit milestones
 
 ### 🛂 9. Anti-Fraud Measures
+
 - [ ] Email/domain blocklists
 - [ ] Rate limiting
 - [ ] Optional email verification (Resend/Postmark)
 
 ### 🧪 10. A/B Testing
+
 - [ ] Test different widget copy/designs
 - [ ] Compare referral viral coefficient
 
 ## 🚀 Potential Growth Features
 
 ### 🌐 Multi-Project Support
+
 - [ ] Each customer can run multiple waitlists with different widgets
 
 ### 🧬 Public Leaderboards
+
 - [ ] Viral leaderboard-style signup race
 - [ ] Optional "top referrers" list
 
 ### 🛠 Dev Tools
+
 - [ ] API access for devs to push/pull waitlist data
 - [ ] SDK or React hook to integrate custom UIs

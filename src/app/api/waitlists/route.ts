@@ -44,7 +44,7 @@ export async function POST(req: NextRequest) {
     if (!body.name || typeof body.name !== 'string') {
       return new NextResponse('Waitlist name is required and must be a string', { status: 400 });
     }
-    
+
     const slug = body.name
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, '-')
@@ -84,30 +84,30 @@ export async function POST(req: NextRequest) {
   } catch (error) {
     console.error('[WAITLISTS_POST]', error);
     log('Error details:', error);
-    
+
     if (error instanceof Error) {
       log('Error stack:', error.stack);
       return new NextResponse(
-        JSON.stringify({ 
+        JSON.stringify({
           error: error.message,
-          stack: isDev ? error.stack : undefined 
-        }), 
-        { 
+          stack: isDev ? error.stack : undefined,
+        }),
+        {
           status: 500,
-          headers: { 'Content-Type': 'application/json' }
-        }
+          headers: { 'Content-Type': 'application/json' },
+        },
       );
     }
-    
+
     return new NextResponse(
-      JSON.stringify({ 
+      JSON.stringify({
         error: 'Internal server error',
-        details: isDev ? String(error) : undefined 
-      }), 
-      { 
+        details: isDev ? String(error) : undefined,
+      }),
+      {
         status: 500,
-        headers: { 'Content-Type': 'application/json' }
-      }
+        headers: { 'Content-Type': 'application/json' },
+      },
     );
   }
 }
@@ -116,10 +116,10 @@ export async function POST(req: NextRequest) {
 export async function GET(req: NextRequest) {
   try {
     console.log('[WAITLISTS_GET] Fetching waitlists...');
-    
+
     const { userId } = getAuth(req);
     console.log('[WAITLISTS_GET] User ID from auth:', userId);
-    
+
     if (!userId) {
       console.error('[WAITLISTS_GET] No user ID found in session');
       return new NextResponse('Unauthorized', { status: 401 });
@@ -157,30 +157,30 @@ export async function GET(req: NextRequest) {
   } catch (error) {
     console.error('[WAITLISTS_GET]', error);
     log('Error details:', error);
-    
+
     if (error instanceof Error) {
       log('Error stack:', error.stack);
       return new NextResponse(
-        JSON.stringify({ 
+        JSON.stringify({
           error: error.message,
-          stack: isDev ? error.stack : undefined 
-        }), 
-        { 
+          stack: isDev ? error.stack : undefined,
+        }),
+        {
           status: 500,
-          headers: { 'Content-Type': 'application/json' }
-        }
+          headers: { 'Content-Type': 'application/json' },
+        },
       );
     }
-    
+
     return new NextResponse(
-      JSON.stringify({ 
+      JSON.stringify({
         error: 'Internal server error',
-        details: isDev ? String(error) : undefined 
-      }), 
-      { 
+        details: isDev ? String(error) : undefined,
+      }),
+      {
         status: 500,
-        headers: { 'Content-Type': 'application/json' }
-      }
+        headers: { 'Content-Type': 'application/json' },
+      },
     );
   }
 }

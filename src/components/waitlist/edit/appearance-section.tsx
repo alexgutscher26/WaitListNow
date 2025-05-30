@@ -2,7 +2,13 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Slider } from '@/components/ui/slider';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -60,7 +66,11 @@ const BORDER_RADII: { value: ButtonRounded; label: string }[] = [
   { value: 'full', label: 'Full' },
 ];
 
-export function AppearanceSection({ formData, onStyleChange, getBorderRadius }: AppearanceSectionProps) {
+export function AppearanceSection({
+  formData,
+  onStyleChange,
+  getBorderRadius,
+}: AppearanceSectionProps) {
   const [activeTab, setActiveTab] = useState('colors');
   const [colorPicker, setColorPicker] = useState<{
     open: boolean;
@@ -70,13 +80,13 @@ export function AppearanceSection({ formData, onStyleChange, getBorderRadius }: 
 
   const handleColorChange = (name: string, color: string) => {
     onStyleChange(name, color);
-    setColorPicker(prev => ({ ...prev, color }));
+    setColorPicker((prev) => ({ ...prev, color }));
   };
 
   const openColorPicker = (name: string, color: string) => {
     setColorPicker({
       open: true,
-      color: formData.style[name as keyof typeof formData.style] as string || color,
+      color: (formData.style[name as keyof typeof formData.style] as string) || color,
       name,
     });
   };
@@ -85,12 +95,14 @@ export function AppearanceSection({ formData, onStyleChange, getBorderRadius }: 
     <Card>
       <CardHeader>
         <CardTitle>Appearance</CardTitle>
-        <CardDescription>
-          Customize how your waitlist form looks.
-        </CardDescription>
+        <CardDescription>Customize how your waitlist form looks.</CardDescription>
       </CardHeader>
       <CardContent>
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+        <Tabs
+          value={activeTab}
+          onValueChange={setActiveTab}
+          className="space-y-6"
+        >
           <TabsList>
             <TabsTrigger value="colors">Colors</TabsTrigger>
             <TabsTrigger value="button">Button</TabsTrigger>
@@ -98,7 +110,10 @@ export function AppearanceSection({ formData, onStyleChange, getBorderRadius }: 
             <TabsTrigger value="typography">Typography</TabsTrigger>
           </TabsList>
 
-          <TabsContent value="colors" className="space-y-6">
+          <TabsContent
+            value="colors"
+            className="space-y-6"
+          >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-4">
                 <div>
@@ -154,7 +169,10 @@ export function AppearanceSection({ formData, onStyleChange, getBorderRadius }: 
             </div>
           </TabsContent>
 
-          <TabsContent value="button" className="space-y-6">
+          <TabsContent
+            value="button"
+            className="space-y-6"
+          >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-4">
                 <div>
@@ -211,7 +229,10 @@ export function AppearanceSection({ formData, onStyleChange, getBorderRadius }: 
                     </SelectTrigger>
                     <SelectContent>
                       {BUTTON_VARIANTS.map((variant) => (
-                        <SelectItem key={variant.value} value={variant.value}>
+                        <SelectItem
+                          key={variant.value}
+                          value={variant.value}
+                        >
                           {variant.label}
                         </SelectItem>
                       ))}
@@ -223,14 +244,19 @@ export function AppearanceSection({ formData, onStyleChange, getBorderRadius }: 
                   <Label>Button Rounded</Label>
                   <Select
                     value={formData.style.buttonRounded}
-                    onValueChange={(value) => onStyleChange('buttonRounded', value as ButtonRounded)}
+                    onValueChange={(value) =>
+                      onStyleChange('buttonRounded', value as ButtonRounded)
+                    }
                   >
                     <SelectTrigger>
                       <SelectValue placeholder="Select border radius" />
                     </SelectTrigger>
                     <SelectContent>
                       {BORDER_RADII.map((radius) => (
-                        <SelectItem key={radius.value} value={radius.value}>
+                        <SelectItem
+                          key={radius.value}
+                          value={radius.value}
+                        >
                           {radius.label}
                         </SelectItem>
                       ))}
@@ -241,7 +267,10 @@ export function AppearanceSection({ formData, onStyleChange, getBorderRadius }: 
             </div>
           </TabsContent>
 
-          <TabsContent value="form" className="space-y-6">
+          <TabsContent
+            value="form"
+            className="space-y-6"
+          >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-4">
                 <div>
@@ -270,7 +299,10 @@ export function AppearanceSection({ formData, onStyleChange, getBorderRadius }: 
                       onChange={(e) => onStyleChange('showLabels', e.target.checked)}
                       className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
                     />
-                    <label htmlFor="show-labels" className="ml-2 block text-sm text-gray-700">
+                    <label
+                      htmlFor="show-labels"
+                      className="ml-2 block text-sm text-gray-700"
+                    >
                       Show field labels
                     </label>
                   </div>
@@ -317,7 +349,10 @@ export function AppearanceSection({ formData, onStyleChange, getBorderRadius }: 
             </div>
           </TabsContent>
 
-          <TabsContent value="typography" className="space-y-6">
+          <TabsContent
+            value="typography"
+            className="space-y-6"
+          >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-4">
                 <div>
@@ -331,7 +366,10 @@ export function AppearanceSection({ formData, onStyleChange, getBorderRadius }: 
                     </SelectTrigger>
                     <SelectContent>
                       {FONT_FAMILIES.map((font) => (
-                        <SelectItem key={font.value} value={font.value}>
+                        <SelectItem
+                          key={font.value}
+                          value={font.value}
+                        >
                           {font.label}
                         </SelectItem>
                       ))}
@@ -350,7 +388,10 @@ export function AppearanceSection({ formData, onStyleChange, getBorderRadius }: 
                     </SelectTrigger>
                     <SelectContent>
                       {['none', 'sm', 'md', 'lg', 'xl', '2xl', '3xl', 'full'].map((radius) => (
-                        <SelectItem key={radius} value={radius}>
+                        <SelectItem
+                          key={radius}
+                          value={radius}
+                        >
                           {radius.charAt(0).toUpperCase() + radius.slice(1)}
                         </SelectItem>
                       ))}
@@ -374,14 +415,14 @@ export function AppearanceSection({ formData, onStyleChange, getBorderRadius }: 
             <div className="mt-4 flex justify-end space-x-2">
               <Button
                 variant="outline"
-                onClick={() => setColorPicker(prev => ({ ...prev, open: false }))}
+                onClick={() => setColorPicker((prev) => ({ ...prev, open: false }))}
               >
                 Cancel
               </Button>
               <Button
                 onClick={() => {
                   onStyleChange(colorPicker.name, colorPicker.color);
-                  setColorPicker(prev => ({ ...prev, open: false }));
+                  setColorPicker((prev) => ({ ...prev, open: false }));
                 }}
               >
                 Apply

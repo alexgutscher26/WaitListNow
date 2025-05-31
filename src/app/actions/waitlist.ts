@@ -6,8 +6,6 @@ import { db } from '@/lib/db';
 // Type for the auth response
 type AuthResponse = {
   userId: string | null;
-  sessionId: string | null;
-  getToken: () => Promise<string | null>;
 };
 
 export async function getWaitlistStats() {
@@ -26,7 +24,6 @@ export async function getWaitlistStats() {
     });
     
     if (!user) {
-      console.error('No user found with externalId:', clerkUserId);
       return {
         totalSubscribers: 0,
         newThisWeek: 0,
@@ -39,27 +36,24 @@ export async function getWaitlistStats() {
     }
     
     const userId = user.id;
-    console.log('Using internal user ID:', userId, 'for Clerk user ID:', clerkUserId);
-    
-    // Log user ID information for debugging
-    console.log('Auth user info:', { 
-      clerkUserId,
-      internalUserId: userId,
-      userIdType: typeof userId,
-      isString: typeof userId === 'string',
-      length: String(userId).length
-    });
 
-    // Get waitlists for the current user
+    // Get waitlists for the current user with subscriber counts
     const userWaitlists = await db.waitlist.findMany({
       where: { userId },
       select: { 
         id: true, 
         name: true,
         subscribers: {
-          select: { id: true, email: true, name: true, createdAt: true, referralCode: true, referredBy: true },
+          select: { 
+            id: true, 
+            email: true, 
+            name: true, 
+            createdAt: true, 
+            referralCode: true, 
+            referredBy: true 
+          },
           orderBy: { createdAt: 'desc' },
-          take: 100 // Limit to prevent performance issues
+          take: 100
         },
         _count: {
           select: { subscribers: true }
@@ -69,34 +63,8 @@ export async function getWaitlistStats() {
       orderBy: { createdAt: 'desc' }
     });
     
-    console.log(`Found ${userWaitlists.length} waitlists for user ${userId}`);
-    userWaitlists.forEach((wl, i) => {
-      console.log(`Waitlist ${i + 1}:`, {
-        name: wl.name,
-        id: wl.id,
-        subscriberCount: wl._count.subscribers,
-        hasSubscribers: wl.subscribers.length > 0
-      });
-    });
-
-    // Log detailed waitlist information
-    console.log('Waitlist details for user:', userId);
-    
-    // Get subscriber count for all waitlists
-    const subscriberStats = await db.waitlist.aggregate({
-      where: { userId },
-      _sum: { subscriberCount: true },
-      _count: { id: true }
-    });
-    
-    console.log('Waitlist stats:', {
-      totalWaitlists: subscriberStats._count.id,
-      totalSubscribers: subscriberStats._sum.subscriberCount || 0
-    });
-    
     // If no waitlists found, return early with empty results
     if (userWaitlists.length === 0) {
-      console.log('No waitlists found for user');
       return {
         totalSubscribers: 0,
         newThisWeek: 0,
@@ -107,6 +75,13 @@ export async function getWaitlistStats() {
         waitlists: []
       };
     }
+
+    // Get subscriber count for all waitlists
+    const subscriberStats = await db.waitlist.aggregate({
+      where: { userId },
+      _sum: { subscriberCount: true },
+      _count: { id: true }
+    });
     
     // Get waitlists with subscriber counts and recent subscribers
     const waitlists = await db.waitlist.findMany({

@@ -35,24 +35,6 @@ import { db } from '@/lib/db';
 import { cn } from '@/utils';
 import { formatDistanceToNow } from 'date-fns';
 
-interface WaitlistWithCount {
-  id: string;
-  name: string;
-  createdAt: Date;
-  updatedAt: Date;
-  slug: string;
-  description: string | null;
-  websiteUrl: string | null;
-  redirectUrl: string | null;
-  logoUrl: string | null;
-  userId: string;
-  status: string;
-  settings: Record<string, any>;
-  _count: {
-    subscribers: number;
-  };
-}
-
 type ActivityType = 'new_subscriber' | 'waitlist_created' | 'referral' | 'conversion' | 'milestone';
 
 type BaseActivity = {
@@ -101,22 +83,6 @@ type Activity =
 
 import { getWaitlistStats } from '@/app/actions/waitlist';
 
-// Define the stats type
-type WaitlistStats = Awaited<ReturnType<typeof getWaitlistStats>> & {
-  recentActivity: Array<{
-    id: string;
-    type: Activity['type'];
-    name: string;
-    time: Date;
-    [key: string]: any;
-  }>;
-  waitlists: Array<{
-    id: string;
-    name: string;
-    subscribers: number;
-    createdAt: Date;
-  }>;
-};
 
 // Enhanced stats with growth indicators and more detailed metrics
 const getStats = async (): Promise<{
@@ -127,7 +93,6 @@ const getStats = async (): Promise<{
   completedWaitlists: number;
   averageWaitTime: string;
   conversionRate: number;
-  totalRevenue: number;
   monthlyGrowth: number;
   recentActivity: Activity[];
   topWaitlists: Array<{ id: string; name: string; subscribers: number; growth: number }>;
@@ -221,7 +186,6 @@ const getStats = async (): Promise<{
       completedWaitlists: stats.completedWaitlists,
       averageWaitTime,
       conversionRate,
-      totalRevenue: 0, // TODO: Implement revenue tracking
       monthlyGrowth,
       recentActivity,
       topWaitlists: stats.waitlists.map((wl) => ({
@@ -242,7 +206,6 @@ const getStats = async (): Promise<{
       completedWaitlists: 0,
       averageWaitTime: '0 days',
       conversionRate: 0,
-      totalRevenue: 0,
       monthlyGrowth: 0,
       recentActivity: [
         {
@@ -461,16 +424,30 @@ export default async function Page({ searchParams = {} }: PageProps) {
   }
 
   // Check if user has premium access
-  const isPremium = user.privateMetadata?.premium === true;
   
   // Handle upgrade success banner
   const upgradeParam = searchParams?.upgrade;
-  const showUpgradeBanner = upgradeParam === 'success';
 
-  // Fetch waitlists with subscribers count
+  console.log('Clerk user ID:', user.id);
+  
+  // Find the internal user ID that matches the Clerk user ID
+  const dbUser = await db.user.findUnique({
+    where: { externalId: user.id },
+    select: { id: true }
+  });
+  console.log('Database user:', dbUser);
+
+  // Debug: Check what waitlists exist in the database
+  const allWaitlists = await db.waitlist.findMany({
+    select: { id: true, name: true, userId: true },
+    take: 10
+  });
+  console.log('All waitlists in database:', allWaitlists);
+
+  // Fetch waitlists with subscribers count using internal user ID
   const waitlists = await db.waitlist.findMany({
     where: {
-      userId: user.id,
+      userId: dbUser?.id || '',
     },
     include: {
       _count: {
@@ -484,7 +461,8 @@ export default async function Page({ searchParams = {} }: PageProps) {
     },
     take: 3,
   });
-
+  
+  console.log('Found waitlists for user:', waitlists);
   return (
     <div className="space-y-6">
       {/* Header */}

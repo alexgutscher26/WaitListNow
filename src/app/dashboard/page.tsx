@@ -167,16 +167,90 @@ const getStats = async (): Promise<{
     console.log('Mapped activities count:', recentActivity.length);
     console.log('Mapped activities:', JSON.stringify(recentActivity, null, 2));
 
-    // Calculate average wait time (placeholder for now)
-    const averageWaitTime = '2.5 days'; // TODO: Calculate this from actual data
+    // Calculate average wait time from actual data
+    const approvedSubscribers = await db.subscriber.findMany({
+      where: {
+        status: 'APPROVED',
+        waitlistId: {
+          in: stats.waitlists.map(w => w.id)
+        }
+      },
+      select: {
+        createdAt: true,
+        updatedAt: true
+      }
+    });
+
+    // Calculate average wait time in hours
+    let averageWaitTime = 'N/A';
+    if (approvedSubscribers.length > 0) {
+      const totalWaitTimeMs = approvedSubscribers.reduce((sum, sub) => {
+        const waitTimeMs = sub.updatedAt.getTime() - sub.createdAt.getTime();
+        return sum + waitTimeMs;
+      }, 0);
+      
+      const avgWaitTimeMs = totalWaitTimeMs / approvedSubscribers.length;
+      const avgWaitTimeHours = avgWaitTimeMs / (1000 * 60 * 60);
+      
+      // Format the average wait time
+      if (avgWaitTimeHours < 1) {
+        const minutes = Math.round(avgWaitTimeHours * 60);
+        averageWaitTime = `${minutes} ${minutes === 1 ? 'minute' : 'minutes'}`;
+      } else if (avgWaitTimeHours < 24) {
+        const hours = Math.round(avgWaitTimeHours * 10) / 10;
+        averageWaitTime = `${hours} ${hours === 1 ? 'hour' : 'hours'}`;
+      } else {
+        const days = Math.round((avgWaitTimeHours / 24) * 10) / 10;
+        averageWaitTime = `${days} ${days === 1 ? 'day' : 'days'}`;
+      }
+    }
     
-    // Calculate conversion rate (placeholder for now)
+    // Calculate conversion rate (new subscribers this week / total subscribers)
     const conversionRate = stats.totalSubscribers > 0 
       ? Math.min(100, Math.round((stats.newThisWeek / stats.totalSubscribers) * 1000) / 10)
       : 0;
 
     // Calculate monthly growth (placeholder for now)
     const monthlyGrowth = stats.growthRate * 4; // Extrapolate weekly growth to monthly
+
+    // Calculate growth for each waitlist
+    const waitlistsWithGrowth = await Promise.all(stats.waitlists.map(async (wl) => {
+      const now = new Date();
+      const oneWeekAgo = new Date(now);
+      oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+      const twoWeeksAgo = new Date(now);
+      twoWeeksAgo.setDate(twoWeeksAgo.getDate() - 14);
+
+      // Get subscriber counts for the current and previous week
+      const [currentWeekCount, previousWeekCount] = await Promise.all([
+        db.subscriber.count({
+          where: {
+            waitlistId: wl.id,
+            createdAt: { gte: oneWeekAgo }
+          }
+        }),
+        db.subscriber.count({
+          where: {
+            waitlistId: wl.id,
+            createdAt: { gte: twoWeeksAgo, lt: oneWeekAgo }
+          }
+        })
+      ]);
+
+      // Calculate growth percentage
+      let growth = 0;
+      if (previousWeekCount > 0) {
+        growth = ((currentWeekCount - previousWeekCount) / previousWeekCount) * 100;
+      } else if (currentWeekCount > 0) {
+        // If there were no subscribers in the previous week but there are now, show 100% growth
+        growth = 100;
+      }
+
+      return {
+        ...wl,
+        growth: Math.round(growth * 10) / 10 // Round to 1 decimal place
+      };
+    }));
 
     return {
       totalSubscribers: stats.totalSubscribers,
@@ -188,11 +262,11 @@ const getStats = async (): Promise<{
       conversionRate,
       monthlyGrowth,
       recentActivity,
-      topWaitlists: stats.waitlists.map((wl) => ({
+      topWaitlists: waitlistsWithGrowth.map((wl) => ({
         id: wl.id,
         name: wl.name,
         subscribers: wl.subscribers,
-        growth: 0, // TODO: Calculate growth
+        growth: wl.growth
       })),
     };
   } catch (error) {
@@ -610,34 +684,46 @@ export default async function Page({ searchParams = {} }: PageProps) {
               <CardTitle>Quick Actions</CardTitle>
             </CardHeader>
             <CardContent className="grid gap-2">
-              <Button
-                variant="outline"
-                className="justify-start gap-2 h-10"
-              >
-                <Plus className="h-4 w-4" />
-                Create Waitlist
-              </Button>
-              <Button
-                variant="outline"
-                className="justify-start gap-2 h-10"
-              >
-                <Mail className="h-4 w-4" />
-                Email Subscribers
-              </Button>
-              <Button
-                variant="outline"
-                className="justify-start gap-2 h-10"
-              >
-                <BarChart3 className="h-4 w-4" />
-                View Analytics
+              <Button asChild variant="outline" className="justify-start gap-2 h-10">
+                <Link href="/dashboard/waitlists/new">
+                  <Plus className="h-4 w-4" />
+                  Create Waitlist
+                </Link>
               </Button>
               <Button
                 variant="outline"
                 className="justify-start gap-2 h-10"
               >
                 <Settings className="h-4 w-4" />
-                Account Settings
+                <Link href="/dashboard/account-settings">
+                  Account Settings
+                </Link>
               </Button>
+              {/* <Button asChild variant="outline" className="justify-start gap-2 h-10">
+                <Link href="/dashboard/subscribers">
+                  <Users className="h-4 w-4" />
+                  View All Subscribers
+                </Link>
+              </Button> */}
+              {/* <Button asChild variant="outline" className="justify-start gap-2 h-10">
+                <Link href="/dashboard/email">
+                  <Mail className="h-4 w-4" />
+                  Email Subscribers
+                </Link>
+              </Button> */}
+              {/* <Button asChild variant="outline" className="justify-start gap-2 h-10">
+                <Link href="/dashboard/analytics">
+                  <BarChart3 className="h-4 w-4" />
+                  View Analytics
+                </Link>
+              </Button> */}
+              {/* <Button
+                variant="outline"
+                className="justify-start gap-2 h-10"
+              >
+                <BarChart3 className="h-4 w-4" />
+                View Analytics
+              </Button> */}
             </CardContent>
           </Card>
         </div>

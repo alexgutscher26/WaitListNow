@@ -16,12 +16,13 @@ import {
   Bell,
   Settings,
   ChevronRight,
-  Plus,
   MoreHorizontal,
   CheckCircle2,
   Check,
   Clock,
+  Loader2,
 } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
@@ -85,6 +86,7 @@ type Activity =
   | MilestoneActivity;
 
 import { getWaitlistStats } from '@/app/actions/waitlist';
+import { ExportButton } from '@/components/export-button';
 
 
 // Enhanced stats with growth indicators and more detailed metrics
@@ -500,13 +502,17 @@ export default async function Page({ searchParams = {} }: PageProps) {
     redirect('/sign-in');
   }
   
-  // Get user role from database
+  // Get user role and plan from database
   const userData = await db.user.findUnique({
     where: { externalId: user.id },
-    select: { role: true }
+    select: { 
+      role: true,
+      plan: true
+    }
   });
   
   const isAdmin = userData?.role === 'ADMIN';
+  const hasExportAccess = userData?.plan !== 'FREE'; // Assuming FREE plan doesn't have export access
 
   // Check if user has premium access
   
@@ -561,20 +567,14 @@ export default async function Page({ searchParams = {} }: PageProps) {
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <Button
-            variant="outline"
-            size="sm"
-            className="gap-2"
-          >
-            <Download className="h-4 w-4" />
-            Export
-          </Button>
+          <ExportButton hasExportAccess={hasExportAccess} />
           <Button
             size="sm"
             className="gap-2"
+            asChild
           >
-            <Plus className="h-4 w-4" />
             <Link href="/dashboard/waitlists/new">
+              <Plus className="h-4 w-4" />
               New Waitlist
             </Link>
           </Button>

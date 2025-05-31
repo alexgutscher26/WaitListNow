@@ -11,10 +11,7 @@ const submissionSchema = z.object({
   referralCode: z.string().optional(),
 });
 
-export async function POST(
-  request: Request,
-  { params }: { params: { id: string } }
-) {
+export async function POST(request: Request, { params }: { params: { id: string } }) {
   try {
     // Handle CORS preflight
     if (request.method === 'OPTIONS') {
@@ -39,10 +36,7 @@ export async function POST(
     });
 
     if (!waitlist) {
-      return NextResponse.json(
-        { error: 'Waitlist not found' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: 'Waitlist not found' }, { status: 404 });
     }
 
     // Parse and validate request body
@@ -52,12 +46,12 @@ export async function POST(
     if (!validation.success) {
       return NextResponse.json(
         { error: 'Invalid submission', details: validation.error.issues },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
     const { email, name, fields, referralCode } = validation.data;
-    
+
     // Check for existing subscriber
     const existingSubscriber = await db.subscriber.findFirst({
       where: {
@@ -67,10 +61,7 @@ export async function POST(
     });
 
     if (existingSubscriber) {
-      return NextResponse.json(
-        { error: 'You are already on the waitlist!' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'You are already on the waitlist!' }, { status: 400 });
     }
 
     // Create subscriber
@@ -91,7 +82,6 @@ export async function POST(
     //   await sendVerificationEmail(subscriber);
     // }
 
-
     // Set CORS headers
     const headers = {
       'Access-Control-Allow-Origin': '*',
@@ -100,19 +90,16 @@ export async function POST(
     };
 
     return NextResponse.json(
-      { 
-        success: true, 
+      {
+        success: true,
         message: 'Successfully joined the waitlist!',
-        requiresVerification: waitlist.requireEmailVerification
+        requiresVerification: waitlist.requireEmailVerification,
       },
-      { headers }
+      { headers },
     );
   } catch (error) {
     console.error('Error processing submission:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
 

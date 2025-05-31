@@ -23,7 +23,7 @@ const protectedRoutes = [
   // Protect API routes by explicitly listing them instead of using negative lookahead
   '/api/auth(.*)',
   '/api/waitlists(.*)',
-  '/api/subscribers(.*)'
+  '/api/subscribers(.*)',
   // Add other API routes that need protection
 ];
 
@@ -32,7 +32,7 @@ const isProtectedRoute = createRouteMatcher(protectedRoutes);
 
 const middleware = clerkMiddleware(async (auth, req: NextRequest) => {
   const { pathname } = req.nextUrl;
-  
+
   // Skip middleware for public routes
   if (isPublicRoute(req)) {
     trackPageview();
@@ -72,6 +72,6 @@ export const config = {
     // - public folder
     '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
     // Always run for API routes
-    '/(api|trpc)(.*)'
-  ]
+    '/(api|trpc)(.*)',
+  ],
 };

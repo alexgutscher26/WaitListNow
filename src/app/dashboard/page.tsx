@@ -134,81 +134,89 @@ const getStats = async (): Promise<{
 }> => {
   try {
     const stats = await getWaitlistStats();
-    
+
     // Debug: Log the raw stats from getWaitlistStats
     console.log('Raw stats from getWaitlistStats:', JSON.stringify(stats, null, 2));
     console.log('Recent activities count from API:', stats.recentActivities?.length || 0);
 
     // Debug: Log the raw activities before mapping
-    console.log('Raw activities before mapping:', JSON.stringify(stats.recentActivities || [], null, 2));
-    
-    // Map the recent activities to the expected format
-    const recentActivity: Activity[] = (stats.recentActivities || []).map((act: any, index: number) => {
-      console.log(`Mapping activity ${index}:`, JSON.stringify(act, null, 2));
-      const base = {
-        id: act.id,
-        type: act.type,
-        name: act.name || 'Unknown',
-        time: new Date(act.time || new Date()),
-      };
+    console.log(
+      'Raw activities before mapping:',
+      JSON.stringify(stats.recentActivities || [], null, 2),
+    );
 
-      switch (act.type) {
-        case 'new_subscriber':
-          return {
-            ...base,
-            type: 'new_subscriber',
-            email: act.email || '',
-            waitlist: act.waitlist || '',
-            avatar: act.avatar || `https://api.dicebear.com/7.x/initials/svg?seed=${act.email || 'user'}`,
-          } as NewSubscriberActivity;
-          
-        case 'waitlist_created':
-          return {
-            ...base,
-            type: 'waitlist_created',
-            subscribers: act.subscribers || 0,
-          } as WaitlistCreatedActivity;
-          
-        case 'referral':
-          return {
-            ...base,
-            type: 'referral',
-            referrer: act.referrer || 'someone',
-            referred: act.referred || '',
-            reward: act.reward || 'Early access',
-          } as ReferralActivity;
-          
-        case 'conversion':
-          return {
-            ...base,
-            type: 'conversion',
-            revenue: act.revenue || 0,
-            waitlist: act.waitlist || '',
-          } as ConversionActivity;
-          
-        case 'milestone':
-          return {
-            ...base,
-            type: 'milestone',
-            message: act.message || '',
-          } as MilestoneActivity;
-          
-        default:
-          console.warn('Unknown activity type:', act.type, act);
-          return base as Activity;
-      }
-    });
+    // Map the recent activities to the expected format
+    const recentActivity: Activity[] = (stats.recentActivities || []).map(
+      (act: any, index: number) => {
+        console.log(`Mapping activity ${index}:`, JSON.stringify(act, null, 2));
+        const base = {
+          id: act.id,
+          type: act.type,
+          name: act.name || 'Unknown',
+          time: new Date(act.time || new Date()),
+        };
+
+        switch (act.type) {
+          case 'new_subscriber':
+            return {
+              ...base,
+              type: 'new_subscriber',
+              email: act.email || '',
+              waitlist: act.waitlist || '',
+              avatar:
+                act.avatar ||
+                `https://api.dicebear.com/7.x/initials/svg?seed=${act.email || 'user'}`,
+            } as NewSubscriberActivity;
+
+          case 'waitlist_created':
+            return {
+              ...base,
+              type: 'waitlist_created',
+              subscribers: act.subscribers || 0,
+            } as WaitlistCreatedActivity;
+
+          case 'referral':
+            return {
+              ...base,
+              type: 'referral',
+              referrer: act.referrer || 'someone',
+              referred: act.referred || '',
+              reward: act.reward || 'Early access',
+            } as ReferralActivity;
+
+          case 'conversion':
+            return {
+              ...base,
+              type: 'conversion',
+              revenue: act.revenue || 0,
+              waitlist: act.waitlist || '',
+            } as ConversionActivity;
+
+          case 'milestone':
+            return {
+              ...base,
+              type: 'milestone',
+              message: act.message || '',
+            } as MilestoneActivity;
+
+          default:
+            console.warn('Unknown activity type:', act.type, act);
+            return base as Activity;
+        }
+      },
+    );
 
     console.log('Mapped activities count:', recentActivity.length);
     console.log('Mapped activities:', JSON.stringify(recentActivity, null, 2));
 
     // Calculate average wait time (placeholder for now)
     const averageWaitTime = '2.5 days'; // TODO: Calculate this from actual data
-    
+
     // Calculate conversion rate (placeholder for now)
-    const conversionRate = stats.totalSubscribers > 0 
-      ? Math.min(100, Math.round((stats.newThisWeek / stats.totalSubscribers) * 1000) / 10)
-      : 0;
+    const conversionRate =
+      stats.totalSubscribers > 0
+        ? Math.min(100, Math.round((stats.newThisWeek / stats.totalSubscribers) * 1000) / 10)
+        : 0;
 
     // Calculate monthly growth (placeholder for now)
     const monthlyGrowth = stats.growthRate * 4; // Extrapolate weekly growth to monthly
@@ -462,7 +470,7 @@ export default async function Page({ searchParams = {} }: PageProps) {
 
   // Check if user has premium access
   const isPremium = user.privateMetadata?.premium === true;
-  
+
   // Handle upgrade success banner
   const upgradeParam = searchParams?.upgrade;
   const showUpgradeBanner = upgradeParam === 'success';

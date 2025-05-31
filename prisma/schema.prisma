@@ -17,18 +17,25 @@ enum UserRole {
 }
 
 model User {
-  id                  String          @id @default(cuid())
-  externalId          String?         @unique
-  plan                Plan            @default(FREE)
-  email               String          @unique
-  apiKey              String          @unique @default(cuid())
-  role                UserRole        @default(USER)
-  onboardingComplete  Boolean         @default(false)
+  id                    String          @id @default(cuid())
+  externalId            String?         @unique
+  plan                  Plan            @default(FREE)
+  email                 String          @unique
+  name                  String?
+  company               String?
+  website               String?
+  bio                   String?
+  timezone              String          @default("UTC")
+  apiKey               String          @unique @default(cuid())
+  role                 UserRole        @default(USER)
+  notificationPreferences Json?         @default("{}")
+  preferences          Json?           @default("{}")
+  onboardingComplete   Boolean         @default(false)
   onboardingCompletedAt DateTime?
-  createdAt           DateTime        @default(now())
-  updatedAt           DateTime        @updatedAt
-  waitlists           Waitlist[]
-  subscribers         Subscriber[]
+  createdAt            DateTime        @default(now())
+  updatedAt            DateTime        @updatedAt
+  waitlists            Waitlist[]
+  subscribers          Subscriber[]
 
   @@index([email, apiKey])
 }
@@ -76,6 +83,8 @@ model Subscriber {
 
 enum Plan {
   FREE
+  STARTER
+  GROWTH
   PRO
 }
 

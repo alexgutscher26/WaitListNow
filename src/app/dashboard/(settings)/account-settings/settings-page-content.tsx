@@ -1,8 +1,10 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
+import { useToast } from '@/components/ui/use-toast';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Badge } from '@/components/ui/badge';
@@ -32,6 +34,8 @@ import {
   ExternalLink,
   ArrowUp,
   ArrowRight,
+  ListChecks,
+  Save,
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 
@@ -52,13 +56,49 @@ import { useState, useEffect } from 'react';
  * @returns {JSX.Element} The rendered component displaying the user's account settings page.
  */
 const AccountSettingsContent = () => {
+  const router = useRouter();
+  const { toast } = useToast();
   const { user } = useUser();
-  const [email, setEmail] = useState(user?.emailAddresses[0]?.emailAddress || '');
-  const [name, setName] = useState(`${user?.firstName || ''} ${user?.lastName || ''}`.trim());
-  const [company, setCompany] = useState('');
-  const [website, setWebsite] = useState('');
-  const [bio, setBio] = useState('');
-  const [timezone, setTimezone] = useState('UTC');
+  
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
+  
+  // Profile form state with proper type and default values
+  type FormData = {
+    name: string;
+    email: string;
+    company: string;
+    website: string;
+    bio: string;
+    timezone: string;
+  };
+
+  // Waitlist preferences state
+  type WaitlistPreferences = {
+    defaultWaitlistLimit: number;
+    autoApproveSubscribers: boolean;
+    emailNotifications: boolean;
+    maxSubscribers: number;
+    requireEmailVerification: boolean;
+  };
+
+  const [formData, setFormData] = useState<FormData>({
+    name: '',
+    email: user?.emailAddresses[0]?.emailAddress || '',
+    company: '',
+    website: '',
+    bio: '',
+    timezone: 'UTC'
+  });
+
+  const [waitlistPrefs, setWaitlistPrefs] = useState<WaitlistPreferences>({
+    defaultWaitlistLimit: 1,
+    autoApproveSubscribers: true,
+    emailNotifications: true,
+    maxSubscribers: 1000,
+    requireEmailVerification: false,
+  });
+  const [isSavingPrefs, setIsSavingPrefs] = useState(false);
 
   const [notifications, setNotifications] = useState({
     email: true,
@@ -70,6 +110,7 @@ const AccountSettingsContent = () => {
     securityAlerts: true,
     marketing: false,
   });
+  const [isSavingNotifications, setIsSavingNotifications] = useState(false);
 
   const [preferences, setPreferences] = useState({
     defaultView: 'overview',
@@ -78,7 +119,6 @@ const AccountSettingsContent = () => {
     allowReferrals: true,
   });
 
-  const [isSaving, setIsSaving] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
   // Plan configurations - must match Prisma schema enum values exactly
   const planConfigs = {
@@ -158,7 +198,6 @@ const AccountSettingsContent = () => {
   
   // Get current plan config
   const currentPlan = planConfigs[metrics.plan] || planConfigs.FREE;
-  const [isLoading, setIsLoading] = useState(true);
   const [lastUpdate, setLastUpdate] = useState(0); // Used to force re-renders
   const [usage, setUsage] = useState({
     waitlistUsage: 0,
@@ -167,6 +206,250 @@ const AccountSettingsContent = () => {
     lastBillingDate: new Date().toISOString().split('T')[0],
     nextBillingDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
   });
+
+  // Fetch profile and preferences data on component mount
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!user) return;
+      
+      setIsLoading(true);
+      
+      try {
+        // Fetch both profile and preferences in parallel
+        const [profileRes, prefsRes] = await Promise.all([
+          fetch('/api/account/profile'),
+          fetch('/api/account/waitlist-preferences')
+        ]);
+
+        // Handle profile response
+        if (profileRes.ok) {
+          const profileData = await profileRes.json();
+          setFormData(prev => ({
+            ...prev,
+            name: profileData.name || '',
+            email: profileData.email || user.emailAddresses[0]?.emailAddress || '',
+            company: profileData.company || '',
+            website: profileData.website || '',
+            bio: profileData.bio || '',
+            timezone: profileData.timezone || 'UTC'
+          }));
+        }
+
+        // Handle waitlist preferences response
+        if (prefsRes.ok) {
+          const prefsData = await prefsRes.json();
+          setWaitlistPrefs(prev => ({
+            ...prev,
+            ...prefsData,
+            maxSubscribers: prefsData.maxSubscribers || 1000
+          }));
+        }
+      } catch (error) {
+        console.error('Error loading data:', error);
+        toast({
+          title: 'Error',
+          description: 'Failed to load profile data',
+          variant: 'destructive'
+        });
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [user, toast]);
+
+  // Handle form input changes with null check
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value ?? '' // Ensure value is never null
+    }));
+  };
+
+  // Handle timezone select change
+  const handleTimezoneChange = (value: string) => {
+    setFormData(prev => ({
+      ...prev,
+      timezone: value
+    }));
+  };
+
+  // Handle profile form submission
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSaving(true);
+    
+    try {
+      const response = await fetch('/api/account/profile', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update profile');
+      }
+
+      const data = await response.json();
+      
+      // Update form with potentially sanitized data from server
+      setFormData(prev => ({
+        ...prev,
+        ...data
+      }));
+      
+      // Show success message
+      toast({
+        title: 'Success',
+        description: 'Your profile has been updated',
+      });
+      
+      // Refresh the page to ensure all data is up to date
+      router.refresh();
+      
+    } catch (error) {
+      console.error('Error updating profile:', error);
+      toast({
+        title: 'Error',
+        description: 'Failed to update profile. Please try again.',
+        variant: 'destructive'
+      });
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  // Handle waitlist preferences change
+  const handlePrefsChange = (field: keyof WaitlistPreferences, value: any) => {
+    setWaitlistPrefs(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
+
+  // Handle waitlist preferences submission
+  const handleSavePrefs = async () => {
+    setIsSavingPrefs(true);
+    
+    try {
+      const response = await fetch('/api/account/waitlist-preferences', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(waitlistPrefs),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update waitlist preferences');
+      }
+
+      const data = await response.json();
+      
+      // Update prefs with potentially sanitized data from server
+      setWaitlistPrefs(prev => ({
+        ...prev,
+        ...data
+      }));
+      
+      // Show success message
+      toast({
+        title: 'Success',
+        description: 'Your waitlist preferences have been updated',
+      });
+      
+    } catch (error) {
+      console.error('Error updating waitlist preferences:', error);
+      toast({
+        title: 'Error',
+        description: 'Failed to update waitlist preferences. Please try again.',
+        variant: 'destructive'
+      });
+    } finally {
+      setIsSavingPrefs(false);
+    }
+  };
+
+  // Fetch notification preferences on component mount
+  const fetchNotificationPreferences = async () => {
+    try {
+      setIsLoading(true);
+      const response = await fetch('/api/account/notification-preferences', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        cache: 'no-store',
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      setNotifications(prev => ({
+        ...prev,
+        ...data
+      }));
+    } catch (error) {
+      console.error('Error fetching notification preferences:', error);
+      toast({
+        title: 'Error',
+        description: 'Failed to load notification preferences. Please refresh the page to try again.',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Save notification preferences
+  const saveNotificationPreferences = async () => {
+    if (isSavingNotifications) return;
+    
+    setIsSavingNotifications(true);
+    try {
+      const response = await fetch('/api/account/notification-preferences', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(notifications),
+        cache: 'no-store',
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || 'Failed to update notification preferences');
+      }
+
+      const updatedPrefs = await response.json();
+      
+      // Update local state with the server response
+      setNotifications(updatedPrefs);
+      
+      toast({
+        title: 'Success',
+        description: 'Your notification preferences have been updated',
+      });
+      
+      return true;
+    } catch (error) {
+      console.error('Error updating notification preferences:', error);
+      toast({
+        title: 'Error',
+        description: error instanceof Error ? error.message : 'Failed to update notification preferences',
+        variant: 'destructive',
+      });
+      return false;
+    } finally {
+      setIsSavingNotifications(false);
+    }
+  };
 
   // Fetch metrics on component mount and when the plan changes
   useEffect(() => {
@@ -205,6 +488,7 @@ const AccountSettingsContent = () => {
     };
 
     fetchMetrics();
+    fetchNotificationPreferences();
     
     // Refresh metrics every 30 seconds
     const interval = setInterval(fetchMetrics, 30000);
@@ -237,11 +521,36 @@ const AccountSettingsContent = () => {
   /**
    * Toggles the notification state for a specified key.
    */
-  const handleNotificationToggle = (key: keyof typeof notifications) => {
-    setNotifications((prev) => ({
-      ...prev,
-      [key]: !prev[key],
-    }));
+  const handleNotificationToggle = async (key: keyof typeof notifications) => {
+    // Create the new state
+    const newValue = !notifications[key];
+    const newNotifications = {
+      ...notifications,
+      [key]: newValue,
+    };
+    
+    // If turning off email, also turn off all email-based notifications
+    if (key === 'email' && !newValue) {
+      Object.keys(newNotifications).forEach(k => {
+        if (k !== 'email') {
+          newNotifications[k as keyof typeof notifications] = false;
+        }
+      });
+    }
+    
+    // Update local state immediately for better UX
+    setNotifications(newNotifications);
+    
+    // Save to the server
+    try {
+      await saveNotificationPreferences();
+    } catch (error) {
+      // Revert the UI if save fails
+      setNotifications(prev => ({
+        ...prev,
+        [key]: !newValue // Revert the toggle
+      }));
+    }
   };
 
   /**
@@ -423,6 +732,113 @@ const AccountSettingsContent = () => {
         </CardContent>
       </Card>
 
+      {/* Waitlist Preferences make sure they are updated and carried over to the waitlist page*/}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <ListChecks className="h-5 w-5" />
+            Waitlist Preferences
+          </CardTitle>
+          <CardDescription>Configure default settings for your waitlists</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <div className="space-y-0.5">
+                <Label htmlFor="auto-approve">Auto-approve Subscribers</Label>
+                <p className="text-sm text-muted-foreground">
+                  Automatically approve new subscribers without manual review
+                </p>
+              </div>
+              <Switch
+                id="auto-approve"
+                checked={waitlistPrefs.autoApproveSubscribers}
+                onCheckedChange={(checked) => handlePrefsChange('autoApproveSubscribers', checked)}
+              />
+            </div>
+
+            <div className="flex items-center justify-between">
+              <div className="space-y-0.5">
+                <Label htmlFor="email-verification">Require Email Verification</Label>
+                <p className="text-sm text-muted-foreground">
+                  Require subscribers to verify their email address
+                </p>
+              </div>
+              <Switch
+                id="email-verification"
+                checked={waitlistPrefs.requireEmailVerification}
+                onCheckedChange={(checked) => handlePrefsChange('requireEmailVerification', checked)}
+              />
+            </div>
+
+            <div className="flex items-center justify-between">
+              <div className="space-y-0.5">
+                <Label htmlFor="email-notifications">Email Notifications</Label>
+                <p className="text-sm text-muted-foreground">
+                  Receive email notifications for new subscribers
+                </p>
+              </div>
+              <Switch
+                id="email-notifications"
+                checked={waitlistPrefs.emailNotifications}
+                onCheckedChange={(checked) => handlePrefsChange('emailNotifications', checked)}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="default-limit">Default Waitlist Limit</Label>
+              <Input
+                id="default-limit"
+                type="number"
+                min="1"
+                max="100"
+                value={waitlistPrefs.defaultWaitlistLimit}
+                onChange={(e) => handlePrefsChange('defaultWaitlistLimit', parseInt(e.target.value) || 1)}
+                className="max-w-[120px]"
+              />
+              <p className="text-sm text-muted-foreground">
+                Default maximum number of waitlists you can create
+              </p>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="max-subscribers">Maximum Subscribers</Label>
+              <Input
+                id="max-subscribers"
+                type="number"
+                min="100"
+                max="10000"
+                step="100"
+                value={waitlistPrefs.maxSubscribers}
+                onChange={(e) => handlePrefsChange('maxSubscribers', Math.min(10000, Math.max(100, parseInt(e.target.value) || 1000)))}
+                className="max-w-[150px]"
+              />
+              <p className="text-sm text-muted-foreground">
+                Maximum number of subscribers allowed per waitlist (100-10,000)
+              </p>
+            </div>
+          </div>
+
+          <div className="flex justify-end pt-2">
+            <Button 
+              onClick={handleSavePrefs} 
+              disabled={isSavingPrefs}
+            >
+              {isSavingPrefs ? (
+                <>
+                  <span className="opacity-0">Saving...</span>
+                  <span className="absolute inset-0 flex items-center justify-center">
+                    <span className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></span>
+                  </span>
+                </>
+              ) : (
+                'Save Preferences'
+              )}
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+
       {/* Profile Information */}
       <Card>
         <CardHeader>
@@ -432,150 +848,113 @@ const AccountSettingsContent = () => {
           </CardTitle>
           <CardDescription>Update your account details and public profile</CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="name">Full Name</Label>
-              <Input
-                id="name"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="Your full name"
-              />
+        <CardContent>
+          {isLoading ? (
+            <div className="flex justify-center py-8">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="email">Email Address</Label>
-              <Input
-                id="email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </div>
-          </div>
+          ) : (
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="name">Full Name *</Label>
+                  <Input
+                    id="name"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleChange}
+                    placeholder="Your full name"
+                    required
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="email">Email Address</Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    value={formData.email}
+                    disabled
+                    className="bg-gray-100"
+                  />
+                  <p className="text-xs text-muted-foreground">Contact support to change your email</p>
+                </div>
+              </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="company">Company/Organization</Label>
-              <Input
-                id="company"
-                value={company}
-                onChange={(e) => setCompany(e.target.value)}
-                placeholder="Your company name"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="website">Website</Label>
-              <Input
-                id="website"
-                value={website}
-                onChange={(e) => setWebsite(e.target.value)}
-                placeholder="https://yourwebsite.com"
-              />
-            </div>
-          </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="company">Company/Organization</Label>
+                  <Input
+                    id="company"
+                    name="company"
+                    value={formData.company}
+                    onChange={handleChange}
+                    placeholder="Your company name"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="website">Website</Label>
+                  <Input
+                    id="website"
+                    name="website"
+                    type="url"
+                    value={formData.website}
+                    onChange={handleChange}
+                    placeholder="https://yourwebsite.com"
+                  />
+                </div>
+              </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="bio">Bio</Label>
-            <Textarea
-              id="bio"
-              value={bio}
-              onChange={(e) => setBio(e.target.value)}
-              placeholder="Tell us about yourself or your project..."
-              className="min-h-[80px]"
-            />
-          </div>
+              <div className="space-y-2">
+                <Label htmlFor="bio">Bio</Label>
+                <Textarea
+                  id="bio"
+                  name="bio"
+                  value={formData.bio}
+                  onChange={handleChange}
+                  placeholder="Tell us about yourself or your project..."
+                  className="min-h-[100px]"
+                />
+              </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="timezone">Timezone</Label>
-            <Select
-              value={timezone}
-              onValueChange={setTimezone}
-            >
-              <SelectTrigger className="max-w-md">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="UTC">UTC (Coordinated Universal Time)</SelectItem>
-                <SelectItem value="EST">EST (Eastern Standard Time)</SelectItem>
-                <SelectItem value="PST">PST (Pacific Standard Time)</SelectItem>
-                <SelectItem value="GMT">GMT (Greenwich Mean Time)</SelectItem>
-                <SelectItem value="CET">CET (Central European Time)</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </CardContent>
-      </Card>
+              <div className="space-y-2">
+                <Label htmlFor="timezone">Timezone</Label>
+                <Select
+                  value={formData.timezone}
+                  onValueChange={handleTimezoneChange}
+                >
+                  <SelectTrigger className="max-w-md">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="UTC">UTC (Coordinated Universal Time)</SelectItem>
+                    <SelectItem value="America/New_York">EST (Eastern Standard Time)</SelectItem>
+                    <SelectItem value="America/Los_Angeles">PST (Pacific Standard Time)</SelectItem>
+                    <SelectItem value="America/Chicago">CST (Central Standard Time)</SelectItem>
+                    <SelectItem value="America/Denver">MST (Mountain Standard Time)</SelectItem>
+                    <SelectItem value="Europe/London">GMT (Greenwich Mean Time)</SelectItem>
+                    <SelectItem value="Europe/Paris">CET (Central European Time)</SelectItem>
+                    <SelectItem value="Asia/Tokyo">JST (Japan Standard Time)</SelectItem>
+                    <SelectItem value="Australia/Sydney">AEST (Australian Eastern Time)</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
 
-      {/* Waitlist Preferences */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Users className="h-5 w-5" />
-            Waitlist Preferences
-          </CardTitle>
-          <CardDescription>Configure your waitlist management settings</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="flex items-center justify-between">
-            <div className="space-y-0.5">
-              <Label htmlFor="public-profile">Public Profile</Label>
-              <p className="text-sm text-muted-foreground">
-                Allow others to discover your waitlists
-              </p>
-            </div>
-            <Switch
-              id="public-profile"
-              checked={preferences.publicProfile}
-              onCheckedChange={() => handlePreferenceToggle('publicProfile')}
-            />
-          </div>
-
-          <div className="flex items-center justify-between">
-            <div className="space-y-0.5">
-              <Label htmlFor="allow-referrals">Allow Referrals</Label>
-              <p className="text-sm text-muted-foreground">
-                Enable referral system for your waitlists
-              </p>
-            </div>
-            <Switch
-              id="allow-referrals"
-              checked={preferences.allowReferrals}
-              onCheckedChange={() => handlePreferenceToggle('allowReferrals')}
-            />
-          </div>
-
-          <div className="flex items-center justify-between">
-            <div className="space-y-0.5">
-              <Label htmlFor="auto-archive">Auto-archive Completed</Label>
-              <p className="text-sm text-muted-foreground">
-                Automatically archive waitlists after launch
-              </p>
-            </div>
-            <Switch
-              id="auto-archive"
-              checked={preferences.autoArchive}
-              onCheckedChange={() => handlePreferenceToggle('autoArchive')}
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="default-view">Default Dashboard View</Label>
-            <Select
-              value={preferences.defaultView}
-              onValueChange={(value) => setPreferences((prev) => ({ ...prev, defaultView: value }))}
-            >
-              <SelectTrigger className="max-w-md">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="overview">Overview</SelectItem>
-                <SelectItem value="analytics">Analytics</SelectItem>
-                <SelectItem value="waitlists">Waitlists</SelectItem>
-                <SelectItem value="subscribers">Subscribers</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
+              <div className="flex justify-end pt-4">
+                <Button type="submit" disabled={isSaving}>
+                  {isSaving ? (
+                    <>
+                      <span className="opacity-0">Saving...</span>
+                      <span className="absolute inset-0 flex items-center justify-center">
+                        <span className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></span>
+                      </span>
+                    </>
+                  ) : (
+                    'Save Changes'
+                  )}
+                </Button>
+              </div>
+            </form>
+          )}
         </CardContent>
       </Card>
 
@@ -843,3 +1222,4 @@ export const AccountSettings = () => {
 
   return <AccountSettingsContent />;
 };
+

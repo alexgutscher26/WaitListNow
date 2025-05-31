@@ -563,7 +563,9 @@ export default async function Page({ searchParams = {} }: PageProps) {
             className="gap-2"
           >
             <Plus className="h-4 w-4" />
-            New Waitlist
+            <Link href="/dashboard/waitlists/new">
+              New Waitlist
+            </Link>
           </Button>
         </div>
       </div>
@@ -645,36 +647,77 @@ export default async function Page({ searchParams = {} }: PageProps) {
               <CardTitle>Waitlist Health</CardTitle>
               <CardDescription>Performance overview</CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="space-y-6">
+              {/* Subscriber Growth */}
               <div>
                 <div className="flex items-center justify-between text-sm mb-1">
                   <span className="font-medium text-gray-700">Subscriber Growth</span>
-                  <span className="font-medium text-green-600">+15.8%</span>
+                  <span className={`font-medium ${
+                    stats.growthRate > 0 ? 'text-green-600' : stats.growthRate < 0 ? 'text-red-600' : 'text-gray-600'
+                  }`}>
+                    {stats.growthRate > 0 ? '+' : ''}{stats.growthRate.toFixed(1)}% (Week)
+                  </span>
                 </div>
-                <Progress
-                  value={68}
-                  className="h-2"
-                />
+                <div className="relative pt-1">
+                  <div className="flex items-center justify-between">
+                    <div className="text-right">
+                      <span className="text-xs font-semibold inline-block text-blue-600">
+                        {stats.totalSubscribers} total
+                      </span>
+                    </div>
+                  </div>
+                  <div className="overflow-hidden h-2 mb-4 text-xs flex rounded bg-blue-200">
+                    <div 
+                      style={{ width: `${Math.min(100, (stats.newThisWeek / Math.max(1, stats.totalSubscribers - stats.newThisWeek)) * 100)}%` }}
+                      className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-blue-500 transition-all duration-500"
+                    ></div>
+                  </div>
+                </div>
               </div>
+              
+              {/* Active Subscribers */}
               <div>
                 <div className="flex items-center justify-between text-sm mb-1">
-                  <span className="font-medium text-gray-700">Engagement</span>
-                  <span className="font-medium text-blue-600">42%</span>
+                  <span className="font-medium text-gray-700">Active Subscribers</span>
+                  <span className="font-medium text-gray-900">{stats.totalSubscribers}</span>
                 </div>
-                <Progress
-                  value={42}
-                  className="h-2"
-                />
+                <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+                  <div 
+                    className="h-full bg-blue-600 transition-all duration-500"
+                    style={{
+                      width: `${Math.min(100, (stats.totalSubscribers / 1000) * 100)}%`
+                    }}
+                  />
+                </div>
+                <p className="text-xs text-gray-500 mt-1">
+                  {stats.newThisWeek} new this week
+                </p>
               </div>
+              
+              {/* Waitlist Status */}
               <div>
-                <div className="flex items-center justify-between text-sm mb-1">
-                  <span className="font-medium text-gray-700">Conversion</span>
-                  <span className="font-medium text-purple-600">68.5%</span>
+                <div className="flex items-center justify-between text-sm mb-2">
+                  <span className="font-medium text-gray-700">Waitlist Status</span>
+                  <div className="flex items-center gap-2">
+                    <span className="inline-block w-2 h-2 rounded-full bg-green-500"></span>
+                    <span className="text-gray-600">
+                      {stats.activeWaitlists} Active
+                    </span>
+                    <span className="mx-1 text-gray-300">•</span>
+                    <span className="inline-block w-2 h-2 rounded-full bg-gray-300"></span>
+                    <span className="text-gray-600">
+                      {stats.completedWaitlists} Archived
+                    </span>
+                  </div>
                 </div>
-                <Progress
-                  value={68.5}
-                  className="h-2"
-                />
+                <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+                  <div 
+                    className="h-full bg-green-500 transition-all duration-500"
+                    style={{
+                      width: `${(stats.activeWaitlists / (stats.activeWaitlists + stats.completedWaitlists)) * 100}%`
+                    }}
+                  />
+                </div>
               </div>
             </CardContent>
           </Card>

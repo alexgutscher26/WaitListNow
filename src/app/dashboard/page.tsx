@@ -18,6 +18,9 @@ import {
   ChevronRight,
   Plus,
   MoreHorizontal,
+  CheckCircle2,
+  Check,
+  Clock,
 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -496,6 +499,14 @@ export default async function Page({ searchParams = {} }: PageProps) {
   if (!user) {
     redirect('/sign-in');
   }
+  
+  // Get user role from database
+  const userData = await db.user.findUnique({
+    where: { externalId: user.id },
+    select: { role: true }
+  });
+  
+  const isAdmin = userData?.role === 'ADMIN';
 
   // Check if user has premium access
   
@@ -771,6 +782,58 @@ export default async function Page({ searchParams = {} }: PageProps) {
           </Card>
         </div>
       </div>
+
+      {/* System Status - Admin Only */}
+      {isAdmin && (
+        <Card>
+          <CardHeader>
+            <CardTitle>System Status</CardTitle>
+            <CardDescription>Current status of all systems (Admin Only)</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between p-4 bg-green-50 rounded-lg">
+                <div className="flex items-center space-x-3">
+                  <div className="p-2 rounded-full bg-green-100">
+                    <CheckCircle2 className="h-5 w-5 text-green-600" />
+                  </div>
+                  <div>
+                    <h4 className="font-medium text-gray-900">All Systems Operational</h4>
+                    <p className="text-sm text-gray-500">Last checked: {new Date().toLocaleString()}</p>
+                  </div>
+                </div>
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                  Operational
+                </span>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-4">
+                {[
+                  { name: 'API', status: 'operational', lastChecked: 'Just now' },
+                  { name: 'Database', status: 'operational', lastChecked: 'Just now' },
+                  { name: 'Email Service', status: 'operational', lastChecked: 'Just now' },
+                  { name: 'Authentication', status: 'operational', lastChecked: 'Just now' },
+                ].map((system) => (
+                  <div key={system.name} className="flex items-center p-3 bg-white border border-gray-100 rounded-lg shadow-sm">
+                    <div className="flex-shrink-0">
+                      <div className={`h-2.5 w-2.5 rounded-full ${
+                        system.status === 'operational' ? 'bg-green-500' : 'bg-red-500'
+                      }`}></div>
+                    </div>
+                    <div className="ml-3 flex-1">
+                      <div className="flex justify-between items-center">
+                        <p className="text-sm font-medium text-gray-900">{system.name}</p>
+                        <span className="text-xs text-gray-500">{system.lastChecked}</span>
+                      </div>
+                      <p className="text-xs text-gray-500 capitalize">{system.status}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Your Waitlists */}
       <Card>

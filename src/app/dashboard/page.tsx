@@ -102,7 +102,21 @@ type Activity =
 import { getWaitlistStats } from '@/app/actions/waitlist';
 
 // Define the stats type
-type WaitlistStats = Awaited<ReturnType<typeof getWaitlistStats>>;
+type WaitlistStats = Awaited<ReturnType<typeof getWaitlistStats>> & {
+  recentActivity: Array<{
+    id: string;
+    type: Activity['type'];
+    name: string;
+    time: Date;
+    [key: string]: any;
+  }>;
+  waitlists: Array<{
+    id: string;
+    name: string;
+    subscribers: number;
+    createdAt: Date;
+  }>;
+};
 
 // Enhanced stats with growth indicators and more detailed metrics
 const getStats = async (): Promise<{
@@ -115,24 +129,101 @@ const getStats = async (): Promise<{
   conversionRate: number;
   totalRevenue: number;
   monthlyGrowth: number;
-  recentActivity: any[];
+  recentActivity: Activity[];
   topWaitlists: Array<{ id: string; name: string; subscribers: number; growth: number }>;
 }> => {
   try {
     const stats = await getWaitlistStats();
+    
+    // Debug: Log the raw stats from getWaitlistStats
+    console.log('Raw stats from getWaitlistStats:', JSON.stringify(stats, null, 2));
+    console.log('Recent activities count from API:', stats.recentActivities?.length || 0);
 
-    // For now, we'll keep some placeholder values for metrics we don't have data for yet
+    // Debug: Log the raw activities before mapping
+    console.log('Raw activities before mapping:', JSON.stringify(stats.recentActivities || [], null, 2));
+    
+    // Map the recent activities to the expected format
+    const recentActivity: Activity[] = (stats.recentActivities || []).map((act: any, index: number) => {
+      console.log(`Mapping activity ${index}:`, JSON.stringify(act, null, 2));
+      const base = {
+        id: act.id,
+        type: act.type,
+        name: act.name || 'Unknown',
+        time: new Date(act.time || new Date()),
+      };
+
+      switch (act.type) {
+        case 'new_subscriber':
+          return {
+            ...base,
+            type: 'new_subscriber',
+            email: act.email || '',
+            waitlist: act.waitlist || '',
+            avatar: act.avatar || `https://api.dicebear.com/7.x/initials/svg?seed=${act.email || 'user'}`,
+          } as NewSubscriberActivity;
+          
+        case 'waitlist_created':
+          return {
+            ...base,
+            type: 'waitlist_created',
+            subscribers: act.subscribers || 0,
+          } as WaitlistCreatedActivity;
+          
+        case 'referral':
+          return {
+            ...base,
+            type: 'referral',
+            referrer: act.referrer || 'someone',
+            referred: act.referred || '',
+            reward: act.reward || 'Early access',
+          } as ReferralActivity;
+          
+        case 'conversion':
+          return {
+            ...base,
+            type: 'conversion',
+            revenue: act.revenue || 0,
+            waitlist: act.waitlist || '',
+          } as ConversionActivity;
+          
+        case 'milestone':
+          return {
+            ...base,
+            type: 'milestone',
+            message: act.message || '',
+          } as MilestoneActivity;
+          
+        default:
+          console.warn('Unknown activity type:', act.type, act);
+          return base as Activity;
+      }
+    });
+
+    console.log('Mapped activities count:', recentActivity.length);
+    console.log('Mapped activities:', JSON.stringify(recentActivity, null, 2));
+
+    // Calculate average wait time (placeholder for now)
+    const averageWaitTime = '2.5 days'; // TODO: Calculate this from actual data
+    
+    // Calculate conversion rate (placeholder for now)
+    const conversionRate = stats.totalSubscribers > 0 
+      ? Math.min(100, Math.round((stats.newThisWeek / stats.totalSubscribers) * 1000) / 10)
+      : 0;
+
+    // Calculate monthly growth (placeholder for now)
+    const monthlyGrowth = stats.growthRate * 4; // Extrapolate weekly growth to monthly
+
     return {
       totalSubscribers: stats.totalSubscribers,
       newThisWeek: stats.newThisWeek,
       growthRate: stats.growthRate,
       activeWaitlists: stats.activeWaitlists,
       completedWaitlists: stats.completedWaitlists,
-      averageWaitTime: '2.5 days', // TODO: Calculate this from actual data
-      conversionRate: 68.5, // TODO: Calculate this from actual data
+      averageWaitTime,
+      conversionRate,
       totalRevenue: 0, // TODO: Implement revenue tracking
-      monthlyGrowth: 0, // TODO: Calculate this from actual data
-      recentActivity: [], // TODO: Implement activity feed
+      monthlyGrowth,
+      recentActivity,
       topWaitlists: stats.waitlists.map((wl) => ({
         id: wl.id,
         name: wl.name,
@@ -153,20 +244,29 @@ const getStats = async (): Promise<{
       conversionRate: 0,
       totalRevenue: 0,
       monthlyGrowth: 0,
-      recentActivity: [],
+      recentActivity: [
+        {
+          id: 1,
+          type: 'milestone',
+          name: 'Welcome to WaitListNow!',
+          message: 'Start by creating your first waitlist to see activity here.',
+          time: new Date(),
+        } as MilestoneActivity,
+      ],
       topWaitlists: [],
     };
   }
 };
 
-interface PageProps {
-  searchParams?: SearchParams;
-}
-
+// Define the type for search parameters
 type SearchParams = {
   upgrade?: string;
-  [key: string]: string | string[] | undefined;
 };
+
+// Define the page props with searchParams
+interface PageProps {
+  searchParams: SearchParams;
+}
 
 /**
  * Returns a React component for rendering an activity icon based on the given type.
@@ -360,10 +460,11 @@ export default async function Page({ searchParams = {} }: PageProps) {
     redirect('/sign-in');
   }
 
-  // Safely access searchParams with proper typing
-  const safeSearchParams = searchParams as SearchParams;
+  // Check if user has premium access
   const isPremium = user.privateMetadata?.premium === true;
-  const upgradeParam = safeSearchParams?.upgrade;
+  
+  // Handle upgrade success banner
+  const upgradeParam = searchParams?.upgrade;
   const showUpgradeBanner = upgradeParam === 'success';
 
   // Fetch waitlists with subscribers count
@@ -469,12 +570,18 @@ export default async function Page({ searchParams = {} }: PageProps) {
           </CardHeader>
           <CardContent className="p-0">
             <div className="divide-y divide-gray-100">
-              {stats.recentActivity.map((activity) => (
-                <ActivityItem
-                  key={activity.id}
-                  activity={activity}
-                />
-              ))}
+              {stats.recentActivity && stats.recentActivity.length > 0 ? (
+                stats.recentActivity.map((activity) => (
+                  <ActivityItem
+                    key={activity.id}
+                    activity={activity}
+                  />
+                ))
+              ) : (
+                <div className="p-6 text-center text-sm text-gray-500">
+                  No recent activities found
+                </div>
+              )}
             </div>
           </CardContent>
         </Card>

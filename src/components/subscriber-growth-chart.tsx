@@ -1,11 +1,11 @@
 'use client';
 
+import React, { useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { useTheme } from 'next-themes';
+import { format } from 'date-fns';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
-import { useEffect, useState } from 'react';
-import { format } from 'date-fns';
 
 // Define the type for chart data
 interface ChartData {
@@ -16,11 +16,20 @@ interface ChartData {
 }
 
 // Define props interface for the Chart component
+interface TooltipProps {
+  active?: boolean;
+  payload?: Array<{
+    value: number;
+    payload: ChartData;
+  }>;
+  label?: string;
+}
+
 interface ChartProps {
   data: ChartData[];
   isDark: boolean;
   maxValue: number;
-  CustomTooltip: React.ComponentType<any>;
+  CustomTooltip: React.ComponentType<TooltipProps>;
 }
 
 // Create a single dynamic import for all Recharts components
@@ -154,7 +163,7 @@ interface SubscriberGrowthChartProps {
   days?: number;
 }
 
-const CustomTooltip = ({ active, payload, label }: any) => {
+const CustomTooltip = ({ active, payload, label }: TooltipProps) => {
   if (!active || !payload?.length) return null;
 
   // Find the original data point to get the correct date
@@ -195,9 +204,10 @@ export function SubscriberGrowthChart({
 }: SubscriberGrowthChartProps) {
   const { theme } = useTheme();
   const [isMounted, setIsMounted] = useState(false);
-  const [data, setData] = useState<ChartDataPoint[]>([]);
+  const [chartData, setChartData] = useState<ChartData[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [selectedPeriod, setSelectedPeriod] = useState<'7d' | '30d' | '90d' | 'all'>('7d');
   const isDark = theme === 'dark';
 
   useEffect(() => {
@@ -219,7 +229,7 @@ export function SubscriberGrowthChart({
         }
 
         const result = await response.json();
-        setData(Array.isArray(result) ? result : []);
+        setChartData(Array.isArray(result) ? result : []);
       } catch (err) {
         console.error('Error fetching growth data:', err);
         setError('Failed to load growth data');
@@ -265,7 +275,7 @@ export function SubscriberGrowthChart({
   // console.log('Raw data from API:', data);
 
   // Format the data for the chart with proper timezone handling
-  const chartData = data.map((item) => {
+  const formattedChartData = chartData.map((item) => {
     try {
       // Keep the original date string as-is for data integrity
       const originalDate = item.date;
@@ -306,9 +316,9 @@ export function SubscriberGrowthChart({
   // console.log('Formatted chart data:', chartData);
 
   // Calculate the max value for the Y-axis with some padding
-  const maxValue = Math.max(...data.map((item) => item.cumulative), 10) * 1.1;
+  const maxValue = Math.max(...chartData.map((item) => item.cumulative), 10) * 1.1;
 
-  if (data.length === 0) {
+  if (chartData.length === 0) {
     return (
       <Card className={className}>
         <CardHeader>
@@ -328,7 +338,7 @@ export function SubscriberGrowthChart({
       </CardHeader>
       <CardContent className="h-[300px] -mt-2">
         <RechartsComponents
-          data={chartData}
+          data={formattedChartData}
           isDark={isDark}
           maxValue={maxValue}
           CustomTooltip={CustomTooltip}

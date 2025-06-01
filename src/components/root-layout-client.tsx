@@ -1,8 +1,7 @@
 'use client';
 
-import { Suspense } from 'react';
+import React, { Suspense } from 'react';
 import { usePathname } from 'next/navigation';
-import { cn } from '@/lib/utils';
 import { ClientLayout } from '@/components/client-layout';
 
 // This is a client component that wraps the content with ClientLayout only for non-dashboard routes

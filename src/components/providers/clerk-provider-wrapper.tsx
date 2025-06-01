@@ -1,5 +1,6 @@
 'use client';
 
+import React from 'react';
 import { ClerkProvider as ClerkProviderBase } from '@clerk/nextjs';
 
 export function ClerkProvider({ children }: { children: React.ReactNode }) {

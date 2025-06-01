@@ -1,9 +1,10 @@
 'use client';
 
+import React, { useState } from 'react';
 import { client } from '@/lib/client';
 import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import Image from 'next/image';
 import { Modal } from './ui/modal';
 import { LoadingSpinner } from './loading-spinner';
 import { Button } from './ui/button';
@@ -25,7 +26,7 @@ export const PaymentSuccessModal = () => {
   const { data, isPending } = useQuery({
     queryKey: ['user-plan'],
     queryFn: async () => {
-      const res = await client.payment.getUserPlan.$get();
+      const res = await client.payment.getUserPlan.$get({});
       return await res.json();
     },
     refetchInterval: (query) => {
@@ -63,10 +64,13 @@ export const PaymentSuccessModal = () => {
         ) : (
           <>
             <div className="relative aspect-video border border-gray-200 w-full overflow-hidden rounded-lg bg-gray-50">
-              <img
+              <Image
                 src="/brand-asset-heart.png"
-                className="h-full w-full object-cover"
                 alt="Payment success"
+                fill
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                className="object-cover"
+                priority
               />
             </div>
 

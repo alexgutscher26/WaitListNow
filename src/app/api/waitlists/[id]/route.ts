@@ -107,6 +107,18 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
 }
 
 // DELETE /api/waitlists/[id] - Delete a waitlist
+/**
+ * Handles the deletion of a waitlist and its associated subscribers.
+ *
+ * It verifies user authentication, checks if the waitlist exists and belongs to the user,
+ * then deletes all related subscribers followed by deleting the waitlist itself within a transaction
+ * to ensure data consistency. If any error occurs during these processes, it logs the error and returns
+ * an appropriate HTTP response with a 500 status code.
+ *
+ * @param req - The Next.js request object containing user information and headers.
+ * @param {params: { id: string }} - An object containing the waitlist ID from the URL parameters.
+ * @returns A `NextResponse` with a 204 No Content status on successful deletion, or an error response if applicable.
+ */
 export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
   try {
     // Verify authentication

@@ -15,7 +15,7 @@ export async function exportWaitlists(): Promise<ExportResult> {
   try {
     const authResponse = await auth();
     const userId = authResponse.userId;
-    
+
     if (!userId) {
       throw new Error('Unauthorized');
     }
@@ -46,11 +46,12 @@ export async function exportWaitlists(): Promise<ExportResult> {
     }
 
     // Convert waitlists to CSV format
-    let csvContent = 'Waitlist Name,Subscriber Email,Status,Signup Date,Last Updated,Referral Code,Referred By\n';
-    
-    waitlists.forEach(waitlist => {
+    let csvContent =
+      'Waitlist Name,Subscriber Email,Status,Signup Date,Last Updated,Referral Code,Referred By\n';
+
+    waitlists.forEach((waitlist) => {
       if (waitlist.subscribers && waitlist.subscribers.length > 0) {
-        waitlist.subscribers.forEach(subscriber => {
+        waitlist.subscribers.forEach((subscriber) => {
           csvContent += `"${waitlist.name}",`;
           csvContent += `"${subscriber.email}",`;
           csvContent += `"${subscriber.status}",`;
@@ -68,17 +69,17 @@ export async function exportWaitlists(): Promise<ExportResult> {
     // Create a Blob and return it
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
-    
+
     return {
       success: true,
       url,
-      filename: `waitlist-export-${format(new Date(), 'yyyy-MM-dd')}.csv`
+      filename: `waitlist-export-${format(new Date(), 'yyyy-MM-dd')}.csv`,
     };
   } catch (error) {
     console.error('Export failed:', error);
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Failed to export waitlists'
+      error: error instanceof Error ? error.message : 'Failed to export waitlists',
     };
   }
 }

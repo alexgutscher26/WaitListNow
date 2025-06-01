@@ -31,16 +31,35 @@ function parseNotificationPreferences(prefs: any): NotificationPreferences {
   if (!prefs || typeof prefs !== 'object') {
     return { ...defaultPreferences };
   }
-  
+
   return {
     email: typeof prefs.email === 'boolean' ? prefs.email : defaultPreferences.email,
-    waitlistMilestones: typeof prefs.waitlistMilestones === 'boolean' ? prefs.waitlistMilestones : defaultPreferences.waitlistMilestones,
-    dailyReports: typeof prefs.dailyReports === 'boolean' ? prefs.dailyReports : defaultPreferences.dailyReports,
-    weeklyDigest: typeof prefs.weeklyDigest === 'boolean' ? prefs.weeklyDigest : defaultPreferences.weeklyDigest,
-    signupAlerts: typeof prefs.signupAlerts === 'boolean' ? prefs.signupAlerts : defaultPreferences.signupAlerts,
-    integrationUpdates: typeof prefs.integrationUpdates === 'boolean' ? prefs.integrationUpdates : defaultPreferences.integrationUpdates,
-    securityAlerts: typeof prefs.securityAlerts === 'boolean' ? prefs.securityAlerts : defaultPreferences.securityAlerts,
-    marketing: typeof prefs.marketing === 'boolean' ? prefs.marketing : defaultPreferences.marketing,
+    waitlistMilestones:
+      typeof prefs.waitlistMilestones === 'boolean'
+        ? prefs.waitlistMilestones
+        : defaultPreferences.waitlistMilestones,
+    dailyReports:
+      typeof prefs.dailyReports === 'boolean'
+        ? prefs.dailyReports
+        : defaultPreferences.dailyReports,
+    weeklyDigest:
+      typeof prefs.weeklyDigest === 'boolean'
+        ? prefs.weeklyDigest
+        : defaultPreferences.weeklyDigest,
+    signupAlerts:
+      typeof prefs.signupAlerts === 'boolean'
+        ? prefs.signupAlerts
+        : defaultPreferences.signupAlerts,
+    integrationUpdates:
+      typeof prefs.integrationUpdates === 'boolean'
+        ? prefs.integrationUpdates
+        : defaultPreferences.integrationUpdates,
+    securityAlerts:
+      typeof prefs.securityAlerts === 'boolean'
+        ? prefs.securityAlerts
+        : defaultPreferences.securityAlerts,
+    marketing:
+      typeof prefs.marketing === 'boolean' ? prefs.marketing : defaultPreferences.marketing,
   };
 }
 
@@ -55,14 +74,11 @@ export async function GET() {
     // Try to find user by ID or externalId
     const user = await db.user.findFirst({
       where: {
-        OR: [
-          { id: userId },
-          { externalId: userId }
-        ]
+        OR: [{ id: userId }, { externalId: userId }],
       },
-      select: { 
-        notificationPreferences: true 
-      }
+      select: {
+        notificationPreferences: true,
+      },
     });
 
     // If user not found, return default preferences
@@ -77,7 +93,7 @@ export async function GET() {
     console.error('Error fetching notification preferences:', error);
     return NextResponse.json(
       { error: 'Failed to fetch notification preferences' },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -91,18 +107,15 @@ export async function PUT(request: Request) {
     const userId = authResult.userId;
 
     const preferences = await request.json();
-    
+
     try {
       // Parse and validate the incoming preferences
       const validPreferences = parseNotificationPreferences(preferences);
-      
+
       // First, check if user exists by ID or externalId
       let user = await db.user.findFirst({
         where: {
-          OR: [
-            { id: userId },
-            { externalId: userId }
-          ]
+          OR: [{ id: userId }, { externalId: userId }],
         },
       });
 
@@ -118,7 +131,7 @@ export async function PUT(request: Request) {
             where: { id: existingUser.id },
             data: { id: userId },
           });
-          
+
           // Update the user's preferences
           await db.user.update({
             where: { id: userId },
@@ -133,7 +146,9 @@ export async function PUT(request: Request) {
               name: 'New User',
               notificationPreferences: validPreferences,
               plan: 'FREE',
-              apiKey: Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15),
+              apiKey:
+                Math.random().toString(36).substring(2, 15) +
+                Math.random().toString(36).substring(2, 15),
               externalId: userId,
             },
           });
@@ -150,18 +165,19 @@ export async function PUT(request: Request) {
     } catch (error) {
       console.error('Error updating notification preferences:', error);
       return NextResponse.json(
-        { 
-          error: error instanceof Error ? error.message : 'Failed to update notification preferences',
-          details: process.env.NODE_ENV === 'development' ? (error as any).message : undefined
+        {
+          error:
+            error instanceof Error ? error.message : 'Failed to update notification preferences',
+          details: process.env.NODE_ENV === 'development' ? (error as any).message : undefined,
         },
-        { status: 500 }
+        { status: 500 },
       );
     }
   } catch (error) {
     console.error('Error updating notification preferences:', error);
     return NextResponse.json(
       { error: 'Failed to update notification preferences' },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

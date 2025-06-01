@@ -17,39 +17,42 @@ export function ExportButton({ hasExportAccess }: ExportButtonProps) {
     if (!hasExportAccess) {
       toast({
         title: 'Upgrade Required',
-        description: 'Export is a premium feature. Please upgrade your plan to access this feature.',
+        description:
+          'Export is a premium feature. Please upgrade your plan to access this feature.',
         variant: 'default',
       });
       return;
     }
 
     setIsLoading(true);
-    
+
     try {
       const response = await fetch('/api/export/waitlists');
-      
+
       if (!response.ok) {
         throw new Error('Failed to export waitlists');
       }
-      
+
       const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      
+
       // Get filename from content-disposition header or use a default one
       const contentDisposition = response.headers.get('content-disposition');
       const filenameMatch = contentDisposition?.match(/filename="?(.+)"?/);
-      const filename = filenameMatch ? filenameMatch[1] : `waitlist-export-${new Date().toISOString().split('T')[0]}.csv`;
-      
+      const filename = filenameMatch
+        ? filenameMatch[1]
+        : `waitlist-export-${new Date().toISOString().split('T')[0]}.csv`;
+
       a.download = filename;
       document.body.appendChild(a);
       a.click();
-      
+
       // Cleanup
       window.URL.revokeObjectURL(url);
       document.body.removeChild(a);
-      
+
       toast({
         title: 'Export Successful',
         description: 'Your waitlist data has been exported successfully.',

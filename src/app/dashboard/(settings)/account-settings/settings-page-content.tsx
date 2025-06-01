@@ -674,7 +674,7 @@ const AccountSettingsContent = () => {
               </div>
 
               <div
-                className={`flex items-center gap-3 p-4 bg-gradient-to-br from-green-50 to-white rounded-lg border border-green-100`}
+                className={"flex items-center gap-3 p-4 bg-gradient-to-br from-green-50 to-white rounded-lg border border-green-100"}
               >
                 <div className="p-2 bg-green-100 rounded-lg">
                   <TrendingUp className="h-6 w-6 text-green-600" />
@@ -719,7 +719,7 @@ const AccountSettingsContent = () => {
               </div>
 
               <div
-                className={`flex items-center gap-3 p-4 bg-gradient-to-br from-purple-50 to-white rounded-lg border border-purple-100`}
+                className={"flex items-center gap-3 p-4 bg-gradient-to-br from-purple-50 to-white rounded-lg border border-purple-100"}
               >
                 <div className="p-2 bg-purple-100 rounded-lg">
                   <Zap className="h-6 w-6 text-purple-600" />

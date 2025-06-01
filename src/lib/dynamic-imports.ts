@@ -1,7 +1,7 @@
-import dynamic, { LoaderComponent, Loader } from 'next/dynamic';
+import dynamic, { Loader } from 'next/dynamic';
 import { ComponentType, ReactNode } from 'react';
 
-interface DynamicImportOptions<T = {}> {
+interface DynamicImportOptions<T = object> {
   loading?: () => ReactNode;
   ssr?: boolean;
   suspense?: boolean;
@@ -13,7 +13,7 @@ interface DynamicImportOptions<T = {}> {
  * @param options - Dynamic import options
  * @returns A dynamically imported component with proper TypeScript types
  */
-export function dynamicImport<T extends {}>(
+export function dynamicImport<T extends object>(
   importFn: () => Promise<{ default: ComponentType<T> }>,
   options: DynamicImportOptions<T> = {}
 ) {

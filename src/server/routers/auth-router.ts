@@ -1,12 +1,12 @@
 import { currentUser } from '@clerk/nextjs/server';
-import { HTTPException } from 'hono/http-exception';
+// HTTPException import removed as it's not used
 import { router } from '../__internals/router';
 import { publicProcedure } from '../procedures';
 import { db } from '@/lib/db';
 export const dynamic = 'force-dynamic';
 
 export const authRouter = router({
-  getDatabaseSyncStatus: publicProcedure.query(async ({ c, ctx }) => {
+  getDatabaseSyncStatus: publicProcedure.query(async ({ c }) => {
     const auth = await currentUser();
 
     if (!auth) {

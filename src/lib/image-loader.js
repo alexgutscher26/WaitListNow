@@ -16,7 +16,7 @@ module.exports = function customLoader({ src, width, quality }) {
   let url;
   try {
     url = new URL(src);
-  } catch (_e) {
+  } catch (error) {
     // If it's a relative URL, prepend the origin
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
     url = new URL(src, baseUrl);

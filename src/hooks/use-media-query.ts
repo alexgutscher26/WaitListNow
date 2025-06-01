@@ -9,7 +9,8 @@ import { useEffect, useState } from 'react';
 export const useMediaQuery = () => {
   const [device, setDevice] = useState<'mobile' | 'tablet' | 'desktop' | null>(null);
 
-  const [dimensions, setDimensions] = useState<{
+  // Screen dimensions state (commented out as it's currently unused)
+  const [dimensions] = useState<{
     width: number;
     height: number;
   } | null>(null);

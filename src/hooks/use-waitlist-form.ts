@@ -23,6 +23,7 @@ const defaultValues: WaitlistFormValues = {
   },
   settings: {
     emailVerification: true,
+    allowDuplicates: false,
     referralEnabled: false,
   },
 };
@@ -56,7 +57,7 @@ export function useWaitlistForm(initialValues: Partial<WaitlistFormValues> = {})
     [errors],
   );
 
-  const handleCustomFieldChange = useCallback((index: number, field: string, value: any) => {
+  const handleCustomFieldChange = useCallback((index: number, field: string, value: unknown) => {
     setFormData((prev) => {
       const updatedFields = [...prev.customFields];
       updatedFields[index] = {
@@ -93,7 +94,7 @@ export function useWaitlistForm(initialValues: Partial<WaitlistFormValues> = {})
     }));
   }, []);
 
-  const handleStyleChange = useCallback((field: string, value: any) => {
+  const handleStyleChange = useCallback(<T extends keyof WaitlistFormValues['style']>(field: T, value: WaitlistFormValues['style'][T]) => {
     setFormData((prev) => ({
       ...prev,
       style: {
@@ -103,7 +104,7 @@ export function useWaitlistForm(initialValues: Partial<WaitlistFormValues> = {})
     }));
   }, []);
 
-  const handleSettingsChange = useCallback((field: string, value: any) => {
+  const handleSettingsChange = useCallback(<T extends keyof WaitlistFormValues['settings']>(field: T, value: WaitlistFormValues['settings'][T]) => {
     setFormData((prev) => ({
       ...prev,
       settings: {

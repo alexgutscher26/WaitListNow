@@ -12,7 +12,7 @@ const { PrismaClient } = require('@prisma/client');
  */
 async function checkSchema() {
   const prisma = new PrismaClient();
-  
+
   try {
     // Check if User table exists
     const tables = await prisma.$queryRaw`
@@ -20,34 +20,32 @@ async function checkSchema() {
       FROM information_schema.tables 
       WHERE table_schema = 'public' AND table_name = 'User';
     `;
-    
+
     if (tables.length === 0) {
       console.log('User table does not exist in the database');
       return;
     }
-    
+
     console.log('User table exists');
-    
+
     // Check columns in User table
     const columns = await prisma.$queryRaw`
       SELECT column_name, data_type, is_nullable, column_default
       FROM information_schema.columns
       WHERE table_name = 'User';
     `;
-    
+
     console.log('\nColumns in User table:');
     console.table(columns);
-    
+
     // Check if waitlist_preferences column exists
-    const waitlistPrefsColumn = columns.find(
-      col => col.column_name === 'waitlist_preferences'
-    );
-    
+    const waitlistPrefsColumn = columns.find((col) => col.column_name === 'waitlist_preferences');
+
     if (waitlistPrefsColumn) {
       console.log('\nwaitlist_preferences column exists:', waitlistPrefsColumn);
     } else {
       console.log('\nwaitlist_preferences column does NOT exist');
-      
+
       // Try to add the column
       console.log('\nAttempting to add waitlist_preferences column...');
       try {
@@ -61,7 +59,6 @@ async function checkSchema() {
         console.error('Error adding waitlist_preferences column:', alterError);
       }
     }
-    
   } catch (error) {
     console.error('Error checking database schema:', error);
   } finally {

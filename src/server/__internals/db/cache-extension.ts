@@ -13,10 +13,25 @@ type PrismaModel = {
 
 export type CacheArgs = { cache?: { id: string; ttl?: number } };
 
+/**
+ * Checks if an object is a valid SuperJSONResult instance.
+ *
+ * This function verifies that the input is an object, not null,
+ * and contains both 'json' and 'meta' properties.
+ */
 function isSuperJSONResult(obj: unknown): obj is SuperJSONResult {
   return typeof obj === 'object' && obj !== null && 'json' in obj && 'meta' in obj;
 }
 
+/**
+ * Defines a Prisma extension to cache database queries using Redis.
+ *
+ * This function extends Prisma models with caching capabilities for `findFirst`, `findUnique`, and `findMany` methods. It also handles cache invalidation for `create`, `update`, and `delete` operations. The caching logic checks if the result is already cached in Redis, retrieves it if available, or fetches from the database and caches the result.
+ *
+ * @param {object} options - An object containing the Redis client instance.
+ * @param {Redis} options.redis - The Redis client used for caching.
+ * @returns A Prisma extension with cache capabilities.
+ */
 export const cacheExtension = ({ redis }: { redis: Redis }) => {
   return Prisma.defineExtension({
     name: 'prisma-extension-cache',

@@ -8,6 +8,18 @@ type AuthResponse = {
   userId: string | null;
 };
 
+/**
+ * Fetches comprehensive statistics related to user waitlists.
+ *
+ * This function retrieves detailed data including total subscribers, new subscribers from the past week,
+ * growth rate, active and completed waitlists, recent activities, and individual waitlist details.
+ * It involves multiple database queries to gather all necessary information and performs calculations
+ * for derived metrics like growth rate and recent activities. The function handles user authentication
+ * and ensures that only authorized users can access their waitlist statistics.
+ *
+ * @returns An object containing various statistics and details about the user's waitlists.
+ * @throws Error if the user is not authenticated or if there is an issue fetching data from the database.
+ */
 export async function getWaitlistStats() {
   try {
     const authResponse = (await auth()) as AuthResponse;

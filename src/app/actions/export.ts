@@ -11,6 +11,15 @@ type ExportResult = {
   error?: string;
 };
 
+/**
+ * Exports user's waitlists with subscribers in CSV format.
+ *
+ * This function first authenticates the user, retrieves their waitlists along with subscribers,
+ * converts the data to CSV format, and returns a Blob URL for download.
+ *
+ * @returns An ExportResult object containing success status, the Blob URL, filename, or error message.
+ * @throws Error If authentication fails, no waitlists are found, or an unexpected error occurs during export.
+ */
 export async function exportWaitlists(): Promise<ExportResult> {
   try {
     const authResponse = await auth();

@@ -9,6 +9,17 @@ interface WaitlistPageProps {
   };
 }
 
+/**
+ * Renders a waitlist page based on the provided slug.
+ *
+ * The function first attempts to fetch the waitlist by slug from the database.
+ * If the waitlist is not found, it returns a message indicating that the waitlist has ended.
+ * If the waitlist status is not 'ACTIVE', it displays an appropriate message based on the status.
+ * For active waitlists, it retrieves and applies style and settings, then renders the waitlist widget
+ * with the specified styling. It also displays the number of subscribers and optionally a branding badge.
+ *
+ * @param params - An object containing the slug parameter used to fetch the waitlist.
+ */
 export default async function WaitlistPage({ params }: WaitlistPageProps) {
   // console.log('Fetching waitlist with slug:', params.slug);
 

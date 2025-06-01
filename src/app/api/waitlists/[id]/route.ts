@@ -156,23 +156,18 @@ export async function DELETE(req: NextRequest, { params }: { params: { id: strin
   } catch (error) {
     console.error('[WAITLISTS_DELETE]', error);
 
+    // Log the error details, including the stack trace, for debugging purposes
     if (error instanceof Error) {
-      return new NextResponse(
-        JSON.stringify({
-          error: error.message,
-          stack: isDev ? error.stack : undefined,
-        }),
-        {
-          status: 500,
-          headers: { 'Content-Type': 'application/json' },
-        },
-      );
+      console.error('Error message:', error.message);
+      console.error('Stack trace:', error.stack);
+    } else {
+      console.error('Unexpected error:', String(error));
     }
 
+    // Return a generic error message to the user
     return new NextResponse(
       JSON.stringify({
         error: 'Internal server error',
-        details: isDev ? String(error) : undefined,
       }),
       {
         status: 500,

@@ -70,20 +70,26 @@ interface RootLayoutProps {
 
 export default function RootLayout({ children, modal }: Readonly<RootLayoutProps>) {
   return (
-    <html lang="en" className={cn('h-full', inter.variable)} suppressHydrationWarning>
+    <html
+      lang="en"
+      className={cn('h-full', inter.variable)}
+      suppressHydrationWarning
+    >
       <head>
         <link
           rel="preconnect"
-          href={process.env.NEXT_PUBLIC_CDN_URL || process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}
+          href={
+            process.env.NEXT_PUBLIC_CDN_URL ||
+            process.env.NEXT_PUBLIC_APP_URL ||
+            'http://localhost:3000'
+          }
           crossOrigin="anonymous"
         />
       </head>
       <body className={cn('min-h-screen bg-background font-sans antialiased')}>
         <QueryProvider>
           <ClerkProvider>
-            <RootLayoutClient modal={modal}>
-              {children}
-            </RootLayoutClient>
+            <RootLayoutClient modal={modal}>{children}</RootLayoutClient>
           </ClerkProvider>
         </QueryProvider>
       </body>

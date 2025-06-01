@@ -30,7 +30,7 @@ export class ErrorBoundary extends Component<Props, State> {
    */
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     this.setState({ error, errorInfo });
-    
+
     // Log error to PostHog if available
     if (typeof window !== 'undefined' && (window as any).posthog) {
       (window as any).posthog.capture('$exception', {
@@ -40,7 +40,7 @@ export class ErrorBoundary extends Component<Props, State> {
         $exception_component_stack: errorInfo.componentStack,
       });
     }
-    
+
     console.error('Error Boundary caught an error:', error, errorInfo);
   }
 
@@ -53,7 +53,7 @@ export class ErrorBoundary extends Component<Props, State> {
       if (this.props.fallback) {
         return this.props.fallback;
       }
-      
+
       return (
         <div className="p-4 text-center">
           <h2 className="text-lg font-medium text-red-600 mb-2">Something went wrong</h2>
@@ -73,4 +73,3 @@ export class ErrorBoundary extends Component<Props, State> {
     return this.props.children;
   }
 }
-

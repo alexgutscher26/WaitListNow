@@ -1,5 +1,6 @@
 'use client';
 
+import React from 'react';
 import { UserButton } from '@clerk/nextjs';
 import { LogOut } from 'lucide-react';
 import Link from 'next/link';

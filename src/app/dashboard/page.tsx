@@ -699,7 +699,7 @@ export default async function Page({ searchParams = {} }: PageProps) {
                         width: `${Math.min(100, (stats.newThisWeek / Math.max(1, stats.totalSubscribers - stats.newThisWeek)) * 100)}%`,
                       }}
                       className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-blue-500 transition-all duration-500"
-                    ></div>
+                    />
                   </div>
                 </div>
               </div>
@@ -726,10 +726,10 @@ export default async function Page({ searchParams = {} }: PageProps) {
                 <div className="flex items-center justify-between text-sm mb-2">
                   <span className="font-medium text-gray-700">Waitlist Status</span>
                   <div className="flex items-center gap-2">
-                    <span className="inline-block w-2 h-2 rounded-full bg-green-500"></span>
+                    <span className="inline-block w-2 h-2 rounded-full bg-green-500" />
                     <span className="text-gray-600">{stats.activeWaitlists} Active</span>
                     <span className="mx-1 text-gray-300">•</span>
-                    <span className="inline-block w-2 h-2 rounded-full bg-gray-300"></span>
+                    <span className="inline-block w-2 h-2 rounded-full bg-gray-300" />
                     <span className="text-gray-600">{stats.completedWaitlists} Archived</span>
                   </div>
                 </div>
@@ -839,7 +839,7 @@ export default async function Page({ searchParams = {} }: PageProps) {
                         className={`h-2.5 w-2.5 rounded-full ${
                           system.status === 'operational' ? 'bg-green-500' : 'bg-red-500'
                         }`}
-                      ></div>
+                      />
                     </div>
                     <div className="ml-3 flex-1">
                       <div className="flex justify-between items-center">

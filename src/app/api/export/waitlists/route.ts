@@ -3,6 +3,15 @@ import { auth } from '@clerk/nextjs/server';
 import { db } from '@/lib/db';
 import { format } from 'date-fns';
 
+/**
+ * Export user waitlists with subscribers in CSV format.
+ *
+ * This function handles the export of waitlist data including subscriber information
+ * to a CSV file. It fetches the waitlists associated with the authenticated user,
+ * processes the data into CSV format, and returns it as a downloadable response.
+ *
+ * @returns A NextResponse object containing the CSV file or an error message.
+ */
 export async function GET() {
   try {
     const authResponse = await auth();

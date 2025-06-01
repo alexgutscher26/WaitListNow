@@ -2,6 +2,15 @@ import { NextResponse } from 'next/server';
 import { auth } from '@clerk/nextjs/server';
 import { db } from '@/lib/db';
 
+/**
+ * Handles GET requests to fetch user metrics.
+ *
+ * This function retrieves user data, including their waitlists and subscribers,
+ * calculates various metrics such as active waitlists, total signups, and a placeholder conversion rate,
+ * and returns these metrics in a JSON response. If the user is not found or unauthorized, it returns an appropriate error.
+ *
+ * @returns A JSON response containing user metrics or an error message.
+ */
 export async function GET() {
   try {
     const authResponse = await auth();

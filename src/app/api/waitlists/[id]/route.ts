@@ -302,7 +302,6 @@ async function handleUpdateWaitlist(req: NextRequest, waitlistId: string, isFull
       return new NextResponse(
         JSON.stringify({
           error: error.message,
-          stack: isDev ? error.stack : undefined,
         }),
         {
           status: 500,
@@ -311,10 +310,16 @@ async function handleUpdateWaitlist(req: NextRequest, waitlistId: string, isFull
       );
     }
 
+    // Log the error details on the server
+    console.error('[WAITLISTS_UPDATE] Internal server error:', {
+      message: error instanceof Error ? error.message : 'Unknown error',
+      stack: error instanceof Error ? error.stack : undefined,
+      error,
+    });
+
     return new NextResponse(
       JSON.stringify({
         error: 'Internal server error',
-        details: isDev ? String(error) : undefined,
       }),
       {
         status: 500,

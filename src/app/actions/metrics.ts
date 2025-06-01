@@ -7,7 +7,7 @@ export async function getUserMetrics() {
   try {
     const authResponse = await auth();
     const userId = authResponse.userId;
-    
+
     if (!userId) {
       throw new Error('Unauthorized');
     }
@@ -19,12 +19,12 @@ export async function getUserMetrics() {
         waitlists: {
           include: {
             _count: {
-              select: { subscribers: true }
-            }
-          }
+              select: { subscribers: true },
+            },
+          },
         },
-        subscribers: true
-      }
+        subscribers: true,
+      },
     });
 
     if (!user) {
@@ -32,22 +32,23 @@ export async function getUserMetrics() {
     }
 
     // Calculate metrics
-    const activeWaitlists = user.waitlists.filter(waitlist => 
-      waitlist.status === 'ACTIVE'
+    const activeWaitlists = user.waitlists.filter(
+      (waitlist) => waitlist.status === 'ACTIVE',
     ).length;
 
     const totalSignups = user.subscribers.length;
-    
+
     // Calculate conversion rate (for simplicity, we'll use a placeholder)
     // In a real app, you'd track visits and calculate actual conversion rate
-    const conversionRate = activeWaitlists > 0 
-      ? Math.min(100, Math.round((totalSignups / (activeWaitlists * 50)) * 100)) 
-      : 0;
+    const conversionRate =
+      activeWaitlists > 0
+        ? Math.min(100, Math.round((totalSignups / (activeWaitlists * 50)) * 100))
+        : 0;
 
     return {
       activeWaitlists,
       totalSignups,
-      conversionRate: Math.min(100, conversionRate) // Cap at 100%
+      conversionRate: Math.min(100, conversionRate), // Cap at 100%
     };
   } catch (error) {
     console.error('Error fetching user metrics:', error);
@@ -55,7 +56,7 @@ export async function getUserMetrics() {
     return {
       activeWaitlists: 0,
       totalSignups: 0,
-      conversionRate: 0
+      conversionRate: 0,
     };
   }
 }

@@ -10,19 +10,19 @@ type AuthResponse = {
 
 export async function getWaitlistStats() {
   try {
-    const authResponse = await auth() as AuthResponse;
+    const authResponse = (await auth()) as AuthResponse;
     const clerkUserId = authResponse.userId;
-    
+
     if (!clerkUserId) {
       throw new Error('Unauthorized: You must be signed in to view waitlist stats');
     }
-    
+
     // Find the internal user ID that matches the Clerk user ID
     const user = await db.user.findUnique({
       where: { externalId: clerkUserId },
-      select: { id: true }
+      select: { id: true },
     });
-    
+
     if (!user) {
       return {
         totalSubscribers: 0,
@@ -31,38 +31,38 @@ export async function getWaitlistStats() {
         activeWaitlists: 0,
         completedWaitlists: 0,
         recentActivities: [],
-        waitlists: []
+        waitlists: [],
       };
     }
-    
+
     const userId = user.id;
 
     // Get waitlists for the current user with subscriber counts
     const userWaitlists = await db.waitlist.findMany({
       where: { userId },
-      select: { 
-        id: true, 
+      select: {
+        id: true,
         name: true,
         subscribers: {
-          select: { 
-            id: true, 
-            email: true, 
-            name: true, 
-            createdAt: true, 
-            referralCode: true, 
-            referredBy: true 
+          select: {
+            id: true,
+            email: true,
+            name: true,
+            createdAt: true,
+            referralCode: true,
+            referredBy: true,
           },
           orderBy: { createdAt: 'desc' },
-          take: 100
+          take: 100,
         },
         _count: {
-          select: { subscribers: true }
+          select: { subscribers: true },
         },
-        createdAt: true
+        createdAt: true,
       },
-      orderBy: { createdAt: 'desc' }
+      orderBy: { createdAt: 'desc' },
     });
-    
+
     // If no waitlists found, return early with empty results
     if (userWaitlists.length === 0) {
       return {
@@ -72,7 +72,7 @@ export async function getWaitlistStats() {
         activeWaitlists: 0,
         completedWaitlists: 0,
         recentActivities: [],
-        waitlists: []
+        waitlists: [],
       };
     }
 
@@ -80,9 +80,9 @@ export async function getWaitlistStats() {
     const subscriberStats = await db.waitlist.aggregate({
       where: { userId },
       _sum: { subscriberCount: true },
-      _count: { id: true }
+      _count: { id: true },
     });
-    
+
     // Get waitlists with subscriber counts and recent subscribers
     const waitlists = await db.waitlist.findMany({
       where: { userId },
@@ -93,14 +93,14 @@ export async function getWaitlistStats() {
         slug: true,
         createdAt: true,
         subscribers: {
-          select: { 
-            id: true, 
+          select: {
+            id: true,
             email: true,
             name: true,
             createdAt: true,
             referralCode: true,
             referredBy: true,
-            status: true
+            status: true,
           },
           orderBy: { createdAt: 'desc' },
           take: 10, // Limit to most recent 10 subscribers per waitlist
@@ -108,7 +108,7 @@ export async function getWaitlistStats() {
       },
       orderBy: { createdAt: 'desc' },
     });
-    
+
     // Get recent waitlist creation activity
     const recentWaitlists = await db.waitlist.findMany({
       where: { userId },
@@ -174,7 +174,7 @@ export async function getWaitlistStats() {
     // Generate recent activity
     const recentActivity = [];
     const currentTime = new Date();
-    
+
     // Add waitlist creation activities
     for (const wl of recentWaitlists) {
       recentActivity.push({
@@ -185,21 +185,21 @@ export async function getWaitlistStats() {
         subscribers: 0, // Will be updated in the next step
       });
     }
-    
+
     // Add subscriber activities
     let subscriberCount = 0;
     for (const wl of waitlists) {
       // Update waitlist creation activity with subscriber count
-      const wlActivity = recentActivity.find(a => a.id === `wl-${wl.id}`);
+      const wlActivity = recentActivity.find((a) => a.id === `wl-${wl.id}`);
       if (wlActivity) {
         wlActivity.subscribers = wl.subscribers.length;
       }
-      
+
       // Add subscriber activities
       for (const sub of wl.subscribers) {
         subscriberCount++;
         if (subscriberCount > 10) break; // Limit total activities to prevent too many
-        
+
         recentActivity.push({
           id: `sub-${sub.id}`,
           type: 'new_subscriber' as const,
@@ -209,7 +209,7 @@ export async function getWaitlistStats() {
           waitlist: wl.name,
           time: sub.createdAt,
         });
-        
+
         // Add referral activity if applicable
         if (sub.referralCode || sub.referredBy) {
           recentActivity.push({
@@ -224,10 +224,11 @@ export async function getWaitlistStats() {
         }
       }
     }
-    
+
     // Add milestone activity (every 100 subscribers)
     const milestone = Math.floor(totalSubscribers / 100) * 100;
-    if (milestone > 0 && totalSubscribers % 100 < 10) { // Only show milestone when close to the next 100
+    if (milestone > 0 && totalSubscribers % 100 < 10) {
+      // Only show milestone when close to the next 100
       recentActivity.push({
         id: `mile-${milestone}`,
         type: 'milestone' as const,
@@ -236,7 +237,7 @@ export async function getWaitlistStats() {
         time: new Date(currentTime.getTime() - 1000), // 1 second ago
       });
     }
-    
+
     // Sort activities by time (newest first) and limit to 10
     const sortedActivities = recentActivity
       .sort((a, b) => b.time.getTime() - a.time.getTime())

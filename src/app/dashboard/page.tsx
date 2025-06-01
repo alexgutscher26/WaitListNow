@@ -88,7 +88,6 @@ type Activity =
 import { getWaitlistStats } from '@/app/actions/waitlist';
 import { ExportButton } from '@/components/export-button';
 
-
 // Enhanced stats with growth indicators and more detailed metrics
 const getStats = async (): Promise<{
   totalSubscribers: number;
@@ -104,70 +103,77 @@ const getStats = async (): Promise<{
 }> => {
   try {
     const stats = await getWaitlistStats();
-    
+
     // Debug: Log the raw stats from getWaitlistStats
     console.log('Raw stats from getWaitlistStats:', JSON.stringify(stats, null, 2));
     console.log('Recent activities count from API:', stats.recentActivities?.length || 0);
 
     // Debug: Log the raw activities before mapping
-    console.log('Raw activities before mapping:', JSON.stringify(stats.recentActivities || [], null, 2));
-    
-    // Map the recent activities to the expected format
-    const recentActivity: Activity[] = (stats.recentActivities || []).map((act: any, index: number) => {
-      console.log(`Mapping activity ${index}:`, JSON.stringify(act, null, 2));
-      const base = {
-        id: act.id,
-        type: act.type,
-        name: act.name || 'Unknown',
-        time: new Date(act.time || new Date()),
-      };
+    console.log(
+      'Raw activities before mapping:',
+      JSON.stringify(stats.recentActivities || [], null, 2),
+    );
 
-      switch (act.type) {
-        case 'new_subscriber':
-          return {
-            ...base,
-            type: 'new_subscriber',
-            email: act.email || '',
-            waitlist: act.waitlist || '',
-            avatar: act.avatar || `https://api.dicebear.com/7.x/initials/svg?seed=${act.email || 'user'}`,
-          } as NewSubscriberActivity;
-          
-        case 'waitlist_created':
-          return {
-            ...base,
-            type: 'waitlist_created',
-            subscribers: act.subscribers || 0,
-          } as WaitlistCreatedActivity;
-          
-        case 'referral':
-          return {
-            ...base,
-            type: 'referral',
-            referrer: act.referrer || 'someone',
-            referred: act.referred || '',
-            reward: act.reward || 'Early access',
-          } as ReferralActivity;
-          
-        case 'conversion':
-          return {
-            ...base,
-            type: 'conversion',
-            revenue: act.revenue || 0,
-            waitlist: act.waitlist || '',
-          } as ConversionActivity;
-          
-        case 'milestone':
-          return {
-            ...base,
-            type: 'milestone',
-            message: act.message || '',
-          } as MilestoneActivity;
-          
-        default:
-          console.warn('Unknown activity type:', act.type, act);
-          return base as Activity;
-      }
-    });
+    // Map the recent activities to the expected format
+    const recentActivity: Activity[] = (stats.recentActivities || []).map(
+      (act: any, index: number) => {
+        console.log(`Mapping activity ${index}:`, JSON.stringify(act, null, 2));
+        const base = {
+          id: act.id,
+          type: act.type,
+          name: act.name || 'Unknown',
+          time: new Date(act.time || new Date()),
+        };
+
+        switch (act.type) {
+          case 'new_subscriber':
+            return {
+              ...base,
+              type: 'new_subscriber',
+              email: act.email || '',
+              waitlist: act.waitlist || '',
+              avatar:
+                act.avatar ||
+                `https://api.dicebear.com/7.x/initials/svg?seed=${act.email || 'user'}`,
+            } as NewSubscriberActivity;
+
+          case 'waitlist_created':
+            return {
+              ...base,
+              type: 'waitlist_created',
+              subscribers: act.subscribers || 0,
+            } as WaitlistCreatedActivity;
+
+          case 'referral':
+            return {
+              ...base,
+              type: 'referral',
+              referrer: act.referrer || 'someone',
+              referred: act.referred || '',
+              reward: act.reward || 'Early access',
+            } as ReferralActivity;
+
+          case 'conversion':
+            return {
+              ...base,
+              type: 'conversion',
+              revenue: act.revenue || 0,
+              waitlist: act.waitlist || '',
+            } as ConversionActivity;
+
+          case 'milestone':
+            return {
+              ...base,
+              type: 'milestone',
+              message: act.message || '',
+            } as MilestoneActivity;
+
+          default:
+            console.warn('Unknown activity type:', act.type, act);
+            return base as Activity;
+        }
+      },
+    );
 
     console.log('Mapped activities count:', recentActivity.length);
     console.log('Mapped activities:', JSON.stringify(recentActivity, null, 2));
@@ -177,13 +183,13 @@ const getStats = async (): Promise<{
       where: {
         status: 'APPROVED',
         waitlistId: {
-          in: stats.waitlists.map(w => w.id)
-        }
+          in: stats.waitlists.map((w) => w.id),
+        },
       },
       select: {
         createdAt: true,
-        updatedAt: true
-      }
+        updatedAt: true,
+      },
     });
 
     // Calculate average wait time in hours
@@ -193,10 +199,10 @@ const getStats = async (): Promise<{
         const waitTimeMs = sub.updatedAt.getTime() - sub.createdAt.getTime();
         return sum + waitTimeMs;
       }, 0);
-      
+
       const avgWaitTimeMs = totalWaitTimeMs / approvedSubscribers.length;
       const avgWaitTimeHours = avgWaitTimeMs / (1000 * 60 * 60);
-      
+
       // Format the average wait time
       if (avgWaitTimeHours < 1) {
         const minutes = Math.round(avgWaitTimeHours * 60);
@@ -209,53 +215,56 @@ const getStats = async (): Promise<{
         averageWaitTime = `${days} ${days === 1 ? 'day' : 'days'}`;
       }
     }
-    
+
     // Calculate conversion rate (new subscribers this week / total subscribers)
-    const conversionRate = stats.totalSubscribers > 0 
-      ? Math.min(100, Math.round((stats.newThisWeek / stats.totalSubscribers) * 1000) / 10)
-      : 0;
+    const conversionRate =
+      stats.totalSubscribers > 0
+        ? Math.min(100, Math.round((stats.newThisWeek / stats.totalSubscribers) * 1000) / 10)
+        : 0;
 
     // Calculate monthly growth (placeholder for now)
     const monthlyGrowth = stats.growthRate * 4; // Extrapolate weekly growth to monthly
 
     // Calculate growth for each waitlist
-    const waitlistsWithGrowth = await Promise.all(stats.waitlists.map(async (wl) => {
-      const now = new Date();
-      const oneWeekAgo = new Date(now);
-      oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
-      const twoWeeksAgo = new Date(now);
-      twoWeeksAgo.setDate(twoWeeksAgo.getDate() - 14);
+    const waitlistsWithGrowth = await Promise.all(
+      stats.waitlists.map(async (wl) => {
+        const now = new Date();
+        const oneWeekAgo = new Date(now);
+        oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+        const twoWeeksAgo = new Date(now);
+        twoWeeksAgo.setDate(twoWeeksAgo.getDate() - 14);
 
-      // Get subscriber counts for the current and previous week
-      const [currentWeekCount, previousWeekCount] = await Promise.all([
-        db.subscriber.count({
-          where: {
-            waitlistId: wl.id,
-            createdAt: { gte: oneWeekAgo }
-          }
-        }),
-        db.subscriber.count({
-          where: {
-            waitlistId: wl.id,
-            createdAt: { gte: twoWeeksAgo, lt: oneWeekAgo }
-          }
-        })
-      ]);
+        // Get subscriber counts for the current and previous week
+        const [currentWeekCount, previousWeekCount] = await Promise.all([
+          db.subscriber.count({
+            where: {
+              waitlistId: wl.id,
+              createdAt: { gte: oneWeekAgo },
+            },
+          }),
+          db.subscriber.count({
+            where: {
+              waitlistId: wl.id,
+              createdAt: { gte: twoWeeksAgo, lt: oneWeekAgo },
+            },
+          }),
+        ]);
 
-      // Calculate growth percentage
-      let growth = 0;
-      if (previousWeekCount > 0) {
-        growth = ((currentWeekCount - previousWeekCount) / previousWeekCount) * 100;
-      } else if (currentWeekCount > 0) {
-        // If there were no subscribers in the previous week but there are now, show 100% growth
-        growth = 100;
-      }
+        // Calculate growth percentage
+        let growth = 0;
+        if (previousWeekCount > 0) {
+          growth = ((currentWeekCount - previousWeekCount) / previousWeekCount) * 100;
+        } else if (currentWeekCount > 0) {
+          // If there were no subscribers in the previous week but there are now, show 100% growth
+          growth = 100;
+        }
 
-      return {
-        ...wl,
-        growth: Math.round(growth * 10) / 10 // Round to 1 decimal place
-      };
-    }));
+        return {
+          ...wl,
+          growth: Math.round(growth * 10) / 10, // Round to 1 decimal place
+        };
+      }),
+    );
 
     return {
       totalSubscribers: stats.totalSubscribers,
@@ -271,7 +280,7 @@ const getStats = async (): Promise<{
         id: wl.id,
         name: wl.name,
         subscribers: wl.subscribers,
-        growth: wl.growth
+        growth: wl.growth,
       })),
     };
   } catch (error) {
@@ -501,37 +510,37 @@ export default async function Page({ searchParams = {} }: PageProps) {
   if (!user) {
     redirect('/sign-in');
   }
-  
+
   // Get user role and plan from database
   const userData = await db.user.findUnique({
     where: { externalId: user.id },
-    select: { 
+    select: {
       role: true,
-      plan: true
-    }
+      plan: true,
+    },
   });
-  
+
   const isAdmin = userData?.role === 'ADMIN';
   const hasExportAccess = userData?.plan !== 'FREE'; // Assuming FREE plan doesn't have export access
 
   // Check if user has premium access
-  
+
   // Handle upgrade success banner
   const upgradeParam = searchParams?.upgrade;
 
   console.log('Clerk user ID:', user.id);
-  
+
   // Find the internal user ID that matches the Clerk user ID
   const dbUser = await db.user.findUnique({
     where: { externalId: user.id },
-    select: { id: true }
+    select: { id: true },
   });
   console.log('Database user:', dbUser);
 
   // Debug: Check what waitlists exist in the database
   const allWaitlists = await db.waitlist.findMany({
     select: { id: true, name: true, userId: true },
-    take: 10
+    take: 10,
   });
   console.log('All waitlists in database:', allWaitlists);
 
@@ -552,7 +561,7 @@ export default async function Page({ searchParams = {} }: PageProps) {
     },
     take: 3,
   });
-  
+
   console.log('Found waitlists for user:', waitlists);
   return (
     <div className="space-y-6">
@@ -663,10 +672,17 @@ export default async function Page({ searchParams = {} }: PageProps) {
               <div>
                 <div className="flex items-center justify-between text-sm mb-1">
                   <span className="font-medium text-gray-700">Subscriber Growth</span>
-                  <span className={`font-medium ${
-                    stats.growthRate > 0 ? 'text-green-600' : stats.growthRate < 0 ? 'text-red-600' : 'text-gray-600'
-                  }`}>
-                    {stats.growthRate > 0 ? '+' : ''}{stats.growthRate.toFixed(1)}% (Week)
+                  <span
+                    className={`font-medium ${
+                      stats.growthRate > 0
+                        ? 'text-green-600'
+                        : stats.growthRate < 0
+                          ? 'text-red-600'
+                          : 'text-gray-600'
+                    }`}
+                  >
+                    {stats.growthRate > 0 ? '+' : ''}
+                    {stats.growthRate.toFixed(1)}% (Week)
                   </span>
                 </div>
                 <div className="relative pt-1">
@@ -678,14 +694,16 @@ export default async function Page({ searchParams = {} }: PageProps) {
                     </div>
                   </div>
                   <div className="overflow-hidden h-2 mb-4 text-xs flex rounded bg-blue-200">
-                    <div 
-                      style={{ width: `${Math.min(100, (stats.newThisWeek / Math.max(1, stats.totalSubscribers - stats.newThisWeek)) * 100)}%` }}
+                    <div
+                      style={{
+                        width: `${Math.min(100, (stats.newThisWeek / Math.max(1, stats.totalSubscribers - stats.newThisWeek)) * 100)}%`,
+                      }}
                       className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-blue-500 transition-all duration-500"
                     ></div>
                   </div>
                 </div>
               </div>
-              
+
               {/* Active Subscribers */}
               <div>
                 <div className="flex items-center justify-between text-sm mb-1">
@@ -693,39 +711,33 @@ export default async function Page({ searchParams = {} }: PageProps) {
                   <span className="font-medium text-gray-900">{stats.totalSubscribers}</span>
                 </div>
                 <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
-                  <div 
+                  <div
                     className="h-full bg-blue-600 transition-all duration-500"
                     style={{
-                      width: `${Math.min(100, (stats.totalSubscribers / 1000) * 100)}%`
+                      width: `${Math.min(100, (stats.totalSubscribers / 1000) * 100)}%`,
                     }}
                   />
                 </div>
-                <p className="text-xs text-gray-500 mt-1">
-                  {stats.newThisWeek} new this week
-                </p>
+                <p className="text-xs text-gray-500 mt-1">{stats.newThisWeek} new this week</p>
               </div>
-              
+
               {/* Waitlist Status */}
               <div>
                 <div className="flex items-center justify-between text-sm mb-2">
                   <span className="font-medium text-gray-700">Waitlist Status</span>
                   <div className="flex items-center gap-2">
                     <span className="inline-block w-2 h-2 rounded-full bg-green-500"></span>
-                    <span className="text-gray-600">
-                      {stats.activeWaitlists} Active
-                    </span>
+                    <span className="text-gray-600">{stats.activeWaitlists} Active</span>
                     <span className="mx-1 text-gray-300">•</span>
                     <span className="inline-block w-2 h-2 rounded-full bg-gray-300"></span>
-                    <span className="text-gray-600">
-                      {stats.completedWaitlists} Archived
-                    </span>
+                    <span className="text-gray-600">{stats.completedWaitlists} Archived</span>
                   </div>
                 </div>
                 <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
-                  <div 
+                  <div
                     className="h-full bg-green-500 transition-all duration-500"
                     style={{
-                      width: `${(stats.activeWaitlists / (stats.activeWaitlists + stats.completedWaitlists)) * 100}%`
+                      width: `${(stats.activeWaitlists / (stats.activeWaitlists + stats.completedWaitlists)) * 100}%`,
                     }}
                   />
                 </div>
@@ -738,7 +750,11 @@ export default async function Page({ searchParams = {} }: PageProps) {
               <CardTitle>Quick Actions</CardTitle>
             </CardHeader>
             <CardContent className="grid gap-2">
-              <Button asChild variant="outline" className="justify-start gap-2 h-10">
+              <Button
+                asChild
+                variant="outline"
+                className="justify-start gap-2 h-10"
+              >
                 <Link href="/dashboard/waitlists/new">
                   <Plus className="h-4 w-4" />
                   Create Waitlist
@@ -749,9 +765,7 @@ export default async function Page({ searchParams = {} }: PageProps) {
                 className="justify-start gap-2 h-10"
               >
                 <Settings className="h-4 w-4" />
-                <Link href="/dashboard/account-settings">
-                  Account Settings
-                </Link>
+                <Link href="/dashboard/account-settings">Account Settings</Link>
               </Button>
               {/* <Button asChild variant="outline" className="justify-start gap-2 h-10">
                 <Link href="/dashboard/subscribers">
@@ -799,14 +813,16 @@ export default async function Page({ searchParams = {} }: PageProps) {
                   </div>
                   <div>
                     <h4 className="font-medium text-gray-900">All Systems Operational</h4>
-                    <p className="text-sm text-gray-500">Last checked: {new Date().toLocaleString()}</p>
+                    <p className="text-sm text-gray-500">
+                      Last checked: {new Date().toLocaleString()}
+                    </p>
                   </div>
                 </div>
                 <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
                   Operational
                 </span>
               </div>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-4">
                 {[
                   { name: 'API', status: 'operational', lastChecked: 'Just now' },
@@ -814,11 +830,16 @@ export default async function Page({ searchParams = {} }: PageProps) {
                   { name: 'Email Service', status: 'operational', lastChecked: 'Just now' },
                   { name: 'Authentication', status: 'operational', lastChecked: 'Just now' },
                 ].map((system) => (
-                  <div key={system.name} className="flex items-center p-3 bg-white border border-gray-100 rounded-lg shadow-sm">
+                  <div
+                    key={system.name}
+                    className="flex items-center p-3 bg-white border border-gray-100 rounded-lg shadow-sm"
+                  >
                     <div className="flex-shrink-0">
-                      <div className={`h-2.5 w-2.5 rounded-full ${
-                        system.status === 'operational' ? 'bg-green-500' : 'bg-red-500'
-                      }`}></div>
+                      <div
+                        className={`h-2.5 w-2.5 rounded-full ${
+                          system.status === 'operational' ? 'bg-green-500' : 'bg-red-500'
+                        }`}
+                      ></div>
                     </div>
                     <div className="ml-3 flex-1">
                       <div className="flex justify-between items-center">

@@ -7,7 +7,7 @@ export async function GET() {
   try {
     const authResponse = await auth();
     const userId = authResponse.userId;
-    
+
     if (!userId) {
       return new NextResponse('Unauthorized', { status: 401 });
     }
@@ -38,11 +38,12 @@ export async function GET() {
     }
 
     // Convert waitlists to CSV format
-    let csvContent = 'Waitlist Name,Subscriber Email,Status,Signup Date,Last Updated,Referral Code,Referred By\n';
-    
-    waitlists.forEach(waitlist => {
+    let csvContent =
+      'Waitlist Name,Subscriber Email,Status,Signup Date,Last Updated,Referral Code,Referred By\n';
+
+    waitlists.forEach((waitlist) => {
       if (waitlist.subscribers && waitlist.subscribers.length > 0) {
-        waitlist.subscribers.forEach(subscriber => {
+        waitlist.subscribers.forEach((subscriber) => {
           csvContent += `"${waitlist.name.replace(/"/g, '""')}",`;
           csvContent += `"${subscriber.email}",`;
           csvContent += `"${subscriber.status}",`;
@@ -59,11 +60,14 @@ export async function GET() {
 
     // Create a response with the CSV file
     const response = new NextResponse(csvContent);
-    
+
     // Set headers for file download
     response.headers.set('Content-Type', 'text/csv');
-    response.headers.set('Content-Disposition', `attachment; filename=waitlist-export-${format(new Date(), 'yyyy-MM-dd')}.csv`);
-    
+    response.headers.set(
+      'Content-Disposition',
+      `attachment; filename=waitlist-export-${format(new Date(), 'yyyy-MM-dd')}.csv`,
+    );
+
     return response;
   } catch (error) {
     console.error('Export error:', error);

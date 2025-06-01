@@ -1,6 +1,5 @@
 import { db } from '@/lib/db';
 
-
 // Custom error class for waitlist preferences errors
 export class WaitlistPreferencesError extends Error {
   constructor(

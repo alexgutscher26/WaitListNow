@@ -3,6 +3,7 @@
 This document outlines the code splitting and lazy loading strategy implemented in the application to improve performance and reduce initial load time.
 
 ## Table of Contents
+
 - [Implementation Details](#implementation-details)
   - [1. Dynamic Imports](#1-dynamic-imports)
   - [2. Lazy Loading Components](#2-lazy-loading-components)
@@ -56,7 +57,7 @@ import { lazyLoad } from '@/components/ui/lazy-load';
 // Lazy load a component
 const HeavyComponent = lazyLoad(
   () => import('@/components/HeavyComponent'),
-  { ssr: false } // Disable SSR for this component if needed
+  { ssr: false }, // Disable SSR for this component if needed
 );
 
 // Use the lazy-loaded component
@@ -104,7 +105,7 @@ const NamedComponent = dynamic(
   () => import('../components/Hello').then((mod) => mod.NamedComponent),
   {
     loading: () => <p>Loading...</p>,
-  }
+  },
 );
 ```
 
@@ -133,6 +134,7 @@ Monitor the effectiveness of code splitting using:
 ## Troubleshooting
 
 If a component doesn't load:
+
 1. Check the network tab for failed chunk loads
 2. Verify the import path is correct
 3. Ensure the component is exported as default

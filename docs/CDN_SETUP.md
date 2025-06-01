@@ -97,6 +97,7 @@ For other platforms, make sure to:
 ### Mixed Content Warnings
 
 If you see mixed content warnings, make sure:
+
 - Your CDN URL uses HTTPS
 - All asset URLs use HTTPS or protocol-relative URLs
 - The `NEXT_PUBLIC_APP_URL` environment variable uses HTTPS in production
@@ -104,6 +105,7 @@ If you see mixed content warnings, make sure:
 ### Cache Invalidation
 
 To force cache invalidation when deploying updates:
+
 1. Update the `VERCEL_GIT_COMMIT_SHA` environment variable (automatically set in Vercel)
 2. Append a version query parameter to your asset URLs (already handled by `getStaticAssetUrl`)
 

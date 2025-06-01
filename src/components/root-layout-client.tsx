@@ -17,16 +17,22 @@ function LayoutWrapper({ children, modal }: { children: React.ReactNode; modal: 
   return <ClientLayout modal={modal}>{children}</ClientLayout>;
 }
 
-export function RootLayoutClient({ children, modal }: { children: React.ReactNode; modal: React.ReactNode }) {
+export function RootLayoutClient({
+  children,
+  modal,
+}: {
+  children: React.ReactNode;
+  modal: React.ReactNode;
+}) {
   return (
-    <Suspense fallback={
-      <div className="flex h-screen w-full items-center justify-center">
-        <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
-      </div>
-    }>
-      <LayoutWrapper modal={modal}>
-        {children}
-      </LayoutWrapper>
+    <Suspense
+      fallback={
+        <div className="flex h-screen w-full items-center justify-center">
+          <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+        </div>
+      }
+    >
+      <LayoutWrapper modal={modal}>{children}</LayoutWrapper>
     </Suspense>
   );
 }

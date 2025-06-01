@@ -10,20 +10,20 @@
 export function getStaticAssetUrl(path: string): string {
   // Remove leading slash if present
   const cleanPath = path.startsWith('/') ? path.slice(1) : path;
-  
+
   // In development or if no CDN is configured, use the local path
   if (process.env.NODE_ENV !== 'production' || !process.env.NEXT_PUBLIC_CDN_URL) {
     return `/${cleanPath}`;
   }
-  
+
   // Create URL with cache busting
   const url = new URL(cleanPath, process.env.NEXT_PUBLIC_CDN_URL);
-  
+
   // Add cache busting parameter if available
   if (process.env.NEXT_PUBLIC_BUILD_ID) {
     url.searchParams.set('v', process.env.NEXT_PUBLIC_BUILD_ID);
   }
-  
+
   return url.toString();
 }
 
@@ -34,17 +34,17 @@ export function getStaticAssetUrl(path: string): string {
  */
 export function preloadResource(url: string, as: string): void {
   if (typeof document === 'undefined') return;
-  
+
   const link = document.createElement('link');
   link.rel = 'preload';
   link.href = url;
   link.as = as;
-  
+
   // Add crossOrigin attribute for fonts
   if (as === 'font') {
     link.crossOrigin = 'anonymous';
   }
-  
+
   document.head.appendChild(link);
 }
 
@@ -54,11 +54,11 @@ export function preloadResource(url: string, as: string): void {
  */
 export function preconnectToOrigins(urls: string[]): void {
   if (typeof document === 'undefined') return;
-  
+
   const origins = new Set(
     urls
-      .filter(url => url.startsWith('http'))
-      .map(url => {
+      .filter((url) => url.startsWith('http'))
+      .map((url) => {
         try {
           const { origin } = new URL(url);
           return origin;
@@ -66,10 +66,10 @@ export function preconnectToOrigins(urls: string[]): void {
           return null;
         }
       })
-      .filter(Boolean) as string[]
+      .filter(Boolean) as string[],
   );
-  
-  origins.forEach(origin => {
+
+  origins.forEach((origin) => {
     const link = document.createElement('link');
     link.rel = 'preconnect';
     link.href = origin;
@@ -82,7 +82,7 @@ export function preconnectToOrigins(urls: string[]): void {
  */
 export function preloadCriticalAssets(): void {
   if (typeof document === 'undefined') return;
-  
+
   // Preconnect to required origins
   preconnectToOrigins([
     process.env.NEXT_PUBLIC_APP_URL || '',
@@ -90,14 +90,14 @@ export function preloadCriticalAssets(): void {
     'https://fonts.googleapis.com',
     'https://fonts.gstatic.com',
   ]);
-  
+
   // Preload critical fonts
   const criticalFonts = [
     // Add paths to your critical fonts here
     '/fonts/inter-var-latin.woff2',
   ];
-  
-  criticalFonts.forEach(font => {
+
+  criticalFonts.forEach((font) => {
     preloadResource(getStaticAssetUrl(font), 'font');
   });
 }

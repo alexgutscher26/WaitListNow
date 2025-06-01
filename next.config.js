@@ -68,11 +68,7 @@ const baseConfig = {
   // Enable static optimization for all pages
   experimental: {
     optimizeCss: true,
-    optimizePackageImports: [
-      '@radix-ui/react-icons',
-      'date-fns',
-      'lucide-react',
-    ],
+    optimizePackageImports: ['@radix-ui/react-icons', 'date-fns', 'lucide-react'],
   },
   // Disable source maps in production
   productionBrowserSourceMaps: process.env.NODE_ENV !== 'production',

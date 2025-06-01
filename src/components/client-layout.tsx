@@ -7,48 +7,50 @@ import { cn } from '@/lib/utils';
 
 // Import providers
 const ClerkProvider = dynamic(
-  () => import('@/providers/clerk-provider').then(mod => mod.ClerkProvider),
-  { ssr: true, loading: () => null }
+  () => import('@/providers/clerk-provider').then((mod) => mod.ClerkProvider),
+  { ssr: true, loading: () => null },
 );
 
 const QueryProvider = dynamic(
-  () => import('@/providers/query-provider').then(mod => mod.QueryProvider),
-  { ssr: true, loading: () => null }
+  () => import('@/providers/query-provider').then((mod) => mod.QueryProvider),
+  { ssr: true, loading: () => null },
 );
 
 const PostHogProvider = dynamic(
-  () => import('@/providers/posthog-provider').then(mod => mod.PostHogProvider),
-  { ssr: true, loading: () => null }
+  () => import('@/providers/posthog-provider').then((mod) => mod.PostHogProvider),
+  { ssr: true, loading: () => null },
 );
 
 // Lazy load client providers with proper code splitting
 const ClientProviders = dynamic(
-  () => import('@/components/providers/client-providers').then(mod => ({
-    default: function DynamicClientProviders({ children }: { children: React.ReactNode }) {
-      return <mod.ClientProviders>{children}</mod.ClientProviders>;
-    }
-  })),
-  { 
+  () =>
+    import('@/components/providers/client-providers').then((mod) => ({
+      default: function DynamicClientProviders({ children }: { children: React.ReactNode }) {
+        return <mod.ClientProviders>{children}</mod.ClientProviders>;
+      },
+    })),
+  {
     ssr: false,
     loading: () => (
       <div className="flex h-screen w-full items-center justify-center">
         <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
       </div>
-    )
-  }
+    ),
+  },
 );
 
 // Client components with dynamic imports
 const ClientSideComponents = dynamic(
-  () => import('@/components/client-side-components').then(mod => ({
-    default: function DynamicClientComponents() {
-      return <mod.ClientSideComponents />;
-    }
-  })),
-  { 
+  () =>
+    import('@/components/client-side-components').then((mod) => ({
+      default: function DynamicClientComponents() {
+        return <mod.ClientSideComponents />;
+      },
+    })),
+  {
     ssr: false,
-    loading: () => null
-  }
+    loading: () => null,
+  },
 );
 
 interface ClientLayoutProps {

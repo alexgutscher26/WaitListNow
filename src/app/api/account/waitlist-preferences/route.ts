@@ -7,6 +7,15 @@ import {
 } from '@/lib/waitlist-preferences';
 
 // GET handler to fetch waitlist preferences
+/**
+ * Handles GET requests to fetch waitlist preferences for an authenticated user.
+ *
+ * It first authenticates the user, retrieves the user ID from the session,
+ * and checks if the user is authorized. If authorized, it fetches the user's waitlist preferences
+ * and returns them in a JSON response. If any step fails, it logs the error and returns an appropriate error response.
+ *
+ * @returns A JSON response containing either the user's waitlist preferences or an error message.
+ */
 export async function GET() {
   try {
     console.log('GET /api/account/waitlist-preferences called');
@@ -43,6 +52,16 @@ export async function GET() {
 }
 
 // PUT handler to update waitlist preferences
+/**
+ * Handles PUT requests to update waitlist preferences for a user.
+ *
+ * This function authenticates the user, parses and validates the request body,
+ * updates the user's waitlist preferences in the database, and returns the updated preferences.
+ * It handles errors related to authentication, parsing, validation, and database operations.
+ *
+ * @param request - The incoming HTTP request object.
+ * @returns A JSON response containing either the updated preferences or an error message.
+ */
 export async function PUT(request: Request) {
   try {
     console.log('PUT /api/account/waitlist-preferences called');

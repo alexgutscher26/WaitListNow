@@ -10,18 +10,18 @@ import { ClientProviders } from '@/components/providers/client-providers';
 
 // Server-side providers that can be used in Server Components
 const ClerkProvider = dynamic(
-  () => import('@/providers/clerk-provider').then(mod => mod.ClerkProvider),
-  { ssr: true }
+  () => import('@/providers/clerk-provider').then((mod) => mod.ClerkProvider),
+  { ssr: true },
 );
 
 const QueryProvider = dynamic(
-  () => import('@/providers/query-provider').then(mod => mod.QueryProvider),
-  { ssr: true }
+  () => import('@/providers/query-provider').then((mod) => mod.QueryProvider),
+  { ssr: true },
 );
 
 const PostHogProvider = dynamic(
-  () => import('@/providers/posthog-provider').then(mod => mod.PostHogProvider),
-  { ssr: true }
+  () => import('@/providers/posthog-provider').then((mod) => mod.PostHogProvider),
+  { ssr: true },
 );
 
 // Loading component for Suspense fallback

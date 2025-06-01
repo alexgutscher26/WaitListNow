@@ -26,7 +26,7 @@ import { lazyLoad } from '@/components/ui/lazy-load';
 // Lazy load a component
 const HeavyComponent = lazyLoad(
   () => import('@/components/HeavyComponent'),
-  { ssr: false } // Disable SSR for this component if needed
+  { ssr: false }, // Disable SSR for this component if needed
 );
 
 // Use the lazy-loaded component
@@ -74,7 +74,7 @@ const NamedComponent = dynamic(
   () => import('../components/Hello').then((mod) => mod.NamedComponent),
   {
     loading: () => <p>Loading...</p>,
-  }
+  },
 );
 ```
 
@@ -103,6 +103,7 @@ Monitor the effectiveness of code splitting using:
 ## Troubleshooting
 
 If a component doesn't load:
+
 1. Check the network tab for failed chunk loads
 2. Verify the import path is correct
 3. Ensure the component is exported as default

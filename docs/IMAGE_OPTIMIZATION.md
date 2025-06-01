@@ -25,7 +25,7 @@ import { Image } from '@/components/ui/image';
   alt="Description of image"
   width={800}
   height={600}
-/>
+/>;
 ```
 
 ### With Custom Class

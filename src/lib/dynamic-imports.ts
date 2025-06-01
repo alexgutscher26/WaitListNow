@@ -15,7 +15,7 @@ interface DynamicImportOptions<T = {}> {
  */
 export function dynamicImport<T extends {}>(
   importFn: () => Promise<{ default: ComponentType<T> }>,
-  options: DynamicImportOptions<T> = {}
+  options: DynamicImportOptions<T> = {},
 ) {
   const { loading, ssr = false } = options;
 

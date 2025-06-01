@@ -1,20 +1,6 @@
-import type { Metadata, Viewport } from 'next';
-import { Inter } from 'next/font/google';
-import { cn } from '@/lib/utils';
-import { RootLayoutClient } from '@/components/root-layout-client';
-import { ClerkProvider } from '@/components/providers/clerk-provider-wrapper';
-import { QueryProvider } from '@/components/providers/query-provider-wrapper';
-import './globals.css';
+import { Metadata, Viewport } from 'next';
 
-// Font configuration - loaded on the server
-const inter = Inter({
-  subsets: ['latin'],
-  display: 'swap',
-  weight: ['400', '500', '600', '700'],
-  variable: '--font-sans',
-});
-
-// Export metadata
+// Metadata configuration
 export const metadata: Metadata = {
   title: {
     default: 'WaitlistNow - Build Your Waitlist in Minutes',
@@ -61,31 +47,3 @@ export const viewport: Viewport = {
   maximumScale: 5,
   userScalable: true,
 };
-
-interface RootLayoutProps {
-  children: React.ReactNode;
-  modal: React.ReactNode;
-}
-
-export default function RootLayout({ children, modal }: Readonly<RootLayoutProps>) {
-  return (
-    <html lang="en" className={cn('h-full', inter.variable)} suppressHydrationWarning>
-      <head>
-        <link
-          rel="preconnect"
-          href={process.env.NEXT_PUBLIC_CDN_URL || process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}
-          crossOrigin="anonymous"
-        />
-      </head>
-      <body className={cn('min-h-screen bg-background font-sans antialiased')}>
-        <QueryProvider>
-          <ClerkProvider>
-            <RootLayoutClient modal={modal}>
-              {children}
-            </RootLayoutClient>
-          </ClerkProvider>
-        </QueryProvider>
-      </body>
-    </html>
-  );
-}

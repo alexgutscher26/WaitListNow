@@ -644,6 +644,16 @@ const onboardingSteps = [
   },
 ];
 
+/**
+ * A component managing the onboarding process with multiple steps.
+ *
+ * This component handles user interactions through a series of onboarding steps,
+ * validates input data, and manages state transitions between steps. It also
+ * includes functionality for validation, error handling, and API submission upon
+ * completion.
+ *
+ * @returns JSX element representing the onboarding UI.
+ */
 export default function ImprovedOnboarding() {
   const [currentStep, setCurrentStep] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
@@ -729,6 +739,16 @@ export default function ImprovedOnboarding() {
 
   const router = useRouter();
 
+  /**
+   * Validates the current step in a form-based workflow.
+   *
+   * Depending on the `currentStep` value, it performs different validation checks:
+   * - For `currentStep === 0`, the welcome screen is always considered valid.
+   * - For `currentStep === 1`, it validates the `name` field to ensure it's at least 3 characters long,
+   *   and optionally checks if `websiteUrl` and `redirectUrl` start with 'http://' or 'https://'.
+   *
+   * @returns A boolean indicating whether the current step is valid.
+   */
   const validateCurrentStep = (): boolean => {
     if (currentStep === 0) {
       // Welcome screen is always valid
@@ -763,6 +783,15 @@ export default function ImprovedOnboarding() {
     return true;
   };
 
+  /**
+   * Handles navigation to the next step in the onboarding process.
+   *
+   * This function validates the current step, checks if it's the final step,
+   * prepares and validates the submission data, sends a request to complete onboarding,
+   * and handles errors appropriately. If not at the final step, it increments the current step.
+   *
+   * @returns None
+   */
   const handleNext = async () => {
     // Validate current step before proceeding
     const isValid = validateCurrentStep();

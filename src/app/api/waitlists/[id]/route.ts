@@ -158,6 +158,8 @@ export async function DELETE(req: NextRequest, { params }: { params: { id: strin
 
     // Log the error details, including the stack trace, for debugging purposes
     if (error instanceof Error) {
+      console.error('Error details:', error.message, error.stack);
+    }
 
     return new NextResponse(
       JSON.stringify({

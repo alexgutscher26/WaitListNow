@@ -1,0 +1,7 @@
+{
+  "files": [
+    ".next/static/chunks/**/*.js",
+    ".next/static/*/*.js"
+  ],
+  "limit": "500 KB"
+}

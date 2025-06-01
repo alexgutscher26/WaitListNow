@@ -1,5 +1,7 @@
+// @ts-check
+
 /** @type {import('next').NextConfig} */
-const nextConfig = {
+const baseConfig = {
   // Enable browser source maps in production
   productionBrowserSourceMaps: true,
   // Increase the timeout for builds to 5 minutes
@@ -59,6 +61,30 @@ const nextConfig = {
   },
   // This is required to support PostHog trailing slash API requests
   skipTrailingSlashRedirect: true,
+  // Enable HTTP/2 server push
+  httpAgentOptions: {
+    keepAlive: true,
+  },
+  // Enable static optimization for all pages
+  experimental: {
+    optimizeCss: true,
+    optimizePackageImports: [
+      '@radix-ui/react-icons',
+      'date-fns',
+      'lucide-react',
+    ],
+  },
+  // Disable source maps in production
+  productionBrowserSourceMaps: process.env.NODE_ENV !== 'production',
 };
 
-export default nextConfig;
+// Conditionally apply bundle analyzer in development or when ANALYZE is set
+if (process.env.ANALYZE) {
+  const withBundleAnalyzer = require('@next/bundle-analyzer')({
+    enabled: true,
+    openAnalyzer: true,
+  });
+  module.exports = withBundleAnalyzer(baseConfig);
+} else {
+  module.exports = baseConfig;
+}

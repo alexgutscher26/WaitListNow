@@ -1,6 +1,18 @@
 'use client';
 
-import { AlertCircle, ArrowRight, Bell, Check, Copy, Eye, EyeOff, LinkIcon, Settings, Users, Zap } from 'lucide-react';
+import {
+  AlertCircle,
+  ArrowRight,
+  Bell,
+  Check,
+  Copy,
+  Eye,
+  EyeOff,
+  LinkIcon,
+  Settings,
+  Users,
+  Zap,
+} from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { toast } from '@/components/ui/use-toast';
 import { useState, useEffect } from 'react';
@@ -144,9 +156,7 @@ const onboardingSteps = [
                 }))
               }
             />
-            {errors.name && (
-              <p className="text-sm text-red-500">{errors.name}</p>
-            )}
+            {errors.name && <p className="text-sm text-red-500">{errors.name}</p>}
           </div>
 
           <div className="space-y-2">
@@ -194,9 +204,7 @@ const onboardingSteps = [
                 }))
               }
             />
-            {errors.websiteUrl && (
-              <p className="text-sm text-red-500">{errors.websiteUrl}</p>
-            )}
+            {errors.websiteUrl && <p className="text-sm text-red-500">{errors.websiteUrl}</p>}
           </div>
 
           <div className="space-y-2">
@@ -223,11 +231,10 @@ const onboardingSteps = [
                 }))
               }
             />
-            {errors.redirectUrl && (
-              <p className="text-sm text-red-500">{errors.redirectUrl}</p>
-            )}
+            {errors.redirectUrl && <p className="text-sm text-red-500">{errors.redirectUrl}</p>}
             <p className="text-xs text-gray-500">
-              Where should we send users after they sign up? Leave blank to show a success message on the same page.
+              Where should we send users after they sign up? Leave blank to show a success message
+              on the same page.
             </p>
           </div>
 
@@ -331,8 +338,10 @@ const onboardingSteps = [
                     onChange={(e) =>
                       setFormData((prev) => {
                         const currentSettings = prev.settings || {};
-                        const currentReward = currentSettings.referralReward || { type: 'position' as const };
-                        
+                        const currentReward = currentSettings.referralReward || {
+                          type: 'position' as const,
+                        };
+
                         return {
                           ...prev,
                           settings: {
@@ -401,7 +410,14 @@ const onboardingSteps = [
     description: 'Add your waitlist to your website with simple copy-paste.',
     icon: <LinkIcon className="h-8 w-8 text-blue-500" />,
     content: (props: ContentProps) => {
-      const { formData, setFormData, showPreview = false, setShowPreview, copied = null, setCopied } = props;
+      const {
+        formData,
+        setFormData,
+        showPreview = false,
+        setShowPreview,
+        copied = null,
+        setCopied,
+      } = props;
       const waitlistId = `wl_${Math.random().toString(36).substr(2, 9)}`;
 
       const handleCopy = (text: string, type: 'script' | 'div') => {
@@ -418,14 +434,14 @@ const onboardingSteps = [
             <div className="flex items-center justify-between">
               <h3 className="font-semibold text-gray-900">Integration Options</h3>
               <button
-                onClick={() => setShowPreview && setShowPreview(!showPreview)}
+                onClick={() => setShowPreview?.(!showPreview)}
                 className="flex items-center gap-2 text-sm text-blue-600 hover:text-blue-700 transition-colors"
               >
                 {showPreview ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                 {showPreview ? 'Hide' : 'Show'} Preview
               </button>
             </div>
-            
+
             {/* Terms and Conditions Section */}
             <div className="pt-4 border-t border-gray-200">
               <h3 className="font-semibold text-gray-900 mb-4">Terms & Conditions</h3>
@@ -448,13 +464,26 @@ const onboardingSteps = [
                     />
                   </div>
                   <div className="ml-3 text-sm">
-                    <label htmlFor="terms" className="font-medium text-gray-700">
+                    <label
+                      htmlFor="terms"
+                      className="font-medium text-gray-700"
+                    >
                       I agree to the{' '}
-                      <a href="/terms" className="text-blue-600 hover:text-blue-500" target="_blank" rel="noopener noreferrer">
+                      <a
+                        href="/terms"
+                        className="text-blue-600 hover:text-blue-500"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
                         Terms of Service
                       </a>{' '}
                       and{' '}
-                      <a href="/privacy" className="text-blue-600 hover:text-blue-500" target="_blank" rel="noopener noreferrer">
+                      <a
+                        href="/privacy"
+                        className="text-blue-600 hover:text-blue-500"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
                         Privacy Policy
                       </a>
                     </label>
@@ -463,7 +492,7 @@ const onboardingSteps = [
                     </p>
                   </div>
                 </div>
-                
+
                 <div className="flex items-start">
                   <div className="flex items-center h-5">
                     <input
@@ -481,7 +510,10 @@ const onboardingSteps = [
                     />
                   </div>
                   <div className="ml-3 text-sm">
-                    <label htmlFor="email-notifications" className="font-medium text-gray-700">
+                    <label
+                      htmlFor="email-notifications"
+                      className="font-medium text-gray-700"
+                    >
                       Receive important email notifications
                     </label>
                     <p className="text-gray-500">
@@ -489,7 +521,7 @@ const onboardingSteps = [
                     </p>
                   </div>
                 </div>
-                
+
                 <div className="flex items-start">
                   <div className="flex items-center h-5">
                     <input
@@ -507,12 +539,13 @@ const onboardingSteps = [
                     />
                   </div>
                   <div className="ml-3 text-sm">
-                    <label htmlFor="marketing-emails" className="font-medium text-gray-700">
+                    <label
+                      htmlFor="marketing-emails"
+                      className="font-medium text-gray-700"
+                    >
                       Subscribe to marketing emails
                     </label>
-                    <p className="text-gray-500">
-                      Get tips, product updates, and special offers.
-                    </p>
+                    <p className="text-gray-500">Get tips, product updates, and special offers.</p>
                   </div>
                 </div>
               </div>
@@ -672,7 +705,7 @@ export default function ImprovedOnboarding() {
     if (currentStep === 1) {
       // Only validate on the second step (Set Up Your Waitlist)
       const newErrors: FormErrors = {};
-      
+
       if (!formData.name) {
         newErrors.name = 'Waitlist name is required';
       } else if (formData.name.length < 3) {
@@ -686,7 +719,7 @@ export default function ImprovedOnboarding() {
       if (formData.redirectUrl && !/^https?:\/\//.test(formData.redirectUrl)) {
         newErrors.redirectUrl = 'Please enter a valid URL (starting with http:// or https://)';
       }
-      
+
       setErrors(newErrors);
     } else {
       // Clear errors for other steps
@@ -704,7 +737,7 @@ export default function ImprovedOnboarding() {
       // Second step requires name
       const newErrors: FormErrors = {};
       let hasErrors = false;
-      
+
       if (!formData.name) {
         newErrors.name = 'Waitlist name is required';
         hasErrors = true;
@@ -722,11 +755,11 @@ export default function ImprovedOnboarding() {
         newErrors.redirectUrl = 'Please enter a valid URL (starting with http:// or https://)';
         hasErrors = true;
       }
-      
+
       setErrors(newErrors);
       return !hasErrors;
     }
-    
+
     return true;
   };
 
@@ -737,7 +770,7 @@ export default function ImprovedOnboarding() {
       console.log('Validation failed, cannot proceed');
       return;
     }
-    
+
     console.log('Validation passed, proceeding to next step');
 
     if (currentStep === onboardingSteps.length - 1) {
@@ -762,8 +795,12 @@ export default function ImprovedOnboarding() {
             emailVerification: formData.settings?.emailVerification ?? true,
             allowDuplicates: formData.settings?.allowDuplicates ?? false,
             referralEnabled: formData.settings?.referralEnabled ?? false,
-            ...(formData.settings?.referralReward && { referralReward: formData.settings.referralReward }),
-            ...(formData.settings?.referralMessage && { referralMessage: formData.settings.referralMessage }),
+            ...(formData.settings?.referralReward && {
+              referralReward: formData.settings.referralReward,
+            }),
+            ...(formData.settings?.referralMessage && {
+              referralMessage: formData.settings.referralMessage,
+            }),
           },
           termsAccepted: formData.termsAccepted,
           emailNotifications: formData.emailNotifications,
@@ -773,9 +810,11 @@ export default function ImprovedOnboarding() {
 
         // Validate against the schema
         const result = onboardingCompleteSchema.safeParse(submissionData);
-        
+
         if (!result.success) {
-          const errorMessages = result.error.errors.map((err: { message: string }) => err.message).join('\n');
+          const errorMessages = result.error.errors
+            .map((err: { message: string }) => err.message)
+            .join('\n');
           throw new Error(errorMessages);
         }
 
@@ -792,21 +831,21 @@ export default function ImprovedOnboarding() {
           const errorData = await response.json().catch(() => ({}));
           throw new Error(errorData.error || 'Failed to complete onboarding');
         }
-        
+
         // Show success toast
         toast({
           title: '🎉 Onboarding completed!',
           description: 'Your waitlist is now ready to use.',
           variant: 'default',
         });
-        
+
         // Redirect to dashboard after successful onboarding
         router.push('/dashboard');
       } catch (error) {
         console.error('Error completing onboarding:', error);
         const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
         setError(errorMessage);
-        
+
         // Show error toast
         toast({
           title: 'Error',
@@ -833,7 +872,10 @@ export default function ImprovedOnboarding() {
         <div className="mb-8">
           <div className="flex items-center justify-between mb-4">
             {onboardingSteps.map((_, index) => (
-              <div key={index} className="flex items-center">
+              <div
+                key={index}
+                className="flex items-center"
+              >
                 <div
                   className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold transition-all ${
                     index <= currentStep ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-500'

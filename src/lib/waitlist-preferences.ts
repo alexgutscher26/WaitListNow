@@ -1,5 +1,5 @@
 import { db } from '@/lib/db';
-import { Prisma } from '@prisma/client';
+
 
 // Custom error class for waitlist preferences errors
 export class WaitlistPreferencesError extends Error {

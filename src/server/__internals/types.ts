@@ -5,15 +5,15 @@ import { httpHandler } from '@/server';
 import { Variables } from 'hono/types';
 import { Bindings } from '../env';
 
-export type Middleware<I> = ({
+export type Middleware<Ctx> = ({
   ctx,
   next,
   c,
 }: {
-  ctx: I;
-  next: <B>(args?: B) => B & I;
+  ctx: Ctx;
+  next: <B>(args?: B) => B & Ctx;
   c: Context<{ Bindings: Bindings; Variables: Variables }>;
-}) => Promise<any>;
+}) => Promise<unknown>;
 
 export type QueryOperation<Schema extends Record<string, unknown>, ZodInput = never> = {
   type: 'query';

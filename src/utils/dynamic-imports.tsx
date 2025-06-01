@@ -1,10 +1,14 @@
-import { Suspense, lazy, ComponentType, ReactNode } from 'react';
+import React, { Suspense, lazy, ComponentType, ReactNode, ComponentProps } from 'react';
 import { Loader2 } from 'lucide-react';
 
 interface DynamicImportOptions {
   loading?: () => ReactNode;
   error?: (error: Error) => ReactNode;
 }
+
+type PropsOf<T> = T extends ComponentType<infer P> ? P : Record<string, unknown>;
+
+type DynamicComponentProps<T extends ComponentType<unknown>> = ComponentProps<T>;
 
 const defaultLoading = () => (
   <div className="flex items-center justify-center min-h-[200px]">
@@ -21,20 +25,38 @@ const defaultError = (error: Error) => (
   </div>
 );
 
-export function dynamicImport<T extends ComponentType<any>>(
+class ErrorBoundary extends React.Component<{
+  fallback: (error: Error) => ReactNode;
+  children: ReactNode;
+}, { hasError: boolean; error: Error | null }> {
+  state = { hasError: false, error: null };
+
+  static getDerivedStateFromError(error: Error) {
+    return { hasError: true, error };
+  }
+
+  render() {
+    if (this.state.hasError && this.state.error) {
+      return this.props.fallback(this.state.error);
+    }
+    return this.props.children;
+  }
+}
+
+export function dynamicImport<T extends ComponentType<unknown>>(
   importFn: () => Promise<{ default: T }>,
-  { loading, error }: DynamicImportOptions = {}
+  { loading, error = defaultError }: DynamicImportOptions = {}
 ) {
   const Component = lazy(importFn);
+  const LoadingComponent = loading || defaultLoading;
   
-  return function DynamicComponent(props: any) {
-    const LoadingComponent = loading || defaultLoading;
-    const ErrorComponent = error || defaultError;
-
+  return function DynamicComponent(props: DynamicComponentProps<T>) {
     return (
-      <Suspense fallback={<LoadingComponent />}>
-        <Component {...props} />
-      </Suspense>
+      <ErrorBoundary fallback={error}>
+        <Suspense fallback={<LoadingComponent />}>
+          <Component {...(props as any)} />
+        </Suspense>
+      </ErrorBoundary>
     );
   };
 }

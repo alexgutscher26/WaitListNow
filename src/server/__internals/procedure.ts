@@ -28,19 +28,17 @@ export class Procedure<ctx = Record<string, never>> {
    * Optional, but recommended:
    * This makes "c.superjson" available to your API routes
    */
-  private static async superjsonMiddleware({
+  private static async superjsonMiddleware<Ctx>({
     c,
     next,
-  }: Parameters<Middleware<any>>[0]): Promise<any> {
-    type JSONRespond = typeof c.json;
-
+  }: Parameters<Middleware<Ctx>>[0]): Promise<unknown> {
     c.superjson = ((data: unknown, status?: StatusCode): Response => {
       const serialized = superjson.stringify(data);
       return new Response(serialized, {
         status: status || 200,
         headers: { 'Content-Type': 'application/superjson' },
       });
-    }) as JSONRespond;
+    }) as typeof c.json;
 
     return await next();
   }

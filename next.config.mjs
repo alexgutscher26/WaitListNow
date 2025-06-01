@@ -35,6 +35,10 @@ const nextConfig = {
   // Environment variables that will be available on the client side
   env: {
     NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000',
+    // CDN configuration
+    NEXT_PUBLIC_CDN_URL: process.env.NEXT_PUBLIC_CDN_URL || '',
+    // Add build ID for cache busting
+    NEXT_PUBLIC_BUILD_ID: process.env.VERCEL_GIT_COMMIT_SHA || 'development',
   },
   // PostHog rewrites to proxy analytics requests
   async rewrites() {

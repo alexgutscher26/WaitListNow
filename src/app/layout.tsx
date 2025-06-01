@@ -7,6 +7,8 @@ import './globals.css';
 
 // Import client providers component
 import { ClientProviders } from '@/components/providers/client-providers';
+import { LoadingFallback } from '@/components/loading-fallback';
+import { PreloadAssets } from '@/components/preload-assets';
 
 // Server-side providers that can be used in Server Components
 const ClerkProvider = dynamic(
@@ -24,14 +26,7 @@ const PostHogProvider = dynamic(
   { ssr: true }
 );
 
-// Loading component for Suspense fallback
-function LoadingFallback() {
-  return (
-    <div className="flex items-center justify-center min-h-screen">
-      <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
-    </div>
-  );
-}
+
 
 // Font configuration
 const inter = Inter({
@@ -94,21 +89,31 @@ interface RootLayoutProps {
   modal: React.ReactNode;
 }
 
+
+
 /**
  * Provides the root layout structure for the application, including providers and global components.
  */
-export default function RootLayout({ children, modal }: RootLayoutProps) {
+export default function RootLayout({ children, modal }: Readonly<RootLayoutProps>) {
   return (
-    <html
-      lang="en"
-      className={cn('h-full', inter.variable)}
-    >
+    <html lang="en" className={cn('h-full', inter.variable)}>
+      <head>
+        {/* Preload critical assets */}
+        <link
+          rel="preconnect"
+          href={process.env.NEXT_PUBLIC_CDN_URL || process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}
+          crossOrigin="anonymous"
+        />
+        {/* Add any other preconnect domains here */}
+      </head>
       <body className={cn('min-h-full bg-background font-sans antialiased')}>
         <Suspense fallback={<LoadingFallback />}>
           <PostHogProvider>
             <ClerkProvider>
               <QueryProvider>
                 <ClientProviders>
+                  {/* Client-side preloading */}
+                  <PreloadAssets />
                   <div className="relative flex min-h-screen flex-col">
                     <main className="flex-1">
                       {children}

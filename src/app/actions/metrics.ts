@@ -3,6 +3,16 @@
 import { auth } from '@clerk/nextjs/server';
 import { db } from '@/lib/db';
 
+/**
+ * Fetches and calculates user metrics such as active waitlists, total signups, and conversion rate.
+ *
+ * The function first authenticates the user to get their ID. It then retrieves the user's data including
+ * their waitlists and subscribers from the database. If the user is not found or unauthorized, it throws an error.
+ * Metrics are calculated based on the retrieved data, and a default set of metrics is returned in case of any errors.
+ *
+ * @returns An object containing the active waitlists count, total signups count, and conversion rate.
+ * @throws Error If authentication fails or if the user is not found.
+ */
 export async function getUserMetrics() {
   try {
     const authResponse = await auth();

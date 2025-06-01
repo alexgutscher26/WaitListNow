@@ -183,6 +183,19 @@ export async function DELETE(req: NextRequest, { params }: { params: { id: strin
 }
 
 // Shared handler for both PUT and PATCH
+/**
+ * Handles updating a waitlist based on the request and update type.
+ *
+ * This function performs several key steps: verifying authentication, checking if the user exists,
+ * ensuring the waitlist belongs to the user, parsing and validating the request body, handling partial or full updates,
+ * validating provided fields, generating a new slug if the name changes, checking for slug conflicts, updating the
+ * waitlist in the database, and returning the updated waitlist. It also includes comprehensive error handling for various scenarios.
+ *
+ * @param req - The NextRequest object containing the request details.
+ * @param waitlistId - The ID of the waitlist to be updated.
+ * @param isFullUpdate - A boolean indicating whether it's a full (PUT) or partial (PATCH) update.
+ * @returns A JSON response containing the updated waitlist or an error message.
+ */
 async function handleUpdateWaitlist(req: NextRequest, waitlistId: string, isFullUpdate: boolean) {
   try {
     // Verify authentication

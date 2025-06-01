@@ -157,10 +157,10 @@ export async function DELETE(req: NextRequest, { params }: { params: { id: strin
     console.error('[WAITLISTS_DELETE]', error);
 
     if (error instanceof Error) {
+      console.error('Error stack trace:', error.stack); // Log stack trace server-side
       return new NextResponse(
         JSON.stringify({
-          error: error.message,
-          stack: isDev ? error.stack : undefined,
+          error: 'Internal server error',
         }),
         {
           status: 500,
@@ -169,10 +169,10 @@ export async function DELETE(req: NextRequest, { params }: { params: { id: strin
       );
     }
 
+    console.error('Error details:', error); // Log error details server-side
     return new NextResponse(
       JSON.stringify({
         error: 'Internal server error',
-        details: isDev ? String(error) : undefined,
       }),
       {
         status: 500,

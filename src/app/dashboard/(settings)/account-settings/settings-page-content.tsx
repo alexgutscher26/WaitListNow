@@ -655,7 +655,7 @@ const AccountSettingsContent = () => {
                             (Number(metrics.activeWaitlists || 0) / currentPlan.maxWaitlists) * 100,
                           )}%`,
                         }}
-                      ></div>
+                      />
                     </div>
                   </div>
                   <p className="text-xs text-gray-500 mt-1">
@@ -699,7 +699,7 @@ const AccountSettingsContent = () => {
                             (Number(metrics.totalSignups || 0) / currentPlan.maxSignups) * 100,
                           )}%`,
                         }}
-                      ></div>
+                      />
                     </div>
                   </div>
                   <p className="text-xs text-gray-500 mt-1">
@@ -891,7 +891,7 @@ const AccountSettingsContent = () => {
                 <>
                   <span className="opacity-0">Saving...</span>
                   <span className="absolute inset-0 flex items-center justify-center">
-                    <span className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></span>
+                    <span className="animate-spin rounded-full h-4 w-4 border-b-2 border-white" />
                   </span>
                 </>
               ) : (
@@ -914,7 +914,7 @@ const AccountSettingsContent = () => {
         <CardContent>
           {isLoading ? (
             <div className="flex justify-center py-8">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900" />
             </div>
           ) : (
             <form
@@ -1016,7 +1016,7 @@ const AccountSettingsContent = () => {
                     <>
                       <span className="opacity-0">Saving...</span>
                       <span className="absolute inset-0 flex items-center justify-center">
-                        <span className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></span>
+                        <span className="animate-spin rounded-full h-4 w-4 border-b-2 border-white" />
                       </span>
                     </>
                   ) : (

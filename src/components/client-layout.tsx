@@ -1,9 +1,8 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { usePathname } from 'next/navigation';
-import { cn } from '@/lib/utils';
 
 // Import providers
 const ClerkProvider = dynamic(

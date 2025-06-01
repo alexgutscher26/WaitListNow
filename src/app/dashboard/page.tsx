@@ -699,7 +699,7 @@ export default async function Page({ searchParams = {} }: PageProps) {
                         width: `${Math.min(100, (stats.newThisWeek / Math.max(1, stats.totalSubscribers - stats.newThisWeek)) * 100)}%`,
                       }}
                       className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-blue-500 transition-all duration-500"
-                     />
+                    />
                   </div>
                 </div>
               </div>
@@ -839,7 +839,7 @@ export default async function Page({ searchParams = {} }: PageProps) {
                         className={`h-2.5 w-2.5 rounded-full ${
                           system.status === 'operational' ? 'bg-green-500' : 'bg-red-500'
                         }`}
-                       />
+                      />
                     </div>
                     <div className="ml-3 flex-1">
                       <div className="flex justify-between items-center">

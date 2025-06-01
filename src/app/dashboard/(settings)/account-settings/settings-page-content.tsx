@@ -655,7 +655,7 @@ const AccountSettingsContent = () => {
                             (Number(metrics.activeWaitlists || 0) / currentPlan.maxWaitlists) * 100,
                           )}%`,
                         }}
-                       />
+                      />
                     </div>
                   </div>
                   <p className="text-xs text-gray-500 mt-1">
@@ -697,7 +697,7 @@ const AccountSettingsContent = () => {
                             (Number(metrics.totalSignups || 0) / currentPlan.maxSignups) * 100,
                           )}%`,
                         }}
-                       />
+                      />
                     </div>
                   </div>
                   <p className="text-xs text-gray-500 mt-1">

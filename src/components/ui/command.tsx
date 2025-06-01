@@ -6,11 +6,9 @@ import { Command as CommandPrimitive } from 'cmdk';
 import { Search } from 'lucide-react';
 
 // Extend the HTMLAttributes interface to include cmdk-input-wrapper
-declare global {
-  namespace React {
-    interface HTMLAttributes<T> extends AriaAttributes, DOMAttributes<T> {
-      'cmdk-input-wrapper'?: string;
-    }
+declare module 'react' {
+  interface HTMLAttributes<T> extends AriaAttributes, DOMAttributes<T> {
+    'cmdk-input-wrapper'?: string;
   }
 }
 
@@ -53,7 +51,7 @@ const CommandInput = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     className="flex items-center border-b px-3"
-    cmdk-input-wrapper=""
+ data-cmdk-input-wrapper=""
   >
     <Search className="mr-2 h-4 w-4 shrink-0 opacity-50" />
     <CommandPrimitive.Input

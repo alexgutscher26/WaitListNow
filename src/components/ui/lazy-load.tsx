@@ -1,6 +1,7 @@
-import { Suspense, lazy, ComponentType, ReactNode } from 'react';
+import React, { Suspense, lazy, ComponentType, ReactNode } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 
+// Type is used in other files
 type LazyLoadProps<T extends object> = {
   load: () => Promise<{ default: ComponentType<T> }>;
   loading?: () => ReactNode;

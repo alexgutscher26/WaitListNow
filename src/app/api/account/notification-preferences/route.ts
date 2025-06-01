@@ -27,6 +27,15 @@ const defaultPreferences: NotificationPreferences = {
 };
 
 // Helper function to parse notification preferences
+/**
+ * Parses and normalizes notification preferences from a given object.
+ *
+ * This function checks each preference key in the input object to ensure it is a boolean.
+ * If a preference is missing or not a boolean, it defaults to the corresponding value from `defaultPreferences`.
+ *
+ * @param prefs - An object containing user-defined notification preferences.
+ * @returns A normalized object of notification preferences with boolean values.
+ */
 function parseNotificationPreferences(prefs: any): NotificationPreferences {
   if (!prefs || typeof prefs !== 'object') {
     return { ...defaultPreferences };
@@ -44,6 +53,15 @@ function parseNotificationPreferences(prefs: any): NotificationPreferences {
   };
 }
 
+/**
+ * Fetches and returns the user's notification preferences based on authentication.
+ *
+ * The function first authenticates the user and retrieves their ID. It then attempts to find the user by either their internal or external ID.
+ * If the user is found, it parses and returns their notification preferences. If not, it returns default preferences. Errors during this process
+ * are caught and logged, with an appropriate error message returned to the client.
+ *
+ * @returns A JSON response containing either the user's notification preferences or a default set of preferences.
+ */
 export async function GET() {
   try {
     const authResult = await auth();
@@ -82,6 +100,18 @@ export async function GET() {
   }
 }
 
+/**
+ * Handles updating notification preferences for a user via a PUT request.
+ *
+ * This function first authenticates the request and retrieves the user's ID.
+ * It then parses and validates the incoming preferences. The function checks if a user exists by either their ID or externalId.
+ * If a user with the externalId already exists, it updates the user's ID to match the authenticated user ID and updates the preferences.
+ * If no such user exists, it creates a new user entry with the provided details and preferences.
+ * If the user already exists, it simply updates their notification preferences.
+ *
+ * @param request - The incoming HTTP request containing user preferences.
+ * @returns A JSON response with the updated preferences or an error message.
+ */
 export async function PUT(request: Request) {
   try {
     const authResult = await auth();

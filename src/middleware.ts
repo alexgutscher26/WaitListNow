@@ -1,41 +1,77 @@
-import { authMiddleware } from '@clerk/nextjs/server';
-import { NextResponse } from 'next/server';
+import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
+import { NextResponse, type NextRequest } from 'next/server';
 import { trackPageview } from '@/lib/plausible';
 
-// This example protects all routes including api/trpc routes
-// Please edit this to allow other routes to be public as needed.
-// See https://clerk.com/docs/references/nextjs/auth-middleware for more information about configuring your Middleware
-export default authMiddleware({
-  publicRoutes: [
-    '/',
-    '/sign-in(.*)',
-    '/sign-up(.*)',
-    '/api/webhook(.*)',
-    '/pricing',
-    '/blog(.*)',
-  ],
-  afterAuth(auth, req) {
-    // Track page views for analytics
+// Define public routes that don't require authentication
+const publicRoutes = [
+  '/',
+  '/sign-in(.*)',
+  '/sign-up(.*)',
+  '/api/webhook(.*)',
+  '/pricing',
+  '/blog(.*)',
+  '/api/trpc(.*)',
+  '/_next/static(.*)',
+  '/_next/image(.*)',
+  '/favicon.ico',
+];
+
+// Define protected routes that require authentication
+const protectedRoutes = [
+  '/dashboard(.*)',
+  '/welcome',
+  // Protect API routes by explicitly listing them instead of using negative lookahead
+  '/api/auth(.*)',
+  '/api/waitlists(.*)',
+  '/api/subscribers(.*)'
+  // Add other API routes that need protection
+];
+
+const isPublicRoute = createRouteMatcher(publicRoutes);
+const isProtectedRoute = createRouteMatcher(protectedRoutes);
+
+const middleware = clerkMiddleware(async (auth, req: NextRequest) => {
+  const { pathname } = req.nextUrl;
+  
+  // Skip middleware for public routes
+  if (isPublicRoute(req)) {
     trackPageview();
-
-    // Handle users who aren't authenticated
-    if (!auth.userId && !auth.isPublicRoute) {
-      const signInUrl = new URL('/sign-in', req.url);
-      signInUrl.searchParams.set('redirect_url', req.url);
-      return NextResponse.redirect(signInUrl);
-    }
-
     return NextResponse.next();
-  },
+  }
+
+  // Track page views for authenticated users
+  trackPageview();
+
+  // Get the auth state
+  const { userId } = await auth();
+
+  // Handle unauthenticated users trying to access protected routes
+  if (!userId && isProtectedRoute(req)) {
+    const signInUrl = new URL('/sign-in', req.url);
+    signInUrl.searchParams.set('redirect_url', pathname);
+    return NextResponse.redirect(signInUrl);
+  }
+
+  // Handle authenticated users trying to access auth routes
+  if (userId && (pathname.startsWith('/sign-in') || pathname.startsWith('/sign-up'))) {
+    const dashboardUrl = new URL('/dashboard', req.url);
+    return NextResponse.redirect(dashboardUrl);
+  }
+
+  return NextResponse.next();
 });
+
+export default middleware;
 
 export const config = {
   matcher: [
-    // Skip Next.js internals and all static files, unless found in search params
-    '/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)',
+    // Match all request paths except for the ones starting with:
+    // - _next/static (static files)
+    // - _next/image (image optimization files)
+    // - favicon.ico (favicon file)
+    // - public folder
+    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
     // Always run for API routes
-    '/(api|trpc)(.*)',
-    '/dashboard(.*)',
-    '/welcome',
-  ],
+    '/(api|trpc)(.*)'
+  ]
 };

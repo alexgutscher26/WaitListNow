@@ -2,7 +2,7 @@ import { DashboardPage } from '@/components/dashboard-page';
 import { db } from '@/lib/db';
 import { currentUser } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation';
-import { AccountSettings } from './setttings-page-content';
+import { AccountSettings } from './settings-page-content';
 
 /**
  * Renders the Account Settings page after verifying user authentication.

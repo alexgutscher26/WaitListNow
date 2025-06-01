@@ -15,19 +15,26 @@ interface RouteParams {
 export async function GET(request: Request, { params }: RouteParams) {
   try {
     const { id } = params;
-    const { userId } = auth();
+    const { userId } = await auth();
 
     if (!userId) {
       return new NextResponse('Unauthorized', { status: 401 });
+    }
+
+    // First get the database user
+    const dbUser = await db.user.findUnique({
+      where: { externalId: userId },
+    });
+
+    if (!dbUser) {
+      return new NextResponse('User not found', { status: 404 });
     }
 
     // Verify the waitlist belongs to the user
     const waitlist = await db.waitlist.findFirst({
       where: {
         id,
-        user: {
-          externalId: userId,
-        },
+        userId: dbUser.id,
       },
     });
 

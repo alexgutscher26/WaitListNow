@@ -1,12 +1,16 @@
 module.exports = {
   root: true,
-  // This tells ESLint to load the config from the package `eslint-config-custom`
-  extends: ['custom'],
-  settings: {
-    next: {
-      rootDir: ['apps/*/', 'packages/*/'],
-    },
-  },
+  // Use the configuration from .eslintrc.json
+  extends: [
+    "next/core-web-vitals",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:import/typescript",
+    "plugin:import/warnings",
+    "plugin:react/recommended",
+    "plugin:react-hooks/recommended",
+    "plugin:jsx-a11y/recommended",
+    "prettier"
+  ],
   // Add overrides for specific files
   overrides: [
     {

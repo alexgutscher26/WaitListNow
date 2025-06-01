@@ -1,5 +1,15 @@
 const { PrismaClient } = require('@prisma/client');
 
+/**
+ * Checks and ensures the presence of required columns in the User table within a database.
+ *
+ * This function first checks if the 'User' table exists. If it does, it then verifies the existence
+ * of specific columns, such as 'waitlist_preferences'. If the 'waitlist_preferences' column is missing,
+ * the function attempts to add this column with predefined default values. The function handles any errors
+ * that occur during these operations and ensures proper disconnection from the database in the `finally` block.
+ *
+ * @returns void - This function does not return any value.
+ */
 async function checkSchema() {
   const prisma = new PrismaClient();
   

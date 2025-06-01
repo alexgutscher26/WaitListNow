@@ -13,6 +13,7 @@ trigger: always_on
 - Always read package.json to see what dependencies i'm already using
 - Always follow image_optimization.md for images
 
+
 ## TypeScript Guidelines
 
 - DONT USE the `any` type - use proper typing or `unknown` when necessary
@@ -62,6 +63,19 @@ trigger: always_on
 - Implement proper loading states
 - Optimize database queries
 - Use Next.js Image component for images
+
+## Code Splitting & Lazy Loading
+
+- Use Next.js `dynamic` imports for non-critical components
+- Always provide a loading fallback for better UX
+- Mark components with `'use client'` when using browser APIs
+- Group client-side dependencies using the `ClientProviders` pattern
+- Leverage Next.js automatic route-based code splitting
+- Use the `lazyLoad` utility from `@/components/ui/lazy-load` for component-level lazy loading
+- Implement proper error boundaries for lazy-loaded components
+- Monitor bundle sizes and loading performance
+- Test lazy-loaded components in isolation
+- Avoid over-splitting small components where overhead outweighs benefits
 
 ## Security
 

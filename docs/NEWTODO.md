@@ -53,7 +53,7 @@ This document outlines the planned improvements and enhancements for the WaitLis
 
   - [ ] Implement server-side rendering for critical pages
   - [X] Add image optimization
-  - [ ] Implement code splitting and lazy loading
+  - [X] Implement code splitting and lazy loading
   - [ ] Set up CDN for static assets
   - [ ] Optimize bundle size
 

@@ -2,7 +2,6 @@
 
 import dynamic from 'next/dynamic';
 import { type ReactNode } from 'react';
-import { Skeleton } from '@/components/ui/skeleton';
 
 // Client-side only providers
 const PlausibleProvider = dynamic(

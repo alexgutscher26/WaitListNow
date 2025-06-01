@@ -1,15 +1,37 @@
-import { ClerkProvider } from '@/providers/clerk-provider';
+import { Suspense } from 'react';
+import dynamic from 'next/dynamic';
 import type { Metadata, Viewport } from 'next';
-import { Toaster } from '@/components/ui/toaster';
-import { Analytics } from '@vercel/analytics/react';
-import { SpeedInsights } from '@vercel/speed-insights/next';
-import { PlausibleProvider } from './plausible-provider';
-import { HeroUIProvider } from '@heroui/react';
-import { QueryProvider } from '@/providers/query-provider';
-import { PostHogProvider } from '@/providers/posthog-provider';
+import { Inter } from 'next/font/google';
 import { cn } from '@/lib/utils';
 import './globals.css';
-import { Inter } from 'next/font/google';
+
+// Import client providers component
+import { ClientProviders } from '@/components/providers/client-providers';
+
+// Server-side providers that can be used in Server Components
+const ClerkProvider = dynamic(
+  () => import('@/providers/clerk-provider').then(mod => mod.ClerkProvider),
+  { ssr: true }
+);
+
+const QueryProvider = dynamic(
+  () => import('@/providers/query-provider').then(mod => mod.QueryProvider),
+  { ssr: true }
+);
+
+const PostHogProvider = dynamic(
+  () => import('@/providers/posthog-provider').then(mod => mod.PostHogProvider),
+  { ssr: true }
+);
+
+// Loading component for Suspense fallback
+function LoadingFallback() {
+  return (
+    <div className="flex items-center justify-center min-h-screen">
+      <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+    </div>
+  );
+}
 
 // Font configuration
 const inter = Inter({
@@ -82,25 +104,22 @@ export default function RootLayout({ children, modal }: RootLayoutProps) {
       className={cn('h-full', inter.variable)}
     >
       <body className={cn('min-h-full bg-background font-sans antialiased')}>
-        <PostHogProvider>
-          <ClerkProvider>
-            <QueryProvider>
-              <HeroUIProvider>
-                <PlausibleProvider>
+        <Suspense fallback={<LoadingFallback />}>
+          <PostHogProvider>
+            <ClerkProvider>
+              <QueryProvider>
+                <ClientProviders>
                   <div className="relative flex min-h-screen flex-col">
                     <main className="flex-1">
                       {children}
                       {modal}
                     </main>
                   </div>
-                  <Toaster />
-                  <Analytics />
-                  <SpeedInsights />
-                </PlausibleProvider>
-              </HeroUIProvider>
-            </QueryProvider>
-          </ClerkProvider>
-        </PostHogProvider>
+                </ClientProviders>
+              </QueryProvider>
+            </ClerkProvider>
+          </PostHogProvider>
+        </Suspense>
       </body>
     </html>
   );

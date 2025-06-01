@@ -11,6 +11,7 @@ trigger: always_on
 - Use exact versions in package.json to ensure consistency
 - Document any non-standard dependencies in README.md
 - Always read package.json to see what dependencies i'm already using
+- Always follow image_optimization.md for images
 
 ## TypeScript Guidelines
 

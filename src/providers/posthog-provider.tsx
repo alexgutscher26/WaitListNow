@@ -7,6 +7,8 @@ import { usePathname, useSearchParams } from 'next/navigation';
 
 export function PostHogProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
+    // Initialize PostHog here if needed
+  }, []);
 
   return (
     <PHProvider client={posthog}>

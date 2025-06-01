@@ -261,9 +261,9 @@ export default function WaitlistsPage() {
       return isValid;
     });
 
-   // console.log(
-   //    `[WaitlistsPage] Filtered ${filtered.length} valid waitlists out of ${waitlists.length}`,
-   // );
+    // console.log(
+    //    `[WaitlistsPage] Filtered ${filtered.length} valid waitlists out of ${waitlists.length}`,
+    // );
     return filtered;
   })();
 

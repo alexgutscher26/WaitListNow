@@ -6,6 +6,7 @@ import { RootLayoutClient } from '@/components/root-layout-client';
 import { ClerkProvider } from '@/components/providers/clerk-provider-wrapper';
 import { QueryProvider } from '@/components/providers/query-provider-wrapper';
 import './globals.css';
+import { Toaster } from 'sonner';
 
 // Font configuration - loaded on the server
 const inter = Inter({
@@ -70,11 +71,19 @@ interface RootLayoutProps {
 
 export default function RootLayout({ children, modal }: Readonly<RootLayoutProps>) {
   return (
-    <html lang="en" className={cn('h-full', inter.variable)} suppressHydrationWarning>
+    <html
+      lang="en"
+      className={cn('h-full', inter.variable)}
+      suppressHydrationWarning
+    >
       <head>
         <link
           rel="preconnect"
-          href={process.env.NEXT_PUBLIC_CDN_URL || process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}
+          href={
+            process.env.NEXT_PUBLIC_CDN_URL ||
+            process.env.NEXT_PUBLIC_APP_URL ||
+            'http://localhost:3000'
+          }
           crossOrigin="anonymous"
         />
       </head>
@@ -83,6 +92,7 @@ export default function RootLayout({ children, modal }: Readonly<RootLayoutProps
           <ClerkProvider>
             <RootLayoutClient modal={modal}>
               {children}
+              <Toaster />
             </RootLayoutClient>
           </ClerkProvider>
         </QueryProvider>

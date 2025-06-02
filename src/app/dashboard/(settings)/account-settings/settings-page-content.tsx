@@ -1,6 +1,6 @@
 'use client';
 
-import React from "react";
+import React from 'react';
 
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
@@ -545,7 +545,6 @@ const AccountSettingsContent = () => {
       }));
     }
   };
-
 
   /**
    * Copies a predefined referral link to the clipboard.

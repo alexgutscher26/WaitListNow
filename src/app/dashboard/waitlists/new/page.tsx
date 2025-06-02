@@ -176,11 +176,31 @@ const BORDER_RADIUS: { value: ButtonRounded; label: string }[] = [
 ];
 
 /**
- * This component is responsible for creating a new waitlist in the dashboard.
- * It includes various sections such as basic information, custom fields, appearance settings,
- * and behavior settings. Users can navigate between these tabs to customize their waitlist form.
+ * Represents a component for creating and managing waitlist forms in a dashboard environment.
  *
- * @returns {JSX.Element} - The rendered React component for creating a new waitlist.
+ * @component
+ * @name WaitlistForm
+ * @description A React component that allows users to configure various aspects of a waitlist form, including basic information,
+ * custom fields, appearance settings, and behavior preferences. The component provides a tabbed interface for easy navigation
+ * between different sections of the form configuration.
+ *
+ * @property {boolean} isSubmitting - Indicates whether the form is currently being submitted.
+ * @property {object} formData - Contains all the data related to the waitlist form, including basic information, custom fields,
+ * appearance settings, and behavior preferences.
+ * @property {object} errors - Stores any validation or submission errors encountered during the form configuration process.
+ * @property {boolean} previewMode - Determines whether the user is in preview mode or in edit mode for the form.
+ * @property {string} activeTab - Specifies the currently active tab within the tabbed interface of the form configuration.
+ * @property {object} newField - Represents a temporary new custom field being added to the form.
+ *
+ * @method addCustomField - Adds a new custom field to the formData object.
+ * @method removeCustomField - Removes an existing custom field from the formData object.
+ * @method updateCustomField - Updates an existing custom field in the formData object.
+ * @method reorderCustomFields - Reorders the list of custom fields within the formData object based on user interaction.
+ * @method handleSubmit - Handles form submission, including validation and data submission to a server or other backend service.
+ * @method resetForm - Resets all form data to its initial state, clearing any user inputs or changes made.
+ *
+ * @example
+ * <WaitlistForm />
  */
 export default function NewWaitlistPage() {
   const router = useRouter();
@@ -588,7 +608,7 @@ export default function NewWaitlistPage() {
   }, [formData, embedType, isProUser]);
 
   /**
-   * Copies the embed code to the clipboard and logs an error if it fails.
+   * Asynchronously copies the embed code to the clipboard and logs an error if it fails.
    */
   const copyEmbedCode = async () => {
     try {
@@ -1489,19 +1509,13 @@ interface BehaviorSectionProps {
 }
 
 /**
- * Renders a behavior section component for configuring waitlist settings.
+ * A React component that renders a waitlist configuration page with various settings and options.
  *
- * This component provides UI elements to configure confirmation messages, advanced settings,
- * integration options, and direct links. It uses React state management to handle form data
- * updates and conditional rendering based on user selections. The component also includes
- * buttons for copying embed codes and a preview section for embedding the waitlist form.
- *
- * @param formData - The current form data containing configuration values.
- * @param setFormData - A function to update the form data.
- * @param errors - An object containing validation errors for form fields.
- * @param embedCode - The code snippet or iframe URL for embedding the waitlist.
- * @param copyEmbedCode - A function to handle copying the embed code to clipboard.
- * @param showBranding - A boolean indicating whether branding should be shown (default is true).
+ * @param {Object} props - The component's props.
+ * @param {Object} props.formData - An object containing the current form data for the waitlist configuration.
+ * @param {Function} props.setFormData - A function to update the form data in the parent component.
+ * @param {Function} props.copyEmbedCode - A function to copy the embed code to the clipboard.
+ * @param {boolean} props.showBranding - A boolean indicating whether branding should be shown on the waitlist form.
  */
 function BehaviorSection({
   formData,

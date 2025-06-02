@@ -29,7 +29,7 @@ This document outlines the planned improvements and enhancements for the WaitLis
 
 - [ ] **Email Notification System**
 
-  - [X] Set up integration with Resend
+  - [x] Set up integration with Resend
   - [ ] Create email templates for different events
   - [ ] Implement scheduled emails for waitlist updates
   - [ ] Add email customization options
@@ -49,13 +49,13 @@ This document outlines the planned improvements and enhancements for the WaitLis
   - [ ] Implement database caching strategies
   - [ ] Set up database monitoring
 
-- [X] **Performance Enhancements**
+- [x] **Performance Enhancements**
 
   - [ ] Implement server-side rendering for critical pages
-  - [X] Add image optimization
-  - [X] Implement code splitting and lazy loading
-  - [X] Set up CDN for static assets
-  - [X] Optimize bundle size
+  - [x] Add image optimization
+  - [x] Implement code splitting and lazy loading
+  - [x] Set up CDN for static assets
+  - [x] Optimize bundle size
 
 - [ ] **Security Improvements**
 

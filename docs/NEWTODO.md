@@ -15,7 +15,7 @@ This document outlines the planned improvements and enhancements for the WaitLis
 
 - [ ] **Embeddable Widget Implementation**
 
-  - [ ] Develop JavaScript snippet for website integration
+  - [x] Develop JavaScript snippet for website integration
   - [ ] Support iframe embedding option
   - [ ] Create direct script embedding option
   - [ ] Add customization parameters for the widget

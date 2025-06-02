@@ -25,10 +25,11 @@ export interface WaitlistWidgetProps {
   waitlistId: string;
   style?: Partial<WaitlistWidgetStyle>;
   apiKey?: string;
+  showBranding?: boolean;
   className?: string;
 }
 
-export function WaitlistWidget({ waitlistId, style = {}, apiKey, className = '' }: WaitlistWidgetProps) {
+export function WaitlistWidget({ waitlistId, style = {}, apiKey, showBranding = true, className = '' }: WaitlistWidgetProps) {
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -179,6 +180,11 @@ export function WaitlistWidget({ waitlistId, style = {}, apiKey, className = '' 
           {isLoading ? 'Joining...' : buttonText}
         </Button>
       </form>
+      {showBranding && (
+        <div style={{ color: 'red', fontWeight: 'bold', fontSize: 20 }}>
+          Powered by WaitlistNow
+        </div>
+      )}
     </div>
   );
 }

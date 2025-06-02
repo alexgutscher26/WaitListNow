@@ -37,12 +37,23 @@ if (currentScript) {
   container.id = `waitlist-widget-container-${waitlistId}`;
   currentScript.parentNode?.insertBefore(container, currentScript.nextSibling);
 
-  // Render the widget
+  // Get the user's plan from the embed
+  const plan = currentScript.getAttribute('data-plan') || 'free';
+
+  // Only allow branding removal for certain plans
+  const showBrandingAttr = currentScript.getAttribute('data-show-branding');
+  // Plans that are allowed to remove branding
+  const canRemoveBranding = ['Starter', 'Growth', 'Pro'].includes(plan);
+  // Enforce branding for all other plans
+  const showBranding = canRemoveBranding ? showBrandingAttr !== 'false' : true;
+
+  // Pass showBranding to the widget
   createRoot(container).render(
     <WaitlistWidget
       waitlistId={waitlistId}
       style={style}
       apiKey={apiKey}
+      showBranding={showBranding}
     />
   );
 } 

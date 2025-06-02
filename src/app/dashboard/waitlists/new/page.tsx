@@ -1,6 +1,6 @@
 'use client';
 
-import React from "react";
+import React from 'react';
 
 import { useState, useCallback, useMemo, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
@@ -235,6 +235,7 @@ export default function NewWaitlistPage() {
     },
   });
   const [embedType, setEmbedType] = useState<'js' | 'iframe'>('js');
+  const isProUser = false; // TODO: Replace with real plan check
 
   const handleTestConfirmation = () => {
     // Removed from here
@@ -531,7 +532,7 @@ export default function NewWaitlistPage() {
   // Generate embed code based on selected type
   const embedCode = useMemo(() => {
     const baseUrl = 'http://localhost:3000';
-    const waitlistId = 'your waitlist id'; 
+    const waitlistId = 'your waitlist id';
     const apiKey = 'your api key';
 
     // Ensure all style properties have default values
@@ -544,6 +545,8 @@ export default function NewWaitlistPage() {
       showLabels: formData.style?.showLabels ?? true,
     };
 
+    // ENFORCE BRANDING FOR FREE USERS
+    const showBranding = isProUser ? formData.showBranding !== false : true;
     const dataAttributes = [
       `data-waitlist-id="${waitlistId}"`,
       `data-button-text="${style.buttonText}"`,
@@ -552,7 +555,7 @@ export default function NewWaitlistPage() {
       `data-primary-color="${style.primaryColor.replace('#', '')}"`,
       `data-form-layout="${style.formLayout}"`,
       `data-show-labels="${style.showLabels}"`,
-      `data-show-branding="${showBranding.toString()}"`,
+      `data-show-branding="${showBranding}"`,
       ...(formData.enableReferrals ? ['data-enable-referrals="true"'] : []),
       ...(formData.referralReward ? [`data-referral-reward="${formData.referralReward}"`] : []),
       ...(formData.maxSignups ? [`data-max-signups="${formData.maxSignups}"`] : []),
@@ -582,7 +585,7 @@ export default function NewWaitlistPage() {
   scrolling="no"
 ></iframe>`;
     }
-  }, [formData, embedType, showBranding]);
+  }, [formData, embedType, isProUser]);
 
   /**
    * Copies the embed code to the clipboard and logs an error if it fails.
@@ -590,7 +593,7 @@ export default function NewWaitlistPage() {
   const copyEmbedCode = async () => {
     try {
       await navigator.clipboard.writeText(embedCode);
-      // You could add a toast notification here
+      // TODO: You could add a toast notification here
     } catch (err) {
       console.error('Failed to copy embed code:', err);
     }
@@ -824,12 +827,17 @@ export default function NewWaitlistPage() {
                       </div>
                       <Button
                         variant={formData.showBranding ? 'outline' : 'default'}
-                        onClick={() =>
+                        onClick={() => {
+                          if (!isProUser) {
+                            toast.info('Upgrade to Pro to remove branding.');
+                            return;
+                          }
                           setFormData((prev) => ({
                             ...prev,
                             showBranding: !prev.showBranding,
-                          }))
-                        }
+                          }));
+                        }}
+                        disabled={!isProUser}
                       >
                         {formData.showBranding ? 'Hide' : 'Show'} Branding
                       </Button>
@@ -883,7 +891,7 @@ export default function NewWaitlistPage() {
                   </div>
                 </CardContent>
               </Card>
-              <BehaviorSection
+                <BehaviorSection
                 formData={formData}
                 setFormData={setFormData}
                 errors={errors}
@@ -1961,17 +1969,6 @@ function BehaviorSection({
               >
                 JavaScript Snippet
               </button>
-              <button
-                type="button"
-                className={`px-4 py-2 text-sm font-medium ${
-                  embedType === 'iframe'
-                    ? 'border-b-2 border-primary text-primary'
-                    : 'text-muted-foreground hover:text-foreground'
-                }`}
-                onClick={() => setEmbedType('iframe')}
-              >
-                iFrame
-              </button>
             </div>
 
             <div className="space-y-2">
@@ -1999,83 +1996,6 @@ function BehaviorSection({
                   : "Add this iframe code to your website's HTML where you want the waitlist form to appear."}
               </p>
             </div>
-
-            <div className="p-4 bg-muted/50 rounded-md">
-              <h4 className="font-medium mb-2">Preview</h4>
-              <div className="border rounded-md p-4 bg-background">
-                {embedType === 'js' ? (
-                  <div className="aspect-video bg-muted/30 rounded flex flex-col items-center justify-center p-6 text-center">
-                    <div className="mx-auto h-12 w-12 bg-muted/50 rounded-full flex items-center justify-center mb-3">
-                      <svg
-                        className="h-6 w-6 text-muted-foreground"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
-                        />
-                      </svg>
-                    </div>
-                    <h4 className="font-medium mb-1">JavaScript Embed</h4>
-                    <p className="text-sm text-muted-foreground max-w-md">
-                      The actual form will be rendered on your website where you place the script
-                      tag.
-                    </p>
-                  </div>
-                ) : (
-                  <div className="aspect-video bg-muted/30 rounded-md border-2 border-dashed flex flex-col items-center justify-center p-6 text-center">
-                    <div className="mx-auto h-12 w-12 bg-muted/50 rounded-full flex items-center justify-center mb-3">
-                      <svg
-                        className="h-6 w-6 text-muted-foreground"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
-                        />
-                      </svg>
-                    </div>
-                    <h4 className="font-medium mb-1">iFrame Embed</h4>
-                    <p className="text-sm text-muted-foreground max-w-md mb-3">
-                      The form will be displayed within an iframe on your website.
-                    </p>
-                    <div className="w-full max-w-xs p-2 bg-gray-50 dark:bg-gray-800 rounded text-xs text-left font-mono overflow-x-auto">
-                      {embedCode}
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-
-          <div className="space-y-2">
-            <Label>Direct Link</Label>
-            <div className="flex items-center gap-2">
-              <Input
-                readOnly
-                value={'https://yourdomain.com/waitlist/new'}
-                className="bg-muted"
-              />
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                onClick={() => navigator.clipboard.writeText('https://yourdomain.com/waitlist/new')}
-              >
-                <Copy className="h-4 w-4" />
-              </Button>
-            </div>
-            <p className="text-xs text-muted-foreground">
-              Share this link directly with your audience.
-            </p>
           </div>
         </CardContent>
       </Card>

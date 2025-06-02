@@ -29,6 +29,16 @@ export interface WaitlistWidgetProps {
   className?: string;
 }
 
+/**
+ * A React component representing a waitlist widget.
+ *
+ * This component allows users to subscribe to a waitlist by providing their email and optionally their name.
+ * It handles form submission, manages loading states, and displays success or error messages using toast notifications.
+ * The widget can be styled through props, including custom styles and branding options.
+ *
+ * @param {WaitlistWidgetProps} props - The component's props.
+ * @returns {JSX.Element} A React JSX element representing the waitlist widget.
+ */
 export function WaitlistWidget({ waitlistId, style = {}, apiKey, showBranding = true, className = '' }: WaitlistWidgetProps) {
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');

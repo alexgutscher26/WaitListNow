@@ -180,11 +180,10 @@ const BORDER_RADIUS: { value: ButtonRounded; label: string }[] = [
 ];
 
 /**
- * This component is responsible for creating a new waitlist in the dashboard.
- * It includes various sections such as basic information, custom fields, appearance settings,
- * and behavior settings. Users can navigate between these tabs to customize their waitlist form.
+ * React component responsible for rendering a form to create or edit a waitlist.
  *
- * @returns {JSX.Element} - The rendered React component for creating a new waitlist.
+ * @function CreateOrEditWaitlist
+ * @returns {JSX.Element} - The JSX element representing the form interface.
  */
 export default function NewWaitlistPage() {
   const router = useRouter();
@@ -408,6 +407,11 @@ export default function NewWaitlistPage() {
   /**
    * Handles form submission by preventing default form behavior, validating input,
    * and making an API call to create a new waitlist.
+   *
+   * It performs client-side validation, prepares data for the API, sends a POST request to create the waitlist,
+   * handles errors from the API response, sends a verification email if required, and redirects to the success page.
+   *
+   * @param e - The form event object.
    */
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -572,7 +576,7 @@ export default function NewWaitlistPage() {
   }, [formData, embedType, isProUser]);
 
   /**
-   * Copies the embed code to the clipboard and logs an error if it fails.
+   * Attempts to copy the embed code to the clipboard and logs errors if it fails.
    */
   const copyEmbedCode = async () => {
     try {
@@ -1000,7 +1004,7 @@ interface SectionProps {
  * Renders a section for basic information input fields in a form.
  *
  * This component includes input fields for the waitlist name, description,
- * website URL, and thank you page URL. It handles form data changes through
+ * website URL, thank you page URL, and optional logo URL. It handles form data changes through
  * the provided `onChange` function and displays error messages if applicable.
  *
  * The component uses conditional rendering to apply error styles and display
@@ -1106,17 +1110,15 @@ interface CustomFieldsSectionProps {
 /**
  * Renders a custom fields section component.
  *
- * This component allows users to manage custom fields in forms by adding, removing, and updating them.
- * It includes input fields for field name, type, placeholder text, and required status.
- * Additionally, it supports reordering of custom fields and handling specific types like 'select' with options.
+ * This component manages custom fields in forms by providing inputs for field name, type,
+ * placeholder text, and required status. It supports adding, removing, updating, and reordering of
+ * custom fields. Additionally, it handles specific types like 'select' with options input.
  *
  * @param formData - The form data containing custom fields.
  * @param newField - The current state of the new custom field being added.
  * @param setNewField - A function to update the new custom field state.
  * @param addCustomField - A function to add a new custom field to the form data.
  * @param removeCustomField - A function to remove a custom field from the form data.
- * @param updateCustomField - A function to update an existing custom field in the form data.
- * @param reorderCustomFields - A function to reorder custom fields within the form data.
  */
 function CustomFieldsSection({
   formData,
@@ -1529,19 +1531,34 @@ interface BehaviorSectionProps {
 }
 
 /**
- * Renders a behavior section component for configuring waitlist settings.
+ * Behavior Description:
+ * This component renders a settings panel for configuring various aspects of a waitlist system,
+ * including confirmation messages, notification preferences, and other options.
  *
- * This component provides UI elements to configure confirmation messages, advanced settings,
- * integration options, and direct links. It uses React state management to handle form data
- * updates and conditional rendering based on user selections. The component also includes
- * buttons for copying embed codes and a preview section for embedding the waitlist form.
+ * The panel consists of three main sections:
+ * 1. Confirmation Messages: Users can configure different types of messages (e.g., success, error)
+ *    with customizable templates. They also have the option to disable certain message types entirely.
+ * 2. Notification Preferences: Users can choose which email notifications they want to receive
+ *    for various events related to their waitlist entries (e.g., status change, reminders).
+ * 3. General Options: These include settings like allowing duplicates, enabling referrals,
+ *    and setting maximum sign-ups.
  *
- * @param formData - The current form data containing configuration values.
- * @param setFormData - A function to update the form data.
- * @param errors - An object containing validation errors for form fields.
- * @param embedCode - The code snippet or iframe URL for embedding the waitlist.
- * @param copyEmbedCode - A function to handle copying the embed code to clipboard.
- * @param showBranding - A boolean indicating whether branding should be shown (default is true).
+ * Component Structure:
+ * - The component is composed of several child components, each responsible for rendering a specific
+ *   section of the settings panel.
+ * - It uses state management to keep track of user inputs and preferences.
+ * - Upon saving changes, it triggers API calls to update the waitlist configuration on the server.
+ *
+ * User Interaction:
+ * - Users can enable or disable different message types and customize their templates.
+ * - They can select which notifications they want to receive for various events.
+ * - General settings like allowing duplicates and enabling referrals are controlled via checkboxes.
+ * - Changes are saved by clicking the "Save" button, which triggers the update process.
+ *
+ * Customization:
+ * - The component allows customization of message templates through text input fields.
+ * - Users can choose from a set of predefined email notification options.
+ * - General settings provide flexibility in configuring various aspects of the waitlist system.
  */
 function BehaviorSection({
   formData,

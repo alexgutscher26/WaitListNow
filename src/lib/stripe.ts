@@ -6,7 +6,7 @@ export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY ?? '', {
 });
 
 /**
- * Mapping of plan names to Stripe price IDs 
+ * Mapping of plan names to Stripe price IDs
  */
 // TODO: add price ids for each plan
 export const PLAN_PRICE_IDS: Record<string, string> = {

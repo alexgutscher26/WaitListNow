@@ -8,7 +8,7 @@ var prisma = new PrismaClient({
  * Asynchronously queries users from the NeonDB database and logs the results.
  *
  * This function fetches all records from the "User" table in the NeonDB database using Prisma's `$queryRaw` method.
- * It logs the fetched user data to the console. If an error occurs during the query, it catches and logs the error.
+ * It handles both successful data retrieval and potential errors during the query, logging appropriate messages to the console.
  * Finally, it ensures that the Prisma client is disconnected regardless of the operation's success or failure.
  */
 function checkNeonData() {

@@ -20,9 +20,7 @@ const publicRoutes = [
 const protectedRoutes = [
   '/dashboard(.*)',
   '/welcome',
-  // Protect API routes by explicitly listing them instead of using negative lookahead
   '/api/auth(.*)',
-  '/api/waitlists(.*)',
   '/api/subscribers(.*)'
   // Add other API routes that need protection
 ];
@@ -72,6 +70,9 @@ export const config = {
     // - public folder
     '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
     // Always run for API routes
-    '/(api|trpc)(.*)'
+    '/(api|trpc)(.*)',
+    // Protect dashboard and private API routes
+    '/dashboard/:path*',
+    '/api/private/:path*'
   ]
 };

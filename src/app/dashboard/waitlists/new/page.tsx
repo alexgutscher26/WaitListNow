@@ -530,8 +530,9 @@ export default function NewWaitlistPage() {
 
   // Generate embed code based on selected type
   const embedCode = useMemo(() => {
-    const baseUrl = 'https://yourdomain.com'; // Replace with your actual domain
-    const waitlistId = 'new'; // This would be the actual waitlist ID in a real app
+    const baseUrl = 'http://localhost:3000';
+    const waitlistId = 'your waitlist id'; 
+    const apiKey = 'your api key';
 
     // Ensure all style properties have default values
     const style = {
@@ -555,6 +556,7 @@ export default function NewWaitlistPage() {
       ...(formData.enableReferrals ? ['data-enable-referrals="true"'] : []),
       ...(formData.referralReward ? [`data-referral-reward="${formData.referralReward}"`] : []),
       ...(formData.maxSignups ? [`data-max-signups="${formData.maxSignups}"`] : []),
+      `data-api-key="${apiKey}"`,
     ];
 
     if (embedType === 'js') {

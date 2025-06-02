@@ -39,7 +39,13 @@ export interface WaitlistWidgetProps {
  * @param {WaitlistWidgetProps} props - The component's props.
  * @returns {JSX.Element} A React JSX element representing the waitlist widget.
  */
-export function WaitlistWidget({ waitlistId, style = {}, apiKey, showBranding = true, className = '' }: WaitlistWidgetProps) {
+export function WaitlistWidget({
+  waitlistId,
+  style = {},
+  apiKey,
+  showBranding = true,
+  className = '',
+}: WaitlistWidgetProps) {
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -66,7 +72,7 @@ export function WaitlistWidget({ waitlistId, style = {}, apiKey, showBranding = 
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          ...(apiKey ? { 'Authorization': `Bearer ${apiKey}` } : {}),
+          ...(apiKey ? { Authorization: `Bearer ${apiKey}` } : {}),
         },
         body: JSON.stringify({ email, name }),
       });
@@ -191,9 +197,7 @@ export function WaitlistWidget({ waitlistId, style = {}, apiKey, showBranding = 
         </Button>
       </form>
       {showBranding && (
-        <div style={{ color: 'red', fontWeight: 'bold', fontSize: 20 }}>
-          Powered by WaitlistNow
-        </div>
+        <div style={{ color: 'red', fontWeight: 'bold', fontSize: 20 }}>Powered by WaitlistNow</div>
       )}
     </div>
   );

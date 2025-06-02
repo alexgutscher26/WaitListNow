@@ -911,7 +911,7 @@ export default function NewWaitlistPage() {
                   </div>
                 </CardContent>
               </Card>
-                <BehaviorSection
+              <BehaviorSection
                 formData={formData}
                 setFormData={setFormData}
                 errors={errors}

@@ -42,20 +42,11 @@ import {
 import { useState, useEffect } from 'react';
 
 /**
- * A React component that renders a user's account settings page.
+ * Represents a React component for displaying and managing user settings.
+ * This component includes sections for plan details, waitlist information,
+ * profile management, notification preferences, account security, and more.
  *
- * This component includes sections for profile information, notification preferences,
- * referral program details, and security settings. Users can update their personal
- * details, manage how they receive notifications about their waitlists, share their
- * referral link, and enhance the security of their account.
- *
- * Features include:
- * - Editing profile information such as name and email.
- * - Toggling various notification types via switches.
- * - Copying a referral link for sharing with others.
- * - Changing passwords and setting up two-factor authentication.
- *
- * @returns {JSX.Element} The rendered component displaying the user's account settings page.
+ * @returns {JSX.Element} The rendered user settings component.
  */
 const AccountSettingsContent = () => {
   const router = useRouter();

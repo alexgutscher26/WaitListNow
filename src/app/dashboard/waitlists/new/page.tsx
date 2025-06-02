@@ -252,9 +252,6 @@ export default function NewWaitlistPage() {
   const isProUser = userPlan === 'STARTER' || userPlan === 'GROWTH' || userPlan === 'PRO';
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
 
-
-
-
   // Helper functions
   const getBorderRadius = useCallback((size: ButtonRounded): string => {
     const radiusMap = {
@@ -937,18 +934,29 @@ export default function NewWaitlistPage() {
       )}
       {/* Upgrade Modal */}
       {showUpgradeModal && (
-        <Modal showModal={showUpgradeModal} setShowModal={setShowUpgradeModal}>
+        <Modal
+          showModal={showUpgradeModal}
+          setShowModal={setShowUpgradeModal}
+        >
           <div className="p-0 rounded-2xl overflow-hidden bg-white shadow-xl max-w-md mx-auto">
             {/* Accent bar */}
             <div className="bg-gradient-to-r from-blue-500 to-cyan-500 h-2 w-full" />
             <div className="flex flex-col items-center px-8 py-8">
               {/* Icon */}
               <div className="bg-blue-100 rounded-full p-3 mb-4">
-                <svg className="h-8 w-8 text-blue-500" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                <svg
+                  className="h-8 w-8 text-blue-500"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                  viewBox="0 0 24 24"
+                >
                   <path d="M12 2l2.09 6.26L20 9.27l-5 3.64L16.18 21 12 17.27 7.82 21 9 12.91l-5-3.64 5.91-.91L12 2z" />
                 </svg>
               </div>
-              <h2 className="text-2xl font-bold mb-2">Upgrade to <span className="text-blue-600">Starter</span></h2>
+              <h2 className="text-2xl font-bold mb-2">
+                Upgrade to <span className="text-blue-600">Starter</span>
+              </h2>
               <p className="mb-4 text-gray-600">
                 Remove branding and unlock all premium features with the Starter plan.
               </p>

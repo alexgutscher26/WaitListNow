@@ -6,9 +6,10 @@ var prisma = new PrismaClient({
 });
 /**
  * Asynchronously queries and logs all users from the database.
+ *
  * This function uses Prisma's `findMany` method to fetch user records.
- * If successful, it logs the user data; otherwise, it logs any errors encountered.
- * Finally, it ensures that the Prisma client connection is properly disconnected.
+ * It handles both successful retrieval of user data and any errors that occur during the query.
+ * Finally, it ensures that the Prisma client connection is properly disconnected regardless of the outcome.
  */
 function checkData() {
     return __awaiter(this, void 0, void 0, function () {

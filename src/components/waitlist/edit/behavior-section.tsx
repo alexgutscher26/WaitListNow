@@ -23,6 +23,13 @@ interface BehaviorSectionProps {
   onSettingsChange: (name: string, value: any) => void;
 }
 
+/**
+ * Renders a behavior configuration section for a waitlist with tabs for confirmation, verification, referrals, and embed settings.
+ *
+ * The component manages state for active tab and copy status. It renders a set of tabs where users can configure different aspects
+ * of the waitlist's behavior, including confirmation messages or redirects after signup, email verification requirements, referral
+ * features, and an embed code snippet that users can copy to their website.
+ */
 export function BehaviorSection({ formData, onSettingsChange }: BehaviorSectionProps) {
   const [copied, setCopied] = useState(false);
   const [activeTab, setActiveTab] = useState('confirmation');

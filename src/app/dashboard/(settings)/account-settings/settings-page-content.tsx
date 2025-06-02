@@ -107,7 +107,7 @@ const AccountSettingsContent = () => {
     waitlistMilestones: true,
     dailyReports: true,
     weeklyDigest: true,
-    signupAlerts: false,
+    signupAlerts: true,
     integrationUpdates: true,
     securityAlerts: true,
     marketing: false,
@@ -116,7 +116,7 @@ const AccountSettingsContent = () => {
 
   const [preferences, setPreferences] = useState({
     defaultView: 'overview',
-    autoArchive: false,
+    autoArchive: true,
     publicProfile: true,
     allowReferrals: true,
   });
@@ -507,7 +507,6 @@ const AccountSettingsContent = () => {
   };
 
   const nextPlan = getNextPlan();
-  const nextPlanConfig = nextPlan ? planConfigs[nextPlan] : null;
 
   /**
    * Manages save process with loading and saved state transitions.
@@ -556,22 +555,13 @@ const AccountSettingsContent = () => {
     }
   };
 
-  /**
-   * Toggles the boolean value of a specified preference key.
-   */
-  const handlePreferenceToggle = (key: keyof typeof preferences) => {
-    setPreferences((prev) => ({
-      ...prev,
-      [key]: !prev[key],
-    }));
-  };
 
   /**
    * Copies a predefined referral link to the clipboard.
    */
-  const copyReferralLink = () => {
-    navigator.clipboard.writeText('https://yourwaitlist.com/ref/user123');
-  };
+  // const copyReferralLink = () => {
+  //   navigator.clipboard.writeText('https://yourwaitlist.com/ref/user123');
+  // };
 
   return (
     <div className="space-y-6">
@@ -1159,7 +1149,7 @@ const AccountSettingsContent = () => {
       </Card>
 
       {/* Referral Program */}
-      <Card>
+      {/* <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Users className="h-5 w-5" />
@@ -1190,7 +1180,7 @@ const AccountSettingsContent = () => {
             </p>
           </div>
         </CardContent>
-      </Card>
+      </Card> */}
 
       {/* Account Security */}
       <Card>

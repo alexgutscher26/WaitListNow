@@ -12,6 +12,15 @@ interface ActivityItemProps {
   message: React.ReactNode;
 }
 
+/**
+ * Determines the icon associated with a given activity type.
+ *
+ * This function uses a switch statement to map each activity type string to its corresponding icon component.
+ * If the provided type does not match any known cases, it defaults to returning the Bell icon.
+ *
+ * @param type - The string representing the type of activity.
+ * @returns The icon component associated with the given activity type.
+ */
 const getActivityIcon = (type: string) => {
   switch (type) {
     case 'new_subscriber':
@@ -29,6 +38,15 @@ const getActivityIcon = (type: string) => {
   }
 };
 
+/**
+ * Determines the URL associated with a given activity type.
+ *
+ * This function uses a switch statement to map different activity types to their respective URLs.
+ * It checks for specific conditions, such as the presence of a waitlistId, to determine the exact URL path.
+ *
+ * @param activity - An object representing the activity with a 'type' property and optional 'waitlistId'.
+ * @returns The URL string associated with the activity type, or null if no matching URL is found.
+ */
 const getActivityUrl = (activity: any): string | null => {
   switch (activity.type) {
     case 'new_subscriber':
@@ -52,11 +70,17 @@ const getActivityUrl = (activity: any): string | null => {
   }
 };
 
+/**
+ * Renders an activity item with an icon, message, and view details option.
+ */
 const ActivityItem: React.FC<ActivityItemProps> = ({ activity, iconType, message }) => {
   const { toast } = useToast();
   const router = useRouter();
   const Icon = getActivityIcon(iconType);
 
+  /**
+   * Handles viewing activity details by redirecting or showing a toast if unavailable.
+   */
   const handleViewDetails = () => {
     const url = getActivityUrl(activity);
     if (url) {
@@ -95,6 +119,16 @@ const ActivityItem: React.FC<ActivityItemProps> = ({ activity, iconType, message
   );
 };
 
+/**
+ * Generates a summary string based on different types of user activities.
+ *
+ * This function processes an activity object and returns a formatted summary string based on its type.
+ * The supported types include 'new_subscriber', 'waitlist_created', 'referral', 'conversion',
+ * 'milestone', and a default for any other types.
+ *
+ * @param activity - An activity object containing details about the user action.
+ * @returns A formatted summary string describing the activity.
+ */
 function getActivitySummary(activity: any): string {
   switch (activity.type) {
     case 'new_subscriber':

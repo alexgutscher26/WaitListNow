@@ -644,6 +644,16 @@ const onboardingSteps = [
   },
 ];
 
+/**
+ * Manages the onboarding process for creating a waitlist.
+ *
+ * This component maintains state for the current step, form data, errors,
+ * and loading status. It validates user input at each step, updates the UI accordingly,
+ * and handles navigation between steps. Upon completing all steps, it submits the form
+ * data to an API endpoint to finalize onboarding.
+ *
+ * @returns A React component that renders the onboarding interface.
+ */
 export default function ImprovedOnboarding() {
   const [currentStep, setCurrentStep] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
@@ -729,6 +739,16 @@ export default function ImprovedOnboarding() {
 
   const router = useRouter();
 
+  /**
+   * Validates the current step in a form based on specific criteria.
+   *
+   * For `currentStep` 0, it always returns true as the welcome screen is valid.
+   * For `currentStep` 1, it checks if the name is provided and has at least 3 characters,
+   * and validates that the websiteUrl and redirectUrl (if provided) start with http:// or https://.
+   * Errors are collected in `newErrors` and set using `setErrors`.
+   *
+   * @returns True if the current step is valid, otherwise false.
+   */
   const validateCurrentStep = (): boolean => {
     if (currentStep === 0) {
       // Welcome screen is always valid
@@ -763,6 +783,15 @@ export default function ImprovedOnboarding() {
     return true;
   };
 
+  /**
+   * Handles navigation to the next step in the onboarding process or finalizes the onboarding if it's the last step.
+   *
+   * This function validates the current step, prepares and validates the submission data according to a schema,
+   * and either moves to the next step or completes the onboarding by calling an API. It handles errors gracefully
+   * and updates UI states such as loading and error messages accordingly.
+   *
+   * @returns void
+   */
   const handleNext = async () => {
     // Validate current step before proceeding
     const isValid = validateCurrentStep();

@@ -62,7 +62,8 @@ export const PaymentSuccessModal = () => {
     },
     PRO: {
       name: 'Pro',
-      message: 'Thank you for upgrading to Pro and supporting WaitlistNow. Your account has been upgraded.',
+      message:
+        'Thank you for upgrading to Pro and supporting WaitlistNow. Your account has been upgraded.',
       success: 'Upgrade successful! 🎉',
       image: '/brand-asset-heart.png',
     },
@@ -106,9 +107,7 @@ export const PaymentSuccessModal = () => {
               <p className="text-lg/7 tracking-tight font-medium text-pretty">
                 {planConfig.success}
               </p>
-              <p className="text-gray-600 text-sm/6 text-pretty">
-                {planConfig.message}
-              </p>
+              <p className="text-gray-600 text-sm/6 text-pretty">{planConfig.message}</p>
             </div>
 
             <div className="mt-8 w-full">

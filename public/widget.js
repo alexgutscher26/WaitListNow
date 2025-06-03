@@ -46,7 +46,7 @@
                 e: for (; 0 < n; ) {
                   var r = (n - 1) >>> 1,
                     a = e[r];
-                  if (!(0 < l(a, t))) break e;
+                  if (!(0 < l(a, t))) break;
                   (e[r] = t), (e[n] = a), (n = r);
                 }
               }
@@ -69,7 +69,7 @@
                         ? ((e[r] = c), (e[s] = n), (r = s))
                         : ((e[r] = u), (e[i] = n), (r = i));
                     else {
-                      if (!(s < a && 0 > l(c, n))) break e;
+                      if (!(s < a && 0 > l(c, n))) break;
                       (e[r] = c), (e[s] = n), (r = s);
                     }
                   }
@@ -1959,10 +1959,10 @@
               }
               for (t = 0; t < n.length; t++) (l = n[t]).form === e.form && mt(l);
             }
-            break e;
+            break;
           case 'textarea':
             St(e, n.value, n.defaultValue);
-            break e;
+            break;
           case 'select':
             null != (t = n.value) && kt(e, Boolean(n.multiple), t, !1);
         }
@@ -2009,7 +2009,7 @@
               'textarea' === e
             )),
             (e = !l);
-          break e;
+          break;
         default:
           e = !1;
       }
@@ -5416,7 +5416,7 @@
               (e.child.return = e), (e = e.child);
               continue;
             }
-            if (e === t) break e;
+            if (e === t) break;
             for (; null === e.sibling; ) {
               if (null === e.return || e.return === t) break e;
               e = e.return;
@@ -5981,7 +5981,7 @@
                   (a.child.return = a), (a = a.child);
                   continue;
                 }
-                if (a === t) break e;
+                if (a === t) break;
                 for (; null === a.sibling; ) {
                   if (null === a.return || a.return === t) break e;
                   a = a.return;
@@ -5994,11 +5994,10 @@
                 case 'input':
                 case 'select':
                 case 'textarea':
-                  e = Boolean(l.autoFocus);
-                  break e;
+
                 case 'img':
                   e = !0;
-                  break e;
+                  break;
                 default:
                   e = !1;
               }
@@ -6355,7 +6354,7 @@
           case 'select':
           case 'textarea':
             n.autoFocus && r.focus();
-            break e;
+            break;
           case 'img':
             n.src ? (r.src = n.src) : n.srcSet && (r.srcset = n.srcSet);
         }
@@ -7114,7 +7113,7 @@
                 (t.child.return = t), (t = t.child);
                 continue;
               }
-              if (t === e) break e;
+              if (t === e) break;
               for (; null === t.sibling; ) {
                 if (null === t.return || t.return === e) break e;
                 n === t && (n = null), (t = t.return);
@@ -7554,11 +7553,11 @@
               a = r.return;
             if ((zu(r), r === n)) {
               Eu = null;
-              break e;
+              break;
             }
             if (null !== l) {
               (l.return = a), (Eu = l);
-              break e;
+              break;
             }
             Eu = a;
           }

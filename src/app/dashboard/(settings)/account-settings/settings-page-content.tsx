@@ -18,7 +18,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
-import { useUser } from '@clerk/nextjs';
+import { useUser, useSession } from '@clerk/nextjs';
 import {
   Mail,
   Bell,
@@ -40,6 +40,7 @@ import {
   Save,
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 
 /**
  * A React component that renders a user's account settings page.
@@ -61,6 +62,7 @@ const AccountSettingsContent = () => {
   const router = useRouter();
   const { toast } = useToast();
   const { user } = useUser();
+  const { session: currentSession } = useSession();
 
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
@@ -208,6 +210,23 @@ const AccountSettingsContent = () => {
     lastBillingDate: new Date().toISOString().split('T')[0],
     nextBillingDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
   });
+
+  // Modal state for Account Security
+  const [showChangePassword, setShowChangePassword] = useState(false);
+  const [show2FA, setShow2FA] = useState(false);
+  const [showSessions, setShowSessions] = useState(false);
+
+  // Active Sessions state
+  type SessionInfo = {
+    id: string;
+    lastActiveAt: number | null;
+    userAgent: string | null;
+    ipAddress: string | null;
+    isCurrent: boolean;
+  };
+  const [sessions, setSessions] = useState<SessionInfo[]>([]);
+  const [isLoadingSessions, setIsLoadingSessions] = useState(false);
+  const [revokingSessionId, setRevokingSessionId] = useState<string | null>(null);
 
   // Fetch profile and preferences data on component mount
   useEffect(() => {
@@ -555,6 +574,64 @@ const AccountSettingsContent = () => {
     }
   };
 
+  // Fetch sessions when modal opens
+  useEffect(() => {
+    if (!showSessions || !user) return;
+    let isMounted = true;
+    setIsLoadingSessions(true);
+    user.getSessions()
+      .then((clerkSessions) => {
+        if (!isMounted) return;
+        setSessions(
+          clerkSessions.map((s) => ({
+            id: s.id,
+            lastActiveAt: s.lastActiveAt ? (typeof s.lastActiveAt === 'string' ? Date.parse(s.lastActiveAt) : s.lastActiveAt instanceof Date ? s.lastActiveAt.getTime() : null) : null,
+            userAgent: s.latestActivity?.browserName
+              ? `${s.latestActivity.browserName}${s.latestActivity.deviceType ? ' (' + s.latestActivity.deviceType + ')' : ''}`
+              : 'Unknown device',
+            ipAddress: s.latestActivity?.ipAddress || null,
+            isCurrent: currentSession?.id === s.id,
+          }))
+        );
+      })
+      .catch(() => {
+        if (isMounted) {
+          toast({
+            title: 'Error',
+            description: 'Failed to load sessions',
+            variant: 'destructive',
+          });
+        }
+      })
+      .finally(() => {
+        if (isMounted) setIsLoadingSessions(false);
+      });
+    return () => { isMounted = false; };
+  }, [showSessions, user, currentSession, toast]);
+
+  // Revoke session handler
+  const handleRevokeSession = async (sessionId: string) => {
+    setRevokingSessionId(sessionId);
+    try {
+      const clerkSessions = await user?.getSessions();
+      const sessionToRevoke = clerkSessions?.find((s) => s.id === sessionId);
+      if (!sessionToRevoke) throw new Error('Session not found');
+      await sessionToRevoke.revoke();
+      setSessions((prev) => prev.filter((s) => s.id !== sessionId));
+      toast({
+        title: 'Session revoked',
+        description: 'The session has been signed out.',
+      });
+    } catch (error) {
+      toast({
+        title: 'Error',
+        description: 'Failed to revoke session',
+        variant: 'destructive',
+      });
+    } finally {
+      setRevokingSessionId(null);
+    }
+  };
 
   /**
    * Copies a predefined referral link to the clipboard.
@@ -1192,45 +1269,6 @@ const AccountSettingsContent = () => {
           <CardDescription>Manage your account security settings</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="flex items-center justify-between">
-            <div className="space-y-0.5">
-              <Label>Password</Label>
-              <p className="text-sm text-muted-foreground">Last changed 3 months ago</p>
-            </div>
-            <Button
-              variant="outline"
-              size="sm"
-            >
-              Change Password
-            </Button>
-          </div>
-
-          <div className="flex items-center justify-between">
-            <div className="space-y-0.5">
-              <Label>Two-Factor Authentication</Label>
-              <p className="text-sm text-muted-foreground">Add an extra layer of security</p>
-            </div>
-            <Button
-              variant="outline"
-              size="sm"
-            >
-              Set Up 2FA
-            </Button>
-          </div>
-
-          <div className="flex items-center justify-between">
-            <div className="space-y-0.5">
-              <Label>API Keys</Label>
-              <p className="text-sm text-muted-foreground">Manage your API access tokens</p>
-            </div>
-            <Button
-              variant="outline"
-              size="sm"
-            >
-              <ExternalLink className="h-4 w-4 mr-2" />
-              Manage Keys
-            </Button>
-          </div>
 
           <div className="flex items-center justify-between">
             <div className="space-y-0.5">
@@ -1240,12 +1278,69 @@ const AccountSettingsContent = () => {
             <Button
               variant="outline"
               size="sm"
+              onClick={() => setShowSessions(true)}
             >
               View Sessions
             </Button>
           </div>
         </CardContent>
       </Card>
+
+      {/* Active Sessions Modal */}
+      <Dialog open={showSessions} onOpenChange={setShowSessions}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Active Sessions</DialogTitle>
+            <DialogDescription>View and revoke your active sessions/devices.</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-2 min-h-[120px]">
+            {isLoadingSessions ? (
+              <div className="flex justify-center py-8">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900" />
+              </div>
+            ) : sessions.length === 0 ? (
+              <div className="text-center text-gray-500">No active sessions found.</div>
+            ) : (
+              <ul className="divide-y divide-gray-100">
+                {sessions.map((session) => (
+                  <li key={session.id} className="flex items-center justify-between py-2">
+                    <div>
+                      <div className="font-medium text-gray-900">
+                        {session.isCurrent ? 'This device' : 'Other device'}
+                        {session.isCurrent && (
+                          <span className="ml-2 text-xs text-green-600">(Current)</span>
+                        )}
+                      </div>
+                      <div className="text-xs text-gray-500">
+                        {session.userAgent || 'Unknown device'}
+                        {session.ipAddress && (
+                          <span className="ml-2">IP: {session.ipAddress}</span>
+                        )}
+                      </div>
+                      <div className="text-xs text-gray-400">
+                        Last active: {session.lastActiveAt ? new Date(session.lastActiveAt).toLocaleString() : 'Unknown'}
+                      </div>
+                    </div>
+                    {!session.isCurrent && (
+                      <Button
+                        size="sm"
+                        variant="destructive"
+                        disabled={revokingSessionId === session.id}
+                        onClick={() => handleRevokeSession(session.id)}
+                      >
+                        {revokingSessionId === session.id ? 'Signing out...' : 'Sign out'}
+                      </Button>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowSessions(false)}>Close</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       {/* Save Button */}
       <div className="flex justify-between items-center">

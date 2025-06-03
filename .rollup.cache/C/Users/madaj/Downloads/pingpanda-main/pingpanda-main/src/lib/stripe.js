@@ -6,29 +6,44 @@ export var stripe = new Stripe((_a = process.env.STRIPE_SECRET_KEY) !== null && 
     typescript: true,
 });
 /**
- * Creates a Stripe checkout session for payment with specified user details.
+ * Mapping of plan names to Stripe price IDs
+ */
+// TODO: add price ids for each plan
+export var PLAN_PRICE_IDS = {
+    PRO: 'price_PRO_PLACEHOLDER',
+    STARTER: 'price_STARTER_PLACEHOLDER',
+    GROWTH: 'price_GROWTH_PLACEHOLDER',
+    // Add more plans as needed
+};
+/**
+ * Creates a Stripe checkout session for payment with specified user details and plan.
  */
 export var createCheckoutSession = function (_a) { return __awaiter(void 0, [_a], void 0, function (_b) {
-    var session;
-    var userEmail = _b.userEmail, userId = _b.userId;
+    var priceId, session;
+    var userEmail = _b.userEmail, userId = _b.userId, plan = _b.plan;
     return __generator(this, function (_c) {
         switch (_c.label) {
-            case 0: return [4 /*yield*/, stripe.checkout.sessions.create({
-                    // TODO: change price and add more plans
-                    line_items: [
-                        {
-                            price: 'price_1QBHVBA19umTXGu8gzhUCSG7',
-                            quantity: 1,
+            case 0:
+                priceId = PLAN_PRICE_IDS[plan];
+                if (!priceId) {
+                    throw new Error("Invalid plan: ".concat(plan));
+                }
+                return [4 /*yield*/, stripe.checkout.sessions.create({
+                        line_items: [
+                            {
+                                price: priceId,
+                                quantity: 1,
+                            },
+                        ],
+                        mode: 'payment',
+                        success_url: "".concat(process.env.NEXT_PUBLIC_APP_URL, "/dashboard?success=true"),
+                        cancel_url: "".concat(process.env.NEXT_PUBLIC_APP_URL, "/pricing"),
+                        customer_email: userEmail,
+                        metadata: {
+                            userId: userId,
+                            plan: plan,
                         },
-                    ],
-                    mode: 'payment',
-                    success_url: "".concat(process.env.NEXT_PUBLIC_APP_URL, "/dashboard?success=true"),
-                    cancel_url: "".concat(process.env.NEXT_PUBLIC_APP_URL, "/pricing"),
-                    customer_email: userEmail,
-                    metadata: {
-                        userId: userId,
-                    },
-                })];
+                    })];
             case 1:
                 session = _c.sent();
                 return [2 /*return*/, session];

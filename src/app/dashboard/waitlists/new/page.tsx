@@ -1806,7 +1806,10 @@ function BehaviorSection({
           <CardDescription>Add this waitlist to your website</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          <Tabs defaultValue="js" className="w-full">
+          <Tabs
+            defaultValue="js"
+            className="w-full"
+          >
             <TabsList className="mb-4">
               <TabsTrigger value="js">JavaScript Snippet</TabsTrigger>
               <TabsTrigger value="iframe">iFrame Embed</TabsTrigger>
@@ -1832,7 +1835,8 @@ function BehaviorSection({
                   </pre>
                 </div>
                 <p className="text-xs text-muted-foreground">
-                  Add this script tag to your website's HTML where you want the waitlist form to appear.
+                  Add this script tag to your website's HTML where you want the waitlist form to
+                  appear.
                 </p>
               </div>
             </TabsContent>
@@ -1875,11 +1879,15 @@ function BehaviorSection({
                       </pre>
                     </div>
                     <p className="text-xs text-muted-foreground">
-                      Add this iframe code to your website's HTML where you want the waitlist form to appear.
+                      Add this iframe code to your website's HTML where you want the waitlist form
+                      to appear.
                     </p>
                     <div className="mt-4">
                       <Label className="mb-2 block">Live Preview</Label>
-                      <div className="border rounded overflow-hidden" style={{ width: '100%', maxWidth: 500, height: 600 }}>
+                      <div
+                        className="border rounded overflow-hidden"
+                        style={{ width: '100%', maxWidth: 500, height: 600 }}
+                      >
                         <iframe
                           src={iframeUrl}
                           width="100%"

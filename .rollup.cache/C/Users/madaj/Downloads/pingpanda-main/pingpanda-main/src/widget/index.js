@@ -1,5 +1,5 @@
 var _a, _b, _c, _d, _e, _f, _g, _h, _j;
-import { jsx as _jsx } from "react/jsx-runtime";
+import { jsx as _jsx } from 'react/jsx-runtime';
 import { createRoot } from 'react-dom/client';
 import { WaitlistWidget } from '../components/waitlist-widget';
 // Find the current script tag

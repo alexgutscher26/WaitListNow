@@ -1,6 +1,6 @@
 'use client';
 
-import React from "react";
+import React from 'react';
 
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
@@ -40,7 +40,14 @@ import {
   Save,
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from '@/components/ui/dialog';
 
 /**
  * A React component that renders a user's account settings page.
@@ -579,19 +586,26 @@ const AccountSettingsContent = () => {
     if (!showSessions || !user) return;
     let isMounted = true;
     setIsLoadingSessions(true);
-    user.getSessions()
+    user
+      .getSessions()
       .then((clerkSessions) => {
         if (!isMounted) return;
         setSessions(
           clerkSessions.map((s) => ({
             id: s.id,
-            lastActiveAt: s.lastActiveAt ? (typeof s.lastActiveAt === 'string' ? Date.parse(s.lastActiveAt) : s.lastActiveAt instanceof Date ? s.lastActiveAt.getTime() : null) : null,
+            lastActiveAt: s.lastActiveAt
+              ? typeof s.lastActiveAt === 'string'
+                ? Date.parse(s.lastActiveAt)
+                : s.lastActiveAt instanceof Date
+                  ? s.lastActiveAt.getTime()
+                  : null
+              : null,
             userAgent: s.latestActivity?.browserName
               ? `${s.latestActivity.browserName}${s.latestActivity.deviceType ? ' (' + s.latestActivity.deviceType + ')' : ''}`
               : 'Unknown device',
             ipAddress: s.latestActivity?.ipAddress || null,
             isCurrent: currentSession?.id === s.id,
-          }))
+          })),
         );
       })
       .catch(() => {
@@ -606,7 +620,9 @@ const AccountSettingsContent = () => {
       .finally(() => {
         if (isMounted) setIsLoadingSessions(false);
       });
-    return () => { isMounted = false; };
+    return () => {
+      isMounted = false;
+    };
   }, [showSessions, user, currentSession, toast]);
 
   // Revoke session handler
@@ -1269,7 +1285,6 @@ const AccountSettingsContent = () => {
           <CardDescription>Manage your account security settings</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-
           <div className="flex items-center justify-between">
             <div className="space-y-0.5">
               <Label>Active Sessions</Label>
@@ -1287,7 +1302,10 @@ const AccountSettingsContent = () => {
       </Card>
 
       {/* Active Sessions Modal */}
-      <Dialog open={showSessions} onOpenChange={setShowSessions}>
+      <Dialog
+        open={showSessions}
+        onOpenChange={setShowSessions}
+      >
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Active Sessions</DialogTitle>
@@ -1303,7 +1321,10 @@ const AccountSettingsContent = () => {
             ) : (
               <ul className="divide-y divide-gray-100">
                 {sessions.map((session) => (
-                  <li key={session.id} className="flex items-center justify-between py-2">
+                  <li
+                    key={session.id}
+                    className="flex items-center justify-between py-2"
+                  >
                     <div>
                       <div className="font-medium text-gray-900">
                         {session.isCurrent ? 'This device' : 'Other device'}
@@ -1313,12 +1334,13 @@ const AccountSettingsContent = () => {
                       </div>
                       <div className="text-xs text-gray-500">
                         {session.userAgent || 'Unknown device'}
-                        {session.ipAddress && (
-                          <span className="ml-2">IP: {session.ipAddress}</span>
-                        )}
+                        {session.ipAddress && <span className="ml-2">IP: {session.ipAddress}</span>}
                       </div>
                       <div className="text-xs text-gray-400">
-                        Last active: {session.lastActiveAt ? new Date(session.lastActiveAt).toLocaleString() : 'Unknown'}
+                        Last active:{' '}
+                        {session.lastActiveAt
+                          ? new Date(session.lastActiveAt).toLocaleString()
+                          : 'Unknown'}
                       </div>
                     </div>
                     {!session.isCurrent && (
@@ -1337,7 +1359,12 @@ const AccountSettingsContent = () => {
             )}
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setShowSessions(false)}>Close</Button>
+            <Button
+              variant="outline"
+              onClick={() => setShowSessions(false)}
+            >
+              Close
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

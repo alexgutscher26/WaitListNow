@@ -321,6 +321,16 @@
     p,
     m = { exports: {} },
     h = {};
+  /**
+   * Initializes React core functionalities and exports necessary components and hooks.
+   *
+   * This function sets up various symbols representing different React element types,
+   * defines React component base classes, and provides utility functions such as `createElement`,
+   * `cloneElement`, and context management. It also exports hooks for functional components,
+   * lifecycle methods for class components, and other utilities required by the React framework.
+   *
+   * @returns An object containing various React core functionalities including components and hooks.
+   */
   function g() {
     if (f) return h;
     f = 1;
@@ -928,16 +938,16 @@
       (S.exports = _()),
       S.exports
     );
-  }
   /**
-   * @license React
-   * react-dom-client.production.js
+   * This module provides a set of functions and classes for rendering React components
+   * to the DOM. It includes methods for creating and hydrating root nodes, as well as
+   * handling errors and transitions. The code is designed to work with specific versions
+   * of React and ReactDOM, and it integrates with development tools like React DevTools.
    *
-   * Copyright (c) Meta Platforms, Inc. and affiliates.
-   *
-   * This source code is licensed under the MIT license found in the
-   * LICENSE file in the root directory of this source tree.
-   */ function C() {
+   * @module ReactDOM
+   * @version 19.1.0
+   */
+  }
     if (w) return u;
     w = 1;
     var e = d(),
@@ -1450,6 +1460,13 @@
         e.setAttributeNS(t, n, String(r));
       }
     }
+    /**
+     * Constructs a formatted error message string based on the provided error object and global context.
+     *
+     * This function checks if the global variable `Ze` is undefined, and if so, attempts to capture the stack trace of an artificial error.
+     * It then extracts relevant parts from the stack trace to set `Ze` and `Je`. Finally, it returns a formatted string combining these values
+     * with the input error object.
+     */
     function ot(e) {
       if (void 0 === Ze)
         try {
@@ -1467,6 +1484,18 @@
       return '\n' + Ze + e + Je;
     }
     var it = !1;
+    /**
+     * Determines and returns a stack trace string related to component frame root.
+     *
+     * This function prepares an error stack trace to identify the component frame root,
+     * handling different scenarios based on the input parameters and available features.
+     * It manipulates the Error.prepareStackTrace method, defines properties with setters,
+     * and uses Reflect.construct or prototype methods to capture stack traces.
+     *
+     * @param e - The first parameter, likely representing a function or object.
+     * @param t - The second parameter, a boolean indicating some condition.
+     * @returns A string containing the stack trace information or an empty string if no relevant frames are found.
+     */
     function ut(e, t) {
       if (!e || it) return '';
       it = !0;
@@ -2362,6 +2391,9 @@
       url: !0,
       week: !0,
     };
+    /**
+     * Handles a basic operation with parameter e.
+     */
     function Rn(e) {
 
     }
@@ -2435,6 +2467,9 @@
       }
       return !0;
     }
+    /**
+     * Traverses down the DOM tree to find and return the deepest child node of the given element.
+     */
     function Jn(e) {
       for (; e?.firstChild; ) e = e.firstChild;
       return e;
@@ -2494,6 +2529,16 @@
       }
       return t;
     }
+    /**
+     * Determines if an element is a text input or textarea.
+     *
+     * This function checks if the provided element's node name is 'input' with a type of
+     * 'text', 'search', 'tel', 'url', or 'password', or if it is a 'textarea'. It also
+     * considers elements where contentEditable is set to 'true'.
+     *
+     * @param e - The DOM element to check.
+     * @returns True if the element is a text input, textarea, or has contentEditable true; otherwise, false.
+     */
     function rr(e) {
       var t = e?.nodeName && e.nodeName.toLowerCase();
       return (
@@ -2513,6 +2558,17 @@
       or = null,
       ir = null,
       ur = !1;
+    /**
+     * Handles selection changes and updates internal state accordingly.
+     *
+     * This function determines the current document or node context, checks for existing selections,
+     * and updates the internal state with the new selection details. It also triggers any registered
+     * 'onSelect' event listeners if the selection has changed.
+     *
+     * @param e - An array to store event-related data.
+     * @param t - The original event object or a placeholder.
+     * @param n - The current context object containing document and node information.
+     */
     function sr(e, t, n) {
       var r = n.window === n ? n.document : 9 === n.nodeType ? n : n.ownerDocument;
       ur ||
@@ -5198,6 +5254,18 @@
     function Vi(e, t, n) {
       return (e = null !== e ? e.childLanes & ~n : 0), t && (e |= ys), e;
     }
+    /**
+     * The Wi function manages the reconciliation and rendering of a component during React's update process.
+     *
+     * It handles various states like hydration, suspense, and fallbacks. Depending on whether the current fiber node is null,
+     * it either initializes new work or updates existing ones. It processes pending props, flags, and state to determine
+     * how to proceed with rendering, including handling dehydrated states, errors, and retries.
+     *
+     * @param e - The current fiber node being processed.
+     * @param t - The alternate fiber node (previous render).
+     * @param n - Lanes representing the priority levels for this update.
+     * @returns The next fiber node to process or null if there are no more work left.
+     */
     function Wi(e, t, n) {
       var l,
         a = t.pendingProps,
@@ -8324,6 +8392,15 @@
         (zs = 1), ac(), oc(), ic();
       }
     }
+    /**
+     * Handles a specific case within the function, updating state and focusing elements if necessary.
+     *
+     * This function checks if `zs` is equal to 1 and sets it to 0. It then proceeds to update various states
+     * and focus on elements based on flags and subtree flags. If certain conditions are met, it manipulates
+     * selections and scrolls. Finally, it resets some internal states.
+     *
+     * @param zs - A variable that determines the execution path within the function.
+     */
     function ac() {
       if (1 === zs) {
         zs = 0;
@@ -8853,6 +8930,19 @@
             ? e.addEventListener(t, n, { passive: l })
             : e.addEventListener(t, n, !1);
     }
+    /**
+     * Handles event delegation and dispatches events to appropriate listeners.
+     *
+     * This function processes various DOM events and delegates them based on their type and target. It handles
+     * different types of events such as keyboard, mouse, touch, pointer, composition, and form-related events.
+     * The function also manages focus states and compositions for specific elements.
+     *
+     * @param e - The event type.
+     * @param t - Flags indicating the event's behavior.
+     * @param n - The native DOM event object.
+     * @param r - The fiber node associated with the event target.
+     * @param l - The host container information.
+     */
     function Wc(e, t, n, r, l) {
       var o = r;
       if (!(1 & t || 2 & t || null === r))
@@ -10682,6 +10772,17 @@
           }
         }));
     }
+    /**
+     * Updates form-related attributes and processes queued form replay actions.
+     *
+     * This function performs several tasks related to form management:
+     * - It updates event handlers associated with form elements using `zf`.
+     * - It clears the `blockedOn` property for entries in `vf` that were blocked by the given element `e`.
+     * - It processes a queue of form replay actions, updating or removing them based on the state of form elements.
+     * - It ensures that any function handlers are properly assigned and executed.
+     *
+     * @param e - The form element or event target for which to update attributes and process form replay actions.
+     */
     function Tf(e) {
       function t(t) {
         return zf(t, e);

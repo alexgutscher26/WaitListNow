@@ -480,14 +480,14 @@ const StatCard = ({
 );
 
 /**
- * Renders the main dashboard page for a user, displaying their waitlists and related statistics.
+ * Renders the dashboard page, displaying various statistics and actions related to waitlists.
  *
- * This function performs several key tasks:
- * 1. Retrieves the current user information and checks if they are authenticated.
- * 2. Redirects to the sign-in page if the user is not logged in.
- * 3. Determines if the user has premium access and whether to display an upgrade banner based on query parameters.
- * 4. Fetches the user's recent waitlists with subscriber counts.
- * 5. Renders various cards, tables, and components displaying statistics, recent activity, and waitlist details.
+ * This component fetches user data and waitlist information, then renders a comprehensive dashboard
+ * with sections for system status, quick actions, your waitlists, and admin-only system status.
+ * It includes interactive elements like buttons, tables, and cards to provide a dynamic user experience.
+ *
+ * @param {Object} props - The component properties.
+ * @returns {JSX.Element} - The JSX representation of the dashboard page.
  */
 export default async function Page({ searchParams = {} }: PageProps) {
   const stats = await getStats();

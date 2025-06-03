@@ -32,6 +32,19 @@
     u = {},
     s = { exports: {} },
     c = {};
+  /**
+   * Initializes and exports a scheduling system with various priority levels and methods for managing tasks.
+   *
+   * This function sets up a complex task scheduling mechanism that includes priority levels, timeouts, and immediate callbacks.
+   * It defines functions to manage tasks in different states (e.g., pending, running), handle timing and prioritization,
+   * and provide interfaces for users to schedule and control the execution of their tasks.
+   *
+   * The system supports multiple priority levels such as ImmediatePriority, UserBlockingPriority, NormalPriority,
+   * LowPriority, and IdlePriority. It also includes methods to request paint, run with a specific priority, force frame rate,
+   * and cancel callbacks.
+   *
+   * @returns An object containing the exported scheduling functions and constants.
+   */
   function d() {
     return (
       a ||
@@ -40,6 +53,17 @@
           (l ||
             ((l = 1),
             (function (e) {
+              /**
+               * Inserts an element into a heap and maintains the heap property.
+               *
+               * This function takes an array `e` representing a heap and an element `t` to be inserted.
+               * It first appends the element to the end of the array. Then, it performs a "bubble up" operation
+               * to ensure the heap property is maintained by comparing the new element with its parent and swapping
+               * if necessary, continuing this process until the correct position is found or the root is reached.
+               *
+               * @param {Array} e - The array representing the heap.
+               * @param {*} t - The element to be inserted into the heap.
+               */
               function t(e, t) {
                 var n = e.length;
                 e.push(t);
@@ -53,6 +77,16 @@
               function n(e) {
                 return 0 === e.length ? null : e[0];
               }
+              /**
+               * Rearranges elements in an array and returns a specific value based on certain conditions.
+               *
+               * The function first checks if the input array is empty and returns null if true.
+               * It then compares the first and last elements of the array, swapping them if they are not equal.
+               * A loop follows to iterate over the array, performing comparisons and swaps based on a condition defined by the `l` function.
+               *
+               * @param e - An array of elements to be processed.
+               * @returns The first element of the original array.
+               */
               function r(e) {
                 if (0 === e.length) return null;
                 var t = e[0],
@@ -928,16 +962,15 @@
       (S.exports = _()),
       S.exports
     );
-  }
   /**
-   * @license React
-   * react-dom-client.production.js
+   * This is a React DOM library that provides methods for creating and managing root elements,
+   * rendering components, and hydrating server-rendered HTML. It includes functionality for error handling,
+   * strict mode, and transitioning between different states of the application. The library also supports
+   * hydration of roots and form state management.
    *
-   * Copyright (c) Meta Platforms, Inc. and affiliates.
-   *
-   * This source code is licensed under the MIT license found in the
-   * LICENSE file in the root directory of this source tree.
-   */ function C() {
+   * @namespace ReactDOM
+   */
+  }
     if (w) return u;
     w = 1;
     var e = d(),
@@ -1915,6 +1948,15 @@
     }
     var Rt = null,
       Dt = null;
+    /**
+     * Handles form field updates and validations based on the provided element's state node.
+     *
+     * This function processes different types of input elements (input, textarea, select) to update their states
+     * and validate them according to specific rules. It also manages radio button groups by ensuring that all
+     * radio buttons with the same name have consistent state updates.
+     *
+     * @param e - The element for which the form field is being updated.
+     */
     function Mt(e) {
       var t = We(e);
       if (t && (e = t.stateNode)) {
@@ -1983,6 +2025,19 @@
           for (t = 0; t < e.length; t++) Mt(e[t]);
       }
     }
+    /**
+     * Retrieves a handler function from the event system based on the provided event type and target node.
+     *
+     * This function checks if the state node is null, then retrieves the event listeners object.
+     * It switches through different mouse events to determine if the event should be handled.
+     * If the event is not handled, it checks if the retrieved handler is a valid function,
+     * throwing an error if not. Finally, it returns the handler function or null.
+     *
+     * @param e - The target node element.
+     * @param t - The type of event to handle.
+     * @returns The event handler function or null if the event should not be handled.
+     * @throws Error If the retrieved handler is not a function when expected.
+     */
     function jt(e, t) {
       var n = e.stateNode;
       if (null === n) return null;
@@ -5402,6 +5457,18 @@
           (a.tail = n),
           (a.tailMode = l));
     }
+    /**
+     * Handles the reconciliation of children in a fiber tree based on reveal order and tail configuration.
+     *
+     * This function processes the child fibers, updating their states and handling special cases like Suspense and Error Boundaries.
+     * It also reorders the children based on the specified reveal order ('forwards', 'backwards', 'together') and tail settings.
+     * The function updates the fiber's flags and state accordingly.
+     *
+     * @param e - Current fiber node.
+     * @param t - Work-in-progress fiber node.
+     * @param n - Render lanes or context.
+     * @returns The updated child fiber of the work-in-progress node.
+     */
     function Yi(e, t, n) {
       var r = t.pendingProps,
         l = r.revealOrder,
@@ -5874,6 +5941,18 @@
             (l = l.sibling);
       return (e.subtreeFlags |= r), (e.childLanes = n), t;
     }
+    /**
+     * Handles various reconciliation tasks for a given fiber node in React's rendering process.
+     *
+     * This function processes different types of fibers (e.g., HostRoot, FunctionComponent, ClassComponent)
+     * and performs operations such as state updates, context propagation, and DOM manipulations based on the fiber tag.
+     * It also manages error boundaries, suspense components, and hydration logic.
+     *
+     * @param {Object} e - The current fiber node.
+     * @param {Object} t - The work-in-progress fiber node.
+     * @param {number} n - Lanes representing priorities for rendering tasks.
+     * @returns {null|Object} Returns the next unit of work or null if no further processing is needed.
+     */
     function au(e, t, n) {
       var l = t.pendingProps;
       switch ((ll(t), t.tag)) {
@@ -6343,6 +6422,15 @@
           }
         else n.current = null;
     }
+    /**
+     * Handles specific lifecycle actions based on the component type and props.
+     *
+     * Depending on the `type` of the component (button, input, select, textarea, img), it performs different actions:
+     * - For button, input, select, and textarea, if `autoFocus` is true in memoizedProps, it focuses the stateNode.
+     * - For img, it sets the `src` or `srcset` properties of the stateNode based on the provided props.
+     *
+     * @param e - An object containing component details including type, memoizedProps, and stateNode.
+     */
     function mu(e) {
       var t = e.type,
         n = e.memoizedProps,
@@ -6905,6 +6993,14 @@
       if (13878 & t.subtreeFlags) for (t = t.child; null !== t; ) Mu(t, e), (t = t.sibling);
     }
     var Du = null;
+    /**
+     * The Mu function handles different types of React fibers during reconciliation.
+     *
+     * It processes various fiber tags (e.g., HostRoot, HostComponent, Fragment) and performs specific operations such as updating the DOM, handling side effects, and managing updates.
+     *
+     * @param e - The current fiber node being processed.
+     * @param t - The context or container information for the fiber node.
+     */
     function Mu(e, t) {
       var n = e.alternate,
         l = e.flags;
@@ -7527,6 +7623,15 @@
         e = e.sibling;
       }
     }
+    /**
+     * Processes nodes in a tree structure, handling different cases based on node tags.
+     *
+     * This function iterates through nodes and performs specific actions depending on their tag.
+     * It manages cache pools and references counts, and handles the traversal of the tree structure.
+     *
+     * @param e - The root or starting node of the tree.
+     * @param t - A parameter that is passed to the `su` function in certain cases.
+     */
     function ts(e, t) {
       for (; null !== Eu; ) {
         var n = Eu;

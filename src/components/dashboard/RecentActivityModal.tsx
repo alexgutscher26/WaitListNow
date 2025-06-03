@@ -67,6 +67,9 @@ function formatActivityMessage(activity: any) {
   }
 }
 
+/**
+ * A modal component displaying recent activity items with a button to toggle visibility.
+ */
 const RecentActivityModal: React.FC<RecentActivityModalProps> = ({ recentActivity }) => {
   const [open, setOpen] = useState(false);
 

@@ -33,7 +33,7 @@ const getActivityUrl = (activity: any): string | null => {
   switch (activity.type) {
     case 'new_subscriber':
       return activity.waitlistId
-        ? `/dashboard/waitlists/${activity.waitlistId}/subscribers`
+        ? `/dashboard/waitlists/${activity.waitlistId}`
         : null;
     case 'waitlist_created':
       return activity.waitlistId

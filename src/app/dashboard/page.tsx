@@ -33,6 +33,9 @@ import { cn } from '@/utils';
 import { formatDistanceToNow } from 'date-fns';
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from '@/components/ui/dropdown-menu';
 import ActivityItem from '@/components/dashboard/ActivityItem';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
+import React from 'react';
+import RecentActivityModal from '@/components/dashboard/RecentActivityModal';
 
 type ActivityType = 'new_subscriber' | 'waitlist_created' | 'referral' | 'conversion' | 'milestone';
 
@@ -534,6 +537,7 @@ export default async function Page({ searchParams = {} }: PageProps) {
   });
 
   console.log('Found waitlists for user:', waitlists);
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -611,14 +615,9 @@ export default async function Page({ searchParams = {} }: PageProps) {
                 <CardTitle>Recent Activity</CardTitle>
                 <CardDescription>Latest actions across your waitlists</CardDescription>
               </div>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="text-sm text-brand-600 hover:text-brand-700"
-              >
-                View all
-                <ChevronRight className="ml-1 h-4 w-4" />
-              </Button>
+              <RecentActivityModal
+                recentActivity={stats.recentActivity}
+              />
             </div>
           </CardHeader>
           <CardContent className="p-0">

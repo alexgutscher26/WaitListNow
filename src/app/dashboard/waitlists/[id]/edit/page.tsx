@@ -5,15 +5,13 @@ import { useRouter, useParams } from 'next/navigation';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { DashboardPage } from '@/components/dashboard-page';
-import { ArrowLeft, Eye, Loader2 } from 'lucide-react';
-import Link from 'next/link';
+import { Loader2 } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { BasicInfoSection } from '@/components/waitlist/edit/basic-info-section';
 import { CustomFieldsSection } from '@/components/waitlist/edit/custom-fields-section';
 import { AppearanceSection } from '@/components/waitlist/edit/appearance-section';
 import { BehaviorSection } from '@/components/waitlist/edit/behavior-section';
 import { WaitlistPreview } from '@/components/waitlist/edit/waitlist-preview';
-import { Waitlist } from '@/types/waitlist';
 
 // Reuse the same types from the new waitlist page
 type FieldType = 'text' | 'email' | 'number' | 'url' | 'tel' | 'textarea' | 'select';

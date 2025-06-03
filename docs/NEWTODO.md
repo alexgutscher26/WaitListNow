@@ -16,7 +16,7 @@ This document outlines the planned improvements and enhancements for the WaitLis
 - [ ] **Embeddable Widget Implementation**
 
   - [x] Develop JavaScript snippet for website integration
-  - [ ] Support iframe embedding option
+  - [X] Support iframe embedding option
   - [ ] Create direct script embedding option
   - [ ] Add customization parameters for the widget
 
@@ -326,10 +326,6 @@ This document outlines the planned improvements and enhancements for the WaitLis
 - [ ] Compare referral viral coefficient
 
 ## 🚀 Potential Growth Features
-
-### 🌐 Multi-Project Support
-
-- [ ] Each customer can run multiple waitlists with different widgets
 
 ### 🧬 Public Leaderboards
 

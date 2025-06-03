@@ -65,7 +65,10 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
     });
 
     if (!waitlist) {
-      return new NextResponse('Waitlist not found or not active', { status: 404 });
+      return new NextResponse(
+        JSON.stringify({ error: 'Waitlist not found' }),
+        { status: 404, headers: { 'Content-Type': 'application/json' } }
+      );
     }
 
     // Check if email already exists for this waitlist if duplicates are not allowed
@@ -163,7 +166,10 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
     });
 
     if (!waitlist) {
-      return new NextResponse('Waitlist not found', { status: 404 });
+      return new NextResponse(
+        JSON.stringify({ error: 'Waitlist not found' }),
+        { status: 404, headers: { 'Content-Type': 'application/json' } }
+      );
     }
 
     // Build the where clause for filtering

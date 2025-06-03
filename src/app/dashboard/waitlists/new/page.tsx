@@ -1802,277 +1802,98 @@ function BehaviorSection({
 
       <Card>
         <CardHeader>
-          <div className="flex items-center gap-2">
-            <CardTitle>Advanced Settings</CardTitle>
-            <button
-              type="button"
-              className="text-gray-400 hover:text-gray-600"
-              onClick={() => {
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <button
-                        type="button"
-                        aria-label="Help"
-                      >
-                        {/* Your help icon here, e.g. <HelpCircleIcon /> */}
-                      </button>
-                    </TooltipTrigger>
-                    <TooltipContent>Your help text goes here!</TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>;
-                // console.log('Show advanced settings help');
-              }}
-              aria-label="Help"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-4 w-4"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z"
-                  clipRule="evenodd"
-                />
-              </svg>
-            </button>
-          </div>
-          <CardDescription>Additional options for your waitlist</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          <div className="space-y-4">
-            <h3 className="text-sm font-medium">Signup Settings</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="flex items-start gap-3">
-                <div className="flex items-center h-5 mt-0.5">
-                  <input
-                    type="checkbox"
-                    id="enableNotifications"
-                    checked={formData.enableNotifications}
-                    onChange={(e) =>
-                      setFormData((prev) => ({
-                        ...prev,
-                        enableNotifications: e.target.checked,
-                      }))
-                    }
-                    className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
-                  />
-                </div>
-                <div>
-                  <label
-                    htmlFor="enableNotifications"
-                    className="text-sm font-medium"
-                  >
-                    Email notifications
-                  </label>
-                  <p className="text-xs text-gray-500 mt-0.5">
-                    Get notified when someone joins the waitlist
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-3">
-                <div className="flex items-center h-5 mt-0.5">
-                  <input
-                    type="checkbox"
-                    id="requireEmailVerification"
-                    checked={formData.requireEmailVerification}
-                    onChange={(e) =>
-                      setFormData((prev) => ({
-                        ...prev,
-                        requireEmailVerification: e.target.checked,
-                      }))
-                    }
-                    className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
-                  />
-                </div>
-                <div>
-                  <label
-                    htmlFor="requireEmailVerification"
-                    className="text-sm font-medium"
-                  >
-                    Email verification
-                  </label>
-                  <p className="text-xs text-gray-500 mt-0.5">
-                    Require users to verify their email address
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-3">
-                <div className="flex items-center h-5 mt-0.5">
-                  <input
-                    type="checkbox"
-                    id="allowDuplicates"
-                    checked={formData.settings.allowDuplicates}
-                    onChange={(e) =>
-                      setFormData((prev) => ({
-                        ...prev,
-                        settings: {
-                          ...prev.settings,
-                          allowDuplicates: e.target.checked,
-                        },
-                      }))
-                    }
-                    className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
-                  />
-                </div>
-                <div>
-                  <label
-                    htmlFor="allowDuplicates"
-                    className="text-sm font-medium"
-                  >
-                    Allow duplicate emails
-                  </label>
-                  <p className="text-xs text-gray-500 mt-0.5">
-                    Let the same email sign up multiple times
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-3">
-                <div className="flex items-center h-5 mt-0.5">
-                  <input
-                    type="checkbox"
-                    id="enableReferrals"
-                    checked={formData.enableReferrals}
-                    onChange={(e) =>
-                      setFormData((prev) => ({
-                        ...prev,
-                        enableReferrals: e.target.checked,
-                      }))
-                    }
-                    className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
-                  />
-                </div>
-                <div>
-                  <label
-                    htmlFor="enableReferrals"
-                    className="text-sm font-medium"
-                  >
-                    Enable referrals
-                  </label>
-                  <p className="text-xs text-gray-500 mt-0.5">
-                    Let users refer friends to move up the list
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <div className="flex items-center gap-2">
-                <Label htmlFor="maxSignups">Maximum Signups</Label>
-                <span className="text-xs text-gray-500">(optional)</span>
-              </div>
-              <div className="relative">
-                <Input
-                  id="maxSignups"
-                  type="number"
-                  min="1"
-                  value={formData.maxSignups || ''}
-                  onChange={(e) => {
-                    const value = e.target.value ? Math.max(1, Number(e.target.value)) : undefined;
-                    setFormData((prev) => ({
-                      ...prev,
-                      maxSignups: value,
-                    }));
-                  }}
-                  placeholder="Leave empty for unlimited"
-                  className={`pr-16 ${errors?.maxSignups ? 'border-red-500' : ''}`}
-                />
-                {formData.maxSignups && (
-                  <div className="absolute inset-y-0 right-0 flex items-center pr-3 text-xs text-gray-500">
-                    {formData.maxSignups.toLocaleString()}{' '}
-                    {formData.maxSignups === 1 ? 'signup' : 'signups'}
-                  </div>
-                )}
-              </div>
-              {errors?.maxSignups ? (
-                <p className="text-red-500 text-sm">{errors.maxSignups}</p>
-              ) : (
-                <p className="text-xs text-gray-500">
-                  Set a limit on total signups. Leave empty for no limit.
-                </p>
-              )}
-            </div>
-
-            {formData.enableReferrals && (
-              <div className="space-y-2">
-                <div className="flex items-center gap-2">
-                  <Label htmlFor="referralReward">Referral Reward</Label>
-                  <span className="text-xs px-2 py-0.5 bg-blue-50 text-blue-700 rounded-full">
-                    Beta
-                  </span>
-                </div>
-                <Input
-                  id="referralReward"
-                  value={formData.referralReward || ''}
-                  onChange={(e) =>
-                    setFormData((prev) => ({
-                      ...prev,
-                      referralReward: e.target.value,
-                    }))
-                  }
-                  placeholder="e.g., Get 1 month free, Earn 100 points, etc."
-                />
-                <p className="text-xs text-gray-500">What will users get for referring others?</p>
-              </div>
-            )}
-          </div>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
           <CardTitle>Integration</CardTitle>
           <CardDescription>Add this waitlist to your website</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="space-y-4">
-            <div className="flex border-b">
-              <button
-                type="button"
-                className={`px-4 py-2 text-sm font-medium ${
-                  embedType === 'js'
-                    ? 'border-b-2 border-primary text-primary'
-                    : 'text-muted-foreground hover:text-foreground'
-                }`}
-                onClick={() => setEmbedType('js')}
-              >
-                JavaScript Snippet
-              </button>
-            </div>
-
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <Label>{embedType === 'js' ? 'JavaScript Embed Code' : 'iFrame Embed Code'}</Label>
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  onClick={copyEmbedCode}
-                  className="flex items-center gap-2"
-                >
-                  <Copy className="h-4 w-4" />
-                  Copy
-                </Button>
+          <Tabs defaultValue="js" className="w-full">
+            <TabsList className="mb-4">
+              <TabsTrigger value="js">JavaScript Snippet</TabsTrigger>
+              <TabsTrigger value="iframe">iFrame Embed</TabsTrigger>
+            </TabsList>
+            <TabsContent value="js">
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <Label>JavaScript Embed Code</Label>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={copyEmbedCode}
+                    className="flex items-center gap-2"
+                  >
+                    <Copy className="h-4 w-4" />
+                    Copy
+                  </Button>
+                </div>
+                <div className="relative">
+                  <pre className="bg-muted p-4 rounded-md text-sm overflow-x-auto whitespace-pre-wrap">
+                    <code>{embedCode}</code>
+                  </pre>
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Add this script tag to your website's HTML where you want the waitlist form to appear.
+                </p>
               </div>
-              <div className="relative">
-                <pre className="bg-muted p-4 rounded-md text-sm overflow-x-auto whitespace-pre-wrap">
-                  <code>{embedCode}</code>
-                </pre>
-              </div>
-              <p className="text-xs text-muted-foreground">
-                {embedType === 'js'
-                  ? "Add this script tag to your website's HTML where you want the waitlist form to appear."
-                  : "Add this iframe code to your website's HTML where you want the waitlist form to appear."}
-              </p>
-            </div>
-          </div>
+            </TabsContent>
+            <TabsContent value="iframe">
+              {(() => {
+                // Generate iframe code from formData
+                const params = new URLSearchParams({
+                  buttonText: formData.style?.buttonText || 'Join Waitlist',
+                  buttonColor: formData.style?.buttonColor || '#3b82f6',
+                  buttonTextColor: formData.style?.buttonTextColor || '#ffffff',
+                  backgroundColor: formData.style?.backgroundColor || '#ffffff',
+                  textColor: formData.style?.textColor || '#1f2937',
+                  borderRadius: String(formData.style?.borderRadius || 8),
+                  fontFamily: formData.style?.fontFamily || 'Inter',
+                  showLabels: String(formData.style?.showLabels ?? true),
+                  formLayout: formData.style?.formLayout || 'stacked',
+                  showBranding: String(formData.showBranding),
+                });
+                const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://waitlistnow.app';
+                const iframeUrl = `${baseUrl}/widget/iframe?waitlistId=your_waitlist_id&${params.toString()}`;
+                const iframeCode = `<iframe src="${iframeUrl}" width="400" height="600" style="border:none;"></iframe>`;
+                return (
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <Label>iFrame Embed Code</Label>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={() => navigator.clipboard.writeText(iframeCode)}
+                        className="flex items-center gap-2"
+                      >
+                        <Copy className="h-4 w-4" />
+                        Copy
+                      </Button>
+                    </div>
+                    <div className="relative">
+                      <pre className="bg-muted p-4 rounded-md text-sm overflow-x-auto whitespace-pre-wrap">
+                        <code>{iframeCode}</code>
+                      </pre>
+                    </div>
+                    <p className="text-xs text-muted-foreground">
+                      Add this iframe code to your website's HTML where you want the waitlist form to appear.
+                    </p>
+                    <div className="mt-4">
+                      <Label className="mb-2 block">Live Preview</Label>
+                      <div className="border rounded overflow-hidden" style={{ width: '100%', maxWidth: 500, height: 600 }}>
+                        <iframe
+                          src={iframeUrl}
+                          width="100%"
+                          height={600}
+                          style={{ border: 'none', width: '100%', height: 600, display: 'block' }}
+                          title="Waitlist Widget Preview"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                );
+              })()}
+            </TabsContent>
+          </Tabs>
         </CardContent>
       </Card>
     </div>

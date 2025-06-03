@@ -1,4 +1,3 @@
-import React from 'react';
 import { currentUser } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation';
 import { Button } from '@/components/ui/button';
@@ -32,6 +31,8 @@ import Link from 'next/link';
 import { db } from '@/lib/db';
 import { cn } from '@/utils';
 import { formatDistanceToNow } from 'date-fns';
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from '@/components/ui/dropdown-menu';
+import ActivityItem from '@/components/dashboard/ActivityItem';
 
 type ActivityType = 'new_subscriber' | 'waitlist_created' | 'referral' | 'conversion' | 'milestone';
 
@@ -47,6 +48,7 @@ type NewSubscriberActivity = BaseActivity & {
   email: string;
   avatar: string;
   waitlist: string;
+  waitlistId: string;
 };
 
 type WaitlistCreatedActivity = BaseActivity & {
@@ -65,6 +67,7 @@ type ConversionActivity = BaseActivity & {
   type: 'conversion';
   revenue: number;
   waitlist: string;
+  waitlistId: string;
 };
 
 type MilestoneActivity = BaseActivity & {
@@ -125,16 +128,18 @@ const getStats = async (): Promise<{
               type: 'new_subscriber',
               email: act.email || '',
               waitlist: act.waitlist || '',
+              waitlistId: act.waitlistId || act.waitlist_id || '',
               avatar:
                 act.avatar ||
                 `https://api.dicebear.com/7.x/initials/svg?seed=${act.email || 'user'}`,
-            } as NewSubscriberActivity;
+            } as NewSubscriberActivity & { waitlistId: string };
 
           case 'waitlist_created':
             return {
               ...base,
               type: 'waitlist_created',
               subscribers: act.subscribers || 0,
+              waitlistId: act.waitlistId || act.waitlist_id || '',
             } as WaitlistCreatedActivity;
 
           case 'referral':
@@ -152,7 +157,8 @@ const getStats = async (): Promise<{
               type: 'conversion',
               revenue: act.revenue || 0,
               waitlist: act.waitlist || '',
-            } as ConversionActivity;
+              waitlistId: act.waitlistId || act.waitlist_id || '',
+            } as ConversionActivity & { waitlistId: string };
 
           case 'milestone':
             return {
@@ -459,33 +465,6 @@ const StatCard = ({
 );
 
 /**
- * Renders an activity item with an icon, message, and timestamp.
- */
-const ActivityItem = ({ activity }: { activity: Activity }) => {
-  const IconComponent = getActivityIcon(activity.type);
-  const message = formatActivityMessage(activity);
-
-  return (
-    <div className="flex items-start gap-3 p-3 hover:bg-gray-50 rounded-lg transition-colors">
-      <div className="flex-shrink-0">
-        <div className="h-10 w-10 rounded-full bg-brand-50 flex items-center justify-center">
-          <IconComponent className="h-5 w-5 text-brand-600" />
-        </div>
-      </div>
-      <div className="flex-1 min-w-0">
-        <div className="text-sm font-medium text-gray-900">{message}</div>
-        <p className="text-xs text-gray-500 mt-1">
-          {formatDistanceToNow(new Date(activity.time), { addSuffix: true })}
-        </p>
-      </div>
-      <button className="text-gray-400 hover:text-gray-600">
-        <MoreHorizontal className="h-4 w-4" />
-      </button>
-    </div>
-  );
-};
-
-/**
  * Renders the main dashboard page for a user, displaying their waitlists and related statistics.
  *
  * This function performs several key tasks:
@@ -649,6 +628,8 @@ export default async function Page({ searchParams = {} }: PageProps) {
                   <ActivityItem
                     key={activity.id}
                     activity={activity}
+                    iconType={activity.type}
+                    message={formatActivityMessage(activity)}
                   />
                 ))
               ) : (

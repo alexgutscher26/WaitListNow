@@ -195,6 +195,7 @@ export async function getWaitlistStats() {
         name: wl.name,
         time: wl.createdAt,
         subscribers: 0, // Will be updated in the next step
+        waitlistId: wl.id,
       });
     }
 
@@ -219,6 +220,7 @@ export async function getWaitlistStats() {
           email: sub.email,
           avatar: `https://api.dicebear.com/7.x/initials/svg?seed=${sub.email}`,
           waitlist: wl.name,
+          waitlistId: wl.id,
           time: sub.createdAt,
         });
 

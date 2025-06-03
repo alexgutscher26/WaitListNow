@@ -928,16 +928,12 @@
       (S.exports = _()),
       S.exports
     );
-  }
   /**
-   * @license React
-   * react-dom-client.production.js
+   * ReactDOM - React package for rendering into the DOM.
    *
-   * Copyright (c) Meta Platforms, Inc. and affiliates.
-   *
-   * This source code is licensed under the MIT license found in the
-   * LICENSE file in the root directory of this source tree.
-   */ function C() {
+   * @version 19.1.0
+   */
+  }
     if (w) return u;
     w = 1;
     var e = d(),
@@ -1900,6 +1896,9 @@
       ]),
       Tt =
         /^[\u0000-\u001F ]*j[\r\n\t]*a[\r\n\t]*v[\r\n\t]*a[\r\n\t]*s[\r\n\t]*c[\r\n\t]*r[\r\n\t]*i[\r\n\t]*p[\r\n\t]*t[\r\n\t]*:/iu;
+    /**
+     * Checks if the input matches a specific pattern and returns a modified string or the original input.
+     */
     function Lt(e) {
       return Tt.test(String(e))
         ? "javascript:throw new Error('React has blocked a javascript: URL as a security precaution.')"
@@ -9234,6 +9233,9 @@
     }
     var Kc = /\r\n?/g,
       Yc = /\u0000|\uFFFD/gu;
+    /**
+     * Converts input to a string and replaces specific patterns with newline or empty string.
+     */
     function Xc(e) {
       return ('string' == typeof e ? e : String(e)).replace(Kc, '\n').replace(Yc, '');
     }

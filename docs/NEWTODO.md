@@ -13,11 +13,11 @@ This document outlines the planned improvements and enhancements for the WaitLis
   - [x] Implement DELETE /api/waitlists/[id] - Delete a waitlist
   - [x] Implement GET /api/waitlists/[id]/subscribers - Retrieve waitlist subscribers
 
-- [ ] **Embeddable Widget Implementation**
+- [X] **Embeddable Widget Implementation**
 
   - [x] Develop JavaScript snippet for website integration
   - [X] Support iframe embedding option
-  - [ ] Create direct script embedding option
+  - [X] Create direct script embedding option
   - [ ] Add customization parameters for the widget
 
 - [ ] **Referral System**

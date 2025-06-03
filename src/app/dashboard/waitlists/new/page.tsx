@@ -1810,6 +1810,7 @@ function BehaviorSection({
             <TabsList className="mb-4">
               <TabsTrigger value="js">JavaScript Snippet</TabsTrigger>
               <TabsTrigger value="iframe">iFrame Embed</TabsTrigger>
+              <TabsTrigger value="direct">Direct Script Embed</TabsTrigger>
             </TabsList>
             <TabsContent value="js">
               <div className="space-y-2">
@@ -1886,6 +1887,69 @@ function BehaviorSection({
                           height={600}
                           style={{ border: 'none', width: '100%', height: 600, display: 'block' }}
                           title="Waitlist Widget Preview"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                );
+              })()}
+            </TabsContent>
+            <TabsContent value="direct">
+              {(() => {
+                // Generate direct script code from formData
+                const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://waitlistnow.app';
+                const waitlistId = 'your_waitlist_id';
+                const apiKey = 'your_api_key';
+                const style = formData.style || {};
+                const showBranding = String(formData.showBranding);
+                const dataAttrs = [
+                  `data-waitlist-id=\"${waitlistId}\"`,
+                  `data-api-key=\"${apiKey}\"`,
+                  `data-button-text=\"${style.buttonText || 'Join Waitlist'}\"`,
+                  `data-button-color=\"${style.buttonColor || '#3b82f6'}\"`,
+                  `data-button-text-color=\"${style.buttonTextColor || '#fff'}\"`,
+                  `data-background-color=\"${style.backgroundColor || '#fff'}\"`,
+                  `data-text-color=\"${style.textColor || '#1f2937'}\"`,
+                  `data-border-radius=\"${style.borderRadius || 8}\"`,
+                  `data-font-family=\"${style.fontFamily || 'Inter'}\"`,
+                  `data-show-labels=\"${String(style.showLabels ?? true)}\"`,
+                  `data-form-layout=\"${style.formLayout || 'stacked'}\"`,
+                  `data-show-branding=\"${showBranding}\"`,
+                ];
+                const scriptCode = `<script src=\"${baseUrl}/widget.js\"\n  ${dataAttrs.join('\n  ')}\n  async></script>`;
+                return (
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <Label>Direct Script Embed Code</Label>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={() => navigator.clipboard.writeText(scriptCode)}
+                        className="flex items-center gap-2"
+                      >
+                        <Copy className="h-4 w-4" />
+                        Copy
+                      </Button>
+                    </div>
+                    <div className="relative">
+                      <pre className="bg-muted p-4 rounded-md text-sm overflow-x-auto whitespace-pre-wrap">
+                        <code>{scriptCode}</code>
+                      </pre>
+                    </div>
+                    <p className="text-xs text-muted-foreground">
+                      Add this script tag to your website's HTML where you want the waitlist form to appear. This works on any site, no React or npm required.
+                    </p>
+                    <div className="mt-4">
+                      <Label className="mb-2 block">Live Preview</Label>
+                      <div className="border rounded overflow-hidden" style={{ width: '100%', maxWidth: 500, minHeight: 100 }}>
+                        {/* Live preview using an iframe to sandbox the script */}
+                        <iframe
+                          srcDoc={`<html><body><div id=\"preview-root\"></div><script src=\"${baseUrl}/widget.js\" ${dataAttrs.join(' ')} async></script></body></html>`}
+                          width="100%"
+                          height={600}
+                          style={{ border: 'none', width: '100%', height: 600, display: 'block' }}
+                          title="Waitlist Widget Direct Script Preview"
                         />
                       </div>
                     </div>

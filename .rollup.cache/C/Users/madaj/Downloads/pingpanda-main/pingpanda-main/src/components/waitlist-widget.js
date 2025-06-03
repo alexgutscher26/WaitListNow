@@ -8,6 +8,20 @@ import { Label } from '@/components/ui/label';
 import { useToast } from '@/components/ui/use-toast';
 import { cn } from '@/lib/utils';
 import styles from './waitlist-widget.module.css';
+/**
+ * Renders a waitlist widget that allows users to join a waitlist by providing their email and name.
+ *
+ * The widget includes input fields for name and email, with validation checks and dynamic styling options.
+ * It handles form submission asynchronously, sending data to the server and displaying success or error messages using toast notifications.
+ * The component uses React hooks like useState to manage the state of inputs and loading status.
+ *
+ * @param {Object} _a - Configuration object for the waitlist widget.
+ * @param {string} _a.waitlistId - Unique identifier for the waitlist.
+ * @param {Object} [_a.style] - Optional styling options for the widget.
+ * @param {string} [_a.apiKey] - Optional API key for authorization.
+ * @param {boolean} [_a.showBranding] - Flag to determine if branding should be displayed (default: true).
+ * @param {string} [_a.className] - Additional CSS class name(s) for styling.
+ */
 export function WaitlistWidget(_a) {
   var _this = this;
   var waitlistId = _a.waitlistId,

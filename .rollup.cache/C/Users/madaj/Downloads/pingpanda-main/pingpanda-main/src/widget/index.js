@@ -13,26 +13,20 @@ if (currentScript) {
   var apiKey = getAttr('data-api-key');
   // Map data attributes to style object
   var style_1 = {
-    buttonText:
-      (_b = getAttr('data-button-text')) !== null && _b !== void 0 ? _b : undefined,
-    buttonColor:
-      (_c = getAttr('data-primary-color')) !== null && _c !== void 0 ? _c : undefined,
+    buttonText: (_b = getAttr('data-button-text')) !== null && _b !== void 0 ? _b : undefined,
+    buttonColor: (_c = getAttr('data-primary-color')) !== null && _c !== void 0 ? _c : undefined,
     buttonTextColor:
-      (_d = getAttr('data-button-text-color')) !== null && _d !== void 0
-        ? _d
-        : undefined,
+      (_d = getAttr('data-button-text-color')) !== null && _d !== void 0 ? _d : undefined,
     backgroundColor:
       (_e = getAttr('data-background-color')) !== null && _e !== void 0 ? _e : undefined,
-    textColor:
-      (_f = getAttr('data-text-color')) !== null && _f !== void 0 ? _f : undefined,
+    textColor: (_f = getAttr('data-text-color')) !== null && _f !== void 0 ? _f : undefined,
     borderRadius:
       getAttr('data-button-rounded') === 'md'
         ? 8
         : getAttr('data-button-rounded') === 'lg'
           ? 16
           : undefined,
-    fontFamily:
-      (_g = getAttr('data-font-family')) !== null && _g !== void 0 ? _g : undefined,
+    fontFamily: (_g = getAttr('data-font-family')) !== null && _g !== void 0 ? _g : undefined,
     showLabels: getAttr('data-show-labels', 'true') === 'true',
     formLayout:
       (_h = getAttr('data-form-layout', 'stacked')) !== null && _h !== void 0 ? _h : undefined,

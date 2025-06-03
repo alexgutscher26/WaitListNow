@@ -1,6 +1,11 @@
 'use client';
 import { formatDistanceToNow } from 'date-fns';
-import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from '@/components/ui/dropdown-menu';
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from '@/components/ui/dropdown-menu';
 import { MoreHorizontal, Users, Zap, Mail, DollarSign, TrendingUp, Bell } from 'lucide-react';
 import React from 'react';
 import { useToast } from '@/components/ui/use-toast';
@@ -32,19 +37,13 @@ const getActivityIcon = (type: string) => {
 const getActivityUrl = (activity: any): string | null => {
   switch (activity.type) {
     case 'new_subscriber':
-      return activity.waitlistId
-        ? `/dashboard/waitlists/${activity.waitlistId}/subscribers`
-        : null;
+      return activity.waitlistId ? `/dashboard/waitlists/${activity.waitlistId}/subscribers` : null;
     case 'waitlist_created':
-      return activity.waitlistId
-        ? `/dashboard/waitlists/${activity.waitlistId}`
-        : null;
+      return activity.waitlistId ? `/dashboard/waitlists/${activity.waitlistId}` : null;
     case 'referral':
       return '/dashboard/referrals';
     case 'conversion':
-      return activity.waitlistId
-        ? `/dashboard/waitlists/${activity.waitlistId}`
-        : null;
+      return activity.waitlistId ? `/dashboard/waitlists/${activity.waitlistId}` : null;
     case 'milestone':
       return null;
     default:
@@ -112,4 +111,4 @@ function getActivitySummary(activity: any): string {
   }
 }
 
-export default ActivityItem; 
+export default ActivityItem;

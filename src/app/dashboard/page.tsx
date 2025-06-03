@@ -31,7 +31,12 @@ import Link from 'next/link';
 import { db } from '@/lib/db';
 import { cn } from '@/utils';
 import { formatDistanceToNow } from 'date-fns';
-import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from '@/components/ui/dropdown-menu';
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from '@/components/ui/dropdown-menu';
 import ActivityItem from '@/components/dashboard/ActivityItem';
 
 type ActivityType = 'new_subscriber' | 'waitlist_created' | 'referral' | 'conversion' | 'milestone';
@@ -579,18 +584,10 @@ export default async function Page({ searchParams = {} }: PageProps) {
         />
         <StatCard
           title="Top Waitlist Growth"
-          value={
-            stats.topWaitlists.length > 0
-              ? `${stats.topWaitlists[0].growth}%`
-              : 'N/A'
-          }
+          value={stats.topWaitlists.length > 0 ? `${stats.topWaitlists[0].growth}%` : 'N/A'}
           icon={TrendingUp}
           trend={stats.topWaitlists.length > 0 && stats.topWaitlists[0].growth > 0 ? 'up' : 'down'}
-          trendValue={
-            stats.topWaitlists.length > 0
-              ? `${stats.topWaitlists[0].name}`
-              : 'No data'
-          }
+          trendValue={stats.topWaitlists.length > 0 ? `${stats.topWaitlists[0].name}` : 'No data'}
         />
         <StatCard
           title="System Status"

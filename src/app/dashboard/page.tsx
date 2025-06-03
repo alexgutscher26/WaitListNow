@@ -856,11 +856,12 @@ export default async function Page({ searchParams = {} }: PageProps) {
           {waitlists.length > 0 ? (
             <>
               <WaitlistTable
-                waitlists={waitlists.map(wl => ({
+                waitlists={waitlists.map((wl) => ({
                   id: wl.id,
                   name: wl.name,
                   subscribers: wl._count.subscribers,
-                  createdAt: typeof wl.createdAt === 'string' ? wl.createdAt : wl.createdAt.toISOString(),
+                  createdAt:
+                    typeof wl.createdAt === 'string' ? wl.createdAt : wl.createdAt.toISOString(),
                 }))}
               />
               <Button

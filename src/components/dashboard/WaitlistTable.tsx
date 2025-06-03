@@ -1,11 +1,31 @@
 'use client';
 import React from 'react';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import Link from 'next/link';
-import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from '@/components/ui/dropdown-menu';
-import { MoreHorizontal, Users, ArrowUpRight, Edit, Link as LinkIcon, Trash, Settings } from 'lucide-react';
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from '@/components/ui/dropdown-menu';
+import {
+  MoreHorizontal,
+  Users,
+  ArrowUpRight,
+  Edit,
+  Link as LinkIcon,
+  Trash,
+  Settings,
+} from 'lucide-react';
 
 interface Waitlist {
   id: string;
@@ -63,14 +83,20 @@ const WaitlistTable: React.FC<WaitlistTableProps> = ({ waitlists }) => {
                 </div>
               </TableCell>
               <TableCell>
-                <Badge variant="outline" className="text-xs bg-green-50 text-green-700">
+                <Badge
+                  variant="outline"
+                  className="text-xs bg-green-50 text-green-700"
+                >
                   Active
                 </Badge>
               </TableCell>
               <TableCell>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="icon">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                    >
                       <MoreHorizontal className="h-5 w-5" />
                     </Button>
                   </DropdownMenuTrigger>
@@ -83,7 +109,10 @@ const WaitlistTable: React.FC<WaitlistTableProps> = ({ waitlists }) => {
                     <DropdownMenuItem onClick={() => handleCopyLink(waitlist.id)}>
                       <LinkIcon className="mr-2 h-4 w-4" /> Copy Link
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => handleDelete(waitlist.id)} className="text-red-600">
+                    <DropdownMenuItem
+                      onClick={() => handleDelete(waitlist.id)}
+                      className="text-red-600"
+                    >
                       <Trash className="mr-2 h-4 w-4" /> Delete
                     </DropdownMenuItem>
                   </DropdownMenuContent>
@@ -97,4 +126,4 @@ const WaitlistTable: React.FC<WaitlistTableProps> = ({ waitlists }) => {
   );
 };
 
-export default WaitlistTable; 
+export default WaitlistTable;

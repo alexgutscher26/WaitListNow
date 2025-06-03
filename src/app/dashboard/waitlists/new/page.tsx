@@ -180,11 +180,19 @@ const BORDER_RADIUS: { value: ButtonRounded; label: string }[] = [
 ];
 
 /**
- * This component is responsible for creating a new waitlist in the dashboard.
- * It includes various sections such as basic information, custom fields, appearance settings,
- * and behavior settings. Users can navigate between these tabs to customize their waitlist form.
+ * Represents a React component for creating and managing waitlist forms.
+ * This component includes tabs for basic information, custom fields, appearance settings,
+ * and behavior settings. It also features an upgrade modal for users to remove branding
+ * by upgrading their plan.
  *
- * @returns {JSX.Element} - The rendered React component for creating a new waitlist.
+ * @component
+ * @name WaitlistForm
+ * @param {boolean} isProUser - Indicates whether the user has a Pro subscription.
+ * @param {Object} formData - The current state of the waitlist form data.
+ * @param {Function} setFormData - A function to update the form data state.
+ * @param {string} embedCode - The generated embed code for the waitlist form.
+ * @param {Function} copyEmbedCode - A function to copy the embed code to the clipboard.
+ * @returns {JSX.Element} - The rendered component.
  */
 export default function NewWaitlistPage() {
   const router = useRouter();

@@ -641,7 +641,6 @@ export default function Page(_a) {
                       <TableHead>Subscribers</TableHead>
                       <TableHead>Created</TableHead>
                       <TableHead>Status</TableHead>
-                      <TableHead className="text-right">Actions</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>

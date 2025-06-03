@@ -4,6 +4,9 @@ import posthog from 'posthog-js';
 import { PostHogProvider as PHProvider, usePostHog } from 'posthog-js/react';
 import { Suspense, useEffect } from 'react';
 import { usePathname, useSearchParams } from 'next/navigation';
+/**
+ * Provides PostHog tracking context and captures page views.
+ */
 export function PostHogProvider(_a) {
     var children = _a.children;
     useEffect(function () {

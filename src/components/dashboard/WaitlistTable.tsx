@@ -1,11 +1,13 @@
 'use client';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import Link from 'next/link';
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from '@/components/ui/dropdown-menu';
-import { MoreHorizontal, Users, ArrowUpRight, Edit, Link as LinkIcon, Trash, Settings } from 'lucide-react';
+import { MoreHorizontal, Users, Edit, Link as LinkIcon, Trash } from 'lucide-react';
+import { toast } from 'sonner';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 
 interface Waitlist {
   id: string;
@@ -19,14 +21,33 @@ interface WaitlistTableProps {
 }
 
 const WaitlistTable: React.FC<WaitlistTableProps> = ({ waitlists }) => {
+  const [waitlistsState, setWaitlistsState] = useState(waitlists);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [pendingDelete, setPendingDelete] = useState<string | null>(null);
+
   const handleCopyLink = (id: string) => {
     navigator.clipboard.writeText(`${window.location.origin}/waitlist/${id}`);
+    toast.success('Waitlist link copied to clipboard.');
   };
 
-  // TODO: Implement delete logic
   const handleDelete = (id: string) => {
-    // Placeholder for delete action
-    alert('Delete not implemented yet: ' + id);
+    setPendingDelete(id);
+  };
+
+  const confirmDelete = async () => {
+    if (!pendingDelete) return;
+    setDeletingId(pendingDelete);
+    try {
+      const res = await fetch(`/api/waitlists/${pendingDelete}`, { method: 'DELETE' });
+      if (!res.ok) throw new Error('Failed to delete waitlist');
+      setWaitlistsState((prev) => prev.filter((w) => w.id !== pendingDelete));
+      toast.success('Waitlist deleted successfully.');
+    } catch (error) {
+      toast.error('Failed to delete waitlist.');
+    } finally {
+      setDeletingId(null);
+      setPendingDelete(null);
+    }
   };
 
   return (
@@ -38,11 +59,10 @@ const WaitlistTable: React.FC<WaitlistTableProps> = ({ waitlists }) => {
             <TableHead>Subscribers</TableHead>
             <TableHead>Created</TableHead>
             <TableHead>Status</TableHead>
-            <TableHead className="text-right">Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {waitlists.map((waitlist) => (
+          {waitlistsState.map((waitlist) => (
             <TableRow key={waitlist.id}>
               <TableCell className="font-medium">
                 <div className="flex items-center gap-3">
@@ -58,9 +78,7 @@ const WaitlistTable: React.FC<WaitlistTableProps> = ({ waitlists }) => {
                 </div>
               </TableCell>
               <TableCell>
-                <div className="text-sm text-muted-foreground">
-                  {new Date(waitlist.createdAt).toLocaleDateString()}
-                </div>
+                <ClientDate dateString={waitlist.createdAt} />
               </TableCell>
               <TableCell>
                 <Badge variant="outline" className="text-xs bg-green-50 text-green-700">
@@ -83,8 +101,13 @@ const WaitlistTable: React.FC<WaitlistTableProps> = ({ waitlists }) => {
                     <DropdownMenuItem onClick={() => handleCopyLink(waitlist.id)}>
                       <LinkIcon className="mr-2 h-4 w-4" /> Copy Link
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => handleDelete(waitlist.id)} className="text-red-600">
-                      <Trash className="mr-2 h-4 w-4" /> Delete
+                    <DropdownMenuItem
+                      onClick={() => handleDelete(waitlist.id)}
+                      className="text-red-600"
+                      disabled={deletingId === waitlist.id}
+                    >
+                      <Trash className="mr-2 h-4 w-4" />
+                      {deletingId === waitlist.id ? 'Deleting...' : 'Delete'}
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
@@ -93,8 +116,34 @@ const WaitlistTable: React.FC<WaitlistTableProps> = ({ waitlists }) => {
           ))}
         </TableBody>
       </Table>
+      <Dialog open={!!pendingDelete} onOpenChange={(open) => !open && setPendingDelete(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Delete Waitlist</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to delete this waitlist? This action cannot be undone.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setPendingDelete(null)} disabled={deletingId !== null}>
+              Cancel
+            </Button>
+            <Button variant="destructive" onClick={confirmDelete} disabled={deletingId !== null}>
+              {deletingId ? 'Deleting...' : 'Delete'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
+};
+
+const ClientDate: React.FC<{ dateString: string }> = ({ dateString }) => {
+  const [formatted, setFormatted] = useState(dateString);
+  useEffect(() => {
+    setFormatted(new Date(dateString).toLocaleDateString());
+  }, [dateString]);
+  return <span>{formatted}</span>;
 };
 
 export default WaitlistTable; 

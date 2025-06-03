@@ -4,7 +4,6 @@ import { redirect } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import {
   ArrowUpRight,
-  BarChart3,
   Users,
   Zap,
   TrendingUp,
@@ -12,20 +11,15 @@ import {
   Mail,
   Activity,
   DollarSign,
-  Download,
   Bell,
   Settings,
   ChevronRight,
   MoreHorizontal,
   CheckCircle2,
-  Check,
-  Clock,
-  Loader2,
 } from 'lucide-react';
 import { Plus } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
 import {
   Table,
   TableBody,
@@ -96,7 +90,6 @@ const getStats = async (): Promise<{
   activeWaitlists: number;
   completedWaitlists: number;
   averageWaitTime: string;
-  conversionRate: number;
   monthlyGrowth: number;
   recentActivity: Activity[];
   topWaitlists: Array<{ id: string; name: string; subscribers: number; growth: number }>;
@@ -216,12 +209,6 @@ const getStats = async (): Promise<{
       }
     }
 
-    // Calculate conversion rate (new subscribers this week / total subscribers)
-    const conversionRate =
-      stats.totalSubscribers > 0
-        ? Math.min(100, Math.round((stats.newThisWeek / stats.totalSubscribers) * 1000) / 10)
-        : 0;
-
     // Calculate monthly growth (placeholder for now)
     const monthlyGrowth = stats.growthRate * 4; // Extrapolate weekly growth to monthly
 
@@ -266,6 +253,9 @@ const getStats = async (): Promise<{
       }),
     );
 
+    // Sort waitlists with growth by growth descending
+    const sortedWaitlists = [...waitlistsWithGrowth].sort((a, b) => b.growth - a.growth);
+
     return {
       totalSubscribers: stats.totalSubscribers,
       newThisWeek: stats.newThisWeek,
@@ -273,10 +263,9 @@ const getStats = async (): Promise<{
       activeWaitlists: stats.activeWaitlists,
       completedWaitlists: stats.completedWaitlists,
       averageWaitTime,
-      conversionRate,
       monthlyGrowth,
       recentActivity,
-      topWaitlists: waitlistsWithGrowth.map((wl) => ({
+      topWaitlists: sortedWaitlists.map((wl) => ({
         id: wl.id,
         name: wl.name,
         subscribers: wl.subscribers,
@@ -293,7 +282,6 @@ const getStats = async (): Promise<{
       activeWaitlists: 0,
       completedWaitlists: 0,
       averageWaitTime: '0 days',
-      conversionRate: 0,
       monthlyGrowth: 0,
       recentActivity: [
         {
@@ -417,7 +405,7 @@ interface StatCardProps {
   value: string | number;
   icon: React.ComponentType<{ className?: string }>;
   className?: string;
-  trend?: 'up' | 'down';
+  trend?: 'up' | 'down' | undefined;
   trendValue?: string;
 }
 
@@ -446,14 +434,18 @@ const StatCard = ({
             <div
               className={cn(
                 'mt-2 inline-flex items-center text-sm font-medium',
-                trend === 'up' ? 'text-green-600' : 'text-red-600',
+                trend === 'up'
+                  ? 'text-green-600'
+                  : trend === 'down'
+                    ? 'text-red-600'
+                    : 'text-gray-600',
               )}
             >
               {trend === 'up' ? (
                 <TrendingUp className="mr-1 h-4 w-4" />
-              ) : (
+              ) : trend === 'down' ? (
                 <TrendingDown className="mr-1 h-4 w-4" />
-              )}
+              ) : null}
               {trendValue}
             </div>
           )}
@@ -607,11 +599,19 @@ export default async function Page({ searchParams = {} }: PageProps) {
           trendValue={`${stats.completedWaitlists} completed`}
         />
         <StatCard
-          title="Conversion Rate"
-          value={`${stats.conversionRate}%`}
-          icon={BarChart3}
-          trend="up"
-          trendValue="+12.1% from last month"
+          title="Top Waitlist Growth"
+          value={
+            stats.topWaitlists.length > 0
+              ? `${stats.topWaitlists[0].growth}%`
+              : 'N/A'
+          }
+          icon={TrendingUp}
+          trend={stats.topWaitlists.length > 0 && stats.topWaitlists[0].growth > 0 ? 'up' : 'down'}
+          trendValue={
+            stats.topWaitlists.length > 0
+              ? `${stats.topWaitlists[0].name}`
+              : 'No data'
+          }
         />
         <StatCard
           title="System Status"

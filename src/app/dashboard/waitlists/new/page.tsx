@@ -1539,34 +1539,14 @@ interface BehaviorSectionProps {
 }
 
 /**
- * Behavior Description:
- * This component renders a settings panel for configuring various aspects of a waitlist system,
- * including confirmation messages, notification preferences, and other options.
+ * Behavior Section Component
  *
- * The panel consists of three main sections:
- * 1. Confirmation Messages: Users can configure different types of messages (e.g., success, error)
- *    with customizable templates. They also have the option to disable certain message types entirely.
- * 2. Notification Preferences: Users can choose which email notifications they want to receive
- *    for various events related to their waitlist entries (e.g., status change, reminders).
- * 3. General Options: These include settings like allowing duplicates, enabling referrals,
- *    and setting maximum sign-ups.
+ * This component renders the behavior section of a waitlist configuration, allowing users to configure confirmation messages and integration options.
  *
- * Component Structure:
- * - The component is composed of several child components, each responsible for rendering a specific
- *   section of the settings panel.
- * - It uses state management to keep track of user inputs and preferences.
- * - Upon saving changes, it triggers API calls to update the waitlist configuration on the server.
- *
- * User Interaction:
- * - Users can enable or disable different message types and customize their templates.
- * - They can select which notifications they want to receive for various events.
- * - General settings like allowing duplicates and enabling referrals are controlled via checkboxes.
- * - Changes are saved by clicking the "Save" button, which triggers the update process.
- *
- * Customization:
- * - The component allows customization of message templates through text input fields.
- * - Users can choose from a set of predefined email notification options.
- * - General settings provide flexibility in configuring various aspects of the waitlist system.
+ * @param {Object} props - The component properties.
+ * @param {Function} copyEmbedCode - A function to copy the embed code to the clipboard.
+ * @param {string} embedCode - The JavaScript snippet for embedding the waitlist form.
+ * @returns {JSX.Element} - The rendered Behavior Section component.
  */
 function BehaviorSection({
   formData,
@@ -1806,7 +1786,10 @@ function BehaviorSection({
           <CardDescription>Add this waitlist to your website</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          <Tabs defaultValue="js" className="w-full">
+          <Tabs
+            defaultValue="js"
+            className="w-full"
+          >
             <TabsList className="mb-4">
               <TabsTrigger value="js">JavaScript Snippet</TabsTrigger>
               <TabsTrigger value="iframe">iFrame Embed</TabsTrigger>
@@ -1833,7 +1816,8 @@ function BehaviorSection({
                   </pre>
                 </div>
                 <p className="text-xs text-muted-foreground">
-                  Add this script tag to your website's HTML where you want the waitlist form to appear.
+                  Add this script tag to your website's HTML where you want the waitlist form to
+                  appear.
                 </p>
               </div>
             </TabsContent>
@@ -1876,11 +1860,15 @@ function BehaviorSection({
                       </pre>
                     </div>
                     <p className="text-xs text-muted-foreground">
-                      Add this iframe code to your website's HTML where you want the waitlist form to appear.
+                      Add this iframe code to your website's HTML where you want the waitlist form
+                      to appear.
                     </p>
                     <div className="mt-4">
                       <Label className="mb-2 block">Live Preview</Label>
-                      <div className="border rounded overflow-hidden" style={{ width: '100%', maxWidth: 500, height: 600 }}>
+                      <div
+                        className="border rounded overflow-hidden"
+                        style={{ width: '100%', maxWidth: 500, height: 600 }}
+                      >
                         <iframe
                           src={iframeUrl}
                           width="100%"
@@ -1938,11 +1926,15 @@ function BehaviorSection({
                       </pre>
                     </div>
                     <p className="text-xs text-muted-foreground">
-                      Add this script tag to your website's HTML where you want the waitlist form to appear. This works on any site, no React or npm required.
+                      Add this script tag to your website's HTML where you want the waitlist form to
+                      appear. This works on any site, no React or npm required.
                     </p>
                     <div className="mt-4">
                       <Label className="mb-2 block">Live Preview</Label>
-                      <div className="border rounded overflow-hidden" style={{ width: '100%', maxWidth: 500, minHeight: 100 }}>
+                      <div
+                        className="border rounded overflow-hidden"
+                        style={{ width: '100%', maxWidth: 500, minHeight: 100 }}
+                      >
                         {/* Live preview using an iframe to sandbox the script */}
                         <iframe
                           srcDoc={`<html><body><div id=\"preview-root\"></div><script src=\"${baseUrl}/widget.js\" ${dataAttrs.join(' ')} async></script></body></html>`}

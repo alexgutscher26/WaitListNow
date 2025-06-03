@@ -646,7 +646,7 @@
           for (var i = Array(o), u = 0; u < o; u++) i[u] = arguments[u + 2];
           l.children = i;
         }
-        if (e && e.defaultProps) for (r in (o = e.defaultProps)) void 0 === l[r] && (l[r] = o[r]);
+        if (e?.defaultProps) for (r in (o = e.defaultProps)) void 0 === l[r] && (l[r] = o[r]);
         return _(e, a, void 0, 0, 0, l);
       }),
       (h.createRef = function () {
@@ -1454,7 +1454,7 @@
           throw Error();
         } catch (e) {
           var t = e.stack.trim().match(/\n( *(at )?)/);
-          (Ze = (t && t[1]) || ''),
+          (Ze = (t?.[1]) || ''),
             (Je =
               -1 < e.stack.indexOf('\n    at')
                 ? ' (<anonymous>)'
@@ -1516,8 +1516,7 @@
         };
         r.DetermineComponentFrameRoot.displayName = 'DetermineComponentFrameRoot';
         var l = Object.getOwnPropertyDescriptor(r.DetermineComponentFrameRoot, 'name');
-        l &&
-          l.configurable &&
+        l?.configurable &&
           Object.defineProperty(r.DetermineComponentFrameRoot, 'name', {
             value: 'DetermineComponentFrameRoot',
           });
@@ -2362,7 +2361,7 @@
       week: !0,
     };
     function Rn(e) {
-      var t = e && e.nodeName && e.nodeName.toLowerCase();
+      var t = e?.nodeName && e.nodeName.toLowerCase();
       return 'input' === t ? !!An[e.type] : 'textarea' === t;
     }
     function Dn(e, t, n, r) {
@@ -2436,7 +2435,7 @@
       return !0;
     }
     function Jn(e) {
-      for (; e && e.firstChild; ) e = e.firstChild;
+      for (; e?.firstChild; ) e = e.firstChild;
       return e;
     }
     function er(e, t) {
@@ -2494,7 +2493,7 @@
       return t;
     }
     function rr(e) {
-      var t = e && e.nodeName && e.nodeName.toLowerCase();
+      var t = e?.nodeName && e.nodeName.toLowerCase();
       return (
         t &&
         (('input' === t &&
@@ -2521,7 +2520,7 @@
           ? (r = { start: r.selectionStart, end: r.selectionEnd })
           : (r = {
               anchorNode: (r = (
-                (r.ownerDocument && r.ownerDocument.defaultView) ||
+                (r.ownerDocument?.defaultView) ||
                 window
               ).getSelection()).anchorNode,
               anchorOffset: r.anchorOffset,
@@ -5290,7 +5289,7 @@
                 (t.memoizedState = Hi),
                 (t = o));
         else if ((ui(t), yd(s))) {
-          if ((l = s.nextSibling && s.nextSibling.dataset)) var c = l.dgst;
+          if ((l = s.nextSibling?.dataset)) var c = l.dgst;
           (l = c),
             ((a = Error(r(419))).stack = ''),
             (a.digest = l),
@@ -8351,7 +8350,7 @@
                   (i.selectionStart = s), (i.selectionEnd = Math.min(c, i.value.length));
                 else {
                   var d = i.ownerDocument || document,
-                    f = (d && d.defaultView) || window;
+                    f = (d?.defaultView) || window;
                   if (f.getSelection) {
                     var p = f.getSelection(),
                       m = i.textContent.length,
@@ -9061,7 +9060,7 @@
           switch (
             (b && (b = b(e, r))
               ? Dn(i, b, n, l)
-              : (y && y(e, u, r),
+              : (y?.(e, u, r),
                 'focusout' === e &&
                   r &&
                   'number' === u.type &&
@@ -10706,7 +10705,7 @@
           if ('function' == typeof a) o || Pf(n);
           else if (o) {
             var i = null;
-            if (a && a.hasAttribute('formAction')) {
+            if (a?.hasAttribute('formAction')) {
               if (((l = a), (o = a[De] || null))) i = o.formAction;
               else if (null !== df(l)) continue;
             } else i = o.action;

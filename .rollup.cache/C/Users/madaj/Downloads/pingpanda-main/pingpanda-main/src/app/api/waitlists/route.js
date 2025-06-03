@@ -13,6 +13,17 @@ var log = function () {
   return isDev && console.log.apply(console, __spreadArray(['[Waitlist API]'], args, false));
 };
 // POST /api/waitlists - Create a new waitlist
+/**
+ * Handles the creation of a new waitlist entry via POST request.
+ *
+ * The function performs several steps: retrieves user ID from authentication, validates and parses JSON body,
+ * fetches or creates a user, generates a slug for the waitlist name, checks for existing waitlists with the same name,
+ * and finally creates a new waitlist entry if all validations pass. It also handles errors by logging them and returning
+ * appropriate error responses.
+ *
+ * @param req - The request object containing user authentication details and body data.
+ * @returns A NextResponse object with either the created waitlist or an error message.
+ */
 export function POST(req) {
   return __awaiter(this, void 0, void 0, function () {
     var userId, json, body, user, email, slug, existingWaitlist, waitlist, error_1;
@@ -144,6 +155,15 @@ export function POST(req) {
   });
 }
 // GET /api/waitlists - Get all waitlists for the current user
+/**
+ * Handles GET requests to fetch waitlists for a user.
+ *
+ * This function retrieves the user ID from the request authentication, checks if the user exists in the database,
+ * and then fetches all waitlists associated with that user. It handles errors by logging them and returning appropriate HTTP responses.
+ *
+ * @param req - The incoming request object.
+ * @returns A NextResponse containing either the fetched waitlists or an error message.
+ */
 export function GET(req) {
   return __awaiter(this, void 0, void 0, function () {
     var userId, user, waitlists, error_2;

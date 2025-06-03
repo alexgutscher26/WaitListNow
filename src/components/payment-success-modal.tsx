@@ -1,15 +1,14 @@
 'use client';
 
+import React, { useState } from 'react';
 import { client } from '@/lib/client';
 import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import Image from 'next/image';
 import { Modal } from './ui/modal';
 import { LoadingSpinner } from './loading-spinner';
 import { Button } from './ui/button';
 import { CheckIcon } from 'lucide-react';
-
-// TODO: Need to update this modal to show different content based on the plan plus change for the different plans for this saas
 
 /**
  * PaymentSuccessModal component
@@ -25,7 +24,7 @@ export const PaymentSuccessModal = () => {
   const { data, isPending } = useQuery({
     queryKey: ['user-plan'],
     queryFn: async () => {
-      const res = await client.payment.getUserPlan.$get();
+      const res = await client.payment.getUserPlan.$get({});
       return await res.json();
     },
     refetchInterval: (query) => {
@@ -41,7 +40,37 @@ export const PaymentSuccessModal = () => {
     router.push('/dashboard');
   };
 
-  const isPaymentSuccessful = data?.plan === 'PRO';
+  // Plan configuration for modal content
+  const planConfigs = {
+    FREE: {
+      name: 'Free',
+      message: 'You are on the Free plan. Upgrade to unlock more features!',
+      success: 'Free Plan',
+      image: '/brand-asset-heart.png',
+    },
+    STARTER: {
+      name: 'Starter',
+      message: 'Thank you for upgrading to Starter! Enjoy more features and higher limits.',
+      success: 'Starter Plan Activated! 🚀',
+      image: '/brand-asset-heart.png',
+    },
+    GROWTH: {
+      name: 'Growth',
+      message: 'Thank you for upgrading to Growth! You now have access to advanced features.',
+      success: 'Growth Plan Activated! 📈',
+      image: '/brand-asset-heart.png',
+    },
+    PRO: {
+      name: 'Pro',
+      message: 'Thank you for upgrading to Pro and supporting WaitlistNow. Your account has been upgraded.',
+      success: 'Upgrade successful! 🎉',
+      image: '/brand-asset-heart.png',
+    },
+  };
+
+  const plan = data?.plan as keyof typeof planConfigs;
+  const planConfig = planConfigs[plan] || planConfigs.FREE;
+  const isPaymentSuccessful = plan && plan !== 'FREE';
 
   return (
     <Modal
@@ -63,20 +92,22 @@ export const PaymentSuccessModal = () => {
         ) : (
           <>
             <div className="relative aspect-video border border-gray-200 w-full overflow-hidden rounded-lg bg-gray-50">
-              <img
-                src="/brand-asset-heart.png"
-                className="h-full w-full object-cover"
+              <Image
+                src={planConfig.image}
                 alt="Payment success"
+                fill
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                className="object-cover"
+                priority
               />
             </div>
 
             <div className="mt-6 flex flex-col items-center gap-1 text-center">
               <p className="text-lg/7 tracking-tight font-medium text-pretty">
-                Upgrade successful! 🎉
+                {planConfig.success}
               </p>
               <p className="text-gray-600 text-sm/6 text-pretty">
-                Thank you for upgrading to Pro and supporting PingPanda. Your account has been
-                upgraded.
+                {planConfig.message}
               </p>
             </div>
 

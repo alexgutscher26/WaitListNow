@@ -1,5 +1,5 @@
 import { notFound, redirect } from 'next/navigation';
-import { auth, currentUser } from '@clerk/nextjs/server';
+import { currentUser } from '@clerk/nextjs/server';
 import { db } from '@/lib/db';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -20,19 +20,27 @@ interface WaitlistDetailPageProps {
 export default async function WaitlistDetailPage({ params }: WaitlistDetailPageProps) {
   const { id } = params;
   // Get the authenticated user
-  const { userId } = auth();
+  const user = await currentUser();
 
-  if (!userId) {
+  if (!user) {
     redirect('/sign-in');
+  }
+
+  // Get the database user
+  const dbUser = await db.user.findUnique({
+    where: { externalId: user.id },
+  });
+
+  if (!dbUser) {
+    console.error('User not found in database');
+    notFound();
   }
 
   // Find the waitlist and verify ownership
   const waitlist = await db.waitlist.findFirst({
     where: {
       id,
-      user: {
-        externalId: userId,
-      },
+      userId: dbUser.id,
     },
     include: {
       _count: {

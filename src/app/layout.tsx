@@ -1,17 +1,14 @@
-import { ClerkProvider } from '@/providers/clerk-provider';
+import React from 'react';
 import type { Metadata, Viewport } from 'next';
-import { Toaster } from '@/components/ui/toaster';
-import { Analytics } from '@vercel/analytics/react';
-import { SpeedInsights } from '@vercel/speed-insights/next';
-import { PlausibleProvider } from './plausible-provider';
-import { HeroUIProvider } from '@heroui/react';
-import { QueryProvider } from '@/providers/query-provider';
-import { PostHogProvider } from '@/providers/posthog-provider';
-import { cn } from '@/lib/utils';
-import './globals.css';
 import { Inter } from 'next/font/google';
+import { cn } from '@/lib/utils';
+import { RootLayoutClient } from '@/components/root-layout-client';
+import { ClerkProvider } from '@/components/providers/clerk-provider-wrapper';
+import { QueryProvider } from '@/components/providers/query-provider-wrapper';
+import './globals.css';
+import { Toaster } from 'sonner';
 
-// Font configuration
+// Font configuration - loaded on the server
 const inter = Inter({
   subsets: ['latin'],
   display: 'swap',
@@ -19,7 +16,7 @@ const inter = Inter({
   variable: '--font-sans',
 });
 
-// Metadata configuration
+// Export metadata
 export const metadata: Metadata = {
   title: {
     default: 'WaitlistNow - Build Your Waitlist in Minutes',
@@ -72,32 +69,33 @@ interface RootLayoutProps {
   modal: React.ReactNode;
 }
 
-/**
- * Provides the root layout structure for the application, including providers and global components.
- */
-export default function RootLayout({ children, modal }: RootLayoutProps) {
+export default function RootLayout({ children, modal }: Readonly<RootLayoutProps>) {
   return (
-    <html lang="en" className={cn('h-full', inter.variable)}>
-      <body className={cn('min-h-full bg-background font-sans antialiased')}>
-        <PostHogProvider>
+    <html
+      lang="en"
+      className={cn('h-full', inter.variable)}
+      suppressHydrationWarning
+    >
+      <head>
+        <link
+          rel="preconnect"
+          href={
+            process.env.NEXT_PUBLIC_CDN_URL ||
+            process.env.NEXT_PUBLIC_APP_URL ||
+            'http://localhost:3000'
+          }
+          crossOrigin="anonymous"
+        />
+      </head>
+      <body className={cn('min-h-screen bg-background font-sans antialiased')}>
+        <QueryProvider>
           <ClerkProvider>
-            <QueryProvider>
-              <HeroUIProvider>
-                <PlausibleProvider>
-                  <div className="relative flex min-h-screen flex-col">
-                    <main className="flex-1">
-                      {children}
-                      {modal}
-                    </main>
-                  </div>
-                  <Toaster />
-                  <Analytics />
-                  <SpeedInsights />
-                </PlausibleProvider>
-              </HeroUIProvider>
-            </QueryProvider>
+            <RootLayoutClient modal={modal}>
+              {children}
+              <Toaster />
+            </RootLayoutClient>
           </ClerkProvider>
-        </PostHogProvider>
+        </QueryProvider>
       </body>
     </html>
   );

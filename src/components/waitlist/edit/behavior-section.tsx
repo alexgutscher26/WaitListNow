@@ -10,6 +10,7 @@ import { Copy, Check } from 'lucide-react';
 
 interface BehaviorSectionProps {
   formData: {
+    [x: string]: any;
     settings: {
       confirmationType: 'message' | 'redirect';
       confirmationMessage: string;
@@ -33,9 +34,18 @@ export function BehaviorSection({ formData, onSettingsChange }: BehaviorSectionP
   };
 
   const embedCode = `
-<!-- Add this to your website's HTML -->
-<div id="waitlist-embed"></div>
-<script src="https://yourdomain.com/embed.js" data-waitlist-id="${formData.id}" async></script>
+<script src="http://localhost:3000/widget.js"
+  data-waitlist-id="your waitlist id"
+  data-button-text="Join Waitlist"
+  data-button-variant="default"
+  data-button-rounded="md"
+  data-primary-color="3b82f6"
+  data-form-layout="stacked"
+  data-show-labels="true"
+  data-show-branding="true"
+  data-api-key="your api key"
+  async>
+</script>
   `.trim();
 
   return (
@@ -235,15 +245,6 @@ export function BehaviorSection({ formData, onSettingsChange }: BehaviorSectionP
                     )}
                   </Button>
                 </div>
-              </div>
-
-              <div className="p-4 bg-yellow-50 rounded-md border border-yellow-200">
-                <h4 className="text-sm font-medium text-yellow-800 mb-1">Note</h4>
-                <p className="text-sm text-yellow-700">
-                  Make sure to replace{' '}
-                  <code className="bg-yellow-100 px-1 rounded">yourdomain.com</code> with your
-                  actual domain.
-                </p>
               </div>
             </div>
           </TabsContent>

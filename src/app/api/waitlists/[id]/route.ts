@@ -156,23 +156,14 @@ export async function DELETE(req: NextRequest, { params }: { params: { id: strin
   } catch (error) {
     console.error('[WAITLISTS_DELETE]', error);
 
+    // Log the error details, including the stack trace, for debugging purposes
     if (error instanceof Error) {
-      return new NextResponse(
-        JSON.stringify({
-          error: error.message,
-          stack: isDev ? error.stack : undefined,
-        }),
-        {
-          status: 500,
-          headers: { 'Content-Type': 'application/json' },
-        },
-      );
+      console.error('Error details:', error.message, error.stack);
     }
 
     return new NextResponse(
       JSON.stringify({
         error: 'Internal server error',
-        details: isDev ? String(error) : undefined,
       }),
       {
         status: 500,
@@ -302,7 +293,6 @@ async function handleUpdateWaitlist(req: NextRequest, waitlistId: string, isFull
       return new NextResponse(
         JSON.stringify({
           error: error.message,
-          stack: isDev ? error.stack : undefined,
         }),
         {
           status: 500,
@@ -311,10 +301,16 @@ async function handleUpdateWaitlist(req: NextRequest, waitlistId: string, isFull
       );
     }
 
+    // Log the error details on the server
+    console.error('[WAITLISTS_UPDATE] Internal server error:', {
+      message: error instanceof Error ? error.message : 'Unknown error',
+      stack: error instanceof Error ? error.stack : undefined,
+      error,
+    });
+
     return new NextResponse(
       JSON.stringify({
         error: 'Internal server error',
-        details: isDev ? String(error) : undefined,
       }),
       {
         status: 500,

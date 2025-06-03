@@ -434,7 +434,7 @@ const onboardingSteps = [
             <div className="flex items-center justify-between">
               <h3 className="font-semibold text-gray-900">Integration Options</h3>
               <button
-                onClick={() => setShowPreview && setShowPreview(!showPreview)}
+                onClick={() => setShowPreview?.(!showPreview)}
                 className="flex items-center gap-2 text-sm text-blue-600 hover:text-blue-700 transition-colors"
               >
                 {showPreview ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}

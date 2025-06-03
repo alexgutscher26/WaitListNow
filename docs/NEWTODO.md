@@ -15,7 +15,7 @@ This document outlines the planned improvements and enhancements for the WaitLis
 
 - [ ] **Embeddable Widget Implementation**
 
-  - [ ] Develop JavaScript snippet for website integration
+  - [x] Develop JavaScript snippet for website integration
   - [ ] Support iframe embedding option
   - [ ] Create direct script embedding option
   - [ ] Add customization parameters for the widget
@@ -29,7 +29,7 @@ This document outlines the planned improvements and enhancements for the WaitLis
 
 - [ ] **Email Notification System**
 
-  - [ ] Set up integration with Resend or Nodemailer
+  - [X] Set up integration with Resend
   - [ ] Create email templates for different events
   - [ ] Implement scheduled emails for waitlist updates
   - [ ] Add email customization options
@@ -49,13 +49,13 @@ This document outlines the planned improvements and enhancements for the WaitLis
   - [ ] Implement database caching strategies
   - [ ] Set up database monitoring
 
-- [ ] **Performance Enhancements**
+- [X] **Performance Enhancements**
 
   - [ ] Implement server-side rendering for critical pages
-  - [ ] Add image optimization
-  - [ ] Implement code splitting and lazy loading
-  - [ ] Set up CDN for static assets
-  - [ ] Optimize bundle size
+  - [X] Add image optimization
+  - [X] Implement code splitting and lazy loading
+  - [X] Set up CDN for static assets
+  - [X] Optimize bundle size
 
 - [ ] **Security Improvements**
 

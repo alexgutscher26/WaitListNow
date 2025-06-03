@@ -1,11 +1,11 @@
-import superjson from 'superjson';
+import { parse, stringify } from 'superjson'; // Using named imports for better tree-shaking
 
 /**
  * Parses a JSON string using superjson and returns the parsed value or the original string if parsing fails.
  */
 export const parseSuperJSON = (value: string) => {
   try {
-    return superjson.parse(value);
+    return parse(value);
   } catch {
     return value;
   }

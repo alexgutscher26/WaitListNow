@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -24,10 +24,12 @@ export interface WaitlistWidgetStyle {
 export interface WaitlistWidgetProps {
   waitlistId: string;
   style?: Partial<WaitlistWidgetStyle>;
+  apiKey?: string;
+  showBranding?: boolean;
   className?: string;
 }
 
-export function WaitlistWidget({ waitlistId, style = {}, className = '' }: WaitlistWidgetProps) {
+export function WaitlistWidget({ waitlistId, style = {}, apiKey, showBranding = true, className = '' }: WaitlistWidgetProps) {
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -47,11 +49,14 @@ export function WaitlistWidget({ waitlistId, style = {}, className = '' }: Waitl
 
     setIsLoading(true);
 
+    console.log('Widget API Key:', apiKey);
+
     try {
       const response = await fetch(`/api/waitlists/${waitlistId}/subscribers`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          ...(apiKey ? { 'Authorization': `Bearer ${apiKey}` } : {}),
         },
         body: JSON.stringify({ email, name }),
       });
@@ -175,6 +180,11 @@ export function WaitlistWidget({ waitlistId, style = {}, className = '' }: Waitl
           {isLoading ? 'Joining...' : buttonText}
         </Button>
       </form>
+      {showBranding && (
+        <div style={{ color: 'red', fontWeight: 'bold', fontSize: 20 }}>
+          Powered by WaitlistNow
+        </div>
+      )}
     </div>
   );
 }

@@ -1,8 +1,12 @@
 'use client';
 
+import React from 'react';
+
 import { useState, useCallback, useMemo, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
+import { useQuery } from '@tanstack/react-query';
+import { client } from '@/lib/client';
 
 // URL validation helper
 const isValidUrl = (url: string): boolean => {
@@ -85,6 +89,9 @@ import {
   DialogTitle,
   DialogDescription,
 } from '@/components/ui/dialog';
+import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from '@/components/ui/tooltip';
+import { Modal } from '@/components/ui/modal';
+import { WaitlistPreview } from '@/components/waitlist/edit/waitlist-preview';
 
 // Types
 type FieldType = 'text' | 'email' | 'number' | 'url' | 'tel' | 'textarea' | 'select';
@@ -118,13 +125,12 @@ interface WaitlistStyle {
   padding: string;
   borderRadius: string;
 }
-
 interface FormData {
-  [x: string]: Color | undefined;
   name: string;
   description: string;
   websiteUrl: string;
   redirectUrl: string;
+  logoUrl: string;
   customFields: CustomField[];
   style: WaitlistStyle;
   confirmationType: ConfirmationType;
@@ -198,6 +204,7 @@ export default function NewWaitlistPage() {
     description: '',
     websiteUrl: '',
     redirectUrl: '',
+    logoUrl: '',
     customFields: [],
     confirmationType: 'message',
     confirmationMessage: 'Thank you for joining the waitlist!',
@@ -233,24 +240,21 @@ export default function NewWaitlistPage() {
     },
   });
   const [embedType, setEmbedType] = useState<'js' | 'iframe'>('js');
+  // Plan check using React Query
+  const { data: planData } = useQuery({
+    queryKey: ['user-plan'],
+    queryFn: async () => {
+      const res = await client.payment.getUserPlan.$get({});
+      return await res.json();
+    },
+    refetchInterval: 60000, // Refresh every 60s
+  });
+  const userPlan = planData?.plan as string | undefined;
+  const isProUser = userPlan === 'STARTER' || userPlan === 'GROWTH' || userPlan === 'PRO';
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
 
-  const handleTestConfirmation = () => {
-    // Removed from here
-    setIsTesting(true);
-    setShowConfirmation(true);
-  };
 
-  const handleCloseTest = () => {
-    setShowConfirmation(false);
-    // Small delay to allow the modal to close before resetting the testing state
-    setTimeout(() => setIsTesting(false), 300);
-  };
 
-  const handleRedirect = () => {
-    if (formData.confirmationType === 'redirect' && formData.redirectUrl) {
-      window.open(formData.redirectUrl, '_blank');
-    }
-  };
 
   // Helper functions
   const getBorderRadius = useCallback((size: ButtonRounded): string => {
@@ -325,23 +329,6 @@ export default function NewWaitlistPage() {
   );
 
   // Handle color picker changes
-  const handleColorChange = (name: string, value: string) => {
-    if (name.includes('.')) {
-      const [parent, child] = name.split('.');
-      setFormData((prev) => ({
-        ...prev,
-        [parent]: {
-          ...((prev[parent as keyof FormData] as object) || {}),
-          [child]: value,
-        },
-      }));
-    } else {
-      setFormData((prev) => ({
-        ...prev,
-        [name]: value,
-      }));
-    }
-  };
 
   // Add a new custom field
   const addCustomField = () => {
@@ -443,6 +430,7 @@ export default function NewWaitlistPage() {
         description: formData.description,
         websiteUrl: formData.websiteUrl || '',
         redirectUrl: formData.redirectUrl || '',
+        logoUrl: formData.logoUrl || '',
         customFields: formData.customFields,
         style: {
           ...formData.style,
@@ -524,12 +512,12 @@ export default function NewWaitlistPage() {
   };
 
   // Get branding preference from form data
-  const showBranding = formData.showBranding !== false; // Default to true if undefined
 
   // Generate embed code based on selected type
   const embedCode = useMemo(() => {
-    const baseUrl = 'https://yourdomain.com'; // Replace with your actual domain
-    const waitlistId = 'new'; // This would be the actual waitlist ID in a real app
+    const baseUrl = 'http://localhost:3000';
+    const waitlistId = 'your waitlist id';
+    const apiKey = 'your api key';
 
     // Ensure all style properties have default values
     const style = {
@@ -541,6 +529,8 @@ export default function NewWaitlistPage() {
       showLabels: formData.style?.showLabels ?? true,
     };
 
+    // ENFORCE BRANDING FOR FREE USERS
+    const showBranding = isProUser ? formData.showBranding !== false : true;
     const dataAttributes = [
       `data-waitlist-id="${waitlistId}"`,
       `data-button-text="${style.buttonText}"`,
@@ -549,10 +539,11 @@ export default function NewWaitlistPage() {
       `data-primary-color="${style.primaryColor.replace('#', '')}"`,
       `data-form-layout="${style.formLayout}"`,
       `data-show-labels="${style.showLabels}"`,
-      `data-show-branding="${showBranding.toString()}"`,
+      `data-show-branding="${showBranding}"`,
       ...(formData.enableReferrals ? ['data-enable-referrals="true"'] : []),
       ...(formData.referralReward ? [`data-referral-reward="${formData.referralReward}"`] : []),
       ...(formData.maxSignups ? [`data-max-signups="${formData.maxSignups}"`] : []),
+      `data-api-key="${apiKey}"`,
     ];
 
     if (embedType === 'js') {
@@ -578,7 +569,7 @@ export default function NewWaitlistPage() {
   scrolling="no"
 ></iframe>`;
     }
-  }, [formData, embedType, showBranding]);
+  }, [formData, embedType, isProUser]);
 
   /**
    * Copies the embed code to the clipboard and logs an error if it fails.
@@ -586,9 +577,10 @@ export default function NewWaitlistPage() {
   const copyEmbedCode = async () => {
     try {
       await navigator.clipboard.writeText(embedCode);
-      // You could add a toast notification here
+      toast.success('Embed code copied to clipboard!');
     } catch (err) {
       console.error('Failed to copy embed code:', err);
+      toast.error('Failed to copy embed code');
     }
   };
 
@@ -601,6 +593,7 @@ export default function NewWaitlistPage() {
       description: '',
       websiteUrl: '',
       redirectUrl: '',
+      logoUrl: '',
       customFields: [],
       confirmationType: 'message',
       confirmationMessage: 'Thank you for joining the waitlist!',
@@ -820,48 +813,54 @@ export default function NewWaitlistPage() {
                       </div>
                       <Button
                         variant={formData.showBranding ? 'outline' : 'default'}
-                        onClick={() =>
+                        onClick={() => {
+                          if (!isProUser) {
+                            toast.info('Upgrade to Pro to remove branding.');
+                            return;
+                          }
                           setFormData((prev) => ({
                             ...prev,
                             showBranding: !prev.showBranding,
-                          }))
-                        }
+                          }));
+                        }}
+                        disabled={!isProUser}
                       >
                         {formData.showBranding ? 'Hide' : 'Show'} Branding
                       </Button>
                     </div>
 
-                    <div className="overflow-hidden rounded-lg border border-amber-200 bg-amber-50 dark:border-amber-900/30 dark:bg-amber-950/20">
-                      <div className="p-4">
-                        <div className="flex items-start">
-                          <div className="flex-shrink-0">
-                            <Zap className="h-5 w-5 text-amber-600 dark:text-amber-400" />
-                          </div>
-                          <div className="ml-3 flex-1">
-                            <h3 className="text-sm font-medium text-amber-800 dark:text-amber-200">
-                              Want to remove branding?
-                            </h3>
-                            <div className="mt-1 text-sm text-amber-700 dark:text-amber-300">
-                              <p>
-                                Upgrade to Pro to remove the "Powered by WaitlistNow" badge and
-                                unlock additional features.
-                              </p>
+                    {/* Only show upgrade card if not on a paid plan */}
+                    {!isProUser && (
+                      <div className="overflow-hidden rounded-lg border border-amber-200 bg-amber-50 dark:border-amber-900/30 dark:bg-amber-950/20">
+                        <div className="p-4">
+                          <div className="flex items-start">
+                            <div className="flex-shrink-0">
+                              <Zap className="h-5 w-5 text-amber-600 dark:text-amber-400" />
                             </div>
-                            <div className="mt-3">
-                              <Button
-                                variant="outline"
-                                className="border-amber-300 text-amber-700 hover:bg-amber-100 dark:border-amber-700 dark:text-amber-300 dark:hover:bg-amber-900/50"
-                                onClick={() => {
-                                  // Handle upgrade logic here
-                                }}
-                              >
-                                Upgrade to Pro
-                              </Button>
+                            <div className="ml-3 flex-1">
+                              <h3 className="text-sm font-medium text-amber-800 dark:text-amber-200">
+                                Want to remove branding?
+                              </h3>
+                              <div className="mt-1 text-sm text-amber-700 dark:text-amber-300">
+                                <p>
+                                  Upgrade to Pro to remove the "Powered by WaitlistNow" badge and
+                                  unlock additional features.
+                                </p>
+                              </div>
+                              <div className="mt-3">
+                                <Button
+                                  variant="outline"
+                                  className="border-amber-300 text-amber-700 hover:bg-amber-100 dark:border-amber-700 dark:text-amber-300 dark:hover:bg-amber-900/50"
+                                  onClick={() => setShowUpgradeModal(true)}
+                                >
+                                  Upgrade to Pro
+                                </Button>
+                              </div>
                             </div>
                           </div>
                         </div>
                       </div>
-                    </div>
+                    )}
 
                     {formData.showBranding && (
                       <div className="mt-4 rounded-lg border p-4">
@@ -931,6 +930,58 @@ export default function NewWaitlistPage() {
             </div>
           </div>
         </form>
+      )}
+      {/* Upgrade Modal */}
+      {showUpgradeModal && (
+        <Modal showModal={showUpgradeModal} setShowModal={setShowUpgradeModal}>
+          <div className="p-0 rounded-2xl overflow-hidden bg-white shadow-xl max-w-md mx-auto">
+            {/* Accent bar */}
+            <div className="bg-gradient-to-r from-blue-500 to-cyan-500 h-2 w-full" />
+            <div className="flex flex-col items-center px-8 py-8">
+              {/* Icon */}
+              <div className="bg-blue-100 rounded-full p-3 mb-4">
+                <svg className="h-8 w-8 text-blue-500" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                  <path d="M12 2l2.09 6.26L20 9.27l-5 3.64L16.18 21 12 17.27 7.82 21 9 12.91l-5-3.64 5.91-.91L12 2z" />
+                </svg>
+              </div>
+              <h2 className="text-2xl font-bold mb-2">Upgrade to <span className="text-blue-600">Starter</span></h2>
+              <p className="mb-4 text-gray-600">
+                Remove branding and unlock all premium features with the Starter plan.
+              </p>
+              {/* Price and features */}
+              <div className="mb-6 w-full bg-blue-50 rounded-lg p-4 text-left">
+                <div className="flex items-center mb-2">
+                  <span className="text-3xl font-bold text-blue-600 mr-2">$19</span>
+                  <span className="text-gray-500">/month</span>
+                </div>
+                <ul className="text-sm text-gray-700 space-y-1 pl-4 list-disc">
+                  <li>Remove "Powered by WaitlistNow" branding</li>
+                  <li>Up to 3 active waitlists</li>
+                  <li>10,000 signups per month</li>
+                  <li>Custom domains & branding</li>
+                  <li>Email notifications</li>
+                  <li>Priority support</li>
+                </ul>
+              </div>
+              <Button
+                className="w-full h-12 mb-2 bg-gradient-to-r from-blue-500 to-cyan-500 text-white font-semibold shadow-lg"
+                onClick={() => {
+                  setShowUpgradeModal(false);
+                  window.location.href = '/dashboard/upgrade';
+                }}
+              >
+                Upgrade Now
+              </Button>
+              <Button
+                variant="outline"
+                className="w-full h-12"
+                onClick={() => setShowUpgradeModal(false)}
+              >
+                Cancel
+              </Button>
+            </div>
+          </div>
+        </Modal>
       )}
     </DashboardPage>
   );
@@ -1022,6 +1073,21 @@ function BasicInfoSection({ formData, errors, onChange }: SectionProps) {
             {errors?.redirectUrl && <p className="text-red-500 text-sm">{errors.redirectUrl}</p>}
           </div>
         </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="logoUrl">Logo URL (optional)</Label>
+          <Input
+            id="logoUrl"
+            name="logoUrl"
+            type="url"
+            value={formData.logoUrl}
+            onChange={onChange}
+            placeholder="https://yourapp.com/logo.png"
+          />
+          <p className="text-sm text-muted-foreground">
+            Display your logo at the top of the waitlist form
+          </p>
+        </div>
       </CardContent>
     </Card>
   );
@@ -1058,8 +1124,6 @@ function CustomFieldsSection({
   setNewField,
   addCustomField,
   removeCustomField,
-  updateCustomField,
-  reorderCustomFields,
 }: CustomFieldsSectionProps) {
   return (
     <Card>
@@ -1148,7 +1212,7 @@ function CustomFieldsSection({
               <Badge variant="secondary">{formData.customFields.length}</Badge>
             </div>
             <div className="rounded-md border divide-y">
-              {formData.customFields.map((field, index) => (
+              {formData.customFields.map((field) => (
                 <div
                   key={field.id}
                   className="flex items-center justify-between p-3 group"
@@ -1201,7 +1265,7 @@ interface AppearanceSectionProps {
 /**
  * Renders a section for customizing button appearance and form styling.
  */
-function AppearanceSection({ formData, setFormData, getBorderRadius }: AppearanceSectionProps) {
+function AppearanceSection({ formData, setFormData }: AppearanceSectionProps) {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
       <div className="space-y-6">
@@ -1443,18 +1507,6 @@ function AppearanceSection({ formData, setFormData, getBorderRadius }: Appearanc
                   </span>
                 )}
               </div>
-
-              {/* TODO: Add upgrade modal for branding removal */}
-              {/* <button 
-                type="button" 
-                className="text-xs text-blue-600 hover:underline mt-1 ml-6"
-                onClick={() => {
-                  // TODO: Open upgrade modal
-                  console.log('Open upgrade modal');
-                }}
-              >
-                Upgrade to remove branding
-              </button> */}
             </div>
           </CardContent>
         </Card>
@@ -1497,7 +1549,6 @@ function BehaviorSection({
   errors,
   embedCode,
   copyEmbedCode,
-  showBranding = true,
 }: BehaviorSectionProps) {
   const [embedType, setEmbedType] = useState<'js' | 'iframe'>('js');
   const [showConfirmation, setShowConfirmation] = useState(false);
@@ -1732,7 +1783,19 @@ function BehaviorSection({
               type="button"
               className="text-gray-400 hover:text-gray-600"
               onClick={() => {
-                // TODO: Show help tooltip
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <button
+                        type="button"
+                        aria-label="Help"
+                      >
+                        {/* Your help icon here, e.g. <HelpCircleIcon /> */}
+                      </button>
+                    </TooltipTrigger>
+                    <TooltipContent>Your help text goes here!</TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>;
                 // console.log('Show advanced settings help');
               }}
               aria-label="Help"
@@ -1957,17 +2020,6 @@ function BehaviorSection({
               >
                 JavaScript Snippet
               </button>
-              <button
-                type="button"
-                className={`px-4 py-2 text-sm font-medium ${
-                  embedType === 'iframe'
-                    ? 'border-b-2 border-primary text-primary'
-                    : 'text-muted-foreground hover:text-foreground'
-                }`}
-                onClick={() => setEmbedType('iframe')}
-              >
-                iFrame
-              </button>
             </div>
 
             <div className="space-y-2">
@@ -1995,382 +2047,9 @@ function BehaviorSection({
                   : "Add this iframe code to your website's HTML where you want the waitlist form to appear."}
               </p>
             </div>
-
-            <div className="p-4 bg-muted/50 rounded-md">
-              <h4 className="font-medium mb-2">Preview</h4>
-              <div className="border rounded-md p-4 bg-background">
-                {embedType === 'js' ? (
-                  <div className="aspect-video bg-muted/30 rounded flex flex-col items-center justify-center p-6 text-center">
-                    <div className="mx-auto h-12 w-12 bg-muted/50 rounded-full flex items-center justify-center mb-3">
-                      <svg
-                        className="h-6 w-6 text-muted-foreground"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
-                        />
-                      </svg>
-                    </div>
-                    <h4 className="font-medium mb-1">JavaScript Embed</h4>
-                    <p className="text-sm text-muted-foreground max-w-md">
-                      The actual form will be rendered on your website where you place the script
-                      tag.
-                    </p>
-                  </div>
-                ) : (
-                  <div className="aspect-video bg-muted/30 rounded-md border-2 border-dashed flex flex-col items-center justify-center p-6 text-center">
-                    <div className="mx-auto h-12 w-12 bg-muted/50 rounded-full flex items-center justify-center mb-3">
-                      <svg
-                        className="h-6 w-6 text-muted-foreground"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
-                        />
-                      </svg>
-                    </div>
-                    <h4 className="font-medium mb-1">iFrame Embed</h4>
-                    <p className="text-sm text-muted-foreground max-w-md mb-3">
-                      The form will be displayed within an iframe on your website.
-                    </p>
-                    <div className="w-full max-w-xs p-2 bg-gray-50 dark:bg-gray-800 rounded text-xs text-left font-mono overflow-x-auto">
-                      {embedCode}
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-
-          <div className="space-y-2">
-            <Label>Direct Link</Label>
-            <div className="flex items-center gap-2">
-              <Input
-                readOnly
-                value={'https://yourdomain.com/waitlist/new'}
-                className="bg-muted"
-              />
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                onClick={() => navigator.clipboard.writeText('https://yourdomain.com/waitlist/new')}
-              >
-                <Copy className="h-4 w-4" />
-              </Button>
-            </div>
-            <p className="text-xs text-muted-foreground">
-              Share this link directly with your audience.
-            </p>
           </div>
         </CardContent>
       </Card>
     </div>
   );
-}
-
-interface WaitlistPreviewProps {
-  formData: FormData;
-}
-
-/**
- * Renders a preview of a waitlist form based on the provided formData.
- *
- * This component dynamically generates a styled and interactive preview of the waitlist form,
- * incorporating custom fields, labels, buttons, and additional information such as max signups,
- * referrals, and email verification requirements. The form's style is determined by props from
- * formData, including background color, text color, font family, padding, border radius, button
- * styles, and layout options.
- *
- * @param {WaitlistPreviewProps} formData - An object containing all necessary data to render the form preview.
- */
-function WaitlistPreview({ formData }: WaitlistPreviewProps) {
-  // Helper function to get border radius value based on buttonRounded option
-  const getBorderRadius = (size: ButtonRounded = 'md'): string => {
-    const radiusMap = {
-      none: '0px',
-      sm: '0.25rem',
-      md: '0.375rem',
-      lg: '0.5rem',
-      full: '9999px',
-    };
-    return radiusMap[size] || '0.375rem';
-  };
-
-  // Determine form layout classes
-  const formLayoutClass =
-    formData.style?.formLayout === 'inline' ? 'flex flex-wrap gap-4 items-end' : 'space-y-4';
-
-  // Determine if we should show field labels
-  const showLabels = formData.style?.showLabels !== false; // Default to true if not specified
-  // Set CSS variables for primary color
-  const style = {
-    '--primary': formData.style?.primaryColor || '#3b82f6',
-    '--primary-foreground': formData.style?.buttonTextColor || '#ffffff',
-  } as React.CSSProperties;
-
-  return (
-    <div
-      className="min-h-screen flex items-center justify-center p-6"
-      style={{
-        ...style,
-        backgroundColor: formData.style?.backgroundColor || '#f3f4f6',
-        fontFamily: formData.style?.fontFamily || 'Inter, sans-serif',
-      }}
-    >
-      <div className="w-full max-w-md">
-        {/* Browser-style header */}
-        <div className="bg-gray-200 rounded-t-xl px-4 py-3 flex items-center space-x-3">
-          <div className="flex space-x-2">
-            <div className="w-3 h-3 bg-red-500 rounded-full" />
-            <div className="w-3 h-3 bg-yellow-500 rounded-full" />
-            <div className="w-3 h-3 bg-green-500 rounded-full" />
-          </div>
-          <div className="flex-1 text-center">
-            <span className="text-gray-700 text-sm font-normal">waitlist.yourdomain.com</span>
-          </div>
-        </div>
-
-        {/* Main content card */}
-        <div
-          className="rounded-b-xl shadow-lg overflow-hidden transition-colors duration-200"
-          style={{
-            backgroundColor: formData.style?.backgroundColor || '#ffffff',
-            color: formData.style?.textColor || '#1f2937',
-          }}
-        >
-          <div className="px-12 py-16 text-center">
-            <h1
-              className="text-4xl font-bold mb-6 leading-tight"
-              style={{
-                color: formData.style?.textColor || '#111827',
-              }}
-            >
-              {formData.name || 'Join the Waitlist'}
-            </h1>
-
-            {formData.description ? (
-              <p
-                className="text-lg mb-12 leading-relaxed font-normal"
-                style={{
-                  color: formData.style?.textColor ? `${formData.style.textColor}CC` : '#4b5563',
-                }}
-              >
-                {formData.description}
-              </p>
-            ) : (
-              <p
-                className="text-lg mb-12 leading-relaxed font-normal"
-                style={{
-                  color: formData.style?.textColor ? `${formData.style.textColor}CC` : '#4b5563',
-                }}
-              >
-                Be the first to know when we launch. Early adopters get exclusive perks!
-              </p>
-            )}
-
-            <div className={`mb-8 ${formLayoutClass}`}>
-              {/* Email input */}
-              <div
-                className={
-                  formData.style?.formLayout === 'inline' ? 'flex-1 min-w-[200px]' : 'w-full'
-                }
-              >
-                {showLabels && (
-                  <label
-                    htmlFor="email"
-                    className="block text-left mb-2 text-sm font-medium"
-                    style={{
-                      color: formData.style?.textColor || '#374151',
-                    }}
-                  >
-                    Email Address
-                  </label>
-                )}
-                <div className="relative">
-                  <input
-                    id="email"
-                    type="email"
-                    placeholder="Enter your email"
-                    className={
-                      'w-full px-6 py-4 border rounded-xl text-base transition-all duration-200 focus:outline-none focus:ring-2 placeholder-gray-400 font-normal'
-                    }
-                    style={
-                      {
-                        backgroundColor:
-                          formData.style?.backgroundColor === formData.style?.textColor
-                            ? '#ffffff'
-                            : formData.style?.backgroundColor || '#ffffff',
-                        color: formData.style?.textColor || '#1f2937',
-                        borderColor: formData.style?.primaryColor
-                          ? `${formData.style.primaryColor}40`
-                          : '#e5e7eb',
-                        borderWidth: '1px',
-                        borderRadius: formData.style?.buttonRounded
-                          ? getBorderRadius(formData.style.buttonRounded as ButtonRounded)
-                          : '0.5rem',
-                        '--tw-ring-color': formData.style?.primaryColor || '#3b82f6',
-                        '--tw-ring-opacity': '0.2',
-                        '--tw-ring-offset-shadow':
-                          'var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color)',
-                        '--tw-ring-shadow':
-                          'var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color)',
-                        '--tw-ring-offset-width': '0px',
-                        '--tw-ring-offset-color': '#fff',
-                      } as React.CSSProperties
-                    }
-                  />
-                  <div className="absolute right-5 top-1/2 transform -translate-y-1/2">
-                    <span className="text-xl">🎯</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Custom fields */}
-              {formData.customFields.map((field) => (
-                <div
-                  key={field.id}
-                  className={
-                    formData.style?.formLayout === 'inline' ? 'flex-1 min-w-[200px]' : 'w-full'
-                  }
-                >
-                  {showLabels && (
-                    <label
-                      htmlFor={field.id}
-                      className="block text-left mb-2 text-sm font-medium"
-                      style={{
-                        color: formData.style?.textColor || '#374151',
-                      }}
-                    >
-                      {field.name}
-                      {field.required && <span className="text-red-500 ml-1">*</span>}
-                    </label>
-                  )}
-                  <input
-                    id={field.id}
-                    type={field.type === 'email' ? 'email' : 'text'}
-                    placeholder={field.placeholder || field.name}
-                    className={
-                      'w-full px-6 py-4 border text-base transition-all duration-200 focus:outline-none focus:ring-2 placeholder-gray-400 font-normal'
-                    }
-                    style={
-                      {
-                        backgroundColor:
-                          formData.style?.backgroundColor === formData.style?.textColor
-                            ? '#ffffff'
-                            : formData.style?.backgroundColor || '#ffffff',
-                        color: formData.style?.textColor || '#1f2937',
-                        borderColor: formData.style?.primaryColor
-                          ? `${formData.style.primaryColor}40`
-                          : '#e5e7eb',
-                        borderWidth: '1px',
-                        borderRadius: formData.style?.buttonRounded
-                          ? getBorderRadius(formData.style.buttonRounded as ButtonRounded)
-                          : '0.5rem',
-                        '--tw-ring-color': formData.style?.primaryColor || '#3b82f6',
-                        '--tw-ring-opacity': '0.2',
-                        '--tw-ring-offset-shadow':
-                          'var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color)',
-                        '--tw-ring-shadow':
-                          'var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color)',
-                        '--tw-ring-offset-width': '0px',
-                        '--tw-ring-offset-color': formData.style?.backgroundColor || '#ffffff',
-                      } as React.CSSProperties
-                    }
-                  />
-                </div>
-              ))}
-
-              {/* Join button */}
-              <div
-                className={
-                  formData.style?.formLayout === 'inline' ? 'flex-1 min-w-[200px]' : 'w-full'
-                }
-              >
-                <button
-                  className={cn(
-                    'w-full px-8 py-4 text-base font-semibold cursor-pointer transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-offset-2',
-                    {
-                      'bg-[--primary] text-[--primary-foreground] hover:bg-opacity-90':
-                        formData.style?.buttonVariant === 'default',
-                      'border border-[--primary] text-[--primary] hover:bg-[--primary] hover:bg-opacity-10':
-                        formData.style?.buttonVariant === 'outline',
-                      'bg-secondary text-secondary-foreground':
-                        formData.style?.buttonVariant === 'secondary',
-                      'text-[--primary] hover:bg-[--primary] hover:bg-opacity-10':
-                        formData.style?.buttonVariant === 'ghost',
-                      'text-[--primary] underline-offset-4 hover:underline p-0':
-                        formData.style?.buttonVariant === 'link',
-                    },
-                  )}
-                  style={{
-                    backgroundColor:
-                      formData.style?.buttonVariant === 'default' ||
-                      formData.style?.buttonVariant === 'secondary'
-                        ? formData.style?.buttonColor
-                        : 'transparent',
-                    color:
-                      formData.style?.buttonVariant === 'default' ||
-                      formData.style?.buttonVariant === 'secondary'
-                        ? formData.style?.buttonTextColor
-                        : formData.style?.buttonColor || formData.style?.primaryColor,
-                    borderColor:
-                      formData.style?.buttonVariant === 'outline'
-                        ? formData.style?.buttonColor
-                        : 'transparent',
-                    borderRadius: formData.style?.buttonRounded
-                      ? getBorderRadius(formData.style.buttonRounded as ButtonRounded)
-                      : '0.5rem',
-                    fontFamily: formData.style?.fontFamily || 'Inter, sans-serif',
-                    borderWidth: formData.style?.buttonVariant === 'outline' ? '1px' : '0',
-                    ...(formData.style?.buttonVariant === 'link'
-                      ? {
-                          padding: 0,
-                          height: 'auto',
-                          display: 'inline',
-                          width: 'auto',
-                        }
-                      : {}),
-                  }}
-                >
-                  {formData.style?.buttonText || 'Join Waitlist'}
-                </button>
-              </div>
-            </div>
-
-            <div className="space-y-4">
-              <p className="text-gray-500 text-base font-normal">
-                Join {formData.maxSignups ? `${formData.maxSignups.toLocaleString()}` : '1,247'}{' '}
-                others on the waitlist
-              </p>
-
-              {formData.showBranding && (
-                <div className="flex items-center justify-center gap-2 text-gray-400 text-sm">
-                  <span>Powered by</span>
-                  <span className="font-semibold text-gray-600">WaitlistNow</span>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-function setIsTesting(arg0: boolean) {
-  throw new Error('Function not implemented.');
-}
-
-function setShowConfirmation(arg0: boolean) {
-  throw new Error('Function not implemented.');
 }

@@ -25,13 +25,18 @@ export async function POST(req: NextRequest) {
       where: { externalId: userId },
     });
 
+    let email: string | undefined = undefined;
+    if (user) {
+      email = user.email;
+    } else {
+      // If user doesn't exist, get email from auth provider if possible, fallback to json.email
+      email = json.email;
+    }
+
     if (!user) {
-      // If user doesn't exist, create them (this might happen on first sign-in)
-      const email = json.email; // TODO: You might want to get this from the auth provider
       if (!email) {
         return new NextResponse('Email is required', { status: 400 });
       }
-
       user = await db.user.create({
         data: {
           externalId: userId,

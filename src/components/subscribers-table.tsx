@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { format } from 'date-fns';
 import {
@@ -119,6 +119,7 @@ export function SubscribersTable({ waitlistId }: SubscribersTableProps) {
   // Handle resend verification email
   const handleResendVerification = useCallback(
     async (email: string) => {
+      if (!toast) return;
       try {
         const response = await fetch('/api/subscribers/resend-verification', {
           method: 'POST',

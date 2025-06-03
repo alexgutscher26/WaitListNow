@@ -40,6 +40,7 @@ WaitListNow is a comprehensive SaaS platform designed to help businesses create,
 - PostgreSQL database (local or hosted)
 - Clerk account for authentication
 - (Optional) Stripe account for payment processing
+- (Optional) CDN provider (e.g., Vercel, Cloudflare) for static asset delivery
 
 ### Installation
 
@@ -138,6 +139,45 @@ WaitListNow/
 Deploy your waitlist application to Vercel with one click:
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Falexgutscher26%2FWaitListNow&env=DATABASE_URL,NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY,CLERK_SECRET_KEY,NEXT_PUBLIC_APP_URL,STRIPE_SECRET_KEY,NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY&project-name=waitlistnow&repository-name=waitlistnow)
+
+## Environment Variables
+
+Create a `.env.local` file in the root directory and add the following variables:
+
+```bash
+# Database
+DATABASE_URL="postgresql://user:password@localhost:5432/waitlistnow?schema=public"
+
+# Clerk Authentication
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=your_publishable_key
+CLERK_SECRET_KEY=your_secret_key
+
+# App URL
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+NEXT_PUBLIC_APP_DOMAIN=localhost
+
+# CDN Configuration (optional)
+NEXT_PUBLIC_CDN_URL=
+VERCEL_GIT_COMMIT_SHA=
+
+# Stripe (optional)
+STRIPE_SECRET_KEY=your_stripe_secret_key
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=your_stripe_publishable_key
+
+# PostHog Analytics (optional)
+NEXT_PUBLIC_POSTHOG_KEY=your_posthog_key
+NEXT_PUBLIC_POSTHOG_HOST=https://us.i.posthog.com
+```
+
+### CDN Configuration
+
+For optimal performance, configure a CDN to serve your static assets:
+
+1. Set up your CDN provider (Vercel, Cloudflare, etc.)
+2. Configure your CDN to point to your application's domain
+3. Set the `NEXT_PUBLIC_CDN_URL` environment variable to your CDN URL
+
+For detailed CDN setup instructions, see [CDN Setup Guide](./docs/CDN_SETUP.md).
 
 ## 🤝 Contributing
 

@@ -5,10 +5,76 @@ generator client {
 }
 
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
-  directUrl = env("DATABASE_URL")
-  extensions = [pgcrypto, pg_trgm]
+  provider   = "postgresql"
+  url        = env("DATABASE_URL")
+  directUrl  = env("DATABASE_URL")
+  extensions = [pg_trgm, pgcrypto]
+}
+
+model User {
+  id                      String       @id @default(cuid())
+  externalId              String?      @unique
+  plan                    Plan         @default(FREE)
+  email                   String       @unique
+  apiKey                  String       @unique @default(cuid())
+  createdAt               DateTime     @default(now())
+  updatedAt               DateTime     @updatedAt
+  role                    UserRole     @default(USER)
+  onboardingComplete      Boolean      @default(false)
+  onboardingCompletedAt   DateTime?
+  bio                     String?
+  company                 String?
+  name                    String?
+  notificationPreferences Json?        @default("{}")
+  preferences             Json?        @default("{}")
+  timezone                String       @default("UTC")
+  website                 String?
+  waitlistPreferences     Json?        @map("waitlist_preferences") @default("{\"maxSubscribers\": 1000, \"emailNotifications\": true, \"defaultWaitlistLimit\": 1, \"autoApproveSubscribers\": true, \"requireEmailVerification\": false}")
+  subscribers             Subscriber[]
+  waitlists               Waitlist[]
+
+  @@index([email, apiKey])
+}
+
+model Waitlist {
+  id              String         @id @default(cuid())
+  name            String
+  slug            String         @unique
+  description     String?
+  websiteUrl      String?
+  redirectUrl     String?
+  userId          String
+  status          WaitlistStatus @default(DRAFT)
+  customFields    Json?
+  style           Json?
+  settings        Json?
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  subscriberCount Int            @default(0)
+  subscribers     Subscriber[]
+  user            User           @relation(fields: [userId], references: [id])
+
+  @@index([slug, userId])
+}
+
+model Subscriber {
+  id                String           @id @default(cuid())
+  email             String
+  name              String?
+  waitlistId        String
+  userId            String
+  customFields      Json?
+  referralCode      String?          @unique
+  referredBy        String?
+  status            SubscriberStatus @default(PENDING)
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+  verificationToken String?          @unique
+  user              User             @relation(fields: [userId], references: [id])
+  waitlist          Waitlist         @relation(fields: [waitlistId], references: [id])
+
+  @@unique([email, waitlistId])
+  @@index([referralCode])
 }
 
 enum UserRole {
@@ -16,67 +82,11 @@ enum UserRole {
   ADMIN
 }
 
-model User {
-  id                  String          @id @default(cuid())
-  externalId          String?         @unique
-  plan                Plan            @default(FREE)
-  email               String          @unique
-  apiKey              String          @unique @default(cuid())
-  role                UserRole        @default(USER)
-  onboardingComplete  Boolean         @default(false)
-  onboardingCompletedAt DateTime?
-  createdAt           DateTime        @default(now())
-  updatedAt           DateTime        @updatedAt
-  waitlists           Waitlist[]
-  subscribers         Subscriber[]
-
-  @@index([email, apiKey])
-}
-
-model Waitlist {
-  id            String       @id @default(cuid())
-  name          String
-  slug          String      @unique
-  description   String?
-  websiteUrl    String?
-  redirectUrl   String?
-  userId       String
-  user          User        @relation(fields: [userId], references: [id])
-  status       WaitlistStatus @default(DRAFT)
-  customFields Json?
-  style        Json?
-  settings     Json?
-  subscribers     Subscriber[]
-  subscriberCount Int         @default(0)
-  createdAt       DateTime    @default(now())
-  updatedAt       DateTime    @updatedAt
-
-  @@index([slug, userId])
-}
-
-model Subscriber {
-  id            String          @id @default(cuid())
-  email         String
-  name          String?
-  waitlistId    String
-  waitlist      Waitlist       @relation(fields: [waitlistId], references: [id])
-  userId        String
-  user          User           @relation(fields: [userId], references: [id])
-  customFields  Json?
-  referralCode  String?        @unique
-  referredBy    String?
-  status       SubscriberStatus @default(PENDING)
-  verificationToken String?        @unique
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
-
-  @@unique([email, waitlistId])
-  @@index([referralCode])
-}
-
 enum Plan {
   FREE
   PRO
+  STARTER
+  GROWTH
 }
 
 enum WaitlistStatus {

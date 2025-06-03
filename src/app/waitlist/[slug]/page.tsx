@@ -1,3 +1,4 @@
+import React from 'react';
 import { notFound } from 'next/navigation';
 import { db } from '@/lib/db';
 import { WaitlistWidget } from '@/components/waitlist-widget';
@@ -93,19 +94,9 @@ export default async function WaitlistPage({ params }: WaitlistPageProps) {
       showBranding?: boolean;
     };
 
-    type WaitlistWithStyle = {
-      id: string;
-      name: string;
-      description: string | null;
-      slug: string;
-      websiteUrl: string | null;
-      redirectUrl: string | null;
-      status: 'DRAFT' | 'ACTIVE' | 'PAUSED' | 'ARCHIVED';
-      style: WaitlistStyle;
-      settings: any;
-      _count: {
-        subscribers: number;
-      };
+    // Settings type definition
+    type WaitlistSettings = {
+      [key: string]: unknown;
     };
 
     // Get the style and settings objects with type safety
@@ -114,11 +105,11 @@ export default async function WaitlistPage({ params }: WaitlistPageProps) {
         ? (waitlist.style as WaitlistStyle)
         : {};
 
-    const settings =
+    const settings: WaitlistSettings =
       waitlist.settings &&
       typeof waitlist.settings === 'object' &&
       !Array.isArray(waitlist.settings)
-        ? waitlist.settings
+        ? (waitlist.settings as WaitlistSettings)
         : {};
 
     const showBranding = style.showBranding !== false;

@@ -33,6 +33,21 @@ const log = (...args: any[]) => isDev && console.log('[Waitlist Subscribers API]
 // GET /api/waitlists/[id]/subscribers - Get subscribers for a specific waitlist
 // POST /api/waitlists/[id]/subscribers - Add a new subscriber to a waitlist
 export async function POST(req: NextRequest, { params }: { params: { id: string } }) {
+  const apiKey = req.headers.get('authorization')?.replace('Bearer ', '');
+
+  // Replace this with your actual API key validation logic
+  if (!apiKey || !(await isValidApiKey(apiKey, params.id))) {
+    return new Response(JSON.stringify({ error: 'Unauthorized: API key required' }), {
+      status: 401,
+      headers: {
+        'Content-Type': 'application/json',
+        ...(apiKey ? { 'Authorization': `Bearer ${apiKey}` } : {}),
+      },
+    });
+  }
+
+  console.log('Received Authorization header:', req.headers.get('authorization'));
+
   try {
     // Get the waitlist ID from the URL parameters
     const waitlistId = params.id;
@@ -241,3 +256,23 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
     );
   }
 }
+
+async function isValidApiKey(apiKey: string, waitlistId: string): Promise<boolean> {
+  // Find the waitlist and its owner
+  const waitlist = await db.waitlist.findUnique({
+    where: { id: waitlistId },
+    select: { userId: true }
+  });
+  if (!waitlist) return false;
+
+  // Find the user and check the API key
+  const user = await db.user.findUnique({
+    where: { id: waitlist.userId },
+    select: { apiKey: true }
+  });
+  if (!user) return false;
+
+  // Compare the provided API key with the user's stored API key
+  return user.apiKey === apiKey;
+}
+

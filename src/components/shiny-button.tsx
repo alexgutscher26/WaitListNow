@@ -1,9 +1,9 @@
 'use client';
 
+import React, { AnchorHTMLAttributes } from 'react';
 import { cn } from '@/utils';
 import { ArrowRight } from 'lucide-react';
 import Link from 'next/link';
-import { AnchorHTMLAttributes } from 'react';
 
 /**
  * Renders a styled button component with an arrow icon and interactive effects.

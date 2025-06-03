@@ -1,15 +1,13 @@
 'use client';
 
 import { Command as CommandPrimitive } from 'cmdk';
-import { Search, X, ArrowUp, ArrowDown, Loader2 } from 'lucide-react';
+import { Search, X, ArrowDown, Loader2 } from 'lucide-react'; 
 import * as React from 'react';
 
 // Extend the HTMLAttributes interface to include cmdk-input-wrapper
-declare global {
-  namespace React {
-    interface HTMLAttributes<T> extends React.AriaAttributes, React.DOMAttributes<T> {
-      'cmdk-input-wrapper'?: string;
-    }
+declare module 'react' {
+  interface HTMLAttributes<T> extends React.AriaAttributes, React.DOMAttributes<T> {
+    'cmdk-input-wrapper'?: string;
   }
 }
 
@@ -132,7 +130,7 @@ const CommandInput = React.forwardRef<
   return (
     <div
       className="flex items-center border-b px-3 relative"
-      cmdk-input-wrapper=""
+      data-cmdk-input-wrapper=""
     >
       {loading ? (
         <Loader2 className="mr-2 h-4 w-4 shrink-0 animate-spin text-muted-foreground" />

@@ -1,6 +1,6 @@
 'use client';
 
-import { ReactNode } from 'react';
+import React, { ReactNode } from 'react';
 import { Button } from './ui/button';
 import { ArrowLeft } from 'lucide-react';
 import { Heading } from './heading';

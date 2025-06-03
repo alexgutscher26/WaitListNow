@@ -2,7 +2,7 @@ import { AppType } from '@/server';
 import { hc } from 'hono/client';
 import { HTTPException } from 'hono/http-exception';
 import { ContentfulStatusCode } from 'hono/utils/http-status';
-import superjson from 'superjson';
+import { parse, stringify } from 'superjson';
 
 /**
  * Determines the base URL based on the environment and deployment context.
@@ -46,7 +46,7 @@ export const baseClient = hc<AppType>(getBaseUrl(), {
       const text = await response.text();
 
       if (contentType === 'application/superjson') {
-        return superjson.parse(text);
+        return parse(text);
       }
 
       try {
@@ -106,19 +106,22 @@ function getHandler(obj: object, ...keys: string[]) {
     throw new Error('The specified path does not point to a function');
   }
 
-  return current as (...args: any[]) => any;
+  return current as (...args: unknown[]) => unknown;
 }
 
 /**
  * Serializes an object using SuperJSON for its values.
  */
-function serializeWithSuperJSON(data: any): any {
+function serializeWithSuperJSON<T>(data: T): T {
   if (typeof data !== 'object' || data === null) {
     return data;
   }
+  if (data === null || typeof data !== 'object') {
+    return data;
+  }
   return Object.fromEntries(
-    Object.entries(data).map(([key, value]) => [key, superjson.stringify(value)]),
-  );
+    Object.entries(data).map(([key, value]) => [key, stringify(value)]),
+  ) as T;
 }
 
 /**
@@ -131,33 +134,38 @@ function serializeWithSuperJSON(data: any): any {
  * @param target - The target object to be proxied.
  * @param path - An optional array representing the current path in the object hierarchy.
  */
-function createProxy(target: any, path: string[] = []): any {
+function createProxy<T extends object>(target: T, path: string[] = []): T {
   return new Proxy(target, {
-    get(target, prop, receiver) {
+    get(target: T, prop: string | symbol, receiver: unknown) {
       if (typeof prop === 'string') {
         const newPath = [...path, prop];
 
         if (prop === '$get') {
-          return async (...args: any[]) => {
+          return async (args: unknown) => {
             const executor = getHandler(baseClient, ...newPath);
-            const serializedQuery = serializeWithSuperJSON(args[0]);
+            const serializedQuery = serializeWithSuperJSON(args);
             return executor({ query: serializedQuery });
           };
         }
 
         if (prop === '$post') {
-          return async (...args: any[]) => {
+          return async (args: unknown) => {
             const executor = getHandler(baseClient, ...newPath);
-            const serializedJson = serializeWithSuperJSON(args[0]);
+            const serializedJson = serializeWithSuperJSON(args);
             return executor({ json: serializedJson });
           };
         }
 
-        return createProxy(target[prop], newPath);
+        // Safe property access with type assertion
+        const value = (target as Record<string, unknown>)[prop];
+        if (value && typeof value === 'object') {
+          return createProxy(value as object, newPath);
+        }
+        return value;
       }
       return Reflect.get(target, prop, receiver);
     },
-  });
+  }) as T;
 }
 
 export const client: typeof baseClient = createProxy(baseClient);

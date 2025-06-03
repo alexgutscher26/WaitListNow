@@ -1,5 +1,6 @@
 'use client';
 
+import React from 'react';
 import Link from 'next/link';
 import { MaxWidthWrapper } from './max-width-wrapper';
 import { SignOutButton, useUser } from '@clerk/nextjs';
@@ -11,7 +12,7 @@ import { ArrowRight } from 'lucide-react';
  * Uses Clerk's useUser hook to get the current user on the client side.
  */
 export const NavbarClient = () => {
-  const { isLoaded, isSignedIn, user } = useUser();
+  const { isLoaded, isSignedIn } = useUser();
 
   if (!isLoaded) {
     // You can return a loading state or skeleton here

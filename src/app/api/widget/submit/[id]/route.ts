@@ -34,7 +34,7 @@ export async function POST(
       select: {
         id: true,
         settings: true,
-        requireEmailVerification: true,
+        userId: true,
       },
     });
 
@@ -44,6 +44,10 @@ export async function POST(
         { status: 404 }
       );
     }
+
+    // Parse settings and get email verification flag
+    const settings = typeof waitlist.settings === 'string' ? JSON.parse(waitlist.settings) : waitlist.settings || {};
+    const requireEmailVerification = settings.emailVerification === true;
 
     // Parse and validate request body
     const body = await request.json();
@@ -80,17 +84,36 @@ export async function POST(
         email,
         name: name || null,
         waitlistId: waitlist.id,
-        fields: fields || {},
+        userId: waitlist.userId,
+        customFields: fields || {},
         referralCode: referralCode || null,
-        isVerified: !waitlist.requireEmailVerification,
+        status: requireEmailVerification ? 'PENDING' : 'VERIFIED',
       },
     });
 
-    // TODO: Send verification email if required
-    // if (waitlist.requireEmailVerification) {
-    //   await sendVerificationEmail(subscriber);
-    // }
-
+    if (requireEmailVerification) {
+      // Generate a verification token
+      const verificationToken = uuidv4();
+      // Update subscriber with verification token in customFields
+      await db.subscriber.update({
+        where: { id: subscriber.id },
+        data: {
+          customFields: {
+            ...((typeof subscriber.customFields === 'object' && subscriber.customFields !== null) ? subscriber.customFields : {}),
+            verificationToken,
+          },
+        },
+      });
+      // Send verification email
+      await fetch(`${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/api/verify-email`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: subscriber.email,
+          verificationToken,
+        }),
+      });
+    }
 
     // Set CORS headers
     const headers = {
@@ -103,7 +126,7 @@ export async function POST(
       { 
         success: true, 
         message: 'Successfully joined the waitlist!',
-        requiresVerification: waitlist.requireEmailVerification
+        requiresVerification: requireEmailVerification
       },
       { headers }
     );

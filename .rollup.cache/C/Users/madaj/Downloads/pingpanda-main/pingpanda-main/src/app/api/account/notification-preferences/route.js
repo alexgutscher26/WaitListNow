@@ -60,7 +60,7 @@ function parseNotificationPreferences(prefs) {
 /**
  * Fetches and returns the user's notification preferences based on authentication.
  *
- * The function first authenticates the user and retrieves their ID. It then attempts to find the user by either their internal or external ID.
+ * The function first authenticates the user to retrieve their ID. It then attempts to find the user by either their internal or external ID.
  * If the user is found, it parses and returns their notification preferences. If not, it returns default preferences. Errors during this process
  * are caught and logged, with an appropriate error message returned to the client.
  *

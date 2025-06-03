@@ -16,6 +16,8 @@ import { CheckIcon } from 'lucide-react';
  * This component displays a modal indicating the success of a payment upgrade to the PRO plan.
  * It fetches the user's current plan status and shows a loading state if the plan is still being processed.
  * Once the plan upgrade is confirmed, it displays a success message with an image and a button to redirect to the dashboard.
+ *
+ * @returns A React component that renders the payment success modal.
  */
 export const PaymentSuccessModal = () => {
   const router = useRouter();

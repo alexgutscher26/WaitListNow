@@ -86,6 +86,17 @@ import { getWaitlistStats } from '@/app/actions/waitlist';
 import { ExportButton } from '@/components/export-button';
 
 // Enhanced stats with growth indicators and more detailed metrics
+/**
+ * Retrieves comprehensive statistics related to waitlists and activities.
+ *
+ * This function fetches waitlist stats, processes recent activities into a standardized format,
+ * calculates average wait time, computes monthly growth, and determines the top waitlists by growth.
+ * It handles errors gracefully by returning default empty stats in case of failure.
+ *
+ * @returns An object containing various statistics including total subscribers, new subscribers this week,
+ *          growth rate, active and completed waitlists, average wait time, recent activities, and
+ *          top waitlists sorted by growth.
+ */
 const getStats = async (): Promise<{
   totalSubscribers: number;
   newThisWeek: number;
@@ -465,14 +476,13 @@ const StatCard = ({
 );
 
 /**
- * Renders the main dashboard page for a user, displaying their waitlists and related statistics.
+ * Renders the main dashboard page for a user.
  *
- * This function performs several key tasks:
- * 1. Retrieves the current user information and checks if they are authenticated.
- * 2. Redirects to the sign-in page if the user is not logged in.
- * 3. Determines if the user has premium access and whether to display an upgrade banner based on query parameters.
- * 4. Fetches the user's recent waitlists with subscriber counts.
- * 5. Renders various cards, tables, and components displaying statistics, recent activity, and waitlist details.
+ * This component fetches and displays various statistics, settings, and actions related to the user's waitlists.
+ * It includes sections for quick actions, system status (admin-only), and the list of user's waitlists.
+ * The component also checks if the user is an admin to display additional administrative information.
+ *
+ * @returns {JSX.Element} - The JSX representation of the dashboard page.
  */
 export default async function Page({ searchParams = {} }: PageProps) {
   const stats = await getStats();

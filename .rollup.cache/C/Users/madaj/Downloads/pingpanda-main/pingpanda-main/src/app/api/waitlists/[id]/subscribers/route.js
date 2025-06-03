@@ -3,6 +3,9 @@ import { NextResponse } from 'next/server';
 import { getAuth } from '@clerk/nextjs/server';
 import { db } from '@/lib/db';
 import { z } from 'zod';
+/**
+ * Returns waitlist settings object or an empty object if input is invalid.
+ */
 function getWaitlistSettings(settings) {
   if (typeof settings !== 'object' || settings === null) {
     return {};
@@ -27,6 +30,18 @@ var log = function () {
 };
 // GET /api/waitlists/[id]/subscribers - Get subscribers for a specific waitlist
 // POST /api/waitlists/[id]/subscribers - Add a new subscriber to a waitlist
+/**
+ * Handles a POST request to subscribe an email to a waitlist.
+ *
+ * This function processes a JSON request body, validates it against a schema,
+ * checks if the waitlist exists and is active, and whether duplicates are allowed.
+ * It then creates a subscriber record and updates the waitlist's subscriber count.
+ *
+ * @param req_1 - The initial request object.
+ * @param _a - Additional parameters from the Next.js API route context.
+ * @returns A Promise that resolves to a NextResponse containing either the created subscriber or an error message.
+ * @throws Will throw an error if there is a validation issue or internal server error, which is caught and logged.
+ */
 export function POST(req_1, _a) {
   return __awaiter(this, arguments, void 0, function (req, _b) {
     var waitlistId,
@@ -145,6 +160,19 @@ export function POST(req_1, _a) {
     });
   });
 }
+/**
+ * Retrieves subscribers for a specific waitlist based on query parameters.
+ *
+ * This function handles pagination, filtering by status and search terms, and returns the results in JSON format.
+ * It first authenticates the user, then checks if the waitlist belongs to the user. It constructs a where clause
+ * based on provided filters and fetches the total count of subscribers matching the criteria. It then retrieves
+ * the paginated list of subscribers and formats the response with pagination details.
+ *
+ * @param req_1 - The incoming request object.
+ * @param _a - An object containing route parameters.
+ * @returns A JSON response containing the list of subscribers and pagination information.
+ * @throws Error If authentication fails, if the user or waitlist is not found, or if an internal server error occurs.
+ */
 export function GET(req_1, _a) {
   return __awaiter(this, arguments, void 0, function (req, _b) {
     var userId,

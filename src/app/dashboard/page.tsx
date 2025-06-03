@@ -83,6 +83,18 @@ import { getWaitlistStats } from '@/app/actions/waitlist';
 import { ExportButton } from '@/components/export-button';
 
 // Enhanced stats with growth indicators and more detailed metrics
+/**
+ * Retrieves comprehensive statistics related to waitlists, subscribers, and recent activities.
+ *
+ * This function aggregates data from various sources including database queries and external API calls,
+ * processes it to calculate metrics such as growth rates, average wait times, and recent activity logs.
+ * It handles different types of activities by mapping them into specific formats and sorts the waitlists
+ * based on their growth. Error handling ensures that in case of failures, default values are returned.
+ *
+ * @returns An object containing statistics including total subscribers, new subscribers this week,
+ *          growth rate, active and completed waitlists, average wait time, monthly growth, recent activities,
+ *          and top performing waitlists.
+ */
 const getStats = async (): Promise<{
   totalSubscribers: number;
   newThisWeek: number;
@@ -412,9 +424,9 @@ interface StatCardProps {
 /**
  * Renders a stat card component with title, value, icon, and optional trend indicators.
  *
- * This component displays a card containing a title, a main value, an icon,
+ * This functional component displays a card containing a title, a main value, an icon,
  * and optionally shows a trend indicator if both `trend` and `trendValue` are provided.
- * The trend can be either 'up' or 'down', affecting the styling and icon used.
+ * The trend can be either 'up' or 'down', which affects the styling and icon used.
  */
 const StatCard = ({
   title,
@@ -486,14 +498,14 @@ const ActivityItem = ({ activity }: { activity: Activity }) => {
 };
 
 /**
- * Renders the main dashboard page for a user, displaying their waitlists and related statistics.
+ * Renders the main dashboard page for authenticated users.
  *
- * This function performs several key tasks:
- * 1. Retrieves the current user information and checks if they are authenticated.
- * 2. Redirects to the sign-in page if the user is not logged in.
- * 3. Determines if the user has premium access and whether to display an upgrade banner based on query parameters.
- * 4. Fetches the user's recent waitlists with subscriber counts.
- * 5. Renders various cards, tables, and components displaying statistics, recent activity, and waitlist details.
+ * This component fetches user data and waitlists, then displays various sections
+ * including system status, quick actions, and a table of the user's waitlists.
+ * It conditionally renders admin-only content if the user is an admin.
+ *
+ * @param {Object} props - Component props.
+ * @returns {JSX.Element} The JSX representing the dashboard page.
  */
 export default async function Page({ searchParams = {} }: PageProps) {
   const stats = await getStats();

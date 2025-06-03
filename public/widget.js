@@ -16,7 +16,9 @@
             n = Symbol.for('react.fragment');
           function l(e, n, r) {
             var l = null;
-            if ((void 0 !== r && (l = String(r)), void 0 !== n.key && (l = String(n.key)), 'key' in n))
+            if (
+              (void 0 !== r && (l = String(r)), void 0 !== n.key && (l = String(n.key)), 'key' in n)
+            )
               for (var a in ((r = {}), n)) 'key' !== a && (r[a] = n[a]);
             else r = n;
             return (
@@ -428,7 +430,7 @@
                   l +
                   (null == o.key || (n && n.key === o.key)
                     ? ''
-                    : (String(o.key)).replace(C, '$&/') + '/') +
+                    : String(o.key).replace(C, '$&/') + '/') +
                   f),
                 (o = _(u.type, s, void 0, 0, 0, u.props))),
               r.push(o)),
@@ -1784,7 +1786,7 @@
           : 'number' != typeof n || 0 === n || Et.has(t)
             ? 'float' === t
               ? (e.cssFloat = n)
-              : (e[t] = (String(n)).trim())
+              : (e[t] = String(n).trim())
             : (e[t] = n + 'px');
     }
     function zt(e, t, n) {
@@ -2228,7 +2230,7 @@
       mn = { Alt: 'altKey', Control: 'ctrlKey', Meta: 'metaKey', Shift: 'shiftKey' };
     function hn(e) {
       var t = this.nativeEvent;
-      return t.getModifierState ? t.getModifierState(e) : Boolean(e = mn[e]) && Boolean(t[e]);
+      return t.getModifierState ? t.getModifierState(e) : Boolean((e = mn[e])) && Boolean(t[e]);
     }
     function gn() {
       return hn;
@@ -2469,7 +2471,8 @@
               ? tr(e, t.parentNode)
               : 'contains' in e
                 ? e.contains(t)
-                : Boolean(e.compareDocumentPosition) && Boolean(16 & e.compareDocumentPosition(t)))))
+                : Boolean(e.compareDocumentPosition) &&
+                  Boolean(16 & e.compareDocumentPosition(t)))))
       );
     }
     function nr(e) {
@@ -6020,9 +6023,11 @@
                     l = a.memoizedProps;
                 }
               (e[Re] = t),
-                (e = Boolean(e.nodeValue === n ||
-                  (null !== l && !0 === l.suppressHydrationWarning) ||
-                  Zc(e.nodeValue, n))) || dl(t);
+                (e = Boolean(
+                  e.nodeValue === n ||
+                    (null !== l && !0 === l.suppressHydrationWarning) ||
+                    Zc(e.nodeValue, n),
+                )) || dl(t);
             } else ((e = ad(e).createTextNode(l))[Re] = t), (t.stateNode = e);
           }
           return lu(t), null;
@@ -6460,7 +6465,8 @@
                 (l = m),
                 void (null != p
                   ? kt(e, Boolean(n), p, !1)
-                  : Boolean(l) != Boolean(n) && (null != t ? kt(e, Boolean(n), t, !0) : kt(e, Boolean(n), n ? [] : '', !1)))
+                  : Boolean(l) != Boolean(n) &&
+                    (null != t ? kt(e, Boolean(n), t, !0) : kt(e, Boolean(n), n ? [] : '', !1)))
               );
             case 'textarea':
               for (u in ((m = p = null), n))
@@ -7091,7 +7097,7 @@
                       u = s.stateNode;
                       var f = s.memoizedProps.style,
                         p = null != f && f.hasOwnProperty('display') ? f.display : null;
-                      u.style.display = null == p || 'boolean' == typeof p ? '' : (String(p)).trim();
+                      u.style.display = null == p || 'boolean' == typeof p ? '' : String(p).trim();
                     }
                   } catch (e) {
                     fc(s, s.return, e);

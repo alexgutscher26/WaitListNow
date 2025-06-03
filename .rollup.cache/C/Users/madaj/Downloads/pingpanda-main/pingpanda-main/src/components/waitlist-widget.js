@@ -8,6 +8,21 @@ import { Label } from '@/components/ui/label';
 import { useToast } from '@/components/ui/use-toast';
 import { cn } from '@/lib/utils';
 import styles from './waitlist-widget.module.css';
+/**
+ * A React component that renders a waitlist widget allowing users to sign up for a waitlist.
+ *
+ * This component manages user input for email and name, handles form submission, and displays success or error messages using toast notifications.
+ * It supports customization through various props such as style options, API key, branding visibility, and more.
+ * The component uses React hooks like useState for managing state and useToast for displaying messages.
+ *
+ * @param {object} _a - Props destructuring.
+ * @param {string} _a.waitlistId - The ID of the waitlist to subscribe to.
+ * @param {object} [_a.style] - Optional custom styles for the widget.
+ * @param {string} [_a.apiKey] - Optional API key for authentication.
+ * @param {boolean} [_a.showBranding=true] - Whether to show branding information.
+ * @param {string} [_a.className=''] - Additional CSS classes for styling.
+ * @returns {JSX.Element} A React element representing the waitlist widget.
+ */
 export function WaitlistWidget(_a) {
   var _this = this;
   var waitlistId = _a.waitlistId,

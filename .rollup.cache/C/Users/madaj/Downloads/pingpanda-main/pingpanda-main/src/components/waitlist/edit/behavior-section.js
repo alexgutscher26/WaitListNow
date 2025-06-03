@@ -8,6 +8,14 @@ import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Copy, Check } from 'lucide-react';
+/**
+ * Renders a behavior section component for configuring waitlist settings.
+ *
+ * This function manages various tabs for different configuration options such as confirmation, verification,
+ * referrals, and embedding. It uses React hooks to manage the state of active tab and copy status.
+ * The component provides UI elements for users to configure settings like email verification, referral
+ * tracking, and embedding code. It also includes functionality to copy the embed code to clipboard.
+ */
 export function BehaviorSection(_a) {
   var formData = _a.formData,
     onSettingsChange = _a.onSettingsChange;

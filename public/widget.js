@@ -1899,7 +1899,7 @@
         ['xHeight', 'x-height'],
       ]),
       Tt =
-        /^[\u0000-\u001F ]*j[\r\n\t]*a[\r\n\t]*v[\r\n\t]*a[\r\n\t]*s[\r\n\t]*c[\r\n\t]*r[\r\n\t]*i[\r\n\t]*p[\r\n\t]*t[\r\n\t]*:/i;
+        /^[\u0000-\u001F ]*j[\r\n\t]*a[\r\n\t]*v[\r\n\t]*a[\r\n\t]*s[\r\n\t]*c[\r\n\t]*r[\r\n\t]*i[\r\n\t]*p[\r\n\t]*t[\r\n\t]*:/iu;
     function Lt(e) {
       return Tt.test(String(e))
         ? "javascript:throw new Error('React has blocked a javascript: URL as a security precaution.')"
@@ -9234,7 +9234,7 @@
       0 !== o.length && e.push({ event: t, listeners: o });
     }
     var Kc = /\r\n?/g,
-      Yc = /\u0000|\uFFFD/g;
+      Yc = /\u0000|\uFFFD/gu;
     function Xc(e) {
       return ('string' == typeof e ? e : String(e)).replace(Kc, '\n').replace(Yc, '');
     }

@@ -51,7 +51,7 @@ export function POST(req_1, _a) {
                     }
                     settings = getWaitlistSettings(waitlist.settings);
                     allowDuplicates = settings.allowDuplicates === true;
-                    if (!!allowDuplicates) return [3 /*break*/, 4];
+                    if (Boolean(allowDuplicates)) return [3 /*break*/, 4];
                     return [4 /*yield*/, db.subscriber.findFirst({
                             where: {
                                 email: body.email,

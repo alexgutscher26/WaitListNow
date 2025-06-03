@@ -42,7 +42,7 @@ export function useWaitlistForm(initialValues) {
         // Clear error when user starts typing
         if (errors[name]) {
             setErrors(function (prev) {
-                var _a = prev, _b = name, _ = _a[_b], rest = __rest(_a, [typeof _b === "symbol" ? _b : _b + ""]);
+                var _a = prev, _b = name, _ = _a[_b], rest = __rest(_a, [typeof _b === "symbol" ? _b : String(_b)]);
                 return rest;
             });
         }

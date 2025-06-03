@@ -138,7 +138,7 @@ export function PUT(request) {
                         })];
                 case 4:
                     user = _a.sent();
-                    if (!!user) return [3 /*break*/, 11];
+                    if (Boolean(user)) return [3 /*break*/, 11];
                     return [4 /*yield*/, db.user.findFirst({
                             where: { externalId: userId },
                         })];

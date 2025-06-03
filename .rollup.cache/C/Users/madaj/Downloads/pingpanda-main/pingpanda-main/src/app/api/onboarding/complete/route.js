@@ -52,7 +52,7 @@ export function POST(req) {
                         })];
                 case 3:
                     user = _c.sent();
-                    if (!!user) return [3 /*break*/, 8];
+                    if (Boolean(user)) return [3 /*break*/, 8];
                     log('User not found, creating new user with externalId:', userId);
                     _c.label = 4;
                 case 4:

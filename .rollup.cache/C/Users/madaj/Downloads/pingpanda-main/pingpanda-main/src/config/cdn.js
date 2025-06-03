@@ -21,6 +21,6 @@ export var getCdnUrl = function (path) {
 export var CDN_URL = cdnUrl;
 // Export a function to check if CDN is enabled
 export var isCdnEnabled = function () {
-    return isProduction && !!cdnUrl;
+    return isProduction && Boolean(cdnUrl);
 };
 //# sourceMappingURL=cdn.js.map

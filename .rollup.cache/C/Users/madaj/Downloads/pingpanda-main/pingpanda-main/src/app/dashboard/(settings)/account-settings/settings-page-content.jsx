@@ -392,7 +392,7 @@ var AccountSettingsContent = function () {
                         })];
                 case 2:
                     response = _a.sent();
-                    if (!!response.ok) return [3 /*break*/, 4];
+                    if (Boolean(response.ok)) return [3 /*break*/, 4];
                     return [4 /*yield*/, response.json().catch(function () { return ({}); })];
                 case 3:
                     errorData = _a.sent();

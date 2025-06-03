@@ -73,7 +73,7 @@ export function GET() {
                     dbUser = userByEmail;
                     _e.label = 7;
                 case 7:
-                    if (!!dbUser) return [3 /*break*/, 9];
+                    if (Boolean(dbUser)) return [3 /*break*/, 9];
                     return [4 /*yield*/, db.user.findMany({
                             select: { id: true, email: true, createdAt: true },
                             take: 10,

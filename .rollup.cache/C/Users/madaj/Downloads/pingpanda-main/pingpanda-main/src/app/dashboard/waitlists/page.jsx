@@ -40,7 +40,7 @@ function deleteWaitlist(id) {
                     })];
                 case 1:
                     res = _a.sent();
-                    if (!!res.ok) return [3 /*break*/, 3];
+                    if (Boolean(res.ok)) return [3 /*break*/, 3];
                     return [4 /*yield*/, res.json()];
                 case 2:
                     error = _a.sent();
@@ -71,7 +71,7 @@ export default function WaitlistsPage() {
                         })];
                     case 1:
                         res = _a.sent();
-                        if (!!res.ok) return [3 /*break*/, 3];
+                        if (Boolean(res.ok)) return [3 /*break*/, 3];
                         return [4 /*yield*/, res.text()];
                     case 2:
                         errorText = _a.sent();
@@ -136,7 +136,7 @@ export default function WaitlistsPage() {
                         })];
                     case 1:
                         response = _c.sent();
-                        if (!!response.ok) return [3 /*break*/, 3];
+                        if (Boolean(response.ok)) return [3 /*break*/, 3];
                         return [4 /*yield*/, response.json()];
                     case 2:
                         error_1 = _c.sent();

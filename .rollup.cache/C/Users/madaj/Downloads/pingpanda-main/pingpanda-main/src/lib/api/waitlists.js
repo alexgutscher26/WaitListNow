@@ -11,7 +11,7 @@ export function getWaitlists() {
                 case 0: return [4 /*yield*/, fetch(API_URL)];
                 case 1:
                     response = _a.sent();
-                    if (!!response.ok) return [3 /*break*/, 3];
+                    if (Boolean(response.ok)) return [3 /*break*/, 3];
                     return [4 /*yield*/, response.json()];
                 case 2:
                     error = _a.sent();
@@ -38,7 +38,7 @@ export function createWaitlist(data) {
                     })];
                 case 1:
                     response = _a.sent();
-                    if (!!response.ok) return [3 /*break*/, 3];
+                    if (Boolean(response.ok)) return [3 /*break*/, 3];
                     return [4 /*yield*/, response.json()];
                 case 2:
                     error = _a.sent();
@@ -65,7 +65,7 @@ export function updateWaitlist(id, data) {
                     })];
                 case 1:
                     response = _a.sent();
-                    if (!!response.ok) return [3 /*break*/, 3];
+                    if (Boolean(response.ok)) return [3 /*break*/, 3];
                     return [4 /*yield*/, response.json()];
                 case 2:
                     error = _a.sent();
@@ -88,7 +88,7 @@ export function deleteWaitlist(id) {
                     })];
                 case 1:
                     response = _a.sent();
-                    if (!!response.ok) return [3 /*break*/, 3];
+                    if (Boolean(response.ok)) return [3 /*break*/, 3];
                     return [4 /*yield*/, response.json()];
                 case 2:
                     error = _a.sent();

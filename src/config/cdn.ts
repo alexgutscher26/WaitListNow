@@ -28,5 +28,5 @@ export const CDN_URL = cdnUrl;
 
 // Export a function to check if CDN is enabled
 export const isCdnEnabled = (): boolean => {
-  return isProduction && !!cdnUrl;
+  return isProduction && Boolean(cdnUrl);
 };

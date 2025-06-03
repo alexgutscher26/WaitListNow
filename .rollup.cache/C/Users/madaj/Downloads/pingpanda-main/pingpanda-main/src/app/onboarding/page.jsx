@@ -512,7 +512,7 @@ export default function ImprovedOnboarding() {
                         })];
                 case 2:
                     response = _j.sent();
-                    if (!!response.ok) return [3 /*break*/, 4];
+                    if (Boolean(response.ok)) return [3 /*break*/, 4];
                     return [4 /*yield*/, response.json().catch(function () { return ({}); })];
                 case 3:
                     errorData = _j.sent();

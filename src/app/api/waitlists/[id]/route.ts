@@ -61,10 +61,10 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
     });
 
     if (!waitlist) {
-      return new NextResponse(
-        JSON.stringify({ error: 'Waitlist not found' }),
-        { status: 404, headers: { 'Content-Type': 'application/json' } }
-      );
+      return new NextResponse(JSON.stringify({ error: 'Waitlist not found' }), {
+        status: 404,
+        headers: { 'Content-Type': 'application/json' },
+      });
     }
 
     return NextResponse.json(waitlist);
@@ -228,10 +228,10 @@ async function handleUpdateWaitlist(req: NextRequest, waitlistId: string, isFull
     });
 
     if (!existingWaitlist) {
-      return new NextResponse(
-        JSON.stringify({ error: 'Waitlist not found' }),
-        { status: 404, headers: { 'Content-Type': 'application/json' } }
-      );
+      return new NextResponse(JSON.stringify({ error: 'Waitlist not found' }), {
+        status: 404,
+        headers: { 'Content-Type': 'application/json' },
+      });
     }
 
     // Parse and validate request body

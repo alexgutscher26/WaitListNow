@@ -31,9 +31,21 @@ import Link from 'next/link';
 import { db } from '@/lib/db';
 import { cn } from '@/utils';
 import { formatDistanceToNow } from 'date-fns';
-import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from '@/components/ui/dropdown-menu';
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from '@/components/ui/dropdown-menu';
 import ActivityItem from '@/components/dashboard/ActivityItem';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from '@/components/ui/dialog';
 import React from 'react';
 import RecentActivityModal from '@/components/dashboard/RecentActivityModal';
 
@@ -468,14 +480,11 @@ const StatCard = ({
 );
 
 /**
- * Renders the main dashboard page for a user, displaying their waitlists and related statistics.
+ * Renders the dashboard page for authenticated users, displaying their waitlists and system status.
  *
- * This function performs several key tasks:
- * 1. Retrieves the current user information and checks if they are authenticated.
- * 2. Redirects to the sign-in page if the user is not logged in.
- * 3. Determines if the user has premium access and whether to display an upgrade banner based on query parameters.
- * 4. Fetches the user's recent waitlists with subscriber counts.
- * 5. Renders various cards, tables, and components displaying statistics, recent activity, and waitlist details.
+ * @param {Object} props - The component props.
+ * @param {Object} props.searchParams - Search parameters from the URL.
+ * @returns {JSX.Element} - The rendered dashboard component.
  */
 export default async function Page({ searchParams = {} }: PageProps) {
   const stats = await getStats();
@@ -583,18 +592,10 @@ export default async function Page({ searchParams = {} }: PageProps) {
         />
         <StatCard
           title="Top Waitlist Growth"
-          value={
-            stats.topWaitlists.length > 0
-              ? `${stats.topWaitlists[0].growth}%`
-              : 'N/A'
-          }
+          value={stats.topWaitlists.length > 0 ? `${stats.topWaitlists[0].growth}%` : 'N/A'}
           icon={TrendingUp}
           trend={stats.topWaitlists.length > 0 && stats.topWaitlists[0].growth > 0 ? 'up' : 'down'}
-          trendValue={
-            stats.topWaitlists.length > 0
-              ? `${stats.topWaitlists[0].name}`
-              : 'No data'
-          }
+          trendValue={stats.topWaitlists.length > 0 ? `${stats.topWaitlists[0].name}` : 'No data'}
         />
         <StatCard
           title="System Status"
@@ -615,9 +616,7 @@ export default async function Page({ searchParams = {} }: PageProps) {
                 <CardTitle>Recent Activity</CardTitle>
                 <CardDescription>Latest actions across your waitlists</CardDescription>
               </div>
-              <RecentActivityModal
-                recentActivity={stats.recentActivity}
-              />
+              <RecentActivityModal recentActivity={stats.recentActivity} />
             </div>
           </CardHeader>
           <CardContent className="p-0">

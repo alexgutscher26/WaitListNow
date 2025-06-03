@@ -1,6 +1,11 @@
 'use client';
 import { formatDistanceToNow } from 'date-fns';
-import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from '@/components/ui/dropdown-menu';
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from '@/components/ui/dropdown-menu';
 import { MoreHorizontal, Users, Zap, Mail, DollarSign, TrendingUp, Bell } from 'lucide-react';
 import React from 'react';
 import { useToast } from '@/components/ui/use-toast';
@@ -29,22 +34,27 @@ const getActivityIcon = (type: string) => {
   }
 };
 
+/**
+ * Determines the URL based on the type of activity.
+ *
+ * This function evaluates the activity type and returns a corresponding URL string.
+ * If the activity type is 'new_subscriber', 'waitlist_created', or 'conversion',
+ * it constructs a URL using the waitlistId if available. For 'referral' activities,
+ * it returns a fixed URL. Other types like 'milestone' return null.
+ *
+ * @param activity - An object representing the activity with a type and optionally a waitlistId.
+ * @returns The constructed URL as a string or null if no URL is applicable for the activity type.
+ */
 const getActivityUrl = (activity: any): string | null => {
   switch (activity.type) {
     case 'new_subscriber':
-      return activity.waitlistId
-        ? `/dashboard/waitlists/${activity.waitlistId}`
-        : null;
+      return activity.waitlistId ? `/dashboard/waitlists/${activity.waitlistId}` : null;
     case 'waitlist_created':
-      return activity.waitlistId
-        ? `/dashboard/waitlists/${activity.waitlistId}`
-        : null;
+      return activity.waitlistId ? `/dashboard/waitlists/${activity.waitlistId}` : null;
     case 'referral':
       return '/dashboard/referrals';
     case 'conversion':
-      return activity.waitlistId
-        ? `/dashboard/waitlists/${activity.waitlistId}`
-        : null;
+      return activity.waitlistId ? `/dashboard/waitlists/${activity.waitlistId}` : null;
     case 'milestone':
       return null;
     default:
@@ -112,4 +122,4 @@ function getActivitySummary(activity: any): string {
   }
 }
 
-export default ActivityItem; 
+export default ActivityItem;

@@ -9,6 +9,14 @@ interface RecentActivityModalProps {
   recentActivity: any[];
 }
 
+/**
+ * Formats an activity message based on the type of activity provided.
+ *
+ * The function uses a switch statement to determine the type of activity and returns a JSX element with formatted content accordingly.
+ *
+ * @param activity - An object containing details about the activity.
+ * @returns A JSX element representing the formatted activity message.
+ */
 function formatActivityMessage(activity: any) {
   switch (activity.type) {
     case 'new_subscriber':
@@ -60,6 +68,9 @@ function formatActivityMessage(activity: any) {
   }
 }
 
+/**
+ * Modal component to display recent activity items.
+ */
 const RecentActivityModal: React.FC<RecentActivityModalProps> = ({ recentActivity }) => {
   const [open, setOpen] = useState(false);
 

@@ -31,9 +31,21 @@ import Link from 'next/link';
 import { db } from '@/lib/db';
 import { cn } from '@/utils';
 import { formatDistanceToNow } from 'date-fns';
-import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from '@/components/ui/dropdown-menu';
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from '@/components/ui/dropdown-menu';
 import ActivityItem from '@/components/dashboard/ActivityItem';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from '@/components/ui/dialog';
 import React from 'react';
 import RecentActivityModal from '@/components/dashboard/RecentActivityModal';
 
@@ -607,9 +619,7 @@ export default async function Page({ searchParams = {} }: PageProps) {
                 <CardTitle>Recent Activity</CardTitle>
                 <CardDescription>Latest actions across your waitlists</CardDescription>
               </div>
-              <RecentActivityModal
-                recentActivity={stats.recentActivity}
-              />
+              <RecentActivityModal recentActivity={stats.recentActivity} />
             </div>
           </CardHeader>
           <CardContent className="p-0">

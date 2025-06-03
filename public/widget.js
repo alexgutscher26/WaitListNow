@@ -1454,7 +1454,7 @@
           throw Error();
         } catch (e) {
           var t = e.stack.trim().match(/\n( *(at )?)/);
-          (Ze = (t?.[1]) || ''),
+          (Ze = t?.[1] || ''),
             (Je =
               -1 < e.stack.indexOf('\n    at')
                 ? ' (<anonymous>)'
@@ -2519,10 +2519,7 @@
         ('selectionStart' in (r = ar) && rr(r)
           ? (r = { start: r.selectionStart, end: r.selectionEnd })
           : (r = {
-              anchorNode: (r = (
-                (r.ownerDocument?.defaultView) ||
-                window
-              ).getSelection()).anchorNode,
+              anchorNode: (r = (r.ownerDocument?.defaultView || window).getSelection()).anchorNode,
               anchorOffset: r.anchorOffset,
               focusNode: r.focusNode,
               focusOffset: r.focusOffset,
@@ -8350,7 +8347,7 @@
                   (i.selectionStart = s), (i.selectionEnd = Math.min(c, i.value.length));
                 else {
                   var d = i.ownerDocument || document,
-                    f = (d?.defaultView) || window;
+                    f = d?.defaultView || window;
                   if (f.getSelection) {
                     var p = f.getSelection(),
                       m = i.textContent.length,

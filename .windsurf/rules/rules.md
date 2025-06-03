@@ -14,7 +14,6 @@ trigger: always_on
 - Always follow image_optimization.md for images
 - Implement server-side rendering for critical pages
 
-
 ## TypeScript Guidelines
 
 - DONT USE the `any` type - use proper typing or `unknown` when necessary
@@ -117,5 +116,3 @@ console.log('Terminal stderr supports 16 million colors (truecolor)');
 Unused variables are generally considered a code smell and should be avoided.
 
 Removing unused references - It prevents unused modules from being loaded at runtime, improving performance, and preventing the compiler from loading metadata that will never be used. - It prevents conflicts that may occur when trying to reference another variable.
-
-

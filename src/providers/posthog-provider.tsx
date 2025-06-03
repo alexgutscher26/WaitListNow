@@ -1,15 +1,12 @@
 'use client';
 
-
 import posthog from 'posthog-js';
 import { PostHogProvider as PHProvider, usePostHog } from 'posthog-js/react';
 import { Suspense, useEffect } from 'react';
 import { usePathname, useSearchParams } from 'next/navigation';
 
 export function PostHogProvider({ children }: { children: React.ReactNode }) {
-  useEffect(() => {
-
-  }, []);
+  useEffect(() => {}, []);
 
   return (
     <PHProvider client={posthog}>

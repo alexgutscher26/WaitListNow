@@ -18,7 +18,12 @@ if (currentScript) {
     buttonTextColor: getAttr('data-button-text-color', undefined) ?? undefined,
     backgroundColor: getAttr('data-background-color', undefined) ?? undefined,
     textColor: getAttr('data-text-color', undefined) ?? undefined,
-    borderRadius: getAttr('data-button-rounded', undefined) === 'md' ? 8 : getAttr('data-button-rounded', undefined) === 'lg' ? 16 : undefined,
+    borderRadius:
+      getAttr('data-button-rounded', undefined) === 'md'
+        ? 8
+        : getAttr('data-button-rounded', undefined) === 'lg'
+          ? 16
+          : undefined,
     fontFamily: getAttr('data-font-family', undefined) ?? undefined,
     showLabels: getAttr('data-show-labels', 'true') === 'true',
     formLayout: (getAttr('data-form-layout', 'stacked') as 'stacked' | 'inline') ?? undefined,
@@ -54,6 +59,6 @@ if (currentScript) {
       style={style}
       apiKey={apiKey}
       showBranding={showBranding}
-    />
+    />,
   );
-} 
+}

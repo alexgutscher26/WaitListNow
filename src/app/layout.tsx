@@ -69,6 +69,9 @@ interface RootLayoutProps {
   modal: React.ReactNode;
 }
 
+/**
+ * Renders the root layout of the application with necessary providers and components.
+ */
 export default function RootLayout({ children, modal }: Readonly<RootLayoutProps>) {
   return (
     <html

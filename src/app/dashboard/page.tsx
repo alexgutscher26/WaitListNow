@@ -15,6 +15,9 @@ import {
   ChevronRight,
   MoreHorizontal,
   CheckCircle2,
+  Edit,
+  Link as LinkIcon,
+  Trash,
 } from 'lucide-react';
 import { Plus } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -36,6 +39,7 @@ import ActivityItem from '@/components/dashboard/ActivityItem';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import React from 'react';
 import RecentActivityModal from '@/components/dashboard/RecentActivityModal';
+import WaitlistTable from '@/components/dashboard/WaitlistTable';
 
 type ActivityType = 'new_subscriber' | 'waitlist_created' | 'referral' | 'conversion' | 'milestone';
 
@@ -849,63 +853,14 @@ export default async function Page({ searchParams = {} }: PageProps) {
         <CardContent>
           {waitlists.length > 0 ? (
             <>
-              <div className="overflow-hidden rounded-lg border">
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Name</TableHead>
-                      <TableHead>Subscribers</TableHead>
-                      <TableHead>Created</TableHead>
-                      <TableHead>Status</TableHead>
-                      <TableHead className="text-right">Actions</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {waitlists.map((waitlist) => (
-                      <TableRow key={waitlist.id}>
-                        <TableCell className="font-medium">
-                          <div className="flex items-center gap-3">
-                            <div className="h-10 w-10 rounded-full bg-brand-50 flex items-center justify-center">
-                              <Users className="h-5 w-5 text-brand-600" />
-                            </div>
-                            <div>
-                              <p className="font-medium">{waitlist.name}</p>
-                              <p className="text-sm text-muted-foreground">
-                                {waitlist._count.subscribers} subscribers
-                              </p>
-                            </div>
-                          </div>
-                        </TableCell>
-                        <TableCell>
-                          <div className="text-sm text-muted-foreground">
-                            {new Date(waitlist.createdAt).toLocaleDateString()}
-                          </div>
-                        </TableCell>
-                        <TableCell>
-                          <Badge
-                            variant="outline"
-                            className="text-xs bg-green-50 text-green-700"
-                          >
-                            Active
-                          </Badge>
-                        </TableCell>
-                        <TableCell>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            asChild
-                          >
-                            <Link href={`/dashboard/waitlists/${waitlist.id}`}>
-                              View
-                              <ArrowUpRight className="ml-1 h-3.5 w-3.5" />
-                            </Link>
-                          </Button>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </div>
+              <WaitlistTable
+                waitlists={waitlists.map(wl => ({
+                  id: wl.id,
+                  name: wl.name,
+                  subscribers: wl._count.subscribers,
+                  createdAt: typeof wl.createdAt === 'string' ? wl.createdAt : wl.createdAt.toISOString(),
+                }))}
+              />
               <Button
                 variant="outline"
                 className="w-full mt-3"

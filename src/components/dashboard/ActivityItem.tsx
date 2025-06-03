@@ -34,6 +34,16 @@ const getActivityIcon = (type: string) => {
   }
 };
 
+/**
+ * Determine the URL based on the type of activity.
+ *
+ * This function evaluates the activity type and returns a corresponding URL path.
+ * It checks specific conditions like the presence of `waitlistId` to decide the URL.
+ * For unsupported activity types, it returns null.
+ *
+ * @param activity - An object representing an activity with a 'type' property and optional 'waitlistId'.
+ * @returns A string representing the URL or null if no matching type is found.
+ */
 const getActivityUrl = (activity: any): string | null => {
   switch (activity.type) {
     case 'new_subscriber':

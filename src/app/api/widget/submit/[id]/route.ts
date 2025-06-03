@@ -11,10 +11,7 @@ const submissionSchema = z.object({
   referralCode: z.string().optional(),
 });
 
-export async function POST(
-  request: Request,
-  { params }: { params: { id: string } }
-) {
+export async function POST(request: Request, { params }: { params: { id: string } }) {
   try {
     // Handle CORS preflight
     if (request.method === 'OPTIONS') {
@@ -39,14 +36,14 @@ export async function POST(
     });
 
     if (!waitlist) {
-      return NextResponse.json(
-        { error: 'Waitlist not found' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: 'Waitlist not found' }, { status: 404 });
     }
 
     // Parse settings and get email verification flag
-    const settings = typeof waitlist.settings === 'string' ? JSON.parse(waitlist.settings) : waitlist.settings || {};
+    const settings =
+      typeof waitlist.settings === 'string'
+        ? JSON.parse(waitlist.settings)
+        : waitlist.settings || {};
     const requireEmailVerification = settings.emailVerification === true;
 
     // Parse and validate request body
@@ -56,12 +53,12 @@ export async function POST(
     if (!validation.success) {
       return NextResponse.json(
         { error: 'Invalid submission', details: validation.error.issues },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
     const { email, name, fields, referralCode } = validation.data;
-    
+
     // Check for existing subscriber
     const existingSubscriber = await db.subscriber.findFirst({
       where: {
@@ -71,10 +68,7 @@ export async function POST(
     });
 
     if (existingSubscriber) {
-      return NextResponse.json(
-        { error: 'You are already on the waitlist!' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'You are already on the waitlist!' }, { status: 400 });
     }
 
     // Create subscriber
@@ -99,20 +93,25 @@ export async function POST(
         where: { id: subscriber.id },
         data: {
           customFields: {
-            ...((typeof subscriber.customFields === 'object' && subscriber.customFields !== null) ? subscriber.customFields : {}),
+            ...(typeof subscriber.customFields === 'object' && subscriber.customFields !== null
+              ? subscriber.customFields
+              : {}),
             verificationToken,
           },
         },
       });
       // Send verification email
-      await fetch(`${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/api/verify-email`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          email: subscriber.email,
-          verificationToken,
-        }),
-      });
+      await fetch(
+        `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/api/verify-email`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email: subscriber.email,
+            verificationToken,
+          }),
+        },
+      );
     }
 
     // Set CORS headers
@@ -123,19 +122,16 @@ export async function POST(
     };
 
     return NextResponse.json(
-      { 
-        success: true, 
+      {
+        success: true,
         message: 'Successfully joined the waitlist!',
-        requiresVerification: requireEmailVerification
+        requiresVerification: requireEmailVerification,
       },
-      { headers }
+      { headers },
     );
   } catch (error) {
     console.error('Error processing submission:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
 

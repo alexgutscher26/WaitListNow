@@ -6,6 +6,9 @@ import { PostHogProvider as PHProvider, usePostHog } from 'posthog-js/react';
 import { Suspense, useEffect } from 'react';
 import { usePathname, useSearchParams } from 'next/navigation';
 
+/**
+ * Provides PostHog tracking context and captures page views.
+ */
 export function PostHogProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     // Initialize PostHog here if needed

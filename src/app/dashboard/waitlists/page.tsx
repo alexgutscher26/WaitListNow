@@ -89,6 +89,20 @@ async function deleteWaitlist(id: string): Promise<{ success: boolean }> {
   return await res.json();
 }
 
+/**
+ * Represents a React component that renders the Waitlists page in a dashboard application.
+ * This component fetches and displays waitlist data, allows users to manage waitlists,
+ * and provides options to create new waitlists, view details, copy links, change status,
+ * and delete waitlists.
+ *
+ * @component
+ * @name WaitlistsPage
+ * @extends {React.Component}
+ * @param {Object} props - The component's properties.
+ * @param {Function} props.router - A router object for navigation.
+ * @param {Function} props.useQuery - A hook for fetching data with GraphQL queries.
+ * @returns {JSX.Element} - The rendered Waitlists page component.
+ */
 export default function WaitlistsPage() {
   const { toast } = useToast();
   const router = useRouter();

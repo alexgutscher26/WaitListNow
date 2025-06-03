@@ -107,6 +107,18 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
 }
 
 // DELETE /api/waitlists/[id] - Delete a waitlist
+/**
+ * Handles the deletion of a waitlist and its associated subscribers.
+ *
+ * It verifies user authentication, checks if the waitlist exists and belongs to the user,
+ * then deletes all related subscribers followed by deleting the waitlist itself within a transaction
+ * to ensure data consistency. If any error occurs during these processes, it logs the error and returns
+ * an appropriate HTTP response with a 500 status code.
+ *
+ * @param req - The Next.js request object containing user information and headers.
+ * @param {params: { id: string }} - An object containing the waitlist ID from the URL parameters.
+ * @returns A `NextResponse` with a 204 No Content status on successful deletion, or an error response if applicable.
+ */
 export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
   try {
     // Verify authentication
@@ -174,6 +186,19 @@ export async function DELETE(req: NextRequest, { params }: { params: { id: strin
 }
 
 // Shared handler for both PUT and PATCH
+/**
+ * Handles updating a waitlist based on the request and update type.
+ *
+ * This function performs several key steps: verifying authentication, checking if the user exists,
+ * ensuring the waitlist belongs to the user, parsing and validating the request body, handling partial or full updates,
+ * validating provided fields, generating a new slug if the name changes, checking for slug conflicts, updating the
+ * waitlist in the database, and returning the updated waitlist. It also includes comprehensive error handling for various scenarios.
+ *
+ * @param req - The NextRequest object containing the request details.
+ * @param waitlistId - The ID of the waitlist to be updated.
+ * @param isFullUpdate - A boolean indicating whether it's a full (PUT) or partial (PATCH) update.
+ * @returns A JSON response containing the updated waitlist or an error message.
+ */
 async function handleUpdateWaitlist(req: NextRequest, waitlistId: string, isFullUpdate: boolean) {
   try {
     // Verify authentication

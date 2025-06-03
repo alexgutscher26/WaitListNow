@@ -24,13 +24,13 @@ import {
   Lock,
   Clock,
   Mail,
-  Headphones
+  Headphones,
 } from 'lucide-react';
 
 // Mock user and router for demonstration
 const useUser = () => ({ user: null });
 const useRouter = () => ({
-  push: (url) => console.log('Navigate to:', url)
+  push: (url) => console.log('Navigate to:', url),
 });
 
 type PlanFeatures = {
@@ -223,7 +223,8 @@ const features = [
 
 const testimonials = [
   {
-    quote: 'WaitlistNow helped us build excitement for our launch and collect 10,000+ signups in just 2 weeks. The viral referral system was a game-changer.',
+    quote:
+      'WaitlistNow helped us build excitement for our launch and collect 10,000+ signups in just 2 weeks. The viral referral system was a game-changer.',
     author: 'Sarah Chen',
     role: 'Founder, TechStart',
     avatar: 'SC',
@@ -231,7 +232,8 @@ const testimonials = [
     growth: '+300% signups',
   },
   {
-    quote: 'The referral system increased our signup rate by 300%. Amazing tool for viral marketing that actually delivers results.',
+    quote:
+      'The referral system increased our signup rate by 300%. Amazing tool for viral marketing that actually delivers results.',
     author: 'Mike Rodriguez',
     role: 'Marketing Director, GrowthCo',
     avatar: 'MR',
@@ -239,7 +241,8 @@ const testimonials = [
     growth: '+10,000 users',
   },
   {
-    quote: 'Enterprise features and support helped us launch to 50,000+ users. The custom integrations saved us months of development.',
+    quote:
+      'Enterprise features and support helped us launch to 50,000+ users. The custom integrations saved us months of development.',
     author: 'Alex Kim',
     role: 'CTO, ScaleUp',
     avatar: 'AK',
@@ -251,27 +254,32 @@ const testimonials = [
 const faqs = [
   {
     question: 'What payment methods do you accept?',
-    answer: 'We accept all major credit cards (Visa, Mastercard, American Express, Discover) and PayPal. All payments are processed securely through Stripe.',
+    answer:
+      'We accept all major credit cards (Visa, Mastercard, American Express, Discover) and PayPal. All payments are processed securely through Stripe.',
     icon: Lock,
   },
   {
     question: 'Can I change plans later?',
-    answer: 'Yes! You can upgrade or downgrade your plan at any time. Changes are prorated automatically, so you only pay for what you use.',
+    answer:
+      'Yes! You can upgrade or downgrade your plan at any time. Changes are prorated automatically, so you only pay for what you use.',
     icon: TrendingUp,
   },
   {
     question: 'Is there a free trial?',
-    answer: 'All paid plans include a 14-day free trial. No credit card required to start. You can cancel anytime during the trial period.',
+    answer:
+      'All paid plans include a 14-day free trial. No credit card required to start. You can cancel anytime during the trial period.',
     icon: Clock,
   },
   {
     question: 'What happens to my data if I cancel?',
-    answer: 'Your data remains accessible for 30 days after cancellation. We provide export tools to download all your data before permanent deletion.',
+    answer:
+      'Your data remains accessible for 30 days after cancellation. We provide export tools to download all your data before permanent deletion.',
     icon: Shield,
   },
   {
     question: 'Do you offer refunds?',
-    answer: 'We offer a 30-day money-back guarantee for all paid plans. If you\'re not satisfied, contact us for a full refund.',
+    answer:
+      "We offer a 30-day money-back guarantee for all paid plans. If you're not satisfied, contact us for a full refund.",
     icon: Award,
   },
 ];
@@ -305,8 +313,14 @@ const PricingPage = () => {
       {/* Enhanced background elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -top-40 -right-40 w-96 h-96 bg-gradient-to-br from-blue-400/30 to-purple-600/30 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-gradient-to-br from-pink-400/30 to-orange-600/30 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-gradient-to-br from-green-400/20 to-blue-600/20 rounded-full blur-2xl animate-pulse" style={{ animationDelay: '2s' }} />
+        <div
+          className="absolute -bottom-40 -left-40 w-96 h-96 bg-gradient-to-br from-pink-400/30 to-orange-600/30 rounded-full blur-3xl animate-pulse"
+          style={{ animationDelay: '1s' }}
+        />
+        <div
+          className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-gradient-to-br from-green-400/20 to-blue-600/20 rounded-full blur-2xl animate-pulse"
+          style={{ animationDelay: '2s' }}
+        />
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20 relative z-10">
@@ -347,7 +361,9 @@ const PricingPage = () => {
             <div className="mt-12 flex items-center justify-center">
               <div className="bg-white/80 backdrop-blur-sm p-2 rounded-2xl shadow-lg border border-white/20">
                 <div className="flex items-center gap-4">
-                  <span className={`px-4 py-2 text-sm font-medium transition-colors ${!isAnnual ? 'text-gray-900' : 'text-gray-500'}`}>
+                  <span
+                    className={`px-4 py-2 text-sm font-medium transition-colors ${!isAnnual ? 'text-gray-900' : 'text-gray-500'}`}
+                  >
                     Monthly
                   </span>
                   <button
@@ -362,7 +378,9 @@ const PricingPage = () => {
                       }`}
                     />
                   </button>
-                  <span className={`px-4 py-2 text-sm font-medium transition-colors ${isAnnual ? 'text-gray-900' : 'text-gray-500'}`}>
+                  <span
+                    className={`px-4 py-2 text-sm font-medium transition-colors ${isAnnual ? 'text-gray-900' : 'text-gray-500'}`}
+                  >
                     Annual
                     <span className="ml-2 bg-gradient-to-r from-green-500 to-emerald-500 text-white text-xs px-2 py-1 rounded-full">
                       Save 35%
@@ -397,7 +415,7 @@ const PricingPage = () => {
           {pricingPlans.map((plan, index) => {
             const IconComponent = plan.icon;
             const isHovered = hoveredPlan === plan.id;
-            
+
             return (
               <div
                 key={plan.name}
@@ -439,7 +457,9 @@ const PricingPage = () => {
 
                   <div className="mt-6 flex items-baseline gap-2">
                     <span className="text-5xl font-bold text-gray-900">
-                      {plan.price === 'Custom' ? plan.price : `${plan.price}${isAnnual && plan.price !== '$0' ? '/yr' : '/mo'}`}
+                      {plan.price === 'Custom'
+                        ? plan.price
+                        : `${plan.price}${isAnnual && plan.price !== '$0' ? '/yr' : '/mo'}`}
                     </span>
                     {plan.originalPrice && (
                       <span className="text-base text-slate-400 line-through ml-3 bg-red-50 px-3 py-1 rounded-full">
@@ -450,7 +470,10 @@ const PricingPage = () => {
 
                   {isAnnual && plan.price !== '$0' && plan.price !== 'Custom' && (
                     <div className="mt-2 text-sm text-emerald-600 font-medium">
-                      Save ${parseInt(plan.originalPrice?.replace('$', '') || '0') - parseInt(plan.price.replace('$', ''))} per month
+                      Save $
+                      {parseInt(plan.originalPrice?.replace('$', '') || '0') -
+                        parseInt(plan.price.replace('$', ''))}{' '}
+                      per month
                     </div>
                   )}
 
@@ -459,7 +482,10 @@ const PricingPage = () => {
                   {/* Highlights */}
                   <div className="mt-6 space-y-2">
                     {plan.highlights.map((highlight, idx) => (
-                      <div key={idx} className="flex items-center gap-2 text-sm text-slate-600">
+                      <div
+                        key={idx}
+                        className="flex items-center gap-2 text-sm text-slate-600"
+                      >
                         <CheckCircle className="h-4 w-4 text-emerald-500 flex-shrink-0" />
                         <span>{highlight}</span>
                       </div>
@@ -490,7 +516,7 @@ const PricingPage = () => {
                     {Object.entries(plan.features)
                       .slice(0, 5)
                       .map(([key, value], idx) => {
-                        const feature = features.find(f => f.key === key);
+                        const feature = features.find((f) => f.key === key);
                         return (
                           <li
                             key={idx}
@@ -504,7 +530,8 @@ const PricingPage = () => {
                               )}
                             </div>
                             <span className="font-medium">
-                              {feature?.name}: <span className="text-gray-900">{String(value)}</span>
+                              {feature?.name}:{' '}
+                              <span className="text-gray-900">{String(value)}</span>
                             </span>
                           </li>
                         );
@@ -596,7 +623,7 @@ const PricingPage = () => {
           <div className="bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 rounded-3xl p-16 relative overflow-hidden">
             <div className="absolute inset-0 bg-black/20 backdrop-blur-sm" />
             <div className="absolute inset-0 bg-gradient-to-r from-blue-600/50 via-transparent to-pink-600/50" />
-            
+
             <div className="relative z-10">
               <div className="text-center mb-20">
                 <h2 className="text-4xl lg:text-6xl font-bold tracking-tight text-white mb-6">
@@ -621,11 +648,11 @@ const PricingPage = () => {
                         />
                       ))}
                     </div>
-                    
+
                     <p className="text-slate-700 text-lg leading-relaxed mb-8 italic">
                       "{testimonial.quote}"
                     </p>
-                    
+
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-4">
                         <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 text-white rounded-full flex items-center justify-center font-bold text-lg">
@@ -639,7 +666,7 @@ const PricingPage = () => {
                           <div className="text-xs text-slate-500">{testimonial.company}</div>
                         </div>
                       </div>
-                      
+
                       <div className="text-right">
                         <div className="bg-gradient-to-r from-emerald-500 to-green-500 text-white text-xs font-bold px-3 py-1 rounded-full">
                           {testimonial.growth}
@@ -690,7 +717,7 @@ const PricingPage = () => {
                         )}
                       </div>
                     </button>
-                    
+
                     {openFaq === index && (
                       <div className="px-6 pb-6 pt-2">
                         <div className="pl-12">
@@ -709,23 +736,23 @@ const PricingPage = () => {
         <div className="mt-32 mb-16">
           <div className="bg-gradient-to-r from-gray-900 via-blue-900 to-purple-900 rounded-3xl p-16 relative overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 via-purple-600/20 to-pink-600/20" />
-            <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width=&quot;60&quot; height=&quot;60&quot; viewBox=&quot;0 0 60 60&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot;%3E%3Cg fill=&quot;none&quot; fill-rule=&quot;evenodd&quot;%3E%3Cg fill=&quot;%23ffffff&quot; fill-opacity=&quot;0.05&quot;%3E%3Ccircle cx=&quot;30&quot; cy=&quot;30&quot; r=&quot;4&quot;/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-50" />
-            
+            <div className='absolute inset-0 bg-[url(&apos;data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23ffffff" fill-opacity="0.05"%3E%3Ccircle cx="30" cy="30" r="4"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E&apos;)] opacity-50' />
+
             <div className="relative z-10 text-center max-w-4xl mx-auto">
               <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 text-white px-6 py-3 rounded-full text-sm font-medium mb-8">
                 <Rocket className="h-4 w-4" />
                 <span>Ready to get started?</span>
               </div>
-              
+
               <h2 className="text-4xl lg:text-6xl font-bold tracking-tight text-white mb-6">
                 Start growing your waitlist today
               </h2>
-              
+
               <p className="text-xl text-blue-100 mb-12 max-w-2xl mx-auto">
-                Join thousands of businesses using our platform to build excitement, 
-                collect signups, and launch successfully.
+                Join thousands of businesses using our platform to build excitement, collect
+                signups, and launch successfully.
               </p>
-              
+
               <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
                 <button
                   onClick={() => handleGetAccess('Starter')}
@@ -734,7 +761,7 @@ const PricingPage = () => {
                   Start Free Trial
                   <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
                 </button>
-                
+
                 <button
                   onClick={() => handleGetAccess('Enterprise')}
                   className="border-2 border-white/30 text-white px-8 py-4 rounded-xl font-semibold text-lg hover:bg-white/10 transition-all duration-300 hover:scale-105 flex items-center gap-3 group"
@@ -744,7 +771,7 @@ const PricingPage = () => {
                   <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
                 </button>
               </div>
-              
+
               <div className="mt-8 flex items-center justify-center gap-8 text-sm text-blue-100">
                 <div className="flex items-center gap-2">
                   <Check className="h-4 w-4 text-emerald-400" />
@@ -768,14 +795,16 @@ const PricingPage = () => {
           <p className="text-slate-500 text-sm mb-8">Trusted by companies worldwide</p>
           <div className="flex items-center justify-center gap-12 opacity-60">
             {/* Mock company logos - in real implementation, use actual logos */}
-            {['TechStart', 'GrowthCo', 'ScaleUp', 'InnovateLab', 'StartupFlow'].map((company, index) => (
-              <div
-                key={index}
-                className="text-slate-400 font-semibold text-lg hover:text-slate-600 transition-colors"
-              >
-                {company}
-              </div>
-            ))}
+            {['TechStart', 'GrowthCo', 'ScaleUp', 'InnovateLab', 'StartupFlow'].map(
+              (company, index) => (
+                <div
+                  key={index}
+                  className="text-slate-400 font-semibold text-lg hover:text-slate-600 transition-colors"
+                >
+                  {company}
+                </div>
+              ),
+            )}
           </div>
         </div>
       </div>
@@ -792,24 +821,25 @@ const PricingPage = () => {
             transform: translateY(0);
           }
         }
-        
+
         .animate-fadeInUp {
           animation: fadeInUp 0.6s ease-out forwards;
         }
-        
+
         @keyframes float {
-          0%, 100% {
+          0%,
+          100% {
             transform: translateY(0px);
           }
           50% {
             transform: translateY(-10px);
           }
         }
-        
+
         .animate-float {
           animation: float 3s ease-in-out infinite;
         }
-        
+
         @keyframes shimmer {
           0% {
             background-position: -200% 0;
@@ -818,9 +848,9 @@ const PricingPage = () => {
             background-position: 200% 0;
           }
         }
-        
+
         .animate-shimmer {
-          background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+          background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
           background-size: 200% 100%;
           animation: shimmer 2s infinite;
         }

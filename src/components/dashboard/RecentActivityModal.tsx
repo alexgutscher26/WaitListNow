@@ -1,7 +1,14 @@
 'use client';
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from '@/components/ui/dialog';
 import { ChevronRight } from 'lucide-react';
 import ActivityItem from './ActivityItem';
 
@@ -74,11 +81,16 @@ const RecentActivityModal: React.FC<RecentActivityModalProps> = ({ recentActivit
         View all
         <ChevronRight className="ml-1 h-4 w-4" />
       </Button>
-      <Dialog open={open} onOpenChange={setOpen}>
+      <Dialog
+        open={open}
+        onOpenChange={setOpen}
+      >
         <DialogContent className="max-w-2xl w-full">
           <DialogHeader>
             <DialogTitle>All Recent Activity</DialogTitle>
-            <DialogDescription>Full list of your recent actions across all waitlists.</DialogDescription>
+            <DialogDescription>
+              Full list of your recent actions across all waitlists.
+            </DialogDescription>
           </DialogHeader>
           <div className="max-h-[60vh] overflow-y-auto divide-y divide-gray-100">
             {recentActivity && recentActivity.length > 0 ? (
@@ -97,7 +109,12 @@ const RecentActivityModal: React.FC<RecentActivityModalProps> = ({ recentActivit
             )}
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setOpen(false)}>Close</Button>
+            <Button
+              variant="outline"
+              onClick={() => setOpen(false)}
+            >
+              Close
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -105,4 +122,4 @@ const RecentActivityModal: React.FC<RecentActivityModalProps> = ({ recentActivit
   );
 };
 
-export default RecentActivityModal; 
+export default RecentActivityModal;

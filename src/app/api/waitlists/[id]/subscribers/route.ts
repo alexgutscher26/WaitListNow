@@ -2,6 +2,8 @@ import { NextResponse, type NextRequest } from 'next/server';
 import { getAuth } from '@clerk/nextjs/server';
 import { db } from '@/lib/db';
 import { z } from 'zod';
+import { Resend } from 'resend';
+import { getConfirmationEmail } from '@/emails';
 
 interface WaitlistSettings {
   allowDuplicates?: boolean;
@@ -33,18 +35,16 @@ const log = (...args: any[]) => isDev && console.log('[Waitlist Subscribers API]
 // GET /api/waitlists/[id]/subscribers - Get subscribers for a specific waitlist
 // POST /api/waitlists/[id]/subscribers - Add a new subscriber to a waitlist
 export async function POST(req: NextRequest, { params }: { params: { id: string } }) {
-  const apiKey = req.headers.get('authorization')?.replace('Bearer ', '');
-
-  // Replace this with your actual API key validation logic
-  if (!apiKey || !(await isValidApiKey(apiKey, params.id))) {
-    return new Response(JSON.stringify({ error: 'Unauthorized: API key required' }), {
-      status: 401,
-      headers: {
-        'Content-Type': 'application/json',
-        ...(apiKey ? { 'Authorization': `Bearer ${apiKey}` } : {}),
-      },
-    });
-  }
+  // const apiKey = req.headers.get('authorization')?.replace('Bearer ', '');
+  // if (!apiKey || !(await isValidApiKey(apiKey, params.id))) {
+  //   return new Response(JSON.stringify({ error: 'Unauthorized: API key required' }), {
+  //     status: 401,
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //       ...(apiKey ? { 'Authorization': `Bearer ${apiKey}` } : {}),
+  //     },
+  //   });
+  // }
 
   console.log('Received Authorization header:', req.headers.get('authorization'));
 
@@ -74,6 +74,11 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
     // Check if email already exists for this waitlist if duplicates are not allowed
     const settings = getWaitlistSettings(waitlist.settings);
     const allowDuplicates = settings.allowDuplicates === true;
+    const requireEmailVerification = settings.emailVerification === true;
+
+    // Debug logs
+    console.log('Waitlist settings:', settings);
+    console.log('requireEmailVerification:', requireEmailVerification);
 
     if (!allowDuplicates) {
       const existingSubscriber = await db.subscriber.findFirst({
@@ -88,6 +93,12 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
       }
     }
 
+    // Generate verification token if needed
+    let verificationToken: string | undefined = undefined;
+    if (requireEmailVerification) {
+      verificationToken = require('crypto').randomBytes(32).toString('hex');
+    }
+
     // Create the subscriber
     const subscriber = await db.subscriber.create({
       data: {
@@ -95,7 +106,8 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
         name: body.name || null,
         waitlistId,
         userId: waitlist.userId, // Link to the waitlist owner
-        status: 'PENDING',
+        status: requireEmailVerification ? 'PENDING' : 'VERIFIED',
+        customFields: requireEmailVerification ? { verificationToken } : {},
       },
     });
 
@@ -108,6 +120,64 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
         },
       },
     });
+
+    if (requireEmailVerification) {
+      // Send verification email via /api/verify-email
+      try {
+        console.log('Sending verification email with:', {
+          email: subscriber.email,
+          verificationToken,
+        });
+        const verifyRes = await fetch(
+          `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/api/verify-email`,
+          {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              email: subscriber.email,
+              verificationToken,
+            }),
+          },
+        );
+        if (!verifyRes.ok) {
+          const errText = await verifyRes.text();
+          console.error('[WAITLIST_VERIFICATION_EMAIL_ERROR]', verifyRes.status, errText);
+        } else {
+          console.log('[WAITLIST_VERIFICATION_EMAIL_SENT]', subscriber.email);
+        }
+      } catch (emailError) {
+        console.error('[WAITLIST_VERIFICATION_EMAIL_ERROR]', emailError);
+        // Do not block the response if email sending fails
+      }
+    } else {
+      // Send confirmation email if enabled
+      try {
+        const customFields = (waitlist.customFields as any) || {};
+        const sendConfirmation =
+          typeof customFields.sendConfirmationEmail === 'boolean'
+            ? customFields.sendConfirmationEmail
+            : true;
+        if (sendConfirmation) {
+          const { html, text } = getConfirmationEmail({
+            name: subscriber.name || undefined,
+            waitlistName: waitlist.name,
+            message: customFields.customThankYouMessage,
+          });
+          const resend = new Resend(process.env.RESEND_API_KEY);
+          const result = await resend.emails.send({
+            from: 'WaitListNow <onboarding@resend.dev>',
+            to: subscriber.email,
+            subject: `You're on the waitlist for ${waitlist.name}!`,
+            html,
+            text,
+          });
+          console.log('Resend API response:', result);
+        }
+      } catch (emailError) {
+        console.error('[WAITLIST_CONFIRMATION_EMAIL_ERROR]', emailError);
+        // Do not block the response if email sending fails
+      }
+    }
 
     return NextResponse.json(subscriber);
   } catch (error) {

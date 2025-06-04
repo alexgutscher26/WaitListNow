@@ -31,8 +31,9 @@ This document outlines the planned improvements and enhancements for the WaitLis
 - [ ] **Email Notification System**
 
   - [x] Set up integration with Resend
-  - [ ] Create email templates for different events
+  - [X] Create email templates for different events
   - [ ] Implement scheduled emails for waitlist updates
+  - [ ] Setting up a notification service to trigger these emails?
   - [ ] Add email customization options
 
 - [ ] **White-labeling Capabilities**

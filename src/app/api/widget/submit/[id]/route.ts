@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { z } from 'zod';
 import { v4 as uuidv4 } from 'uuid';
+import { Resend } from 'resend';
+import { getRewardUnlockedEmail } from '@/emails';
 
 // Define validation schema
 const submissionSchema = z.object({
@@ -89,10 +91,56 @@ export async function POST(request: Request, { params }: { params: { id: string 
 
     // Increment referralCount for the referrer if referralCode is present
     if (referralCode) {
+      // Update referral count
+      const referrerUsers = await db.user.findMany({ where: { referralCode } });
       await db.user.updateMany({
         where: { referralCode },
         data: { referralCount: { increment: 1 } },
       });
+      // Check if a new reward tier is reached and send email
+      if (referrerUsers.length > 0) {
+        const referrer = referrerUsers[0];
+        // Get new referral count
+        const updatedReferrer = await db.user.findUnique({ where: { id: referrer.id } });
+        if (updatedReferrer) {
+          // Define reward tiers (should match your main logic)
+          const REWARD_TIERS = [
+            { count: 1, name: 'Early Supporter', reward: 'Priority access, exclusive badge' },
+            { count: 3, name: 'Rising Referrer', reward: 'Access to behind-the-scenes updates or beta features' },
+            { count: 5, name: 'Inner Circle', reward: 'Free 1-month trial / Pro plan / "Founding Member" badge' },
+            { count: 10, name: 'Power Promoter', reward: 'Discounted subscription (e.g., 50% off for 3 months)' },
+            { count: 25, name: 'Brand Ambassador', reward: 'Swag pack (stickers, T-shirt) or lifetime deal contest entry' },
+            { count: 50, name: 'Growth Hacker', reward: 'Lifetime plan or a custom domain subdomain (like yourname.waitlistnow.app)' },
+            { count: 100, name: 'Legend Tier', reward: 'Public shoutout, profile feature, big reward like AirPods, etc.' },
+          ];
+          const prevCount = (referrer.referralCount || 0);
+          const newCount = (updatedReferrer.referralCount || 0);
+          // Find if a new tier is reached
+          const unlockedTier = REWARD_TIERS.find(
+            (tier) => prevCount < tier.count && newCount >= tier.count
+          );
+          if (unlockedTier && referrer.email) {
+            try {
+              const { html, text } = getRewardUnlockedEmail({
+                name: referrer.name || undefined,
+                waitlistName: undefined, // Optionally fetch waitlist name if needed
+                rewardName: unlockedTier.name,
+                message: `You've unlocked the "${unlockedTier.name}" reward: ${unlockedTier.reward}`,
+              });
+              const resend = new Resend(process.env.RESEND_API_KEY);
+              await resend.emails.send({
+                from: 'WaitListNow <noreply@waitlistnow.app>',
+                to: referrer.email,
+                subject: `You've unlocked a new reward: ${unlockedTier.name}!`,
+                html,
+                text,
+              });
+            } catch (emailError) {
+              console.error('[REWARD_UNLOCKED_EMAIL_ERROR]', emailError);
+            }
+          }
+        }
+      }
     }
 
     if (requireEmailVerification) {

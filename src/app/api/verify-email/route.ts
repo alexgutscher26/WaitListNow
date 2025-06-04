@@ -12,6 +12,8 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 
 // Endpoint to send verification email
 export async function POST(request: Request) {
+  console.log('Received verify-email POST body:', await request.clone().json());
+
   const { email, verificationToken } = await request.json();
 
   if (!email || !verificationToken) {
@@ -22,8 +24,8 @@ export async function POST(request: Request) {
   }
 
   try {
-    await resend.emails.send({
-      from: 'WaitListNow <verification@waitlistnow.app>',
+    const result = await resend.emails.send({
+      from: 'WaitListNow <onboarding@resend.dev>',
       to: email,
       subject: 'Please verify your email address - WaitListNow',
       html: `
@@ -132,6 +134,7 @@ Need help? Contact us at support@waitlistnow.app
 © ${new Date().getFullYear()} WaitListNow. All rights reserved.
       `,
     });
+    console.log('Resend API response:', result);
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error('Error sending verification email:', error);

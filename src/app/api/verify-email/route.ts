@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server';
 import { Resend } from 'resend';
 import { db } from '@/lib/db';
-import { getAuth } from '@clerk/nextjs/server';
 
 interface CustomFields {
   verificationToken?: string;
@@ -35,82 +34,62 @@ export async function POST(request: Request) {
           <meta charset="UTF-8">
           <meta name="viewport" content="width=device-width, initial-scale=1.0">
           <title>Email Verification</title>
-          <script src="https://cdn.tailwindcss.com"></script>
         </head>
-        <body class="bg-gray-50 font-sans">
-          <div class="max-w-2xl mx-auto p-6">
-            <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+        <body style="background: #f9fafb; font-family: Arial, sans-serif; color: #374151; margin: 0; padding: 0;">
+          <div style="max-width: 600px; margin: 0 auto; padding: 24px;">
+            <div style="background: #fff; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); overflow: hidden;">
               <!-- Header -->
-              <div class="bg-gradient-to-r from-blue-600 to-purple-600 px-8 py-6">
-                <div class="text-center">
-                  <h1 class="text-2xl font-bold text-white">WaitListNow</h1>
-                  <p class="text-blue-100 mt-2">Email Verification Required</p>
-                </div>
+              <div style="background: linear-gradient(135deg, #6366f1 0%, #a21caf 100%); padding: 32px 24px; text-align: center; color: #fff;">
+                <h1 style="margin: 0; font-size: 28px; font-weight: 700;">WaitListNow</h1>
+                <p style="margin: 8px 0 0 0; font-size: 16px;">Email Verification Required</p>
               </div>
-              
               <!-- Content -->
-              <div class="px-8 py-8">
-                <div class="text-center mb-6">
-                  <div class="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-full mb-4">
-                    <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
-                    </svg>
+              <div style="padding: 32px 24px;">
+                <div style="text-align: center; margin-bottom: 24px;">
+                  <div style="display: inline-flex; align-items: center; justify-content: center; width: 64px; height: 64px; background: #e0e7ff; border-radius: 50%; margin-bottom: 16px;">
+                    <svg width="32" height="32" fill="none" stroke="#6366f1" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
                   </div>
-                  <h2 class="text-2xl font-bold text-gray-900 mb-4">Verify Your Email Address</h2>
+                  <h2 style="color: #111827; font-size: 22px; font-weight: 700; margin: 0 0 16px 0;">Verify Your Email Address</h2>
                 </div>
-                
-                <div class="text-gray-600 space-y-4 mb-8">
+                <div style="color: #6b7280; font-size: 16px; margin-bottom: 24px; line-height: 1.7;">
                   <p>Hi there! 👋</p>
                   <p>Thank you for joining WaitListNow! To complete your registration and secure your account, we need to verify your email address.</p>
                   <p>Click the button below to verify your email and get started:</p>
                 </div>
-                
                 <!-- CTA Button -->
-                <div class="text-center mb-8">
+                <div style="text-align: center; margin-bottom: 32px;">
                   <a href="${process.env.NEXT_PUBLIC_APP_URL}/api/verify?token=${verificationToken}&email=${encodeURIComponent(email)}" 
-                     class="inline-block bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold px-8 py-4 rounded-lg hover:from-blue-700 hover:to-purple-700 transform hover:scale-105 transition-all duration-200 shadow-lg">
+                     style="display: inline-block; background: #6366f1;
+                     background: linear-gradient(135deg, #6366f1 0%, #a21caf 100%); color: #fff; font-weight: 600; padding: 16px 32px; border-radius: 8px; text-decoration: none; font-size: 16px; box-shadow: 0 4px 14px 0 rgba(99,102,241,0.3); transition: all 0.2s ease;">
                     ✉️ Verify Email Address
                   </a>
                 </div>
-                
                 <!-- Alternative Link -->
-                <div class="bg-gray-50 rounded-lg p-6 mb-6">
-                  <p class="text-sm text-gray-600 mb-2">
-                    <strong>Can't click the button?</strong> Copy and paste this link into your browser:
-                  </p>
-                  <div class="bg-white p-3 rounded border text-xs text-gray-800 break-all font-mono">
+                <div style="background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 20px; margin-bottom: 24px;">
+                  <p style="margin: 0 0 10px 0; font-size: 14px; color: #6b7280;"><strong>Can't click the button?</strong> Copy and paste this link into your browser:</p>
+                  <div style="background: #fff; border: 1px solid #d1d5db; border-radius: 6px; padding: 12px; font-family: 'Courier New', monospace; font-size: 12px; word-break: break-all; color: #374151; margin: 0;">
                     ${process.env.NEXT_PUBLIC_APP_URL}/api/verify?token=${verificationToken}&email=${encodeURIComponent(email)}
                   </div>
                 </div>
-                
                 <!-- Security Notice -->
-                <div class="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-6">
-                  <div class="flex items-start">
-                    <svg class="w-5 h-5 text-amber-600 mt-0.5 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                      <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
-                    </svg>
-                    <div>
-                      <p class="text-sm text-amber-800">
-                        <strong>Security Notice:</strong> This verification link will expire in 24 hours for your security. 
-                        If you didn't create an account with WaitListNow, you can safely ignore this email.
-                      </p>
-                    </div>
+                <div style="background: #fef3c7; border: 1px solid #fde68a; border-radius: 8px; padding: 16px; margin-bottom: 24px; display: flex; align-items: flex-start;">
+                  <div style="flex-shrink: 0; margin-right: 12px; margin-top: 2px;">
+                    <svg width="20" height="20" fill="#f59e0b" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>
+                  </div>
+                  <div>
+                    <p style="margin: 0; font-size: 14px; color: #92400e;"><strong>Security Notice:</strong> This verification link will expire in 24 hours for your security. If you didn't create an account with WaitListNow, you can safely ignore this email.</p>
                   </div>
                 </div>
-                
                 <!-- Help Section -->
-                <div class="text-center text-sm text-gray-500">
+                <div style="text-align: center; font-size: 14px; color: #6b7280; margin-bottom: 24px;">
                   <p>Need help? Contact us at support@waitlistnow.app</p>
                 </div>
               </div>
-              
               <!-- Footer -->
-              <div class="bg-gray-50 px-8 py-6 border-t">
-                <div class="text-center text-sm text-gray-500 space-y-2">
-                  <p>&copy; ${new Date().getFullYear()} WaitListNow. All rights reserved.</p>
-                  <p>This email was sent to <span class="font-medium">${email}</span></p>
-                  <p>If you didn't request this verification, you can safely ignore this email.</p>
-                </div>
+              <div style="background: #f9fafb; border-top: 1px solid #e5e7eb; padding: 24px; text-align: center;">
+                <p style="margin: 0 0 8px 0; font-size: 14px; color: #6b7280;">&copy; ${new Date().getFullYear()} WaitListNow. All rights reserved.</p>
+                <p style="margin: 0; font-size: 14px; color: #6b7280;">This email was sent to <span style="font-weight: 600; color: #374151;">${email}</span></p>
+                <p style="margin: 0; font-size: 14px; color: #6b7280;">If you didn't request this verification, you can safely ignore this email.</p>
               </div>
             </div>
           </div>

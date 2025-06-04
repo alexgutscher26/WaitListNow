@@ -12,4 +12,4 @@ export default function RefPage({ params }: RefPageProps) {
   // Redirect to the main signup page with the referralCode as a query param
   redirect(`/sign-up?referralCode=${encodeURIComponent(params.referralCode)}`);
   return null;
-} 
+}

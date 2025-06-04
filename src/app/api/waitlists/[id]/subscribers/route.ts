@@ -32,6 +32,20 @@ const log = (...args: any[]) => isDev && console.log('[Waitlist Subscribers API]
 
 // GET /api/waitlists/[id]/subscribers - Get subscribers for a specific waitlist
 // POST /api/waitlists/[id]/subscribers - Add a new subscriber to a waitlist
+/**
+ * Handles POST requests to subscribe a user to a waitlist.
+ *
+ * This function validates the API key, parses and validates the request body,
+ * checks if the waitlist exists and is active, verifies if duplicates are allowed,
+ * creates a subscriber record, and updates the waitlist's subscriber count.
+ * It handles various error scenarios such as invalid API keys, missing waitlists,
+ * duplicate subscriptions, and internal server errors.
+ *
+ * @param req - The NextRequest object containing the request details.
+ * @param { params: { id: string } } - An object containing the URL parameters, including the waitlist ID.
+ * @returns A NextResponse with JSON data indicating success or error information.
+ * @throws Various errors based on validation failures and database operations.
+ */
 export async function POST(req: NextRequest, { params }: { params: { id: string } }) {
   const apiKey = req.headers.get('authorization')?.replace('Bearer ', '');
 
@@ -41,7 +55,7 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
       status: 401,
       headers: {
         'Content-Type': 'application/json',
-        ...(apiKey ? { 'Authorization': `Bearer ${apiKey}` } : {}),
+        ...(apiKey ? { Authorization: `Bearer ${apiKey}` } : {}),
       },
     });
   }
@@ -65,10 +79,10 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
     });
 
     if (!waitlist) {
-      return new NextResponse(
-        JSON.stringify({ error: 'Waitlist not found' }),
-        { status: 404, headers: { 'Content-Type': 'application/json' } }
-      );
+      return new NextResponse(JSON.stringify({ error: 'Waitlist not found' }), {
+        status: 404,
+        headers: { 'Content-Type': 'application/json' },
+      });
     }
 
     // Check if email already exists for this waitlist if duplicates are not allowed
@@ -130,6 +144,26 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
   }
 }
 
+/**
+ * Handles GET requests to retrieve subscribers from a waitlist.
+ *
+ * This function performs several steps:
+ * 1. Verifies user authentication and retrieves the userId.
+ * 2. Parses query parameters for pagination, filtering by status, and search.
+ * 3. Retrieves the waitlist ID from URL parameters.
+ * 4. Finds the user in the database using the userId.
+ * 5. Checks if the specified waitlist exists and belongs to the user.
+ * 6. Constructs a where clause based on query parameters for filtering.
+ * 7. Retrieves the total count of subscribers matching the filter criteria.
+ * 8. Calculates pagination values (total pages, skip, take).
+ * 9. Fetches paginated subscribers from the database with specific fields selected and ordered by creation date.
+ * 10. Prepares a response object containing the subscriber data and pagination metadata.
+ * 11. Handles any errors that occur during execution and returns appropriate error responses.
+ *
+ * @param req - The NextRequest object containing the request details.
+ * @param { params: { id: string } } - An object containing the waitlist ID from URL parameters.
+ * @returns A NextResponse object with JSON data containing subscribers and pagination metadata, or an error response if something goes wrong.
+ */
 export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
   try {
     // Verify authentication
@@ -166,10 +200,10 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
     });
 
     if (!waitlist) {
-      return new NextResponse(
-        JSON.stringify({ error: 'Waitlist not found' }),
-        { status: 404, headers: { 'Content-Type': 'application/json' } }
-      );
+      return new NextResponse(JSON.stringify({ error: 'Waitlist not found' }), {
+        status: 404,
+        headers: { 'Content-Type': 'application/json' },
+      });
     }
 
     // Build the where clause for filtering
@@ -267,18 +301,17 @@ async function isValidApiKey(apiKey: string, waitlistId: string): Promise<boolea
   // Find the waitlist and its owner
   const waitlist = await db.waitlist.findUnique({
     where: { id: waitlistId },
-    select: { userId: true }
+    select: { userId: true },
   });
   if (!waitlist) return false;
 
   // Find the user and check the API key
   const user = await db.user.findUnique({
     where: { id: waitlist.userId },
-    select: { apiKey: true }
+    select: { apiKey: true },
   });
   if (!user) return false;
 
   // Compare the provided API key with the user's stored API key
   return user.apiKey === apiKey;
 }
-

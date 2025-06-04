@@ -13,25 +13,25 @@ This document outlines the planned improvements and enhancements for the WaitLis
   - [x] Implement DELETE /api/waitlists/[id] - Delete a waitlist
   - [x] Implement GET /api/waitlists/[id]/subscribers - Retrieve waitlist subscribers
 
-- [X] **Embeddable Widget Implementation**
+- [x] **Embeddable Widget Implementation**
 
   - [x] Develop JavaScript snippet for website integration
-  - [X] Support iframe embedding option
-  - [X] Create direct script embedding option
-  - [X] Add customization parameters for the widget
+  - [x] Support iframe embedding option
+  - [x] Create direct script embedding option
+  - [x] Add customization parameters for the widget
 
-- [X] **Referral System**
+- [x] **Referral System**
 
-  - [X] Implement referral link generation and tracking
-  - [X] Create reward system for successful referrals
-  - [X] Add social sharing capabilities
-  - [ ] add email/in-app notifications for reward unlocks 
+  - [x] Implement referral link generation and tracking
+  - [x] Create reward system for successful referrals
+  - [x] Add social sharing capabilities
+  - [ ] add email/in-app notifications for reward unlocks
   - [ ] create the referral badges
 
 - [ ] **Email Notification System**
 
   - [x] Set up integration with Resend
-  - [X] Create email templates for different events
+  - [x] Create email templates for different events
   - [ ] Implement scheduled emails for waitlist updates
   - [ ] Setting up a notification service to trigger these emails?
   - [ ] Add email customization options
@@ -262,6 +262,7 @@ This document outlines the planned improvements and enhancements for the WaitLis
   - [ ] Add intelligent rate limiting based on user behavior patterns
 
 - [ ] **Feature Flags**
+
   - [ ] Set up using Flagsmith or Growthbook
   - [ ] Create admin interface
   - [ ] Implement AI-driven feature recommendations based on user segments
@@ -368,6 +369,7 @@ This document outlines the planned improvements and enhancements for the WaitLis
 ### 🧠 Intelligent Waitlist Management
 
 - [ ] **AI-Powered Subscriber Segmentation**
+
   - [ ] Automatically categorize subscribers based on engagement patterns
   - [ ] Identify high-value potential customers using predictive analytics
   - [ ] Generate personalized tags based on subscriber data
@@ -382,6 +384,7 @@ This document outlines the planned improvements and enhancements for the WaitLis
 ### 💬 AI Communication Tools
 
 - [ ] **Smart Email Personalization**
+
   - [ ] AI-generated personalized email content based on subscriber data
   - [ ] Dynamic subject line optimization using machine learning
   - [ ] Sentiment analysis on email responses to improve communication
@@ -396,6 +399,7 @@ This document outlines the planned improvements and enhancements for the WaitLis
 ### 🎯 AI-Enhanced Marketing
 
 - [ ] **Smart Referral Optimization**
+
   - [ ] AI-powered referral reward recommendations based on user behavior
   - [ ] Personalized referral messaging tailored to individual subscribers
   - [ ] Predictive modeling to identify potential high-referral users
@@ -410,6 +414,7 @@ This document outlines the planned improvements and enhancements for the WaitLis
 ### 🔍 AI-Powered Insights
 
 - [ ] **Voice of Customer Analysis**
+
   - [ ] Sentiment analysis on subscriber feedback and comments
   - [ ] Automatic categorization of feature requests and pain points
   - [ ] Trend detection in customer needs and expectations
@@ -424,6 +429,7 @@ This document outlines the planned improvements and enhancements for the WaitLis
 ### 🛡️ AI Security and Fraud Prevention
 
 - [ ] **Advanced Fraud Detection**
+
   - [ ] Machine learning models to detect suspicious signup patterns
   - [ ] Anomaly detection for identifying potential abuse
   - [ ] Automated verification of high-risk signups

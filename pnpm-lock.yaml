@@ -95,6 +95,9 @@ importers:
       '@vercel/speed-insights':
         specifier: ^1.2.0
         version: 1.2.0(next@15.3.3(@babel/core@7.27.3)(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react@19.1.0)
+      canvas-confetti:
+        specifier: ^1.9.3
+        version: 1.9.3
       class-variance-authority:
         specifier: ^0.7.1
         version: 0.7.1
@@ -104,6 +107,9 @@ importers:
       cmdk:
         specifier: ^1.1.1
         version: 1.1.1(@types/react-dom@19.1.5(@types/react@19.1.6))(@types/react@19.1.6)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      critters:
+        specifier: ^0.0.25
+        version: 0.0.25
       date-fns:
         specifier: ^4.1.0
         version: 4.1.0
@@ -4094,6 +4100,9 @@ packages:
   caniuse-lite@1.0.30001720:
     resolution: {integrity: sha512-Ec/2yV2nNPwb4DnTANEV99ZWwm3ZWfdlfkQbWSDDt+PsXEVYwlhPH8tdMaPunYTKKmz7AnHi2oNEi1GcmKCD8g==}
 
+  canvas-confetti@1.9.3:
+    resolution: {integrity: sha512-rFfTURMvmVEX1gyXFgn5QMn81bYk70qa0HLzcIOSVEyl57n6o9ItHeBtUSWdvKAPY0xlvBHno4/v3QPrT83q9g==}
+
   chalk@3.0.0:
     resolution: {integrity: sha512-4D3B6Wf41KOYRFdszmDqMCGq5VV/uMAB273JILmO+3jAlh8X4qDtdtgCR3fxtbLEMzSx22QdhnDcJvu2u1fVwg==}
     engines: {node: '>=8'}
@@ -4287,6 +4296,10 @@ packages:
   create-require@1.1.1:
     resolution: {integrity: sha512-dcKFX3jn0MpIaXjisoRvexIJVEKzaq7z2rZKxf+MSr9TkdmHmsU4m2lcLojrj/FHl8mk5VxMmYA+ftRkP/3oKQ==}
 
+  critters@0.0.25:
+    resolution: {integrity: sha512-ROF/tjJyyRdM8/6W0VqoN5Ql05xAGnkf5b7f3sTEl1bI5jTQQf8O918RD/V9tEb9pRY/TKcvJekDbJtniHyPtQ==}
+    deprecated: Ownership of Critters has moved to the Nuxt team, who will be maintaining the project going forward. If you'd like to keep using Critters, please switch to the actively-maintained fork at https://github.com/danielroe/beasties
+
   cross-env@7.0.3:
     resolution: {integrity: sha512-+/HKd6EgcQCJGh2PSjZuUitQBQynKor4wrFbRg4DtAgS1aWO+gU52xpH7M9ScGgXSYmAVS9bIJ8EzuaGw0oNAw==}
     engines: {node: '>=10.14', npm: '>=6', yarn: '>=1'}
@@ -4307,6 +4320,9 @@ packages:
 
   css-select@4.3.0:
     resolution: {integrity: sha512-wPpOYtnsVontu2mODhA19JrqWxNsfdatRKd64kmpRbQgh1KtItko5sTnEpPdpSaJszTOhEMlF/RPz28qj4HqhQ==}
+
+  css-select@5.1.0:
+    resolution: {integrity: sha512-nwoRF1rvRRnnCqqY7updORDsuqKzqYJ28+oSMaJMMgOauh3fvwHqMS7EZpIPqK8GL+g9mKxF1vP/ZjSeNjEVHg==}
 
   css-tree@1.1.3:
     resolution: {integrity: sha512-tRpdppF7TRazZrjJ6v3stzv93qxRcSsFmW6cX0Zm2NVKpxE1WV1HblnghVv9TreireHkqI/VDEsfolRF1p6y7Q==}
@@ -6323,6 +6339,9 @@ packages:
         optional: true
       ts-node:
         optional: true
+
+  postcss-media-query-parser@0.2.3:
+    resolution: {integrity: sha512-3sOlxmbKcSHMjlUXQZKQ06jOswE7oVkXPxmZdoB1r5l0q6gTFTQSHxNxOrCccElbW7dxNytifNEo8qidX2Vsig==}
 
   postcss-merge-longhand@5.1.7:
     resolution: {integrity: sha512-YCI9gZB+PLNskrK0BB3/2OzPnGhPkBEwmwhfYk1ilBHYVAZB7/tkTHFBAnCrvBBOmeYyMYw3DMjT55SyxMBzjQ==}
@@ -12194,6 +12213,8 @@ snapshots:
 
   caniuse-lite@1.0.30001720: {}
 
+  canvas-confetti@1.9.3: {}
+
   chalk@3.0.0:
     dependencies:
       ansi-styles: 4.3.0
@@ -12393,6 +12414,16 @@ snapshots:
   create-require@1.1.1:
     optional: true
 
+  critters@0.0.25:
+    dependencies:
+      chalk: 4.1.2
+      css-select: 5.1.0
+      dom-serializer: 2.0.0
+      domhandler: 5.0.3
+      htmlparser2: 8.0.2
+      postcss: 8.5.4
+      postcss-media-query-parser: 0.2.3
+
   cross-env@7.0.3:
     dependencies:
       cross-spawn: 7.0.6
@@ -12415,6 +12446,14 @@ snapshots:
       css-what: 6.1.0
       domhandler: 4.3.1
       domutils: 2.8.0
+      nth-check: 2.1.1
+
+  css-select@5.1.0:
+    dependencies:
+      boolbase: 1.0.0
+      css-what: 6.1.0
+      domhandler: 5.0.3
+      domutils: 3.2.2
       nth-check: 2.1.1
 
   css-tree@1.1.3:
@@ -14856,6 +14895,8 @@ snapshots:
     optionalDependencies:
       postcss: 8.5.4
       ts-node: 10.9.2(@types/node@22.15.27)(typescript@5.8.3)
+
+  postcss-media-query-parser@0.2.3: {}
 
   postcss-merge-longhand@5.1.7(postcss@8.5.4):
     dependencies:

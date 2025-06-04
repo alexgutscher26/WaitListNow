@@ -39,7 +39,7 @@ import {
   ListChecks,
   Save,
 } from 'lucide-react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -48,6 +48,9 @@ import {
   DialogDescription,
   DialogFooter,
 } from '@/components/ui/dialog';
+// @ts-expect-error: No types for canvas-confetti
+import confetti from 'canvas-confetti';
+import { SocialShareButtons } from '@/components/ui/SocialShareButtons';
 
 /**
  * @fileoverview This file contains the implementation of the Settings component,
@@ -237,13 +240,26 @@ const AccountSettingsContent = () => {
   const [isLoadingSessions, setIsLoadingSessions] = useState(false);
   const [revokingSessionId, setRevokingSessionId] = useState<string | null>(null);
 
+  // Referral state
+  const [referralInfo, setReferralInfo] = useState<{
+    referralLink: string;
+    referralCode: string;
+    referralCount: number;
+    rewards: { name: string; count: number; reward: string }[];
+    nextReward: { name: string; count: number; reward: string; referralsToNext: number; progress: number; message: string } | null;
+    progress: number;
+    topReferrer: boolean;
+  } | null>(null);
+  const [referralLoading, setReferralLoading] = useState(true);
+  const [referralError, setReferralError] = useState<string | null>(null);
+
+  const prevRewardsCount = useRef<number>(0);
+
   // Fetch profile and preferences data on component mount
   useEffect(() => {
     const fetchData = async () => {
       if (!user) return;
-
       setIsLoading(true);
-
       try {
         // Fetch both profile and preferences in parallel
         const [profileRes, prefsRes] = await Promise.all([
@@ -285,9 +301,22 @@ const AccountSettingsContent = () => {
         setIsLoading(false);
       }
     };
-
     fetchData();
   }, [user, toast]);
+
+  // Confetti on milestone unlock
+  useEffect(() => {
+    if (referralInfo && referralInfo.rewards) {
+      if (referralInfo.rewards.length > prevRewardsCount.current) {
+        confetti({
+          particleCount: 120,
+          spread: 80,
+          origin: { y: 0.7 },
+        });
+      }
+      prevRewardsCount.current = referralInfo.rewards.length;
+    }
+  }, [referralInfo?.rewards?.length]);
 
   // Handle form input changes with null check
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -651,12 +680,30 @@ const AccountSettingsContent = () => {
     }
   };
 
-  /**
-   * Copies a predefined referral link to the clipboard.
-   */
-  // const copyReferralLink = () => {
-  //   navigator.clipboard.writeText('https://yourwaitlist.com/ref/user123');
-  // };
+  useEffect(() => {
+    const fetchReferral = async () => {
+      setReferralLoading(true);
+      setReferralError(null);
+      try {
+        const res = await fetch('/api/account/referral');
+        if (!res.ok) throw new Error('Failed to fetch referral info');
+        const data = await res.json();
+        setReferralInfo(data);
+      } catch (err: any) {
+        setReferralError(err.message || 'Error fetching referral info');
+      } finally {
+        setReferralLoading(false);
+      }
+    };
+    fetchReferral();
+  }, []);
+
+  const copyReferralLink = () => {
+    if (referralInfo?.referralLink) {
+      navigator.clipboard.writeText(referralInfo.referralLink);
+      toast({ title: 'Copied!', description: 'Referral link copied to clipboard.' });
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -1244,38 +1291,166 @@ const AccountSettingsContent = () => {
       </Card>
 
       {/* Referral Program */}
-      {/* <Card>
+      <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Users className="h-5 w-5" />
             Referral Program
+            {referralInfo?.topReferrer && (
+              <Badge className="ml-2 bg-gradient-to-r from-yellow-400 to-pink-500 text-white animate-pulse">
+                Top 1% Referrer
+              </Badge>
+            )}
           </CardTitle>
           <CardDescription>Share your referral link and earn rewards</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg border">
-            <div className="flex items-center justify-between mb-2">
-              <h4 className="font-medium">Your Referral Link</h4>
-              <Badge variant="secondary">5 referrals</Badge>
-            </div>
-            <div className="flex items-center gap-2">
-              <code className="flex-1 p-2 bg-white rounded border text-sm">
-                https://yourwaitlist.com/ref/user123
-              </code>
-              <Button
-                size="sm"
-                variant="outline"
-                onClick={copyReferralLink}
-              >
-                <Copy className="h-4 w-4" />
-              </Button>
-            </div>
-            <p className="text-sm text-muted-foreground mt-2">
-              Earn 10% commission on all referral subscriptions
-            </p>
+            {referralLoading ? (
+              <div className="text-sm text-muted-foreground">Loading referral info...</div>
+            ) : referralError ? (
+              <div className="text-sm text-red-500">{referralError}</div>
+            ) : referralInfo ? (
+              <>
+                {/* Milestone Stepper */}
+                <div className="mb-6">
+                  <div className="flex items-center justify-between relative">
+                    {/* Stepper Circles */}
+                    {referralInfo.rewards.map((reward, idx) => (
+                      <div key={reward.count} className="flex-1 flex flex-col items-center group">
+                        <div className="relative z-10">
+                          <div className="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center text-white font-bold shadow-lg border-2 border-green-600">
+                            <span>{idx + 1}</span>
+                          </div>
+                          <div className="absolute left-1/2 -translate-x-1/2 mt-2 w-max text-xs text-green-700 font-semibold whitespace-nowrap">
+                            {reward.name}
+                          </div>
+                          <div className="absolute left-1/2 -translate-x-1/2 mt-8 w-max text-xs text-gray-500 opacity-0 group-hover:opacity-100 transition-opacity bg-white border rounded px-2 py-1 shadow-lg">
+                            {reward.reward}
+                          </div>
+                        </div>
+                        {/* Connector */}
+                        {idx < referralInfo.rewards.length - 1 && (
+                          <div className="absolute top-1/2 left-full w-full h-1 bg-green-400 z-0" style={{ width: '100%', height: 4, marginLeft: -8 }} />
+                        )}
+                      </div>
+                    ))}
+                    {/* Next Reward Circle */}
+                    {referralInfo.nextReward && (
+                      <div className="flex-1 flex flex-col items-center group">
+                        <div className="relative z-10">
+                          <div className="w-8 h-8 rounded-full border-2 border-blue-400 flex items-center justify-center text-blue-600 font-bold bg-white animate-pulse shadow-lg">
+                            <span>{referralInfo.rewards.length + 1}</span>
+                          </div>
+                          <div className="absolute left-1/2 -translate-x-1/2 mt-2 w-max text-xs text-blue-700 font-semibold whitespace-nowrap">
+                            {referralInfo.nextReward.name}
+                          </div>
+                          <div className="absolute left-1/2 -translate-x-1/2 mt-8 w-max text-xs text-gray-500 opacity-0 group-hover:opacity-100 transition-opacity bg-white border rounded px-2 py-1 shadow-lg">
+                            {referralInfo.nextReward.reward}
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                  {/* Progress Bar Under Stepper */}
+                  {referralInfo.nextReward && (
+                    <div className="relative mt-4 h-2 bg-gray-200 rounded-full overflow-hidden">
+                      <div
+                        className="absolute left-0 top-0 h-2 bg-gradient-to-r from-blue-400 to-purple-500 rounded-full transition-all"
+                        style={{ width: `${referralInfo.progress}%` }}
+                      />
+                    </div>
+                  )}
+                </div>
+                {/* Urgency Message */}
+                {referralInfo.nextReward && (
+                  <div className="text-sm font-medium text-blue-700 mb-2">
+                    {referralInfo.nextReward.message}
+                  </div>
+                )}
+                {/* Unlocked Rewards List */}
+                {referralInfo.rewards.length > 0 && (
+                  <div className="mb-2 flex flex-wrap gap-2">
+                    {referralInfo.rewards.map((reward) => (
+                      <Badge key={reward.count} className="bg-green-600 text-white">
+                        {reward.name}
+                      </Badge>
+                    ))}
+                  </div>
+                )}
+                {/* Referral Link */}
+                <div className="flex items-center justify-between mb-2">
+                  <h4 className="font-medium">Your Referral Link</h4>
+                  <Badge variant="secondary">{referralInfo.referralCount} referral{referralInfo.referralCount === 1 ? '' : 's'}</Badge>
+                </div>
+                <div className="flex items-center gap-2">
+                  <code className="flex-1 p-2 bg-white rounded border text-sm overflow-x-auto">
+                    {referralInfo.referralLink}
+                  </code>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={copyReferralLink}
+                  >
+                    <Copy className="h-4 w-4" />
+                  </Button>
+                </div>
+                <SocialShareButtons
+                  url={referralInfo.referralLink}
+                  message={`🌟 WaitListNow Early Access! 🌟\n\n🚀 Skip the line and unlock rewards!\n\n👇 Tap to join:\n${referralInfo.referralLink}\n\n━━━━━━━━━━━━━━\n#WaitListNow #EarlyAccess`}
+                  className="mt-2"
+                />
+                <p className="text-sm text-muted-foreground mt-2">
+                  Share your link to earn rewards for successful referrals!
+                </p>
+              </>
+            ) : null}
           </div>
         </CardContent>
-      </Card> */}
+      </Card>
+
+      {/* Referral Badges Section */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Crown className="h-5 w-5 text-yellow-500" />
+            Your Referral Badges
+          </CardTitle>
+          <CardDescription>Celebrate your referral achievements!</CardDescription>
+        </CardHeader>
+        <CardContent>
+          {referralLoading ? (
+            <div className="text-sm text-muted-foreground">Loading badges...</div>
+          ) : referralError ? (
+            <div className="text-sm text-red-500">{referralError}</div>
+          ) : referralInfo && referralInfo.rewards.length > 0 ? (
+            <div className="flex flex-wrap gap-4">
+              {referralInfo.rewards.map((badge, idx) => (
+                <div
+                  key={badge.count}
+                  className="flex flex-col items-center bg-gradient-to-br from-green-100 to-blue-100 border border-green-300 rounded-xl p-4 shadow-md min-w-[140px] max-w-[180px]"
+                >
+                  <div className="text-3xl mb-2">
+                    {/* Use different icons or emojis for each tier if desired */}
+                    {idx === 0 && '🥉'}
+                    {idx === 1 && '🥈'}
+                    {idx === 2 && '🥇'}
+                    {idx === 3 && '🚀'}
+                    {idx === 4 && '🎉'}
+                    {idx === 5 && '👑'}
+                    {idx === 6 && '🏆'}
+                  </div>
+                  <div className="font-bold text-green-700 text-lg mb-1">{badge.name}</div>
+                  <div className="text-xs text-gray-600 text-center mb-1">{badge.reward}</div>
+                  <div className="text-xs text-blue-700 font-semibold">{badge.count} referrals</div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-sm text-gray-500">You haven&apos;t unlocked any referral badges yet. Start sharing your link to earn rewards!</div>
+          )}
+        </CardContent>
+      </Card>
 
       {/* Account Security */}
       <Card>

@@ -3,6 +3,7 @@ import { getAuth, currentUser } from '@clerk/nextjs/server';
 import { db } from '@/lib/db';
 import { onboardingCompleteSchema } from '@/lib/validations/onboarding';
 import { z } from 'zod';
+import { v4 as uuidv4 } from 'uuid';
 
 // Enable debug logging in development
 const isDev = process.env.NODE_ENV === 'development';
@@ -49,10 +50,13 @@ export async function POST(req: NextRequest) {
     if (!user) {
       log('User not found, creating new user with externalId:', userId);
       try {
+        // Generate a unique referral code (short uuid)
+        const referralCode = uuidv4().split('-')[0];
         user = await db.user.create({
           data: {
             externalId: userId,
             email: userEmail,
+            referralCode,
             // Add any other required fields with default values
           },
         });

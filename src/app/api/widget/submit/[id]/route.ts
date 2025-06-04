@@ -72,6 +72,7 @@ export async function POST(request: Request, { params }: { params: { id: string 
     }
 
     // Create subscriber
+    const newReferralCode = uuidv4().split('-')[0];
     const subscriber = await db.subscriber.create({
       data: {
         id: uuidv4(),
@@ -80,10 +81,19 @@ export async function POST(request: Request, { params }: { params: { id: string 
         waitlistId: waitlist.id,
         userId: waitlist.userId,
         customFields: fields || {},
-        referralCode: referralCode || null,
+        referralCode: newReferralCode,
+        referredBy: referralCode || null,
         status: requireEmailVerification ? 'PENDING' : 'VERIFIED',
       },
     });
+
+    // Increment referralCount for the referrer if referralCode is present
+    if (referralCode) {
+      await db.user.updateMany({
+        where: { referralCode },
+        data: { referralCount: { increment: 1 } },
+      });
+    }
 
     if (requireEmailVerification) {
       // Generate a verification token

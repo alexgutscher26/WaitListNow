@@ -18,14 +18,15 @@ This document outlines the planned improvements and enhancements for the WaitLis
   - [x] Develop JavaScript snippet for website integration
   - [X] Support iframe embedding option
   - [X] Create direct script embedding option
-  - [ ] Add customization parameters for the widget
+  - [X] Add customization parameters for the widget
 
-- [ ] **Referral System**
+- [X] **Referral System**
 
-  - [ ] Implement referral link generation and tracking
-  - [ ] Create reward system for successful referrals
-  - [ ] Develop analytics dashboard for referral performance
+  - [X] Implement referral link generation and tracking
+  - [X] Create reward system for successful referrals
   - [ ] Add social sharing capabilities
+  - [ ] add email/in-app notifications for reward unlocks 
+  - [ ] create the referral badges
 
 - [ ] **Email Notification System**
 

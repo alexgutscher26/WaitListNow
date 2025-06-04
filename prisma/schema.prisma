@@ -29,6 +29,8 @@ model User {
   preferences             Json?        @default("{}")
   timezone                String       @default("UTC")
   website                 String?
+  referralCode            String?      @unique
+  referralCount           Int          @default(0)
   waitlistPreferences     Json?        @map("waitlist_preferences") @default("{\"maxSubscribers\": 1000, \"emailNotifications\": true, \"defaultWaitlistLimit\": 1, \"autoApproveSubscribers\": true, \"requireEmailVerification\": false}")
   subscribers             Subscriber[]
   waitlists               Waitlist[]

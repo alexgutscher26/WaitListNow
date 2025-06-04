@@ -24,7 +24,7 @@ This document outlines the planned improvements and enhancements for the WaitLis
 
   - [X] Implement referral link generation and tracking
   - [X] Create reward system for successful referrals
-  - [ ] Add social sharing capabilities
+  - [X] Add social sharing capabilities
   - [ ] add email/in-app notifications for reward unlocks 
   - [ ] create the referral badges
 

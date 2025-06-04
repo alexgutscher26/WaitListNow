@@ -55,7 +55,7 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
       status: 401,
       headers: {
         'Content-Type': 'application/json',
-        ...(apiKey ? { 'Authorization': `Bearer ${apiKey}` } : {}),
+        ...(apiKey ? { Authorization: `Bearer ${apiKey}` } : {}),
       },
     });
   }
@@ -79,10 +79,10 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
     });
 
     if (!waitlist) {
-      return new NextResponse(
-        JSON.stringify({ error: 'Waitlist not found' }),
-        { status: 404, headers: { 'Content-Type': 'application/json' } }
-      );
+      return new NextResponse(JSON.stringify({ error: 'Waitlist not found' }), {
+        status: 404,
+        headers: { 'Content-Type': 'application/json' },
+      });
     }
 
     // Check if email already exists for this waitlist if duplicates are not allowed
@@ -200,10 +200,10 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
     });
 
     if (!waitlist) {
-      return new NextResponse(
-        JSON.stringify({ error: 'Waitlist not found' }),
-        { status: 404, headers: { 'Content-Type': 'application/json' } }
-      );
+      return new NextResponse(JSON.stringify({ error: 'Waitlist not found' }), {
+        status: 404,
+        headers: { 'Content-Type': 'application/json' },
+      });
     }
 
     // Build the where clause for filtering
@@ -301,18 +301,17 @@ async function isValidApiKey(apiKey: string, waitlistId: string): Promise<boolea
   // Find the waitlist and its owner
   const waitlist = await db.waitlist.findUnique({
     where: { id: waitlistId },
-    select: { userId: true }
+    select: { userId: true },
   });
   if (!waitlist) return false;
 
   // Find the user and check the API key
   const user = await db.user.findUnique({
     where: { id: waitlist.userId },
-    select: { apiKey: true }
+    select: { apiKey: true },
   });
   if (!user) return false;
 
   // Compare the provided API key with the user's stored API key
   return user.apiKey === apiKey;
 }
-

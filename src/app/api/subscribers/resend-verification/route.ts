@@ -366,11 +366,13 @@ export async function GET(request: NextRequest) {
       email = user.email;
     } else {
       return new Response(
-        JSON.stringify({ error: 'Email query parameter is required, and no email found for authenticated user.' }),
+        JSON.stringify({
+          error: 'Email query parameter is required, and no email found for authenticated user.',
+        }),
         {
           status: 400,
           headers: { 'Content-Type': 'application/json' },
-        }
+        },
       );
     }
   }

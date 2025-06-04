@@ -41,4 +41,4 @@ export async function GET(request: Request) {
 
   // Redirect to a success page or return a message
   return NextResponse.redirect(new URL('/verification-success', request.url));
-} 
+}

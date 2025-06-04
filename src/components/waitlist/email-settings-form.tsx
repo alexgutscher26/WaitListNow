@@ -1,5 +1,6 @@
 'use client';
 
+import * as React from 'react';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
@@ -13,7 +14,7 @@ import { toast } from '@/components/ui/use-toast';
 
 // Define the form schema using Zod
 const emailSettingsSchema = z.object({
-  sendConfirmationEmail: z.boolean().default(true),
+  sendConfirmationEmail: z.boolean(),
   customThankYouMessage: z.string().max(500).optional(),
 });
 
@@ -22,10 +23,10 @@ type EmailSettingsValues = z.infer<typeof emailSettingsSchema>;
 interface EmailSettingsFormProps {
   waitlist: {
     id: string;
-    customFields?: {
-      sendConfirmationEmail?: boolean;
+    customFields: {
+      sendConfirmationEmail: boolean;
       customThankYouMessage?: string;
-    } | null;
+    };
   };
 }
 
@@ -33,12 +34,14 @@ export function EmailSettingsForm({ waitlist }: EmailSettingsFormProps) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
 
+  // Always provide a default customFields object if missing
+  const customFields = waitlist.customFields || { sendConfirmationEmail: true };
   const form = useForm<EmailSettingsValues>({
     resolver: zodResolver(emailSettingsSchema),
     defaultValues: {
-      sendConfirmationEmail: waitlist.customFields?.sendConfirmationEmail ?? true,
+      sendConfirmationEmail: customFields.sendConfirmationEmail,
       customThankYouMessage:
-        waitlist.customFields?.customThankYouMessage ||
+        customFields.customThankYouMessage ||
         "Thank you for joining our waitlist! We'll notify you when we launch.",
     },
   });

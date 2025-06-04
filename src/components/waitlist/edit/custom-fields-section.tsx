@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -57,7 +58,7 @@ function SortableItem({
 
   return (
     <div
-      ref={setNoderef}
+      ref={setNodeRef}
       style={style}
       className="relative group bg-white p-4 rounded-lg border border-gray-200 mb-2 hover:shadow-md transition-shadow"
     >
@@ -116,7 +117,7 @@ export function CustomFieldsSection({
     setShowAddField(false);
   };
 
-  const handleUpdateField = (id: string, field: string, value: any) => {
+  const handleUpdateField = (id: string, field: string, value: unknown) => {
     onUpdateField(id, { [field]: value });
   };
 

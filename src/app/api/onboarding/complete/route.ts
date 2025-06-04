@@ -145,7 +145,7 @@ export async function POST(req: NextRequest) {
 
     // Handle Prisma errors specifically
     if (error && typeof error === 'object' && 'code' in error) {
-      const prismaError = error as any;
+      const prismaError = error as unknown;
       if (prismaError.code === 'P2002') {
         return new NextResponse(
           JSON.stringify({

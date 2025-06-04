@@ -1,5 +1,6 @@
 'use client';
 
+import * as React from 'react';
 import { SignIn } from '@clerk/nextjs';
 import { useSearchParams } from 'next/navigation';
 

@@ -12,11 +12,25 @@ import {
 import { ChevronRight } from 'lucide-react';
 import ActivityItem from './ActivityItem';
 
-interface RecentActivityModalProps {
-  recentActivity: any[];
+interface Activity {
+  id: string;
+  type: string;
+  name?: string;
+  waitlist?: string;
+  email?: string;
+  referrer?: string;
+  referred?: string;
+  reward?: string;
+  revenue?: string;
+  message?: string;
+  time: string;
 }
 
-function formatActivityMessage(activity: any) {
+interface RecentActivityModalProps {
+  recentActivity: Activity[];
+}
+
+function formatActivityMessage(activity: Activity) {
   switch (activity.type) {
     case 'new_subscriber':
       return (

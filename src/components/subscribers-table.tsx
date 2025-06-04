@@ -226,7 +226,7 @@ export function SubscribersTable({ waitlistId }: SubscribersTableProps) {
         setDeleteDialogOpen(false);
       }
     },
-    [queryClient, waitlistId],
+    [queryClient, waitlistId, toast],
   );
 
   // Handle export subscribers
@@ -336,7 +336,7 @@ export function SubscribersTable({ waitlistId }: SubscribersTableProps) {
         variant: 'destructive',
       });
     }
-  }, [rowSelection, queryClient, waitlistId]);
+  }, [rowSelection, queryClient, waitlistId, toast]);
 
   // Define table columns
   const columns: ColumnDef<Subscriber>[] = [

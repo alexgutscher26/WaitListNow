@@ -1,5 +1,6 @@
 'use client';
 
+import React from 'react';
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { toast } from 'sonner';
@@ -52,7 +53,7 @@ interface FormData {
   websiteUrl: string;
   redirectUrl: string;
   logoUrl: string;
-  maxSignups: number | null;
+  maxSignups: number;
   customFields: CustomField[];
   style: WaitlistStyle;
   settings: {
@@ -82,7 +83,7 @@ export default function EditWaitlistPage() {
     websiteUrl: '',
     redirectUrl: '',
     logoUrl: '',
-    maxSignups: null,
+    maxSignups: 0,
     customFields: [],
     style: {
       primaryColor: '#3b82f6',
@@ -127,7 +128,7 @@ export default function EditWaitlistPage() {
           websiteUrl: data.websiteUrl || '',
           redirectUrl: data.redirectUrl || '',
           logoUrl: data.logoUrl || '',
-          maxSignups: data.maxSignups,
+          maxSignups: data.maxSignups ?? 0,
           customFields: data.customFields || [],
           style: {
             primaryColor: data.style?.primaryColor || '#3b82f6',
@@ -332,7 +333,7 @@ export default function EditWaitlistPage() {
       >
         <Tabs
           value={activeTab}
-          onValueChange={(v) => setActiveTab(v as any)}
+          onValueChange={(v: string) => setActiveTab(v as 'basic' | 'fields' | 'appearance' | 'behavior')}
         >
           <TabsList className="w-full justify-start overflow-x-auto">
             <TabsTrigger value="basic">Basic Info</TabsTrigger>

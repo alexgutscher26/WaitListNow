@@ -32,8 +32,8 @@ export class ErrorBoundary extends Component<Props, State> {
     this.setState({ error, errorInfo });
     
     // Log error to PostHog if available
-    if (typeof window !== 'undefined' && (window as any).posthog) {
-      (window as any).posthog.capture('$exception', {
+    if (typeof window !== 'undefined' && (window as unknown).posthog) {
+      (window as unknown).posthog.capture('$exception', {
         $exception_message: error.message,
         $exception_type: error.name,
         $exception_stack: error.stack,

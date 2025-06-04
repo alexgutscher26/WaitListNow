@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -10,7 +11,7 @@ import { Copy, Check } from 'lucide-react';
 
 interface BehaviorSectionProps {
   formData: {
-    [x: string]: any;
+    [x: string]: unknown;
     settings: {
       confirmationType: 'message' | 'redirect';
       confirmationMessage: string;
@@ -20,7 +21,7 @@ interface BehaviorSectionProps {
       maxReferrals: number;
     };
   };
-  onSettingsChange: (name: string, value: any) => void;
+  onSettingsChange: (name: string, value: unknown) => void;
 }
 
 export function BehaviorSection({ formData, onSettingsChange }: BehaviorSectionProps) {

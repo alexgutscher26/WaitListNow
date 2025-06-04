@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { Heading } from '@/components/heading';
 import { MaxWidthWrapper } from '@/components/max-width-wrapper';
 import {

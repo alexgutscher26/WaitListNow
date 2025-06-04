@@ -1,5 +1,7 @@
 'use client';
 
+import * as React from 'react';
+
 // synchronize auth status to database
 
 import { useQuery } from '@tanstack/react-query';

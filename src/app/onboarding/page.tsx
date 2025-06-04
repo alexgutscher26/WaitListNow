@@ -1,5 +1,6 @@
 'use client';
 
+import React from 'react';
 import {
   AlertCircle,
   ArrowRight,
@@ -501,7 +502,7 @@ const onboardingSteps = [
                       type="checkbox"
                       checked={formData.emailNotifications}
                       onChange={(e) =>
-                        setFormData((prev: any) => ({
+                        setFormData((prev: unknown) => ({
                           ...prev,
                           emailNotifications: e.target.checked,
                         }))
@@ -530,7 +531,7 @@ const onboardingSteps = [
                       type="checkbox"
                       checked={formData.marketingEmails}
                       onChange={(e) =>
-                        setFormData((prev) => ({
+                        setFormData((prev: unknown) => ({
                           ...prev,
                           marketingEmails: e.target.checked,
                         }))

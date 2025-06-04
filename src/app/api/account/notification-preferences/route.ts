@@ -36,7 +36,7 @@ const defaultPreferences: NotificationPreferences = {
  * @param prefs - An object containing user-defined notification preferences.
  * @returns A normalized object of notification preferences with boolean values.
  */
-function parseNotificationPreferences(prefs: any): NotificationPreferences {
+function parseNotificationPreferences(prefs: unknown): NotificationPreferences {
   if (!prefs || typeof prefs !== 'object') {
     return { ...defaultPreferences };
   }

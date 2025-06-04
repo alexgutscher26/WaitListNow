@@ -16,44 +16,108 @@ This document outlines the planned improvements and enhancements for the WaitLis
 - [X] **Embeddable Widget Implementation**
 
   - [x] Develop JavaScript snippet for website integration
-  - [X] Support iframe embedding option
-  - [X] Create direct script embedding option
-  - [X] Add customization parameters for the widget
+    - [ ] Create lightweight, async-loading script
+    - [ ] Implement automatic widget initialization
+    - [ ] Add error handling and fallback options
+  - [x] Support iframe embedding option
+    - [ ] Create responsive iframe container
+    - [ ]  Implement secure cross-origin communication
+    - [ ] Add iframe resize handling
+  - [x] Create direct script embedding option
+    - [ ] Develop self-contained widget bundle
+    - [ ] Add automatic style injection
+    - [ ] Implement DOM mutation observers
+  - [x] Add customization parameters for the widget
+    - [ ] Support color scheme customization
+    - [ ] Add layout and positioning options
+    - [ ] Implement responsive design controls
 
 - [X] **Referral System**
 
   - [X] Implement referral link generation and tracking
+    - [X] Add unique referral code generation
+    - [X] Create referral link tracking system
+    - [X] Implement referral analytics dashboard
   - [X] Create reward system for successful referrals
+    - [X] Add configurable reward tiers
+    - [X] Implement reward tracking and distribution
+    - [] Create reward redemption system
   - [X] Add social sharing capabilities
-  - [ ] add email/in-app notifications for reward unlocks 
-  - [ ] create the referral badges
+    - [X] Implement share buttons for major platforms (Twitter, LinkedIn, Facebook)
+    - [ ] Add customizable share messages and previews
+    - [ ] Implement social proof counters
+  - [ ] Implement real-time notifications for reward unlocks
+    - [ ] Add email notifications using Resend
+    - [ ] Create in-app notification system
+    - [ ] Add notification preferences in user settings
+  - [ ] Design and implement referral achievement system
+    - [ ] Create badge designs for different referral milestones
+    - [ ] Add badge display in user profile
+    - [ ] Implement badge unlock animations
+    - [ ] Add social sharing for badge achievements
 
 - [ ] **Email Notification System**
 
   - [x] Set up integration with Resend
   - [X] Create email templates for different events
   - [ ] Implement scheduled emails for waitlist updates
-  - [ ] Setting up a notification service to trigger these emails?
-  - [ ] Add email customization options
+    - [ ] Create email templates for different update types
+    - [ ] Set up cron jobs for scheduled emails
+    - [ ] Add email queue system for better reliability
+  - [ ] Build notification service
+    - [ ] Create notification service architecture
+    - [ ] Implement event-driven notification triggers
+    - [ ] Add notification logging and tracking
+  - [ ] Email customization features
+    - [ ] Add template editor with WYSIWYG interface
+    - [ ] Implement variable substitution system
+    - [ ] Create email preview functionality
+    - [ ] Add A/B testing capabilities
 
 - [ ] **White-labeling Capabilities**
-  - [ ] Add customization for logos, colors, and fonts
-  - [ ] Implement custom CSS overrides
-  - [ ] Create branding settings page in dashboard
-  - [ ] Add white-label domain support
+
+  - [ ] Brand customization
+    - [ ] Add logo upload and management
+    - [ ] Implement color scheme customization
+    - [ ] Add font selection and management
+    - [ ] Create brand asset library
+  - [ ] Advanced styling
+    - [ ] Implement custom CSS editor
+    - [ ] Add theme presets
+    - [ ] Create responsive design controls
+    - [ ] Add animation customization
+  - [ ] Branding management
+    - [ ] Create comprehensive branding dashboard
+    - [ ] Add brand consistency checks
+    - [ ] Implement brand guidelines export
+    - [ ] Add multi-brand support
+  - [ ] Domain management
+    - [ ] Add custom domain configuration
+    - [ ] Implement SSL certificate management
+    - [ ] Create domain verification system
+    - [ ] Add DNS record management
 
 ## 2. Technical Improvements
 
 - [ ] **Database Optimization**
 
-  - [ ] Review and optimize Prisma schema
-  - [ ] Add appropriate indexes for frequently queried fields
-  - [ ] Implement database caching strategies
-  - [ ] Set up database monitoring
+  - [ ] Database Schema & Performance
+    - [ ] Review and optimize Prisma schema for better query performance
+    - [ ] Add appropriate indexes for frequently queried fields (email, userId, status)
+    - [ ] Implement Redis caching for high-traffic queries
+    - [ ] Set up database monitoring with Prometheus/Grafana
+    - [ ] Add query performance tracking and optimization
+    - [ ] Implement connection pooling for better resource utilization
 
 - [x] **Performance Enhancements**
 
-  - [ ] Implement server-side rendering for critical pages
+  - [ ] Implement server-side rendering (SSR) for critical pages
+    - [ ] Convert key pages to use Next.js App Router
+    - [ ] Add dynamic metadata generation
+    - [ ] Implement proper loading states
+    - [ ] Add error boundaries for SSR failures
+    - [ ] Optimize data fetching with React Query
+    - [ ] Add proper caching strategies
   - [x] Add image optimization
   - [x] Implement code splitting and lazy loading
   - [x] Set up CDN for static assets
@@ -61,18 +125,44 @@ This document outlines the planned improvements and enhancements for the WaitLis
 
 - [ ] **Security Improvements**
 
-  - [ ] Add rate limiting to prevent abuse (@upstash/ratelimit)
-  - [ ] Implement CSRF protection
-  - [ ] Add input validation on all API endpoints
-  - [ ] Set up security headers
-  - [ ] Conduct security audit
+  - [ ] Implement comprehensive security measures
+    - [ ] Add rate limiting with @upstash/ratelimit for API endpoints
+      - [ ] Configure IP-based rate limiting
+      - [ ] Add user-based rate limiting for authenticated routes
+      - [ ] Implement rate limit headers and responses
+    - [ ] Enhance API security
+      - [ ] Implement CSRF protection with next-csrf
+      - [ ] Add input validation using zod schemas
+      - [ ] Set up security headers with next-secure-headers
+      - [ ] Implement request sanitization
+    - [ ] Security audit and monitoring
+      - [ ] Conduct OWASP security audit
+      - [ ] Set up security monitoring with Sentry
+      - [ ] Implement automated security scanning
+      - [ ] Add security logging and alerts
 
 - [ ] **Testing Infrastructure**
 
-  - [ ] Increase unit test coverage
-  - [ ] Add integration tests
-  - [ ] Implement end-to-end tests (Cypress/Playwright)
-  - [ ] Set up visual regression testing
+    - [ ] Unit Testing
+      - [ ] Increase test coverage to minimum 80%
+      - [ ] Add unit tests for all utility functions
+      - [ ] Implement test mocks for external services
+      - [ ] Add snapshot testing for components
+    - [ ] Integration Testing
+      - [ ] Set up API integration tests
+      - [ ] Add database integration tests
+      - [ ] Test authentication flows
+      - [ ] Implement service integration tests
+    - [ ] End-to-End Testing
+      - [ ] Set up Playwright for E2E testing
+      - [ ] Add critical user journey tests
+      - [ ] Implement cross-browser testing
+      - [ ] Add mobile device testing
+    - [ ] Visual Testing
+      - [ ] Set up Playwright visual regression testing
+      - [ ] Add component visual testing
+      - [ ] Implement responsive design testing
+      - [ ] Add dark mode visual testing
 
 - [ ] **Monitoring and Error Handling**
   - [ ] Enhance Sentry integration

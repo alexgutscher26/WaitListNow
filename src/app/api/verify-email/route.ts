@@ -4,7 +4,7 @@ import { db } from '@/lib/db';
 
 interface CustomFields {
   verificationToken?: string;
-  [key: string]: any; // Allow other custom fields
+  [key: string]: unknown; // Allow other custom fields
 }
 
 const resend = new Resend(process.env.RESEND_API_KEY);

@@ -1,20 +1,5 @@
 import { NextResponse, type NextRequest } from 'next/server';
-// Lazy load Clerk's getAuth function
-let _getAuth: any;
-
-const getAuth = (req: Request) => {
-  if (!_getAuth) {
-    try {
-      // This will be evaluated at runtime
-      _getAuth = require('@clerk/nextjs/server').getAuth;
-    } catch (error) {
-      console.error('Failed to load Clerk:', error);
-      // Fallback mock for development
-      _getAuth = () => ({ userId: process.env.NODE_ENV === 'development' ? 'dev-user' : null });
-    }
-  }
-  return _getAuth(req);
-};
+import { getAuth } from '@clerk/nextjs/server';
 import { db } from '@/lib/db';
 import { waitlistFormSchema } from '@/lib/validations/waitlist';
 import { z } from 'zod';
@@ -22,7 +7,7 @@ import type { Waitlist } from '@prisma/client';
 
 // Enable debug logging in development
 const isDev = process.env.NODE_ENV === 'development';
-const log = (...args: any[]) => isDev && console.log('[Waitlist API]', ...args);
+const log = (...args: unknown[]) => isDev && console.log('[Waitlist API]', ...args);
 
 // GET /api/waitlists/[id] - Get a specific waitlist
 export async function GET(req: NextRequest, { params }: { params: { id: string } }) {

@@ -1,5 +1,6 @@
 'use client';
 
+import * as React from 'react';
 import { buttonVariants } from '@/components/ui/button';
 import { Modal } from '@/components/ui/modal';
 import { cn } from '@/utils';

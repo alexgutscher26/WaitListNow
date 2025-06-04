@@ -1,3 +1,4 @@
+import React from 'react';
 import { useMediaQuery } from '@/hooks/use-media-query';
 import { cn } from '@/utils';
 import { Dispatch, ReactNode, SetStateAction } from 'react';

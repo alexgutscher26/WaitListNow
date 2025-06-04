@@ -18,10 +18,9 @@ import { Dialog, DialogContent } from '@/components/ui/dialog';
 const Command = React.forwardRef<
   React.ElementRef<typeof CommandPrimitive>,
   React.ComponentPropsWithoutRef<typeof CommandPrimitive> & {
-    loading?: boolean;
     shouldFilter?: boolean;
   }
->(({ className, loading, shouldFilter = true, ...props }, ref) => (
+>(({ className, shouldFilter = true, ...props }, ref) => (
   <CommandPrimitive
     ref={ref}
     shouldFilter={shouldFilter}
@@ -111,11 +110,10 @@ const CommandDialog = ({
 const CommandInput = React.forwardRef<
   React.ElementRef<typeof CommandPrimitive.Input>,
   React.ComponentPropsWithoutRef<typeof CommandPrimitive.Input> & {
-    loading?: boolean;
     clearable?: boolean;
     onClear?: () => void;
   }
->(({ className, loading, clearable, onClear, value, ...props }, ref) => {
+>(({ className, clearable, onClear, value, ...props }, ref) => {
   const [inputValue, setInputValue] = React.useState(value || '');
 
   React.useEffect(() => {
@@ -132,11 +130,6 @@ const CommandInput = React.forwardRef<
       className="flex items-center border-b px-3 relative"
       data-cmdk-input-wrapper=""
     >
-      {loading ? (
-        <Loader2 className="mr-2 h-4 w-4 shrink-0 animate-spin text-muted-foreground" />
-      ) : (
-        <Search className="mr-2 h-4 w-4 shrink-0 opacity-50" />
-      )}
       <CommandPrimitive.Input
         ref={ref}
         value={inputValue}

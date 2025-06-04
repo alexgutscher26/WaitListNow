@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -12,7 +13,6 @@ import {
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Slider } from '@/components/ui/slider';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { EyeDropper } from 'lucide-react';
 import { ChromePicker } from 'react-color';
 
 type ButtonVariant = 'default' | 'outline' | 'secondary' | 'ghost' | 'link';
@@ -38,7 +38,7 @@ interface AppearanceSectionProps {
       borderRadius: string;
     };
   };
-  onStyleChange: (name: string, value: any) => void;
+  onStyleChange: (name: string, value: unknown) => void;
   getBorderRadius: (size: ButtonRounded) => string;
 }
 
@@ -410,7 +410,7 @@ export function AppearanceSection({
           <div className="bg-white rounded-lg p-6 w-full max-w-sm">
             <ChromePicker
               color={colorPicker.color}
-              onChange={(color) => handleColorChange(colorPicker.name, color.hex)}
+              onChange={(color: { hex: string }) => handleColorChange(colorPicker.name, color.hex)}
             />
             <div className="mt-4 flex justify-end space-x-2">
               <Button

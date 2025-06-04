@@ -27,7 +27,7 @@ export type QueryOperation<Schema extends Record<string, unknown>, ZodInput = ne
     c: Context;
     input: ZodInput;
   }) => Promise<TypedResponse<Output>>;
-  middlewares: Middleware<any>[];
+  middlewares: Middleware<unknown>[];
 };
 
 export type MutationOperation<Schema extends Record<string, unknown>, ZodInput = never> = {
@@ -41,7 +41,7 @@ export type MutationOperation<Schema extends Record<string, unknown>, ZodInput =
     c: Context;
     input: ZodInput;
   }) => Promise<TypedResponse<Output>>;
-  middlewares: Middleware<any>[];
+  middlewares: Middleware<unknown>[];
 };
 
 export { httpHandler as GET, httpHandler as POST };

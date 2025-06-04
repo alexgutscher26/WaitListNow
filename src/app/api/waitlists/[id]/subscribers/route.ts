@@ -4,6 +4,7 @@ import { db } from '@/lib/db';
 import { z } from 'zod';
 import { Resend } from 'resend';
 import { getConfirmationEmail } from '@/emails';
+import crypto from 'crypto';
 
 interface WaitlistSettings {
   allowDuplicates?: boolean;
@@ -15,7 +16,7 @@ interface WaitlistSettings {
   customJs?: string;
 }
 
-function getWaitlistSettings(settings: any): WaitlistSettings {
+function getWaitlistSettings(settings: unknown): WaitlistSettings {
   if (typeof settings !== 'object' || settings === null) {
     return {};
   }
@@ -30,7 +31,7 @@ const subscriberSchema = z.object({
 
 // Enable debug logging in development
 const isDev = process.env.NODE_ENV === 'development';
-const log = (...args: any[]) => isDev && console.log('[Waitlist Subscribers API]', ...args);
+const log = (...args: unknown[]) => isDev && console.log('[Waitlist Subscribers API]', ...args);
 
 // GET /api/waitlists/[id]/subscribers - Get subscribers for a specific waitlist
 // POST /api/waitlists/[id]/subscribers - Add a new subscriber to a waitlist
@@ -96,7 +97,7 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
     // Generate verification token if needed
     let verificationToken: string | undefined = undefined;
     if (requireEmailVerification) {
-      verificationToken = require('crypto').randomBytes(32).toString('hex');
+      verificationToken = crypto.randomBytes(32).toString('hex');
     }
 
     // Create the subscriber
@@ -152,7 +153,10 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
     } else {
       // Send confirmation email if enabled
       try {
-        const customFields = (waitlist.customFields as any) || {};
+        const customFields = (waitlist.customFields ?? {}) as {
+          sendConfirmationEmail?: boolean;
+          customThankYouMessage?: string;
+        };
         const sendConfirmation =
           typeof customFields.sendConfirmationEmail === 'boolean'
             ? customFields.sendConfirmationEmail
@@ -243,7 +247,7 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
     }
 
     // Build the where clause for filtering
-    const whereClause: any = {
+    const whereClause: Record<string, unknown> = {
       waitlistId,
     };
 

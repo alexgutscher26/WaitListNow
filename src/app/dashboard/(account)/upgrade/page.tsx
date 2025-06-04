@@ -300,7 +300,7 @@ const Page = async () => {
                         ? `bg-gradient-to-r ${plan.color} hover:opacity-90 text-white border-0`
                         : ''
                     }`}
-                    variant={plan.buttonVariant as any}
+                    variant={plan.buttonVariant as unknown}
                     size="lg"
                   >
                     {plan.buttonText}

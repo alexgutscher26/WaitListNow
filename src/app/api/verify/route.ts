@@ -21,7 +21,7 @@ export async function GET(request: Request) {
   }
 
   // Check if token matches
-  const customFields = subscriber.customFields as any;
+  const customFields = subscriber.customFields as unknown;
   if (customFields?.verificationToken !== token) {
     return NextResponse.json({ error: 'Invalid or expired verification token' }, { status: 400 });
   }

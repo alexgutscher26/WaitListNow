@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import * as React from 'react';
 
 import { useState, useCallback, useMemo, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
@@ -31,7 +31,7 @@ const Badge = ({
   variant?: 'default' | 'secondary' | 'outline';
   className?: string;
   children: React.ReactNode;
-  [key: string]: any;
+  [key: string]: unknown;
 }) => {
   const baseStyles =
     'inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2';
@@ -713,7 +713,7 @@ export default function NewWaitlistPage() {
         >
           <Tabs
             value={activeTab}
-            onValueChange={(value) => setActiveTab(value as any)}
+            onValueChange={(value) => setActiveTab(value as unknown as any)}
             className="w-full"
           >
             <TabsList className="grid w-full grid-cols-4">
@@ -905,9 +905,9 @@ export default function NewWaitlistPage() {
                   variant="outline"
                   onClick={() => {
                     const tabs = ['basic', 'fields', 'appearance', 'behavior'];
-                    const currentIndex = tabs.indexOf(activeTab);
+                    const currentIndex = tabs.indexOf(activeTab as unknown as string);
                     if (currentIndex > 0) {
-                      setActiveTab(tabs[currentIndex - 1] as any);
+                      setActiveTab(tabs[currentIndex - 1] as unknown as any);
                     }
                   }}
                 >
@@ -919,9 +919,9 @@ export default function NewWaitlistPage() {
                   type="button"
                   onClick={() => {
                     const tabs = ['basic', 'fields', 'appearance', 'behavior'];
-                    const currentIndex = tabs.indexOf(activeTab);
+                    const currentIndex = tabs.indexOf(activeTab as unknown as string);
                     if (currentIndex < tabs.length - 1) {
-                      setActiveTab(tabs[currentIndex + 1] as any);
+                      setActiveTab(tabs[currentIndex + 1] as unknown as any);
                     }
                   }}
                 >

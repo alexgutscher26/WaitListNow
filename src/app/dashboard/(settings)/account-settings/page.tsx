@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { DashboardPage } from '@/components/dashboard-page';
 import { db } from '@/lib/db';
 import { currentUser } from '@clerk/nextjs/server';

@@ -4,7 +4,7 @@ import { getAuth } from '@clerk/nextjs/server';
 import { db } from '@/lib/db';
 
 // Helper function to convert array of objects to CSV string
-function convertToCSV(data: Record<string, any>[]): string {
+function convertToCSV(data: Record<string, unknown>[]): string {
   if (data.length === 0) return '';
 
   // Get headers from the first object

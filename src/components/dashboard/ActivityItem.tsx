@@ -12,9 +12,15 @@ import { useToast } from '@/components/ui/use-toast';
 import { useRouter } from 'next/navigation';
 
 interface ActivityItemProps {
-  activity: any;
+  activity: Activity;
   iconType: string;
   message: React.ReactNode;
+}
+
+interface Activity {
+  type: string;
+  time: string;
+  waitlistId?: string;
 }
 
 const getActivityIcon = (type: string) => {
@@ -34,7 +40,7 @@ const getActivityIcon = (type: string) => {
   }
 };
 
-const getActivityUrl = (activity: any): string | null => {
+const getActivityUrl = (activity: Activity): string | null => {
   switch (activity.type) {
     case 'new_subscriber':
       return activity.waitlistId ? `/dashboard/waitlists/${activity.waitlistId}` : null;
@@ -93,22 +99,5 @@ const ActivityItem: React.FC<ActivityItemProps> = ({ activity, iconType, message
     </div>
   );
 };
-
-function getActivitySummary(activity: any): string {
-  switch (activity.type) {
-    case 'new_subscriber':
-      return `${activity.name} (${activity.email}) joined ${activity.waitlist}`;
-    case 'waitlist_created':
-      return `Waitlist "${activity.name}" created with ${activity.subscribers} subscribers.`;
-    case 'referral':
-      return `${activity.referrer} referred ${activity.referred}. Reward: ${activity.reward}`;
-    case 'conversion':
-      return `${activity.name} converted from ${activity.waitlist}. Revenue: $${activity.revenue}`;
-    case 'milestone':
-      return activity.message;
-    default:
-      return 'Unknown activity type.';
-  }
-}
 
 export default ActivityItem;

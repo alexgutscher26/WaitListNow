@@ -3,13 +3,17 @@ import { Resend } from 'resend';
 import { db } from '@/lib/db';
 import { getAuth } from '@clerk/nextjs/server';
 import type { NextRequest } from 'next/server';
+import crypto from 'crypto';
 
 interface CustomFields {
   verificationToken?: string;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 const resend = new Resend(process.env.RESEND_API_KEY);
+
+// Define a type alias for error with response
+type ErrorWithResponse = Error & { response?: Response };
 
 export async function POST(request: NextRequest) {
   const origin = request.headers.get('origin') || 'http://localhost:3000';
@@ -51,17 +55,17 @@ export async function POST(request: NextRequest) {
     }
 
     // Generate a new verification token
-    const verificationToken = require('crypto').randomBytes(32).toString('hex');
+    const verificationToken = crypto.randomBytes(32).toString('hex');
 
     // Update subscriber with verification token
     const currentFields = (subscriber.customFields || {}) as CustomFields;
     await db.subscriber.update({
       where: { id: subscriber.id },
       data: {
-        customFields: {
+        customFields: ( {
           ...currentFields,
           verificationToken,
-        } as CustomFields,
+        } ) as any,
       },
     });
 
@@ -331,19 +335,22 @@ Need help? Contact us at support@waitlistnow.app
         success: true,
         message: 'Verification email sent successfully',
       });
-    } catch (emailError: any) {
+    } catch (emailError: unknown) {
       console.error('Failed to send email:');
-      console.error('Error name:', emailError.name);
-      console.error('Error message:', emailError.message);
-      console.error('Error stack:', emailError.stack);
+      console.error('Error name:', (emailError as Error)?.name);
+      console.error('Error message:', (emailError as Error)?.message);
+      console.error('Error stack:', (emailError as Error)?.stack);
 
-      if (emailError.response) {
-        console.error('Error response data:', await emailError.response.text());
+      if ((emailError as ErrorWithResponse).response) {
+        const resp = (emailError as ErrorWithResponse).response;
+        if (resp) {
+          console.error('Error response data:', await resp.text());
+        }
       }
 
       throw emailError; // This will be caught by the outer try-catch
     }
-  } catch (error) {
+  } catch (error: unknown) {
     console.error('Error resending verification email:', error);
     return NextResponse.json({ error: 'Failed to resend verification email' }, { status: 500 });
   }
@@ -391,16 +398,16 @@ export async function GET(request: NextRequest) {
     return new NextResponse('Subscriber not found', { status: 404 });
   }
   // Generate a new verification token
-  const verificationToken = require('crypto').randomBytes(32).toString('hex');
+  const verificationToken = crypto.randomBytes(32).toString('hex');
   // Update subscriber with verification token
   const currentFields = (subscriber.customFields || {}) as CustomFields;
   await db.subscriber.update({
     where: { id: subscriber.id },
     data: {
-      customFields: {
+      customFields: ( {
         ...currentFields,
         verificationToken,
-      } as CustomFields,
+      } ) as any,
     },
   });
   // Send verification email
@@ -658,13 +665,16 @@ Need help? Contact us at support@waitlistnow.app
       success: true,
       message: 'Verification email sent successfully',
     });
-  } catch (emailError: any) {
+  } catch (emailError: unknown) {
     console.error('Failed to send email:');
-    console.error('Error name:', emailError.name);
-    console.error('Error message:', emailError.message);
-    console.error('Error stack:', emailError.stack);
-    if (emailError.response) {
-      console.error('Error response data:', await emailError.response.text());
+    console.error('Error name:', (emailError as Error)?.name);
+    console.error('Error message:', (emailError as Error)?.message);
+    console.error('Error stack:', (emailError as Error)?.stack);
+    if ((emailError as ErrorWithResponse).response) {
+      const resp = (emailError as ErrorWithResponse).response;
+      if (resp) {
+        console.error('Error response data:', await resp.text());
+      }
     }
     return new NextResponse('Failed to send verification email', { status: 500 });
   }

@@ -100,7 +100,7 @@ const RechartsComponents = dynamic<ChartProps>(
                 fontSize={12}
                 tickLine={false}
                 axisLine={false}
-                tickFormatter={(value: any) => Number(value).toLocaleString()}
+                tickFormatter={(value: unknown) => Number(value).toLocaleString()}
                 domain={[0, maxValue]}
                 width={40}
               />
@@ -110,7 +110,7 @@ const RechartsComponents = dynamic<ChartProps>(
                 vertical={false}
               />
               <Tooltip
-                content={(props: any) => <CustomTooltip {...props} />}
+                content={(props: unknown) => <CustomTooltip {...props} />}
                 contentStyle={{
                   backgroundColor: isDark ? '#1e293b' : '#ffffff',
                   border: 'none',
@@ -183,13 +183,13 @@ const CustomTooltip = ({ active, payload, label }: TooltipProps) => {
   return (
     <div className="bg-card p-3 border border-border rounded-md shadow-sm">
       <p className="font-medium text-sm">{formattedDate}</p>
-      {payload.map((entry: any, index: number) => (
+      {payload.map((entry: unknown, index: number) => (
         <p
           key={`tooltip-${index}`}
           className="text-sm"
-          style={{ color: entry.color }}
+          style={{ color: entry as string }}
         >
-          {entry.dataKey === 'count' ? 'New Subscribers' : 'Total Subscribers'}:{' '}
+          {entry instanceof Object && entry.dataKey === 'count' ? 'New Subscribers' : 'Total Subscribers'}:{' '}
           <span className="font-medium">{entry.value.toLocaleString()}</span>
         </p>
       ))}
@@ -207,7 +207,6 @@ export function SubscriberGrowthChart({
   const [chartData, setChartData] = useState<ChartData[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [selectedPeriod, setSelectedPeriod] = useState<'7d' | '30d' | '90d' | 'all'>('7d');
   const isDark = theme === 'dark';
 
   useEffect(() => {

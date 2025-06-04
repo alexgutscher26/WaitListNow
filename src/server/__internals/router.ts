@@ -21,7 +21,7 @@ type OperationType<I extends Record<string, unknown>, O> =
  * @param obj - An object where keys are route identifiers and values are operation configurations.
  * @returns A configured Hono router instance with defined routes and middleware.
  */
-export const router = <T extends Record<string, OperationType<any, any>>>(obj: T) => {
+export const router = <T extends Record<string, OperationType<Record<string, unknown>, Record<string, unknown>>>>(obj: T) => {
   const route = new Hono<{ Bindings: Bindings; Variables: any }>().onError((err, c) => {
     if (err instanceof HTTPException) {
       return c.json(
@@ -132,13 +132,13 @@ export const router = <T extends Record<string, OperationType<any, any>>>(obj: T
     }
   });
 
-  type InferInput<T> = T extends OperationType<infer I, any> ? I : Record<string, never>;
-  type InferOutput<T> = T extends OperationType<any, infer I> ? I : Record<string, never>;
+  type InferInput<T> = T extends OperationType<infer I, Record<string, unknown>> ? I : Record<string, never>;
+  type InferOutput<T> = T extends OperationType<Record<string, unknown>, infer I> ? I : Record<string, never>;
 
   return route as Hono<
     { Bindings: Bindings; Variables: Variables },
     {
-      [K in keyof T]: T[K] extends QueryOperation<any, any>
+      [K in keyof T]: T[K] extends QueryOperation<Record<string, unknown>, Record<string, unknown>>
         ? {
             $get: {
               input: InferInput<T[K]>;

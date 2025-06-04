@@ -1,108 +1,144 @@
+import * as React from 'react';
 import { currentUser } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import {
-  ArrowUpRight,
-  Users,
-  Zap,
-  TrendingUp,
-  TrendingDown,
-  Mail,
-  Activity,
-  DollarSign,
-  Bell,
-  Settings,
-  ChevronRight,
-  MoreHorizontal,
-  CheckCircle2,
-  Edit,
-  Link as LinkIcon,
-  Trash,
-} from 'lucide-react';
-import { Plus } from 'lucide-react';
+import { Users, TrendingUp, TrendingDown, Activity, Settings, CheckCircle2, Plus } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
 import Link from 'next/link';
 import { db } from '@/lib/db';
 import { cn } from '@/utils';
-import { formatDistanceToNow } from 'date-fns';
-import {
-  DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-  DropdownMenuItem,
-} from '@/components/ui/dropdown-menu';
 import ActivityItem from '@/components/dashboard/ActivityItem';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-  DialogFooter,
-} from '@/components/ui/dialog';
-import React from 'react';
 import RecentActivityModal from '@/components/dashboard/RecentActivityModal';
 import WaitlistTable from '@/components/dashboard/WaitlistTable';
-
-type ActivityType = 'new_subscriber' | 'waitlist_created' | 'referral' | 'conversion' | 'milestone';
-
-type BaseActivity = {
-  id: number;
-  type: ActivityType;
-  name: string;
-  time: Date;
-};
-
-type NewSubscriberActivity = BaseActivity & {
-  type: 'new_subscriber';
-  email: string;
-  avatar: string;
-  waitlist: string;
-  waitlistId: string;
-};
-
-type WaitlistCreatedActivity = BaseActivity & {
-  type: 'waitlist_created';
-  subscribers: number;
-};
-
-type ReferralActivity = BaseActivity & {
-  type: 'referral';
-  referrer: string;
-  referred: string;
-  reward: string;
-};
-
-type ConversionActivity = BaseActivity & {
-  type: 'conversion';
-  revenue: number;
-  waitlist: string;
-  waitlistId: string;
-};
-
-type MilestoneActivity = BaseActivity & {
-  type: 'milestone';
-  message: string;
-};
-
-type Activity =
-  | NewSubscriberActivity
-  | WaitlistCreatedActivity
-  | ReferralActivity
-  | ConversionActivity
-  | MilestoneActivity;
-
 import { getWaitlistStats } from '@/app/actions/waitlist';
 import { ExportButton } from '@/components/export-button';
+
+// Define the type for search parameters
+type SearchParams = {
+  upgrade?: string;
+};
+
+// Define the page props with searchParams
+interface PageProps {
+  searchParams: SearchParams;
+}
+
+interface StatCardProps {
+  title: string;
+  value: string | number;
+  icon: React.ComponentType<{ className?: string }>;
+  className?: string;
+  trend?: 'up' | 'down' | undefined;
+  trendValue?: string;
+}
+
+const StatCard = ({
+  title,
+  value,
+  icon: Icon,
+  trend,
+  trendValue,
+  className = '',
+}: StatCardProps) => (
+  <Card className={cn('overflow-hidden', className)}>
+    <CardContent className="p-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <p className="text-sm font-medium text-gray-500">{title}</p>
+          <p className="mt-1 text-2xl font-semibold">{value}</p>
+          {trend && trendValue && (
+            <div
+              className={cn(
+                'mt-2 inline-flex items-center text-sm font-medium',
+                trend === 'up'
+                  ? 'text-green-600'
+                  : trend === 'down'
+                  ? 'text-red-600'
+                  : 'text-gray-600',
+              )}
+            >
+              {trend === 'up' ? (
+                <TrendingUp className="mr-1 h-4 w-4" />
+              ) : trend === 'down' ? (
+                <TrendingDown className="mr-1 h-4 w-4" />
+              ) : null}
+              {trendValue}
+            </div>
+          )}
+        </div>
+        <div className="rounded-lg bg-brand-50 p-3">
+          <Icon className="h-6 w-6 text-brand-600" />
+        </div>
+      </div>
+    </CardContent>
+  </Card>
+);
+
+function formatActivityMessage(activity: Activity) {
+  switch (activity.type) {
+    case 'new_subscriber':
+      return (
+        <div>
+          <p className="text-sm font-medium">
+            <span className="font-semibold">{activity.name}</span> joined{' '}
+            <span className="text-primary">{activity.waitlist}</span>
+          </p>
+          <p className="text-xs text-muted-foreground">{activity.email}</p>
+        </div>
+      );
+    case 'waitlist_created':
+      return (
+        <div>
+          <p className="text-sm font-medium">New waitlist created</p>
+          <p className="text-xs text-muted-foreground">{activity.name}</p>
+        </div>
+      );
+    case 'referral':
+      return (
+        <div>
+          <p className="text-sm font-medium">
+            <span className="font-semibold">{activity.referrer}</span> referred someone
+          </p>
+          <p className="text-xs text-muted-foreground">
+            {activity.referred} • Reward: {activity.reward}
+          </p>
+        </div>
+      );
+    case 'conversion':
+      return (
+        <div>
+          <p className="text-sm font-medium">
+            <span className="font-semibold">{activity.name}</span> converted from{' '}
+            <span className="text-primary">{activity.waitlist}</span>
+          </p>
+          <p className="text-xs text-muted-foreground">Revenue: {activity.revenue}</p>
+        </div>
+      );
+    case 'milestone':
+      return (
+        <div>
+          <p className="text-sm font-medium">{activity.message}</p>
+        </div>
+      );
+    default:
+      return <p className="text-sm">Unknown activity</p>;
+  }
+}
+
+// Instead, use the Activity interface from RecentActivityModal:
+interface Activity {
+  id: string;
+  type: string;
+  name?: string;
+  waitlist?: string;
+  email?: string;
+  referrer?: string;
+  referred?: string;
+  reward?: string;
+  revenue?: string;
+  message?: string;
+  time: string;
+}
 
 // Enhanced stats with growth indicators and more detailed metrics
 const getStats = async (): Promise<{
@@ -137,7 +173,7 @@ const getStats = async (): Promise<{
           id: act.id,
           type: act.type,
           name: act.name || 'Unknown',
-          time: new Date(act.time || new Date()),
+          time: new Date(act.time || new Date()).toISOString(),
         };
 
         switch (act.type) {
@@ -151,7 +187,7 @@ const getStats = async (): Promise<{
               avatar:
                 act.avatar ||
                 `https://api.dicebear.com/7.x/initials/svg?seed=${act.email || 'user'}`,
-            } as NewSubscriberActivity & { waitlistId: string };
+            } as Activity;
 
           case 'waitlist_created':
             return {
@@ -159,7 +195,7 @@ const getStats = async (): Promise<{
               type: 'waitlist_created',
               subscribers: act.subscribers || 0,
               waitlistId: act.waitlistId || act.waitlist_id || '',
-            } as WaitlistCreatedActivity;
+            } as Activity;
 
           case 'referral':
             return {
@@ -168,7 +204,7 @@ const getStats = async (): Promise<{
               referrer: act.referrer || 'someone',
               referred: act.referred || '',
               reward: act.reward || 'Early access',
-            } as ReferralActivity;
+            } as Activity;
 
           case 'conversion':
             return {
@@ -177,14 +213,14 @@ const getStats = async (): Promise<{
               revenue: act.revenue || 0,
               waitlist: act.waitlist || '',
               waitlistId: act.waitlistId || act.waitlist_id || '',
-            } as ConversionActivity & { waitlistId: string };
+            } as Activity;
 
           case 'milestone':
             return {
               ...base,
               type: 'milestone',
               message: act.message || '',
-            } as MilestoneActivity;
+            } as Activity;
 
           default:
             console.warn('Unknown activity type:', act.type, act);
@@ -310,178 +346,17 @@ const getStats = async (): Promise<{
       monthlyGrowth: 0,
       recentActivity: [
         {
-          id: 1,
+          id: '1',
           type: 'milestone',
           name: 'Welcome to WaitListNow!',
           message: 'Start by creating your first waitlist to see activity here.',
-          time: new Date(),
-        } as MilestoneActivity,
+          time: new Date().toISOString(),
+        } as Activity,
       ],
       topWaitlists: [],
     };
   }
 };
-
-// Define the type for search parameters
-type SearchParams = {
-  upgrade?: string;
-};
-
-// Define the page props with searchParams
-interface PageProps {
-  searchParams: SearchParams;
-}
-
-/**
- * Returns a React component for rendering an activity icon based on the given type.
- *
- * This function maps each activity type to its corresponding icon component,
- * applying specific styles and class names as needed. If the type does not match any
- * known cases, it throws an exhaustive check error to ensure all types are handled.
- *
- * @param type - The type of the activity for which to get the icon.
- * @returns A React functional component that renders the appropriate icon with given className.
- */
-const getActivityIcon = (type: Activity['type']): React.ComponentType<{ className?: string }> => {
-  const _exhaustiveCheck = (type: never): never => {
-    throw new Error(`Unexpected activity type: ${type}`);
-  };
-
-  switch (type) {
-    case 'new_subscriber':
-      return ({ className }) => <Users className={cn('h-4 w-4 text-blue-600', className)} />;
-    case 'waitlist_created':
-      return ({ className }) => <Zap className={cn('h-4 w-4 text-green-600', className)} />;
-    case 'referral':
-      return ({ className }) => <Mail className={cn('h-4 w-4 text-purple-600', className)} />;
-    case 'conversion':
-      return ({ className }) => <DollarSign className={cn('h-4 w-4 text-green-600', className)} />;
-    case 'milestone':
-      return ({ className }) => <TrendingUp className={cn('h-4 w-4 text-orange-600', className)} />;
-    default:
-      _exhaustiveCheck(type);
-      return ({ className }) => <Bell className={cn('h-4 w-4 text-gray-600', className)} />;
-  }
-};
-
-/**
- * Formats an activity message based on the type of activity.
- *
- * This function uses a switch statement to determine the type of activity and returns a corresponding JSX element with formatted text.
- * The activity types include 'new_subscriber', 'waitlist_created', 'referral', 'conversion', and 'milestone'.
- * Each case handles different formatting requirements for specific activity details.
- *
- * @param activity - An object containing details about the activity.
- * @returns A JSX element representing the formatted activity message.
- */
-const formatActivityMessage = (activity: Activity) => {
-  switch (activity.type) {
-    case 'new_subscriber':
-      return (
-        <div>
-          <p className="text-sm font-medium">
-            <span className="font-semibold">{activity.name}</span> joined{' '}
-            <span className="text-primary">{activity.waitlist}</span>
-          </p>
-          <p className="text-xs text-muted-foreground">{activity.email}</p>
-        </div>
-      );
-    case 'waitlist_created':
-      return (
-        <div>
-          <p className="text-sm font-medium">New waitlist created</p>
-          <p className="text-xs text-muted-foreground">{activity.name}</p>
-        </div>
-      );
-    case 'referral':
-      return (
-        <div>
-          <p className="text-sm font-medium">
-            <span className="font-semibold">{activity.referrer}</span> referred someone
-          </p>
-          <p className="text-xs text-muted-foreground">
-            {activity.referred} • Reward: {activity.reward}
-          </p>
-        </div>
-      );
-    case 'conversion':
-      return (
-        <div>
-          <p className="text-sm font-medium">
-            <span className="font-semibold">{activity.name}</span> converted from{' '}
-            <span className="text-primary">{activity.waitlist}</span>
-          </p>
-          <p className="text-xs text-muted-foreground">Revenue: {activity.revenue}</p>
-        </div>
-      );
-    case 'milestone':
-      return (
-        <div>
-          <p className="text-sm font-medium">{activity.message}</p>
-        </div>
-      );
-    default:
-      return <p className="text-sm">Unknown activity</p>;
-  }
-};
-
-interface StatCardProps {
-  title: string;
-  value: string | number;
-  icon: React.ComponentType<{ className?: string }>;
-  className?: string;
-  trend?: 'up' | 'down' | undefined;
-  trendValue?: string;
-}
-
-/**
- * Renders a stat card component with title, value, icon, and optional trend indicators.
- *
- * This component displays a card containing a title, a main value, an icon,
- * and optionally shows a trend indicator if both `trend` and `trendValue` are provided.
- * The trend can be either 'up' or 'down', affecting the styling and icon used.
- */
-const StatCard = ({
-  title,
-  value,
-  icon: Icon,
-  trend,
-  trendValue,
-  className = '',
-}: StatCardProps) => (
-  <Card className={cn('overflow-hidden', className)}>
-    <CardContent className="p-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <p className="text-sm font-medium text-gray-500">{title}</p>
-          <p className="mt-1 text-2xl font-semibold">{value}</p>
-          {trend && trendValue && (
-            <div
-              className={cn(
-                'mt-2 inline-flex items-center text-sm font-medium',
-                trend === 'up'
-                  ? 'text-green-600'
-                  : trend === 'down'
-                    ? 'text-red-600'
-                    : 'text-gray-600',
-              )}
-            >
-              {trend === 'up' ? (
-                <TrendingUp className="mr-1 h-4 w-4" />
-              ) : trend === 'down' ? (
-                <TrendingDown className="mr-1 h-4 w-4" />
-              ) : null}
-              {trendValue}
-            </div>
-          )}
-        </div>
-        <div className="rounded-lg bg-brand-50 p-3">
-          <Icon className="h-6 w-6 text-brand-600" />
-        </div>
-      </div>
-    </CardContent>
-  </Card>
-);
 
 /**
  * Renders the main dashboard page for a user, displaying their waitlists and related statistics.
@@ -554,6 +429,40 @@ export default async function Page({ searchParams = {} }: PageProps) {
 
   console.log('Found waitlists for user:', waitlists);
 
+  // Preprocess stats.recentActivity to ensure all time fields are strings
+  const normalizedRecentActivity: Activity[] = stats.recentActivity.map((activity) => {
+    let timeStr: string;
+    if (typeof activity.time === 'string') {
+      timeStr = activity.time;
+    } else if (
+      activity.time &&
+      typeof activity.time === 'object' &&
+      'toISOString' in activity.time &&
+      typeof (activity.time as Date).toISOString === 'function'
+    ) {
+      timeStr = (activity.time as Date).toISOString();
+    } else {
+      timeStr = String(activity.time);
+    }
+    return { ...activity, time: timeStr };
+  });
+
+  const mappedRecentActivity: Activity[] = normalizedRecentActivity.map((activity) => {
+    return {
+      id: String(activity.id),
+      type: String(activity.type),
+      name: activity?.name ? String(activity.name) : undefined,
+      waitlist: activity?.waitlist ? String(activity.waitlist) : undefined,
+      email: activity?.email ? String(activity.email) : undefined,
+      referrer: activity?.referrer ? String(activity.referrer) : undefined,
+      referred: activity?.referred ? String(activity.referred) : undefined,
+      reward: activity?.reward ? String(activity.reward) : undefined,
+      revenue: activity?.revenue !== undefined ? String(activity.revenue) : undefined,
+      message: activity?.message ? String(activity.message) : undefined,
+      time: activity.time,
+    };
+  });
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -623,7 +532,7 @@ export default async function Page({ searchParams = {} }: PageProps) {
                 <CardTitle>Recent Activity</CardTitle>
                 <CardDescription>Latest actions across your waitlists</CardDescription>
               </div>
-              <RecentActivityModal recentActivity={stats.recentActivity} />
+              <RecentActivityModal recentActivity={mappedRecentActivity} />
             </div>
           </CardHeader>
           <CardContent className="p-0">

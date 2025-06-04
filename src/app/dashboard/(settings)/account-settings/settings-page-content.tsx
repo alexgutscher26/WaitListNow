@@ -53,22 +53,22 @@ import confetti from 'canvas-confetti';
 import { SocialShareButtons } from '@/components/ui/SocialShareButtons';
 
 /**
- * @fileoverview This file contains the implementation of the Settings component,
- * which provides users with various options to manage their account settings.
+ * @file SettingsPage Component
+ * @description A React component representing the settings page for a user's account.
+ *              This component includes various sections such as profile, notification preferences,
+ *              referral program, account security, and active sessions management.
  *
- * The component includes sections for:
- * - Account Plan
- * - Waitlist Settings
- * - Notification Preferences
- * - Referral Program
- * - Account Security
- * - Save Button
+ * @exports {React.FC} - The functional component representing the settings page.
  *
- * Each section allows users to view and modify their respective settings, such as
- * changing notification preferences, managing their referral program, or updating
- * account security settings.
+ * @requires {useState, useEffect} from 'react' - React hooks for managing state and side effects.
+ * @requires {useRouter} from 'next/router' - Next.js hook for routing and navigation.
+ * @requires {useAuth} from '@/context/auth' - Custom hook for authentication context.
+ * @requires {toast} from 'react-toastify' - Utility for showing toast notifications.
+ * @requires {axios} from 'axios' - HTTP client for making API requests.
+ * @requires {User, Session, ReferralInfo} from '@/types/types' - Type definitions for user, session, and referral information.
  *
- * @module Settings
+ * @function SettingsPage
+ * @returns {JSX.Element} - The rendered JSX element representing the settings page.
  */
 const AccountSettingsContent = () => {
   const router = useRouter();
@@ -257,6 +257,17 @@ const AccountSettingsContent = () => {
 
   // Fetch profile and preferences data on component mount
   useEffect(() => {
+    /**
+     * Fetches and processes user profile and waitlist preferences data asynchronously.
+     *
+     * This function first checks if a user is present. If not, it returns immediately.
+     * It sets the loading state to true and fetches both the profile and preferences in parallel.
+     * Upon receiving responses, it processes each response:
+     * - For the profile, it updates form data with relevant fields from the profile data or default values.
+     * - For preferences, it updates waitlist preferences with data from the preferences response or default values.
+     * If any error occurs during fetching or processing, it logs the error and shows a toast notification.
+     * Finally, it sets the loading state to false regardless of the outcome.
+     */
     const fetchData = async () => {
       if (!user) return;
       setIsLoading(true);
@@ -681,6 +692,14 @@ const AccountSettingsContent = () => {
   };
 
   useEffect(() => {
+    /**
+     * Fetches referral information from the server and updates the state accordingly.
+     *
+     * This function sets the loading state to true, attempts to fetch referral data,
+     * and handles any errors that occur during the process. It updates the referral
+     * info or error message in the state based on the response and ensures the loading
+     * state is set back to false regardless of the outcome.
+     */
     const fetchReferral = async () => {
       setReferralLoading(true);
       setReferralError(null);
@@ -698,6 +717,9 @@ const AccountSettingsContent = () => {
     fetchReferral();
   }, []);
 
+  /**
+   * Copies the referral link to the clipboard and shows a success notification.
+   */
   const copyReferralLink = () => {
     if (referralInfo?.referralLink) {
       navigator.clipboard.writeText(referralInfo.referralLink);

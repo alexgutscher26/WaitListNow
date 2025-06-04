@@ -189,8 +189,10 @@ const CustomTooltip = ({ active, payload, label }: TooltipProps) => {
           className="text-sm"
           style={{ color: entry as string }}
         >
-          {entry instanceof Object && entry.dataKey === 'count' ? 'New Subscribers' : 'Total Subscribers'}:{' '}
-          <span className="font-medium">{entry.value.toLocaleString()}</span>
+          {entry instanceof Object && entry.dataKey === 'count'
+            ? 'New Subscribers'
+            : 'Total Subscribers'}
+          : <span className="font-medium">{entry.value.toLocaleString()}</span>
         </p>
       ))}
     </div>

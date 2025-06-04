@@ -1,7 +1,7 @@
 import { currentUser } from '@clerk/nextjs/server';
 import { Check, CheckCircle, XCircle, Star, Zap, Users, Shield, Crown } from 'lucide-react';
 import { redirect } from 'next/navigation';
-import React from "react";
+import React from 'react';
 
 import { DashboardPage } from '@/components/dashboard-page';
 import { Button } from '@/components/ui/button';

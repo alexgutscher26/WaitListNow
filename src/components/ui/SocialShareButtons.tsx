@@ -8,12 +8,19 @@ interface SocialShareButtonsProps {
   className?: string;
 }
 
-export const SocialShareButtons: React.FC<SocialShareButtonsProps> = ({ url, message, className }) => {
+export const SocialShareButtons: React.FC<SocialShareButtonsProps> = ({
+  url,
+  message,
+  className,
+}) => {
   const encodedUrl = encodeURIComponent(url);
   // For Twitter, remove the link from the message if present
   let twitterMsg = message || '';
   if (twitterMsg.includes(url)) {
-    twitterMsg = twitterMsg.replace(url, '').replace(/\n{2,}/g, '\n').trim();
+    twitterMsg = twitterMsg
+      .replace(url, '')
+      .replace(/\n{2,}/g, '\n')
+      .trim();
   }
   const encodedTwitterMsg = encodeURIComponent(twitterMsg);
   const encodedMsg = message ? encodeURIComponent(message) : '';
@@ -23,7 +30,8 @@ export const SocialShareButtons: React.FC<SocialShareButtonsProps> = ({ url, mes
       name: 'Twitter',
       icon: Twitter,
       color: 'hover:bg-[#1da1f2]/10 text-[#1da1f2] focus-visible:ring-[#1da1f2]',
-      getUrl: () => `https://twitter.com/intent/tweet?url=${encodedUrl}${encodedTwitterMsg ? `&text=${encodedTwitterMsg}` : ''}`,
+      getUrl: () =>
+        `https://twitter.com/intent/tweet?url=${encodedUrl}${encodedTwitterMsg ? `&text=${encodedTwitterMsg}` : ''}`,
     },
     {
       name: 'LinkedIn',
@@ -40,7 +48,10 @@ export const SocialShareButtons: React.FC<SocialShareButtonsProps> = ({ url, mes
   ];
 
   return (
-    <div className={`flex gap-2 ${className || ''}`} aria-label="Share referral link">
+    <div
+      className={`flex gap-2 ${className || ''}`}
+      aria-label="Share referral link"
+    >
       {SOCIALS.map((social) => {
         const Icon = social.icon;
         const shareUrl = social.getUrl();
@@ -53,7 +64,12 @@ export const SocialShareButtons: React.FC<SocialShareButtonsProps> = ({ url, mes
             key={social.name}
             className={`rounded-full transition-colors duration-150 ${social.color}`}
           >
-            <a href={shareUrl} target="_blank" rel="noopener noreferrer" tabIndex={0}>
+            <a
+              href={shareUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              tabIndex={0}
+            >
               <Icon className="w-5 h-5" />
             </a>
           </Button>
@@ -61,4 +77,4 @@ export const SocialShareButtons: React.FC<SocialShareButtonsProps> = ({ url, mes
       })}
     </div>
   );
-}; 
+};

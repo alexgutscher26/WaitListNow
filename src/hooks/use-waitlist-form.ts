@@ -94,25 +94,37 @@ export function useWaitlistForm(initialValues: Partial<WaitlistFormValues> = {})
     }));
   }, []);
 
-  const handleStyleChange = useCallback(<T extends keyof WaitlistFormValues['style']>(field: T, value: WaitlistFormValues['style'][T]) => {
-    setFormData((prev) => ({
-      ...prev,
-      style: {
-        ...prev.style,
-        [field]: value,
-      },
-    }));
-  }, []);
+  const handleStyleChange = useCallback(
+    <T extends keyof WaitlistFormValues['style']>(
+      field: T,
+      value: WaitlistFormValues['style'][T],
+    ) => {
+      setFormData((prev) => ({
+        ...prev,
+        style: {
+          ...prev.style,
+          [field]: value,
+        },
+      }));
+    },
+    [],
+  );
 
-  const handleSettingsChange = useCallback(<T extends keyof WaitlistFormValues['settings']>(field: T, value: WaitlistFormValues['settings'][T]) => {
-    setFormData((prev) => ({
-      ...prev,
-      settings: {
-        ...prev.settings,
-        [field]: value,
-      },
-    }));
-  }, []);
+  const handleSettingsChange = useCallback(
+    <T extends keyof WaitlistFormValues['settings']>(
+      field: T,
+      value: WaitlistFormValues['settings'][T],
+    ) => {
+      setFormData((prev) => ({
+        ...prev,
+        settings: {
+          ...prev.settings,
+          [field]: value,
+        },
+      }));
+    },
+    [],
+  );
 
   const validateForm = useCallback((): boolean => {
     const newErrors: Record<string, string> = {};

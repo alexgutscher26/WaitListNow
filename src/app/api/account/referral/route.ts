@@ -4,12 +4,36 @@ import { db } from '@/lib/db';
 
 const REWARD_TIERS = [
   { count: 1, name: 'Early Supporter', reward: 'Priority access, exclusive badge' },
-  { count: 3, name: 'Rising Referrer', reward: 'Access to behind-the-scenes updates or beta features' },
-  { count: 5, name: 'Inner Circle', reward: 'Free 1-month trial / Pro plan / "Founding Member" badge' },
-  { count: 10, name: 'Power Promoter', reward: 'Discounted subscription (e.g., 50% off for 3 months)' },
-  { count: 25, name: 'Brand Ambassador', reward: 'Swag pack (stickers, T-shirt) or lifetime deal contest entry' },
-  { count: 50, name: 'Growth Hacker', reward: 'Lifetime plan or a custom domain subdomain (like yourname.waitlistnow.app)' },
-  { count: 100, name: 'Legend Tier', reward: 'Public shoutout, profile feature, big reward like AirPods, etc.' },
+  {
+    count: 3,
+    name: 'Rising Referrer',
+    reward: 'Access to behind-the-scenes updates or beta features',
+  },
+  {
+    count: 5,
+    name: 'Inner Circle',
+    reward: 'Free 1-month trial / Pro plan / "Founding Member" badge',
+  },
+  {
+    count: 10,
+    name: 'Power Promoter',
+    reward: 'Discounted subscription (e.g., 50% off for 3 months)',
+  },
+  {
+    count: 25,
+    name: 'Brand Ambassador',
+    reward: 'Swag pack (stickers, T-shirt) or lifetime deal contest entry',
+  },
+  {
+    count: 50,
+    name: 'Growth Hacker',
+    reward: 'Lifetime plan or a custom domain subdomain (like yourname.waitlistnow.app)',
+  },
+  {
+    count: 100,
+    name: 'Legend Tier',
+    reward: 'Public shoutout, profile feature, big reward like AirPods, etc.',
+  },
 ];
 
 export async function GET() {
@@ -39,11 +63,9 @@ export async function GET() {
     const referralLink = `${baseUrl}/ref/${user.referralCode}`;
 
     // Calculate unlocked rewards and next reward
-    const unlocked = REWARD_TIERS.filter(tier => referralCount >= tier.count);
-    const next = REWARD_TIERS.find(tier => referralCount < tier.count) || null;
-    const progress = next
-      ? Math.min(100, Math.round((referralCount / next.count) * 100))
-      : 100;
+    const unlocked = REWARD_TIERS.filter((tier) => referralCount >= tier.count);
+    const next = REWARD_TIERS.find((tier) => referralCount < tier.count) || null;
+    const progress = next ? Math.min(100, Math.round((referralCount / next.count) * 100)) : 100;
     const referralsToNext = next ? next.count - referralCount : 0;
 
     // Top 1% referrer logic (simple: top 1% by referral count)
@@ -52,8 +74,8 @@ export async function GET() {
       _count: { id: true },
       where: { referredBy: { not: null } },
     });
-    const sorted = allCounts.map(g => g._count.id).sort((a, b) => b - a);
-    const rank = sorted.findIndex(c => c <= referralCount) + 1;
+    const sorted = allCounts.map((g) => g._count.id).sort((a, b) => b - a);
+    const rank = sorted.findIndex((c) => c <= referralCount) + 1;
     const topPercent = rank > 0 ? (rank / sorted.length) * 100 : 100;
     const topReferrer = topPercent <= 1;
 
@@ -77,4 +99,4 @@ export async function GET() {
     console.error('Error fetching referral info:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
-} 
+}

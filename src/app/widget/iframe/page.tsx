@@ -13,7 +13,7 @@ function parseStyleParams(params: URLSearchParams): Partial<WaitlistWidgetStyle>
     borderRadius: params.get('borderRadius') ? Number(params.get('borderRadius')) : undefined,
     fontFamily: params.get('fontFamily') || undefined,
     showLabels: params.get('showLabels') ? params.get('showLabels') === 'true' : undefined,
-    formLayout: params.get('formLayout') as 'stacked' | 'inline' || undefined,
+    formLayout: (params.get('formLayout') as 'stacked' | 'inline') || undefined,
   };
 }
 
@@ -26,7 +26,16 @@ export default function WidgetIframePage() {
 
   // Minimal iframe-friendly styling
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'transparent', margin: 0 }}>
+    <div
+      style={{
+        minHeight: '100vh',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        background: 'transparent',
+        margin: 0,
+      }}
+    >
       <style>{`body { margin: 0; background: transparent; }`}</style>
       <WaitlistWidget
         waitlistId={waitlistId}
@@ -36,4 +45,4 @@ export default function WidgetIframePage() {
       />
     </div>
   );
-} 
+}

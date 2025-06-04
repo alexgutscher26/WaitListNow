@@ -11,6 +11,16 @@ const submissionSchema = z.object({
   referralCode: z.string().optional(),
 });
 
+/**
+ * Handles POST requests to join a waitlist.
+ *
+ * This function processes incoming requests, validates input data, checks for existing subscribers,
+ * creates new subscribers, and optionally sends verification emails if required. It also handles CORS preflight requests.
+ *
+ * @param request - The incoming HTTP request object.
+ * @param { params } - An object containing route parameters, specifically the waitlist ID.
+ * @returns A JSON response indicating success or failure with appropriate status codes and messages.
+ */
 export async function POST(request: Request, { params }: { params: { id: string } }) {
   try {
     // Handle CORS preflight

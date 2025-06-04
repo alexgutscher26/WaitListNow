@@ -10,6 +10,16 @@ const isDev = process.env.NODE_ENV === 'development';
 const log = (...args: any[]) => isDev && console.log('[Onboarding API]', ...args);
 
 // POST /api/onboarding/complete - Mark onboarding as complete
+/**
+ * Handles the POST request to complete user onboarding.
+ *
+ * This function processes a request to mark a user's onboarding as complete,
+ * creating a new user if they don't exist, and generating a default waitlist for them.
+ * It validates the request body, checks authentication, and handles various potential errors.
+ *
+ * @param req - The NextRequest object containing the incoming request details.
+ * @returns A JSON response indicating success or failure with appropriate status codes and error messages.
+ */
 export async function POST(req: NextRequest) {
   try {
     // Verify authentication

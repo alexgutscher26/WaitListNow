@@ -12,6 +12,22 @@ const REWARD_TIERS = [
   { count: 100, name: 'Legend Tier', reward: 'Public shoutout, profile feature, big reward like AirPods, etc.' },
 ];
 
+/**
+ * Handles a GET request to fetch referral information for the authenticated user.
+ *
+ * This function performs several steps:
+ * - Authenticates the user and retrieves their user ID.
+ * - Fetches the user's referral code from the database.
+ * - Counts the number of successful referrals (subscribers who used this code).
+ * - Constructs a referral link using the base URL and the user's referral code.
+ * - Calculates the unlocked rewards and determines the next reward tier based on the referral count.
+ * - Computes the progress towards the next reward tier and the number of referrals needed to reach it.
+ * - Determines if the user is in the top 1% of referrers by comparing their referral count with all other referrer counts.
+ *
+ * @returns A JSON response containing the referral link, referral code, referral count, unlocked rewards,
+ *          next reward details (including progress and message), and top referrer status.
+ * @throws Error if there is an internal server error during processing.
+ */
 export async function GET() {
   try {
     const authUser = await auth();

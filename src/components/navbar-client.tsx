@@ -1,11 +1,11 @@
 'use client';
 
-import React from 'react';
-import Link from 'next/link';
-import { MaxWidthWrapper } from './max-width-wrapper';
 import { SignOutButton, useUser } from '@clerk/nextjs';
-import { Button, buttonVariants } from './ui/button';
 import { ArrowRight } from 'lucide-react';
+import Link from 'next/link';
+import React from 'react';
+import { MaxWidthWrapper } from './max-width-wrapper';
+import { Button, buttonVariants } from './ui/button';
 
 /**
  * Client-side navigation bar component that displays user authentication status and respective links.

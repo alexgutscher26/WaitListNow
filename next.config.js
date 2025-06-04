@@ -1,4 +1,6 @@
-// @ts-check
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+/* eslint-disable @typescript-eslint/no-require-imports */
+// @ts-nocheck
 
 /** @type {import('next').NextConfig} */
 const baseConfig = {

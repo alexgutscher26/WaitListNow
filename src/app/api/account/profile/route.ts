@@ -1,5 +1,5 @@
-import { NextResponse } from 'next/server';
 import { auth } from '@clerk/nextjs/server';
+import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 
 // GET handler to fetch user profile

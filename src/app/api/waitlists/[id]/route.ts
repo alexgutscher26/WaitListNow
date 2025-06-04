@@ -1,9 +1,9 @@
-import { NextResponse, type NextRequest } from 'next/server';
 import { getAuth } from '@clerk/nextjs/server';
+import type { Waitlist } from '@prisma/client';
+import { NextResponse, type NextRequest } from 'next/server';
+import { z } from 'zod';
 import { db } from '@/lib/db';
 import { waitlistFormSchema } from '@/lib/validations/waitlist';
-import { z } from 'zod';
-import type { Waitlist } from '@prisma/client';
 
 // Enable debug logging in development
 const isDev = process.env.NODE_ENV === 'development';

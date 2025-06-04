@@ -1,7 +1,7 @@
-import { db } from '@/lib/db';
-import { stripe } from '@/lib/stripe';
 import { headers } from 'next/headers';
 import Stripe from 'stripe';
+import { db } from '@/lib/db';
+import { stripe } from '@/lib/stripe';
 
 /**
  * Handles incoming POST requests from Stripe webhooks.

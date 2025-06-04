@@ -1,8 +1,8 @@
 import { currentUser } from '@clerk/nextjs/server';
 // HTTPException import removed as it's not used
+import { db } from '@/lib/db';
 import { router } from '../__internals/router';
 import { publicProcedure } from '../procedures';
-import { db } from '@/lib/db';
 export const dynamic = 'force-dynamic';
 
 export const authRouter = router({

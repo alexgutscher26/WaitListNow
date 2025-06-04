@@ -1,8 +1,8 @@
 'use client';
 
-import * as React from 'react';
 import { SignIn } from '@clerk/nextjs';
 import { useSearchParams } from 'next/navigation';
+import * as React from 'react';
 
 /**
  * Renders a sign-in page with conditional redirection based on search params.

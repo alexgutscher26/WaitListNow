@@ -1,5 +1,5 @@
-import React, { Suspense, lazy, ComponentType, ReactNode, ComponentProps } from 'react';
 import { Loader2 } from 'lucide-react';
+import React, { Suspense, lazy, ComponentType, ReactNode, ComponentProps } from 'react';
 
 interface DynamicImportOptions {
   loading?: () => ReactNode;

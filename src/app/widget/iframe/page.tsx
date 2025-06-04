@@ -1,7 +1,7 @@
 'use client';
-import { WaitlistWidget, WaitlistWidgetStyle } from '@/components/waitlist-widget';
 import { useSearchParams } from 'next/navigation';
 import React from 'react';
+import { WaitlistWidget, WaitlistWidgetStyle } from '@/components/waitlist-widget';
 
 function parseStyleParams(params: URLSearchParams): Partial<WaitlistWidgetStyle> {
   return {

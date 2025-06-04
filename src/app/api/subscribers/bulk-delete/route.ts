@@ -1,7 +1,7 @@
-import { NextResponse } from 'next/server';
 import { getAuth } from '@clerk/nextjs/server';
-import { db } from '@/lib/db';
+import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
+import { db } from '@/lib/db';
 
 export async function POST(req: NextRequest) {
   try {

@@ -1,7 +1,7 @@
 'use client';
 
-import React, { type ReactNode } from 'react';
 import dynamic from 'next/dynamic';
+import React, { type ReactNode } from 'react';
 
 // Client-side only providers
 const PlausibleProvider = dynamic(

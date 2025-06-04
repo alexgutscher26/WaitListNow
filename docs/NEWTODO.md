@@ -115,11 +115,32 @@ This document outlines the planned improvements and enhancements for the WaitLis
 
 - [ ] **Security Improvements**
 
-  - [ ] Add rate limiting to prevent abuse (@upstash/ratelimit)
-  - [ ] Implement CSRF protection
-  - [ ] Add input validation on all API endpoints
-  - [ ] Set up security headers
-  - [ ] Conduct security audit
+  - [ ] **API Security**
+    - [ ] Implement rate limiting with @upstash/ratelimit
+      - [ ] Add IP-based rate limiting
+      - [ ] Add user-based rate limiting
+      - [ ] Configure rate limit tiers
+      - [ ] Add rate limit monitoring
+    - [ ] Add CSRF protection
+      - [ ] Implement CSRF tokens
+      - [ ] Add SameSite cookie attributes
+      - [ ] Configure secure cookie settings
+      - [ ] Add CSRF validation middleware
+    - [ ] Enhance API security
+      - [ ] Add input validation using zod schemas
+      - [ ] Implement request sanitization
+      - [ ] Add API key authentication
+      - [ ] Set up request logging
+    - [ ] Configure security headers
+      - [ ] Add Content Security Policy (CSP)
+      - [ ] Configure XSS protection headers
+      - [ ] Add HSTS configuration
+      - [ ] Set up CORS policies
+    - [ ] Security audit and compliance
+      - [ ] Conduct OWASP security audit
+      - [ ] Implement security best practices
+      - [ ] Add security monitoring
+      - [ ] Create security documentation
 
 - [ ] **Testing Infrastructure**
 
@@ -145,7 +166,6 @@ This document outlines the planned improvements and enhancements for the WaitLis
       - [ ] Add dark mode visual testing
 
 - [ ] **Monitoring and Error Handling**
-  - [ ] Enhance Sentry integration
   - [ ] Add custom error boundaries
   - [ ] Implement performance monitoring
   - [ ] Create alerting system for critical issues

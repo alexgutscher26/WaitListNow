@@ -1,8 +1,8 @@
-import { useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
+import { useState, useCallback } from 'react';
 import { toast } from '@/components/ui/use-toast';
-import { WaitlistFormValues } from '@/lib/validations/waitlist';
 import { createWaitlist } from '@/lib/api/waitlists';
+import { WaitlistFormValues } from '@/lib/validations/waitlist';
 
 const defaultValues: WaitlistFormValues = {
   name: '',

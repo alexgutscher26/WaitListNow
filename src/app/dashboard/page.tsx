@@ -1,17 +1,17 @@
-import * as React from 'react';
 import { currentUser } from '@clerk/nextjs/server';
-import { redirect } from 'next/navigation';
-import { Button } from '@/components/ui/button';
 import { Users, TrendingUp, TrendingDown, Activity, Settings, CheckCircle2, Plus } from 'lucide-react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import Link from 'next/link';
-import { db } from '@/lib/db';
-import { cn } from '@/utils';
+import { redirect } from 'next/navigation';
+import * as React from 'react';
+import { getWaitlistStats } from '@/app/actions/waitlist';
 import ActivityItem from '@/components/dashboard/ActivityItem';
 import RecentActivityModal from '@/components/dashboard/RecentActivityModal';
 import WaitlistTable from '@/components/dashboard/WaitlistTable';
-import { getWaitlistStats } from '@/app/actions/waitlist';
 import { ExportButton } from '@/components/export-button';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { db } from '@/lib/db';
+import { cn } from '@/utils';
 
 // Define the type for search parameters
 type SearchParams = {

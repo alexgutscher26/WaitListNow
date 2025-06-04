@@ -2,11 +2,7 @@
 
 import * as React from 'react';
 
-import { useState, useCallback, useMemo, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { toast } from 'sonner';
 import { useQuery } from '@tanstack/react-query';
-import { client } from '@/lib/client';
 
 // URL validation helper
 const isValidUrl = (url: string): boolean => {
@@ -51,19 +47,6 @@ const Badge = ({
   );
 };
 
-import { cn } from '@/utils';
-import { Button } from '@/components/ui/button';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
   ArrowLeft,
@@ -82,6 +65,18 @@ import {
 } from 'lucide-react';
 import { DashboardPage } from '@/components/dashboard-page';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useState, useCallback, useMemo, useEffect } from 'react';
+import { toast } from 'sonner';
+import { Button } from '@/components/ui/button';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 import {
   DialogHeader,
   Dialog,
@@ -89,9 +84,14 @@ import {
   DialogTitle,
   DialogDescription,
 } from '@/components/ui/dialog';
-import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from '@/components/ui/tooltip';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { Modal } from '@/components/ui/modal';
+import { Textarea } from '@/components/ui/textarea';
+import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from '@/components/ui/tooltip';
 import { WaitlistPreview } from '@/components/waitlist/edit/waitlist-preview';
+import { client } from '@/lib/client';
+import { cn } from '@/utils';
 
 // Types
 type FieldType = 'text' | 'email' | 'number' | 'url' | 'tel' | 'textarea' | 'select';

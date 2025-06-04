@@ -1,6 +1,3 @@
-import * as React from 'react';
-import { Heading } from '@/components/heading';
-import { MaxWidthWrapper } from '@/components/max-width-wrapper';
 import {
   Star,
   Users,
@@ -15,10 +12,13 @@ import {
   Rocket,
   Trophy,
 } from 'lucide-react';
-import Image from 'next/image';
-import { Icons } from '@/components/icons';
 import { Metadata } from 'next';
+import Image from 'next/image';
 import Link from 'next/link';
+import * as React from 'react';
+import { Heading } from '@/components/heading';
+import { Icons } from '@/components/icons';
+import { MaxWidthWrapper } from '@/components/max-width-wrapper';
 import { ShinyButton } from '@/components/shiny-button';
 
 export const metadata: Metadata = {

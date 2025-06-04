@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { useState } from 'react';
+import { ChromePicker } from 'react-color';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
@@ -10,10 +12,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Slider } from '@/components/ui/slider';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ChromePicker } from 'react-color';
 
 type ButtonVariant = 'default' | 'outline' | 'secondary' | 'ghost' | 'link';
 type ButtonRounded = 'none' | 'sm' | 'md' | 'lg' | 'full';

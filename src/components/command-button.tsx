@@ -1,8 +1,8 @@
 'use client';
 
+import { Command as CommandIcon } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { cn } from '@/utils';
 import {
   CommandDialog,
   CommandEmpty,
@@ -13,7 +13,7 @@ import {
   CommandShortcut,
 } from '@/components/ui/command';
 import { useCommandMenu } from '@/hooks/use-command';
-import { Command as CommandIcon } from 'lucide-react';
+import { cn } from '@/utils';
 
 /**
  * Renders a command button that opens a dialog with a list of pages.

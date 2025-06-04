@@ -1,6 +1,6 @@
+import { Twitter, Linkedin, Mail } from 'lucide-react';
 import React from 'react';
 import { Button } from './button';
-import { Twitter, Linkedin, Mail } from 'lucide-react';
 
 interface SocialShareButtonsProps {
   url: string;

@@ -1,6 +1,6 @@
-import React from 'react';
-import Link from 'next/link';
 import { Home, ArrowLeft, Users, Sparkles } from 'lucide-react';
+import Link from 'next/link';
+import React from 'react';
 
 /**
  * Renders a visually appealing 404 Not Found page with animations and a rocket icon.

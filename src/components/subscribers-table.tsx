@@ -1,18 +1,6 @@
 'use client';
 
-import React, { useState, useCallback } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { format } from 'date-fns';
-import {
-  ChevronDown,
-  MoreHorizontal,
-  Mail,
-  RefreshCw,
-  Copy,
-  Download,
-  Check,
-  X,
-} from 'lucide-react';
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -25,7 +13,30 @@ import {
   getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table';
+import { format } from 'date-fns';
+import {
+  ChevronDown,
+  MoreHorizontal,
+  Mail,
+  RefreshCw,
+  Copy,
+  Download,
+  Check,
+  X,
+} from 'lucide-react';
+import React, { useState, useCallback } from 'react';
 
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import {
@@ -50,18 +61,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/components/ui/use-toast';
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from '@/components/ui/alert-dialog';
 
 interface Subscriber {
   id: string;

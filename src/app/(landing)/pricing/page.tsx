@@ -1,6 +1,5 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
 import {
   Check,
   CheckCircle,
@@ -26,6 +25,7 @@ import {
   Mail,
   Headphones,
 } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
 
 // Mock user and router for demonstration
 const useUser = () => ({ user: null });

@@ -1,10 +1,10 @@
-import { NextResponse, type NextRequest } from 'next/server';
-import { getAuth } from '@clerk/nextjs/server';
-import { db } from '@/lib/db';
-import { z } from 'zod';
-import { Resend } from 'resend';
-import { getConfirmationEmail } from '@/emails';
 import crypto from 'crypto';
+import { getAuth } from '@clerk/nextjs/server';
+import { NextResponse, type NextRequest } from 'next/server';
+import { Resend } from 'resend';
+import { z } from 'zod';
+import { getConfirmationEmail } from '@/emails';
+import { db } from '@/lib/db';
 
 interface WaitlistSettings {
   allowDuplicates?: boolean;

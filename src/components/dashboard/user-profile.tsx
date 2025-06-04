@@ -1,9 +1,9 @@
 'use client';
 
-import React from 'react';
 import { UserButton } from '@clerk/nextjs';
 import { LogOut } from 'lucide-react';
 import Link from 'next/link';
+import React from 'react';
 import { CommandButton } from '@/components/command-button';
 
 export function UserProfile() {

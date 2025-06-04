@@ -1,9 +1,9 @@
-import * as React from 'react';
-import { DashboardPage } from '@/components/dashboard-page';
 import { currentUser } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation';
-import { ApiKeySettings } from './api-key-settings';
+import * as React from 'react';
+import { DashboardPage } from '@/components/dashboard-page';
 import { db } from '@/lib/db';
+import { ApiKeySettings } from './api-key-settings';
 
 /**
  * Retrieves and displays the API key settings page for a user.

@@ -1,5 +1,5 @@
-import * as React from 'react';
 import NextImage, { ImageProps as NextImageProps } from 'next/image';
+import * as React from 'react';
 
 type ImageProps = Omit<NextImageProps, 'alt'> & {
   alt: string;

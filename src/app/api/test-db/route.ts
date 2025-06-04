@@ -1,8 +1,8 @@
-import { NextResponse } from 'next/server';
-import { headers as getHeaders } from 'next/headers';
-import { rateLimit } from '@/lib/rate-limit';
-import { db } from '@/lib/db';
 import { currentUser } from '@clerk/nextjs/server';
+import { headers as getHeaders } from 'next/headers';
+import { NextResponse } from 'next/server';
+import { db } from '@/lib/db';
+import { rateLimit } from '@/lib/rate-limit';
 
 // Disable caching for this route
 export const dynamic = 'force-dynamic';

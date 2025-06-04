@@ -1,9 +1,9 @@
 'use client';
 
-import React from 'react';
 
 import { ClerkProvider as ClerkProviderBase } from '@clerk/nextjs';
 import { usePathname } from 'next/navigation';
+import React from 'react';
 
 export function ClerkProvider({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();

@@ -1,24 +1,7 @@
 'use client';
 
-import * as React from 'react';
-
-import { useRouter } from 'next/navigation';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { useToast } from '@/components/ui/use-toast';
-import { Label } from '@/components/ui/label';
-import { Switch } from '@/components/ui/switch';
-import { Badge } from '@/components/ui/badge';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import { Textarea } from '@/components/ui/textarea';
 import { useUser, useSession } from '@clerk/nextjs';
+import confetti from 'canvas-confetti';
 import {
   Mail,
   Bell,
@@ -39,7 +22,13 @@ import {
   ListChecks,
   Save,
 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import * as React from 'react';
+
 import { useState, useEffect, useRef } from 'react';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   Dialog,
   DialogContent,
@@ -48,9 +37,20 @@ import {
   DialogDescription,
   DialogFooter,
 } from '@/components/ui/dialog';
-// @ts-expect-error: No types for canvas-confetti
-import confetti from 'canvas-confetti';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { SocialShareButtons } from '@/components/ui/SocialShareButtons';
+import { Switch } from '@/components/ui/switch';
+import { Textarea } from '@/components/ui/textarea';
+// @ts-expect-error: No types for canvas-confetti
+import { useToast } from '@/components/ui/use-toast';
 
 /**
  * @fileoverview This file contains the implementation of the Settings component,

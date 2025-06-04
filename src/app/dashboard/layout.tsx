@@ -1,10 +1,5 @@
 'use client';
 
-import * as React from 'react';
-import { buttonVariants } from '@/components/ui/button';
-import { Modal } from '@/components/ui/modal';
-import { cn } from '@/utils';
-import { UserProfile } from '@/components/dashboard/user-profile';
 import {
   Gem,
   Home,
@@ -17,10 +12,15 @@ import {
   LogOut,
   ArrowUpRight,
 } from 'lucide-react';
-import { CommandButton } from '@/components/command-button';
 import Link from 'next/link';
-import { PropsWithChildren, useState, useMemo } from 'react';
 import { usePathname } from 'next/navigation';
+import * as React from 'react';
+import { PropsWithChildren, useState, useMemo } from 'react';
+import { CommandButton } from '@/components/command-button';
+import { UserProfile } from '@/components/dashboard/user-profile';
+import { buttonVariants } from '@/components/ui/button';
+import { Modal } from '@/components/ui/modal';
+import { cn } from '@/utils';
 
 interface SidebarItemProps {
   href: string;

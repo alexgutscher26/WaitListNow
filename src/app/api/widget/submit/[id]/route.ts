@@ -1,9 +1,9 @@
 import { NextResponse } from 'next/server';
-import { db } from '@/lib/db';
-import { z } from 'zod';
-import { v4 as uuidv4 } from 'uuid';
 import { Resend } from 'resend';
+import { v4 as uuidv4 } from 'uuid';
+import { z } from 'zod';
 import { getRewardUnlockedEmail } from '@/emails';
+import { db } from '@/lib/db';
 
 // Define validation schema
 const submissionSchema = z.object({

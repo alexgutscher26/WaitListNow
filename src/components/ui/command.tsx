@@ -1,9 +1,9 @@
 'use client';
 
-import * as React from 'react';
 import { DialogProps } from '@radix-ui/react-dialog';
 import { Command as CommandPrimitive } from 'cmdk';
 import { Search } from 'lucide-react';
+import * as React from 'react';
 
 // Extend the HTMLAttributes interface to include cmdk-input-wrapper
 declare module 'react' {
@@ -12,8 +12,8 @@ declare module 'react' {
   }
 }
 
-import { cn } from '@/lib/utils';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { cn } from '@/lib/utils';
 
 const Command = React.forwardRef<
   React.ElementRef<typeof CommandPrimitive>,

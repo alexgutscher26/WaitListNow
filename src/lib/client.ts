@@ -1,8 +1,8 @@
-import { AppType } from '@/server';
 import { hc } from 'hono/client';
 import { HTTPException } from 'hono/http-exception';
 import { ContentfulStatusCode } from 'hono/utils/http-status';
 import { parse, stringify } from 'superjson';
+import { AppType } from '@/server';
 
 /**
  * Determines the base URL based on the environment and deployment context.

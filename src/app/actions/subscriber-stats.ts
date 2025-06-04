@@ -50,7 +50,7 @@ export async function getSubscriberGrowth(waitlistId: string, days = 30) {
     `;
 
     // Format the data for the chart
-    let cumulativeCount = 0;
+    const cumulativeCount = 0;
     const result: SubscriberGrowthData = [];
 
     // Generate all dates in the range to ensure we have entries for all days

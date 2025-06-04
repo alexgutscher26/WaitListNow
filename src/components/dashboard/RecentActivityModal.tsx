@@ -1,4 +1,5 @@
 'use client';
+import { ChevronRight } from 'lucide-react';
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import {
@@ -9,7 +10,6 @@ import {
   DialogDescription,
   DialogFooter,
 } from '@/components/ui/dialog';
-import { ChevronRight } from 'lucide-react';
 import ActivityItem from './ActivityItem';
 
 interface Activity {

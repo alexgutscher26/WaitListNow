@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 
 import { DashboardPage } from '@/components/dashboard-page';
 import { currentUser } from '@clerk/nextjs/server';

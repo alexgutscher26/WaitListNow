@@ -1,7 +1,7 @@
 'use client';
 
 import { Command as CommandPrimitive } from 'cmdk';
-import { Search, X, ArrowDown, Loader2 } from 'lucide-react'; 
+import { Search, X, ArrowDown, Loader2 } from 'lucide-react';
 import * as React from 'react';
 
 // Extend the HTMLAttributes interface to include cmdk-input-wrapper

@@ -2,7 +2,15 @@ import * as React from 'react';
 import { currentUser } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { Users, TrendingUp, TrendingDown, Activity, Settings, CheckCircle2, Plus } from 'lucide-react';
+import {
+  Users,
+  TrendingUp,
+  TrendingDown,
+  Activity,
+  Settings,
+  CheckCircle2,
+  Plus,
+} from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import Link from 'next/link';
 import { db } from '@/lib/db';
@@ -53,8 +61,8 @@ const StatCard = ({
                 trend === 'up'
                   ? 'text-green-600'
                   : trend === 'down'
-                  ? 'text-red-600'
-                  : 'text-gray-600',
+                    ? 'text-red-600'
+                    : 'text-gray-600',
               )}
             >
               {trend === 'up' ? (
@@ -765,11 +773,12 @@ export default async function Page({ searchParams = {} }: PageProps) {
           {waitlists.length > 0 ? (
             <>
               <WaitlistTable
-                waitlists={waitlists.map(wl => ({
+                waitlists={waitlists.map((wl) => ({
                   id: wl.id,
                   name: wl.name,
                   subscribers: wl._count.subscribers,
-                  createdAt: typeof wl.createdAt === 'string' ? wl.createdAt : wl.createdAt.toISOString(),
+                  createdAt:
+                    typeof wl.createdAt === 'string' ? wl.createdAt : wl.createdAt.toISOString(),
                 }))}
               />
               <Button

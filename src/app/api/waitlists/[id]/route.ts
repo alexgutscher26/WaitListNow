@@ -25,6 +25,17 @@ const isDev = process.env.NODE_ENV === 'development';
 const log = (...args: any[]) => isDev && console.log('[Waitlist API]', ...args);
 
 // GET /api/waitlists/[id] - Get a specific waitlist
+/**
+ * Handles GET requests to retrieve a specific waitlist.
+ *
+ * This function verifies user authentication, retrieves the waitlist ID from URL parameters,
+ * and checks if the authenticated user has access to the specified waitlist. It returns the
+ * waitlist details along with the count of subscribers. If any step fails, it returns an appropriate error response.
+ *
+ * @param req - The NextRequest object containing the request details.
+ * @param { params: { id: string } } - An object containing URL parameters, specifically the waitlist ID.
+ * @returns A NextResponse object with the waitlist data or an error message.
+ */
 export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
   try {
     // Verify authentication

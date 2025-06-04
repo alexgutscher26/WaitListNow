@@ -7,11 +7,17 @@ interface ReferralMilestoneEmailParams {
   message?: string;
 }
 
-export function getReferralMilestoneEmail({ name, waitlistName, milestone, message }: ReferralMilestoneEmailParams) {
+export function getReferralMilestoneEmail({
+  name,
+  waitlistName,
+  milestone,
+  message,
+}: ReferralMilestoneEmailParams) {
   const displayName = name ? `Hi ${name}! 👋` : 'Hi there! 👋';
   const wlName = waitlistName || 'our waitlist';
   const year = format(new Date(), 'yyyy');
-  const milestoneMessage = message || `Congratulations! You've reached ${milestone} referrals on ${wlName}.`;
+  const milestoneMessage =
+    message || `Congratulations! You've reached ${milestone} referrals on ${wlName}.`;
 
   const html = `
     <!DOCTYPE html>
@@ -69,4 +75,4 @@ If you have any questions, just reply to this email or contact us at support@wai
   `;
 
   return { html, text };
-} 
+}

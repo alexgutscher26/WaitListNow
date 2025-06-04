@@ -13,25 +13,25 @@ This document outlines the planned improvements and enhancements for the WaitLis
   - [x] Implement DELETE /api/waitlists/[id] - Delete a waitlist
   - [x] Implement GET /api/waitlists/[id]/subscribers - Retrieve waitlist subscribers
 
-- [X] **Embeddable Widget Implementation**
+- [x] **Embeddable Widget Implementation**
 
   - [x] Develop JavaScript snippet for website integration
-  - [X] Support iframe embedding option
-  - [X] Create direct script embedding option
-  - [X] Add customization parameters for the widget
+  - [x] Support iframe embedding option
+  - [x] Create direct script embedding option
+  - [x] Add customization parameters for the widget
 
-- [X] **Referral System**
+- [x] **Referral System**
 
-  - [X] Implement referral link generation and tracking
-  - [X] Create reward system for successful referrals
-  - [X] Add social sharing capabilities
-  - [ ] add email/in-app notifications for reward unlocks 
+  - [x] Implement referral link generation and tracking
+  - [x] Create reward system for successful referrals
+  - [x] Add social sharing capabilities
+  - [ ] add email/in-app notifications for reward unlocks
   - [ ] create the referral badges
 
 - [ ] **Email Notification System**
 
   - [x] Set up integration with Resend
-  - [X] Create email templates for different events
+  - [x] Create email templates for different events
   - [ ] Implement scheduled emails for waitlist updates
   - [ ] Setting up a notification service to trigger these emails?
   - [ ] Add email customization options

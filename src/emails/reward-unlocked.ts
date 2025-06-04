@@ -7,11 +7,18 @@ interface RewardUnlockedEmailParams {
   message?: string;
 }
 
-export function getRewardUnlockedEmail({ name, waitlistName, rewardName, message }: RewardUnlockedEmailParams) {
+export function getRewardUnlockedEmail({
+  name,
+  waitlistName,
+  rewardName,
+  message,
+}: RewardUnlockedEmailParams) {
   const displayName = name ? `Hi ${name}! 👋` : 'Hi there! 👋';
   const wlName = waitlistName || 'our waitlist';
   const year = format(new Date(), 'yyyy');
-  const rewardMessage = message || `Congratulations! You've unlocked a new reward: <strong>${rewardName}</strong> on ${wlName}.`;
+  const rewardMessage =
+    message ||
+    `Congratulations! You've unlocked a new reward: <strong>${rewardName}</strong> on ${wlName}.`;
 
   const html = `
     <!DOCTYPE html>
@@ -69,4 +76,4 @@ If you have any questions, just reply to this email or contact us at support@wai
   `;
 
   return { html, text };
-} 
+}

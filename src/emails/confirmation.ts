@@ -10,7 +10,8 @@ export function getConfirmationEmail({ name, waitlistName, message }: Confirmati
   const displayName = name ? `Hi ${name}! 👋` : 'Hi there! 👋';
   const wlName = waitlistName || 'our waitlist';
   const year = format(new Date(), 'yyyy');
-  const confirmationMessage = message || `Thank you for signing up for ${wlName}. Your spot is confirmed!`;
+  const confirmationMessage =
+    message || `Thank you for signing up for ${wlName}. Your spot is confirmed!`;
 
   const html = `
     <!DOCTYPE html>
@@ -68,4 +69,4 @@ If you have any questions, just reply to this email or contact us at support@wai
   `;
 
   return { html, text };
-} 
+}

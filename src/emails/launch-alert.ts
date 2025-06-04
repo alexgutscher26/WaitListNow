@@ -68,4 +68,4 @@ If you have any questions, just reply to this email or contact us at support@wai
   `;
 
   return { html, text };
-} 
+}

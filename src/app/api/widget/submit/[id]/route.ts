@@ -67,18 +67,12 @@ export async function POST(request: Request, { params }: { params: { id: string 
 
     // Honeypot bot detection
     if (hp_token && hp_token.trim() !== '') {
-      return NextResponse.json(
-        { error: 'Bot-like signup detected.' },
-        { status: 400 },
-      );
+      return NextResponse.json({ error: 'Bot-like signup detected.' }, { status: 400 });
     }
 
     // Intelligent CAPTCHA: time-based check
     if (!formRenderedAt) {
-      return NextResponse.json(
-        { error: 'Missing form timestamp.' },
-        { status: 400 },
-      );
+      return NextResponse.json({ error: 'Missing form timestamp.' }, { status: 400 });
     }
     const renderTime = Number(formRenderedAt);
     const now = Date.now();
@@ -101,7 +95,9 @@ export async function POST(request: Request, { params }: { params: { id: string 
     const zbResult = await validateEmailWithZeroBounce(email);
     if (zbResult.status !== 'valid') {
       return NextResponse.json(
-        { error: `Email rejected: ${zbResult.status}${zbResult.sub_status ? ' (' + zbResult.sub_status + ')' : ''}${zbResult.reason ? ' - ' + zbResult.reason : ''}` },
+        {
+          error: `Email rejected: ${zbResult.status}${zbResult.sub_status ? ' (' + zbResult.sub_status + ')' : ''}${zbResult.reason ? ' - ' + zbResult.reason : ''}`,
+        },
         { status: 400 },
       );
     }

@@ -57,4 +57,4 @@ A: Rarely, a legitimate domain may be flagged. Contact support with the email/do
 
 ---
 
-For more details, see the [ZeroBounce documentation](https://zerobounce.net/docs/) and the [`is-disposable-email` package](https://www.npmjs.com/package/is-disposable-email). 
+For more details, see the [ZeroBounce documentation](https://zerobounce.net/docs/) and the [`is-disposable-email` package](https://www.npmjs.com/package/is-disposable-email).

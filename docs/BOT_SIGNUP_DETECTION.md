@@ -52,4 +52,4 @@ A: Yes, but the current system is designed to be user-friendly and invisible. Co
 
 ---
 
-For more details, see the implementation in `src/lib/validations/emailValidation.ts` and the widget code. 
+For more details, see the implementation in `src/lib/validations/emailValidation.ts` and the widget code.

@@ -301,7 +301,7 @@ const AccountSettingsContent = () => {
 
   // Confetti on milestone unlock
   useEffect(() => {
-    if (referralInfo && referralInfo.rewards) {
+    if (referralInfo?.rewards) {
       if (referralInfo.rewards.length > prevRewardsCount.current) {
         confetti({
           particleCount: 120,

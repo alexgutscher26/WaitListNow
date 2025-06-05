@@ -370,7 +370,7 @@ export async function GET(request: NextRequest) {
   if (!email) {
     // Try to find the user's email from the database
     const user = await db.user.findUnique({ where: { externalId: userId } });
-    if (user && user.email) {
+    if (user?.email) {
       email = user.email;
     } else {
       return new Response(

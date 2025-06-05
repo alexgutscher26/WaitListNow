@@ -53,7 +53,11 @@ describe('Widget Submit API - Disposable Email Detection', () => {
 
   it('rejects bot signups with honeypot field filled', async () => {
     const old = Date.now() - 3000;
-    const req = createRequest({ email: 'user@example.com', hp_token: 'I am a bot', formRenderedAt: old.toString() });
+    const req = createRequest({
+      email: 'user@example.com',
+      hp_token: 'I am a bot',
+      formRenderedAt: old.toString(),
+    });
     const res = await POST(req, { params: { id: 'test-id' } });
     const json = await res.json();
     expect(res.status).toBe(400);
@@ -62,7 +66,11 @@ describe('Widget Submit API - Disposable Email Detection', () => {
 
   it('accepts signups with honeypot field empty', async () => {
     const old = Date.now() - 3000;
-    const req = createRequest({ email: 'user@example.com', hp_token: '', formRenderedAt: old.toString() });
+    const req = createRequest({
+      email: 'user@example.com',
+      hp_token: '',
+      formRenderedAt: old.toString(),
+    });
     const res = await POST(req, { params: { id: 'test-id' } });
     const json = await res.json();
     expect(json.error || '').not.toMatch(/bot/i);
@@ -92,4 +100,4 @@ describe('Widget Submit API - Disposable Email Detection', () => {
     const json = await res.json();
     expect(json.error || '').not.toMatch(/timestamp|quickly/i);
   });
-}); 
+});

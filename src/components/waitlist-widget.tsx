@@ -139,7 +139,11 @@ export function WaitlistWidget({
         onSubmit={handleSubmit}
         className={styles['waitlist-widget__form']}
       >
-        <input type="hidden" name="formRenderedAt" value={formRenderedAt} />
+        <input
+          type="hidden"
+          name="formRenderedAt"
+          value={formRenderedAt}
+        />
         <div className={styles['waitlist-widget__field']}>
           {showLabels && (
             <Label

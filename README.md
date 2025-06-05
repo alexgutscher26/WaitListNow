@@ -207,6 +207,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## API Validation
 
 All endpoints that accept email addresses (e.g., waitlist signup, subscribers API) enforce the following:
+
 - Email must be valid (RFC-compliant)
 - **Disposable email addresses are not allowed** (using a maintained blocklist)
 - **Bot signups are blocked** using a honeypot field (`hp_token`). If this field is filled, the request is rejected as likely bot activity.

@@ -63,33 +63,33 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
 
     // Intelligent CAPTCHA: time-based check
     if (!body.formRenderedAt) {
-      return new NextResponse(
-        JSON.stringify({ error: 'Missing form timestamp.' }),
-        { status: 400, headers: { 'Content-Type': 'application/json' } }
-      );
+      return new NextResponse(JSON.stringify({ error: 'Missing form timestamp.' }), {
+        status: 400,
+        headers: { 'Content-Type': 'application/json' },
+      });
     }
     const renderTime = Number(body.formRenderedAt);
     const now = Date.now();
     if (isNaN(renderTime) || now - renderTime < 2000) {
       return new NextResponse(
         JSON.stringify({ error: 'Form submitted too quickly. Please try again.' }),
-        { status: 400, headers: { 'Content-Type': 'application/json' } }
+        { status: 400, headers: { 'Content-Type': 'application/json' } },
       );
     }
 
     // Honeypot bot detection
     if (body.hp_token && body.hp_token.trim() !== '') {
-      return new NextResponse(
-        JSON.stringify({ error: 'Bot-like signup detected.' }),
-        { status: 400, headers: { 'Content-Type': 'application/json' } }
-      );
+      return new NextResponse(JSON.stringify({ error: 'Bot-like signup detected.' }), {
+        status: 400,
+        headers: { 'Content-Type': 'application/json' },
+      });
     }
 
     // Disposable email detection
     if (isDisposableEmail(body.email)) {
       return new NextResponse(
         JSON.stringify({ error: 'Disposable email addresses are not allowed.' }),
-        { status: 400, headers: { 'Content-Type': 'application/json' } }
+        { status: 400, headers: { 'Content-Type': 'application/json' } },
       );
     }
 
@@ -178,7 +178,11 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
         );
         if (!verifyRes.ok) {
           const errText = await verifyRes.text();
-          console.error('[WAITLIST_VERIFICATION_EMAIL_ERROR]', sanitizeForConsole(verifyRes.status), sanitizeForConsole(errText));
+          console.error(
+            '[WAITLIST_VERIFICATION_EMAIL_ERROR]',
+            sanitizeForConsole(verifyRes.status),
+            sanitizeForConsole(errText),
+          );
         } else {
           console.log('[WAITLIST_VERIFICATION_EMAIL_SENT]', subscriber.email);
         }
@@ -372,6 +376,3 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
     );
   }
 }
-
-
-

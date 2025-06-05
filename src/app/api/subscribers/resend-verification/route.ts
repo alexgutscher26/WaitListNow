@@ -63,10 +63,10 @@ export async function POST(request: NextRequest) {
     await db.subscriber.update({
       where: { id: subscriber.id },
       data: {
-        customFields: ( {
+        customFields: {
           ...currentFields,
           verificationToken,
-        } ) as any,
+        } as any,
       },
     });
 
@@ -370,15 +370,17 @@ export async function GET(request: NextRequest) {
   if (!email) {
     // Try to find the user's email from the database
     const user = await db.user.findUnique({ where: { externalId: userId } });
-    if (user && user.email) {
+    if (user?.email) {
       email = user.email;
     } else {
       return new Response(
-        JSON.stringify({ error: 'Email query parameter is required, and no email found for authenticated user.' }),
+        JSON.stringify({
+          error: 'Email query parameter is required, and no email found for authenticated user.',
+        }),
         {
           status: 400,
           headers: { 'Content-Type': 'application/json' },
-        }
+        },
       );
     }
   }
@@ -405,10 +407,10 @@ export async function GET(request: NextRequest) {
   await db.subscriber.update({
     where: { id: subscriber.id },
     data: {
-      customFields: ( {
+      customFields: {
         ...currentFields,
         verificationToken,
-      } ) as any,
+      } as any,
     },
   });
   // Send verification email

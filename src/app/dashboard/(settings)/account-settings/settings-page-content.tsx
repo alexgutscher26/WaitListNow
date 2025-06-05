@@ -46,6 +46,7 @@ import { SocialShareButtons } from '@/components/ui/SocialShareButtons';
 import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/components/ui/use-toast';
+import { sanitizeForConsole } from '@/lib/utils';
 
 /**
  * @fileoverview This file contains the implementation of the Settings component,
@@ -540,10 +541,10 @@ const AccountSettingsContent = () => {
           // Force a re-render to ensure UI updates with new plan
           setLastUpdate(Date.now());
         } else {
-          console.error('Failed to fetch metrics:', response.status);
+          console.error('Failed to fetch metrics:', sanitizeForConsole(response.status));
         }
       } catch (error) {
-        console.error('Error fetching metrics:', error);
+        console.error('Error fetching metrics:', sanitizeForConsole(error));
       } finally {
         setIsLoading(false);
       }

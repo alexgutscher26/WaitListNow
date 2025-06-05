@@ -144,7 +144,7 @@ const WaitlistTable: React.FC<WaitlistTableProps> = ({ waitlists }) => {
         </TableBody>
       </Table>
       <Dialog
-        open={!!pendingDelete}
+
         onOpenChange={(open) => !open && setPendingDelete(null)}
       >
         <DialogContent>

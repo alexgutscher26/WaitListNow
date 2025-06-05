@@ -1,7 +1,15 @@
 /* eslint-disable import/no-default-export */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { currentUser } from '@clerk/nextjs/server';
-import { Users, TrendingUp, TrendingDown, Activity, Settings, CheckCircle2, Plus } from 'lucide-react';
+import {
+  Users,
+  TrendingUp,
+  TrendingDown,
+  Activity,
+  Settings,
+  CheckCircle2,
+  Plus,
+} from 'lucide-react';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import * as React from 'react';
@@ -30,7 +38,7 @@ interface StatCardProps {
   value: string | number;
   icon: React.ComponentType<{ className?: string }>;
   className?: string;
-  trend?: 'up' | 'down' | undefined;
+  trend?: 'up' | 'down';
   trendValue?: string;
 }
 
@@ -55,8 +63,8 @@ const StatCard = ({
                 trend === 'up'
                   ? 'text-green-600'
                   : trend === 'down'
-                  ? 'text-red-600'
-                  : 'text-gray-600',
+                    ? 'text-red-600'
+                    : 'text-gray-600',
               )}
             >
               {trend === 'up' ? (
@@ -392,7 +400,7 @@ export default async function Page({ searchParams = {} }: PageProps) {
 
   // Check if user has premium access
 
- // console.log('Clerk user ID:', user.id);
+  // console.log('Clerk user ID:', user.id);
 
   // Find the internal user ID that matches the Clerk user ID
   const dbUser = await db.user.findUnique({
@@ -764,11 +772,12 @@ export default async function Page({ searchParams = {} }: PageProps) {
           {waitlists.length > 0 ? (
             <>
               <WaitlistTable
-                waitlists={waitlists.map(wl => ({
+                waitlists={waitlists.map((wl) => ({
                   id: wl.id,
                   name: wl.name,
                   subscribers: wl._count.subscribers,
-                  createdAt: typeof wl.createdAt === 'string' ? wl.createdAt : wl.createdAt.toISOString(),
+                  createdAt:
+                    typeof wl.createdAt === 'string' ? wl.createdAt : wl.createdAt.toISOString(),
                 }))}
               />
               <Button

@@ -62,4 +62,4 @@ describe('Widget Submit API - Disposable Email Detection', () => {
     const json = await res.json();
     expect(json.error || '').not.toMatch(/bot/i);
   });
-}); 
+});

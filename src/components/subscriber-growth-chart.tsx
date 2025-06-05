@@ -174,15 +174,13 @@ const CustomTooltip = ({ active, payload, label }: RechartsTooltipProps<ValueTyp
         <p
           key={`tooltip-${index}`}
           className="text-sm"
-          style={{ color: entry as string }}
+          style={{ color: entry.color }}
         >
           {entry instanceof Object && entry.dataKey === 'count'
             ? 'New Subscribers'
             : 'Total Subscribers'}
           : <span className="font-medium">{entry.value.toLocaleString()}</span>
         </p>
-          style={{ color: entry.color }}
-        ></p>
       ))}
     </div>
   );

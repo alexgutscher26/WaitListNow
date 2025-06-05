@@ -380,7 +380,7 @@ const getStats = async (): Promise<{
  *
  * @returns {JSX.Element} The dashboard page component.
  */
-export default async function Page({ }: PageProps) {
+export default async function Page({}: PageProps) {
   const stats = await getStats();
 
   const user = await currentUser();

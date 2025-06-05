@@ -308,7 +308,7 @@ const AccountSettingsContent = () => {
 
   // Confetti on milestone unlock
   useEffect(() => {
-    if (referralInfo?.rewards) {
+    if (referralInfo && referralInfo.rewards) {
       if (referralInfo.rewards.length > prevRewardsCount.current) {
         confetti({
           particleCount: 120,
@@ -318,7 +318,7 @@ const AccountSettingsContent = () => {
       }
       prevRewardsCount.current = referralInfo.rewards.length;
     }
-  }, [referralInfo, referralInfo.rewards.length]);
+  }, [referralInfo]);
 
   // Handle form input changes with null check
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -1318,9 +1318,7 @@ const AccountSettingsContent = () => {
                 <div className="mb-6">
                   <div className="flex items-center justify-between relative">
                     {/* Stepper Circles */}
-
-                    {referralInfo.rewards.map((reward, idx) => (
-
+                    {(referralInfo?.rewards ?? []).map((reward, idx) => (
                       <div
                         key={reward.count}
                         className="flex-1 flex flex-col items-center group"
@@ -1337,11 +1335,7 @@ const AccountSettingsContent = () => {
                           </div>
                         </div>
                         {/* Connector */}
-
-                        {idx < referralInfo.rewards.length - 1 && (
-
-
-
+                        {idx < (referralInfo?.rewards?.length ?? 0) - 1 && (
                           <div
                             className="absolute top-1/2 left-full w-full h-1 bg-green-400 z-0"
                             style={{ width: '100%', height: 4, marginLeft: -8 }}
@@ -1354,7 +1348,7 @@ const AccountSettingsContent = () => {
                       <div className="flex-1 flex flex-col items-center group">
                         <div className="relative z-10">
                           <div className="w-8 h-8 rounded-full border-2 border-blue-400 flex items-center justify-center text-blue-600 font-bold bg-white animate-pulse shadow-lg">
-                            <span>{(referralInfo.rewards?.length ?? 0) + 1}</span>
+                            <span>{(referralInfo?.rewards?.length ?? 0) + 1}</span>
                           </div>
                           <div className="absolute left-1/2 -translate-x-1/2 mt-2 w-max text-xs text-blue-700 font-semibold whitespace-nowrap">
                             {referralInfo.nextReward.name}
@@ -1383,11 +1377,9 @@ const AccountSettingsContent = () => {
                   </div>
                 )}
                 {/* Unlocked Rewards List */}
-                {(referralInfo.rewards?.length ?? 0) > 0 && (
+                {(referralInfo?.rewards?.length ?? 0) > 0 && (
                   <div className="mb-2 flex flex-wrap gap-2">
-
-                    {referralInfo.rewards.map((reward) => (
-
+                    {(referralInfo?.rewards ?? []).map((reward) => (
                       <Badge
                         key={reward.count}
                         className="bg-green-600 text-white"
@@ -1445,9 +1437,9 @@ const AccountSettingsContent = () => {
             <div className="text-sm text-muted-foreground">Loading badges...</div>
           ) : referralError ? (
             <div className="text-sm text-red-500">{referralError}</div>
-          ) : referralInfo && (referralInfo.rewards?.length ?? 0) > 0 ? (
+          ) : referralInfo && (referralInfo?.rewards?.length ?? 0) > 0 ? (
             <div className="flex flex-wrap gap-4">
-              {referralInfo.rewards?.map((badge, idx) => (
+              {(referralInfo?.rewards ?? []).map((badge, idx) => (
                 <div
                   key={badge.count}
                   className="flex flex-col items-center bg-gradient-to-br from-green-100 to-blue-100 border border-green-300 rounded-xl p-4 shadow-md min-w-[140px] max-w-[180px]"

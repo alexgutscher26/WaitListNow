@@ -60,9 +60,21 @@ This document outlines the planned improvements and enhancements for the WaitLis
 
   - [x] Set up integration with Resend
   - [x] Create email templates for different events
-  - [ ] Implement scheduled emails for waitlist updates
-  - [ ] Setting up a notification service to trigger these emails?
-  - [ ] Add email customization options
+  - [ ] Implement scheduled email system
+    - [X] Create email scheduling service using node-cron
+    - [ ] Add queue system for email delivery using Bull
+    - [ ] Implement retry logic for failed deliveries
+    - [ ] Add rate limiting to prevent email spam
+  - [ ] Build notification service
+    - [ ] Create notification queue processor
+    - [ ] Implement webhook support for external integrations
+    - [ ] Add real-time notification delivery
+    - [ ] Set up monitoring and alerting
+  - [ ] Enhance email customization
+    - [ ] Add template variables for dynamic content
+    - [ ] Implement A/B testing for email content
+    - [ ] Create email preview system
+    - [ ] Add template version control
 
 - [ ] **White-labeling Capabilities**
 

@@ -7,7 +7,6 @@ generator client {
 datasource db {
   provider   = "postgresql"
   url        = env("DATABASE_URL")
-  directUrl  = env("DATABASE_URL")
   extensions = [pg_trgm, pgcrypto]
 }
 
@@ -34,6 +33,7 @@ model User {
   waitlistPreferences     Json?        @map("waitlist_preferences") @default("{\"maxSubscribers\": 1000, \"emailNotifications\": true, \"defaultWaitlistLimit\": 1, \"autoApproveSubscribers\": true, \"requireEmailVerification\": false}")
   subscribers             Subscriber[]
   waitlists               Waitlist[]
+  wantsEmail              Boolean      @default(true)
 
   @@index([email, apiKey])
 }

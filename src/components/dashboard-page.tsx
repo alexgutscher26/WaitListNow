@@ -1,10 +1,10 @@
 'use client';
 
-import React, { ReactNode } from 'react';
-import { Button } from './ui/button';
 import { ArrowLeft } from 'lucide-react';
-import { Heading } from './heading';
 import { useRouter } from 'next/navigation';
+import React, { ReactNode } from 'react';
+import { Heading } from './heading';
+import { Button } from './ui/button';
 
 interface DashboardPageProps {
   title: string;

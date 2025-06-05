@@ -27,7 +27,7 @@ export var authRouter = router({
             ];
           case 2:
             user = _c.sent();
-            if (Boolean(user)) return [3 /*break*/, 4];
+            if (user) return [3 /*break*/, 4];
             return [
               4 /*yield*/,
               db.user.create({

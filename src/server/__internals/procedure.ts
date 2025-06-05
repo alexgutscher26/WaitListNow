@@ -1,9 +1,11 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable import/no-named-as-default-member */
 import { Context, TypedResponse } from 'hono';
-import { z } from 'zod';
-import { Middleware, MutationOperation, QueryOperation } from './types';
 import { StatusCode } from 'hono/utils/http-status';
 import superjson from 'superjson';
+import { z } from 'zod';
 import { Bindings } from '../env';
+import { Middleware, MutationOperation, QueryOperation } from './types';
 
 /**
  * Type-level SuperJSON integration
@@ -84,7 +86,7 @@ export class Procedure<ctx = Record<string, never>> {
       type: 'query',
       schema,
       handler: fn as any,
-      middlewares: this.middlewares,
+      middlewares: this.middlewares as Middleware<unknown>[],
     }),
 
     mutation: <Output>(
@@ -101,7 +103,7 @@ export class Procedure<ctx = Record<string, never>> {
       type: 'mutation',
       schema,
       handler: fn as any,
-      middlewares: this.middlewares,
+      middlewares: this.middlewares as Middleware<unknown>[],
     }),
   });
 
@@ -122,7 +124,7 @@ export class Procedure<ctx = Record<string, never>> {
     return {
       type: 'query',
       handler: fn as any,
-      middlewares: this.middlewares,
+      middlewares: this.middlewares as Middleware<unknown>[],
     };
   }
 
@@ -143,7 +145,7 @@ export class Procedure<ctx = Record<string, never>> {
     return {
       type: 'mutation',
       handler: fn as any,
-      middlewares: this.middlewares,
+      middlewares: this.middlewares as Middleware<unknown>[],
     };
   }
 }

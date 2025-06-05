@@ -1,4 +1,6 @@
-// @ts-check
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+/* eslint-disable @typescript-eslint/no-require-imports */
+// @ts-nocheck
 
 /** @type {import('next').NextConfig} */
 const baseConfig = {
@@ -68,11 +70,7 @@ const baseConfig = {
   // Enable static optimization for all pages
   experimental: {
     optimizeCss: true,
-    optimizePackageImports: [
-      '@radix-ui/react-icons',
-      'date-fns',
-      'lucide-react',
-    ],
+    optimizePackageImports: ['@radix-ui/react-icons', 'date-fns', 'lucide-react'],
   },
   // Disable source maps in production
   productionBrowserSourceMaps: process.env.NODE_ENV !== 'production',

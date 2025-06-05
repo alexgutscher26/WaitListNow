@@ -1,8 +1,6 @@
 import * as React from 'react';
 import { useMemo } from 'react';
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 
 type FieldType = 'text' | 'email' | 'number' | 'url' | 'tel' | 'textarea' | 'select';
 type ButtonVariant = 'default' | 'outline' | 'secondary' | 'ghost' | 'link';
@@ -110,107 +108,6 @@ export function WaitlistPreview({ formData }: WaitlistPreviewProps) {
       poppins: '"Poppins", ui-sans-serif, system-ui, -apple-system, sans-serif',
     };
     return fonts[font] || fonts.sans;
-  };
-
-  const containerStyle = useMemo(
-    () => ({
-      backgroundColor: formData.style.backgroundColor,
-      color: formData.style.textColor,
-      fontFamily: getFontFamily(formData.style.fontFamily),
-      boxShadow: getBoxShadow(formData.style.boxShadow),
-      borderRadius: getBorderRadius(formData.style.borderRadius as ButtonRounded),
-      padding: `${parseInt(formData.style.padding) * 0.5}rem`,
-    }),
-    [formData.style],
-  );
-
-  const buttonStyle = useMemo(
-    () => ({
-      backgroundColor: formData.style.buttonColor,
-      color: formData.style.buttonTextColor,
-      borderRadius: getBorderRadius(formData.style.buttonRounded as ButtonRounded),
-    }),
-    [formData.style],
-  );
-
-  const renderField = (field: CustomField) => {
-    const commonProps = {
-      key: field.id,
-      id: `field-${field.id}`,
-      name: field.name.toLowerCase().replace(/\s+/g, '-'),
-      placeholder: field.placeholder || `Enter your ${field.name.toLowerCase()}`,
-      required: field.required,
-      className: 'w-full mt-1',
-      style: {
-        borderRadius: getBorderRadius(formData.style.borderRadius as ButtonRounded),
-        padding: '0.5rem 0.75rem',
-        border: '1px solid #e5e7eb',
-        backgroundColor:
-          formData.style.backgroundColor === formData.style.textColor
-            ? '#ffffff'
-            : formData.style.backgroundColor,
-        color: formData.style.textColor,
-      },
-    };
-
-    switch (field.type) {
-      case 'email':
-        return (
-          <Input
-            type="email"
-            {...commonProps}
-          />
-        );
-      case 'number':
-        return (
-          <Input
-            type="number"
-            {...commonProps}
-          />
-        );
-      case 'url':
-        return (
-          <Input
-            type="url"
-            {...commonProps}
-          />
-        );
-      case 'tel':
-        return (
-          <Input
-            type="tel"
-            {...commonProps}
-          />
-        );
-      case 'textarea':
-        return (
-          <textarea
-            {...commonProps}
-            rows={3}
-          />
-        );
-      case 'select':
-        return (
-          <select {...commonProps}>
-            <option value="">Select {field.name.toLowerCase()}</option>
-            {field.options?.map((option, i) => (
-              <option
-                key={i}
-                value={option}
-              >
-                {option}
-              </option>
-            ))}
-          </select>
-        );
-      default:
-        return (
-          <Input
-            type="text"
-            {...commonProps}
-          />
-        );
-    }
   };
 
   return (

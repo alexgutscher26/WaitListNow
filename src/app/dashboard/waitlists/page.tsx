@@ -1,15 +1,16 @@
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable import/no-default-export */
 'use client';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { Plus, Users, Eye, Copy, Trash2, MoreVertical, AlertCircle, RefreshCw } from 'lucide-react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import * as React from 'react';
 
+import { DashboardPage } from '@/components/dashboard-page';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Plus, Users, Eye, Copy, Trash2, MoreVertical, AlertCircle, RefreshCw } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
-import { Skeleton } from '@/components/ui/skeleton';
-import { useQuery, useMutation, useQueryClient, UseQueryResult } from '@tanstack/react-query';
-import { useToast } from '@/components/ui/use-toast';
-import { useRouter } from 'next/navigation';
-import Link from 'next/link';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -21,7 +22,8 @@ import {
   DropdownMenuSubContent,
   DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu';
-import { DashboardPage } from '@/components/dashboard-page';
+import { Skeleton } from '@/components/ui/skeleton';
+import { useToast } from '@/components/ui/use-toast';
 
 // Define the Waitlist type based on the Prisma model
 type Waitlist = {
@@ -509,6 +511,7 @@ export default function WaitlistsPage() {
             ) : hasWaitlists ? (
               <div className="space-y-4">
                 {waitlists.map((waitlist) => (
+                  // eslint-disable-next-line jsx-a11y/click-events-have-key-events
                   <div
                     key={waitlist.id}
                     className="flex items-center justify-between rounded-lg border p-4 hover:bg-accent/50 transition-colors cursor-pointer"

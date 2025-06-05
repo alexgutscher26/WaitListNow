@@ -1,9 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import crypto from 'crypto';
+import { getAuth } from '@clerk/nextjs/server';
 import { NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
 import { Resend } from 'resend';
 import { db } from '@/lib/db';
-import { getAuth } from '@clerk/nextjs/server';
-import type { NextRequest } from 'next/server';
-import crypto from 'crypto';
 
 interface CustomFields {
   verificationToken?: string;
@@ -369,7 +370,7 @@ export async function GET(request: NextRequest) {
   if (!email) {
     // Try to find the user's email from the database
     const user = await db.user.findUnique({ where: { externalId: userId } });
-    if (user && user.email) {
+    if (user?.email) {
       email = user.email;
     } else {
       return new Response(

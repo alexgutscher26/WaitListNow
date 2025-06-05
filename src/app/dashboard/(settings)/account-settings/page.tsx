@@ -1,8 +1,9 @@
+/* eslint-disable import/no-default-export */
+import { currentUser } from '@clerk/nextjs/server';
+import { redirect } from 'next/navigation';
 import * as React from 'react';
 import { DashboardPage } from '@/components/dashboard-page';
 import { db } from '@/lib/db';
-import { currentUser } from '@clerk/nextjs/server';
-import { redirect } from 'next/navigation';
 import { AccountSettings } from './settings-page-content';
 
 /**

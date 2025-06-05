@@ -1,7 +1,7 @@
 'use client';
 
-import * as React from 'react';
 import { useTheme } from 'next-themes';
+import * as React from 'react';
 
 import { Toast, ToastProvider, ToastViewport } from '@/components/ui/toast';
 import { useToast } from '@/components/ui/use-toast';

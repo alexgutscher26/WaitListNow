@@ -1,6 +1,6 @@
+/* eslint-disable import/no-default-export */
 import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
 import { NextResponse, type NextRequest } from 'next/server';
-import { trackPageview } from '@/lib/plausible';
 
 // Define public routes that don't require authentication
 const publicRoutes = [
@@ -21,7 +21,7 @@ const protectedRoutes = [
   '/dashboard(.*)',
   '/welcome',
   '/api/auth(.*)',
-  '/api/subscribers(.*)'
+  '/api/subscribers(.*)',
   // Add other API routes that need protection
 ];
 
@@ -30,15 +30,13 @@ const isProtectedRoute = createRouteMatcher(protectedRoutes);
 
 const middleware = clerkMiddleware(async (auth, req: NextRequest) => {
   const { pathname } = req.nextUrl;
-  
+
   // Skip middleware for public routes
   if (isPublicRoute(req)) {
-    trackPageview();
     return NextResponse.next();
   }
 
   // Track page views for authenticated users
-  trackPageview();
 
   // Get the auth state
   const { userId } = await auth();
@@ -73,6 +71,6 @@ export const config = {
     '/(api|trpc)(.*)',
     // Protect dashboard and private API routes
     '/dashboard/:path*',
-    '/api/private/:path*'
-  ]
+    '/api/private/:path*',
+  ],
 };

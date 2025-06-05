@@ -1,5 +1,5 @@
 var _a, _b, _c, _d, _e, _f, _g, _h, _j;
-import { jsx as _jsx } from "react/jsx-runtime";
+import { jsx as _jsx } from 'react/jsx-runtime';
 import { createRoot } from 'react-dom/client';
 import { WaitlistWidget } from '../components/waitlist-widget';
 // Find the current script tag
@@ -10,29 +10,23 @@ if (currentScript) {
     return currentScript.getAttribute(name) || fallback;
   };
   var waitlistId = (_a = getAttr('data-waitlist-id', 'new')) !== null && _a !== void 0 ? _a : 'new';
-  var apiKey = getAttr('data-api-key', undefined);
+  var apiKey = getAttr('data-api-key');
   // Map data attributes to style object
   var style_1 = {
-    buttonText:
-      (_b = getAttr('data-button-text', undefined)) !== null && _b !== void 0 ? _b : undefined,
-    buttonColor:
-      (_c = getAttr('data-primary-color', undefined)) !== null && _c !== void 0 ? _c : undefined,
+    buttonText: (_b = getAttr('data-button-text')) !== null && _b !== void 0 ? _b : undefined,
+    buttonColor: (_c = getAttr('data-primary-color')) !== null && _c !== void 0 ? _c : undefined,
     buttonTextColor:
-      (_d = getAttr('data-button-text-color', undefined)) !== null && _d !== void 0
-        ? _d
-        : undefined,
+      (_d = getAttr('data-button-text-color')) !== null && _d !== void 0 ? _d : undefined,
     backgroundColor:
-      (_e = getAttr('data-background-color', undefined)) !== null && _e !== void 0 ? _e : undefined,
-    textColor:
-      (_f = getAttr('data-text-color', undefined)) !== null && _f !== void 0 ? _f : undefined,
+      (_e = getAttr('data-background-color')) !== null && _e !== void 0 ? _e : undefined,
+    textColor: (_f = getAttr('data-text-color')) !== null && _f !== void 0 ? _f : undefined,
     borderRadius:
-      getAttr('data-button-rounded', undefined) === 'md'
+      getAttr('data-button-rounded') === 'md'
         ? 8
-        : getAttr('data-button-rounded', undefined) === 'lg'
+        : getAttr('data-button-rounded') === 'lg'
           ? 16
           : undefined,
-    fontFamily:
-      (_g = getAttr('data-font-family', undefined)) !== null && _g !== void 0 ? _g : undefined,
+    fontFamily: (_g = getAttr('data-font-family')) !== null && _g !== void 0 ? _g : undefined,
     showLabels: getAttr('data-show-labels', 'true') === 'true',
     formLayout:
       (_h = getAttr('data-form-layout', 'stacked')) !== null && _h !== void 0 ? _h : undefined,

@@ -1,7 +1,7 @@
-import { db } from '@/lib/db';
-import { j } from './__internals/j';
 import { currentUser } from '@clerk/nextjs/server';
 import { HTTPException } from 'hono/http-exception';
+import { db } from '@/lib/db';
+import { j } from './__internals/j';
 
 const authMiddleware = j.middleware(async ({ c, next }) => {
   const authHeader = c.req.header('Authorization');

@@ -1,8 +1,8 @@
 'use client';
 
+import dynamic from 'next/dynamic';
 import React from 'react';
 import { type ReactNode } from 'react';
-import dynamic from 'next/dynamic';
 
 // Lazy load providers with code splitting
 const ClerkProvider = dynamic(

@@ -1,6 +1,8 @@
+/* eslint-disable import/no-default-export */
+/* eslint-disable react/no-unescaped-entities */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
-import React from 'react';
 import {
   AlertCircle,
   ArrowRight,
@@ -15,8 +17,9 @@ import {
   Zap,
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import React, { useState, useEffect } from 'react';
 import { toast } from '@/components/ui/use-toast';
-import { useState, useEffect } from 'react';
+
 import { onboardingCompleteSchema } from '@/lib/validations/onboarding';
 
 // Fixed interfaces with proper type

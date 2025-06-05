@@ -88,13 +88,6 @@ export async function getWaitlistStats() {
       };
     }
 
-    // Get subscriber count for all waitlists
-    const subscriberStats = await db.waitlist.aggregate({
-      where: { userId },
-      _sum: { subscriberCount: true },
-      _count: { id: true },
-    });
-
     // Get waitlists with subscriber counts and recent subscribers
     const waitlists = await db.waitlist.findMany({
       where: { userId },

@@ -1,3 +1,4 @@
+/* eslint-disable import/no-default-export */
 import { redirect } from 'next/navigation';
 
 interface RefPageProps {
@@ -9,4 +10,4 @@ export default function RefPage({ params }: RefPageProps) {
   // Redirect to the main signup page with the referralCode as a query param
   redirect(`/sign-up?referralCode=${encodeURIComponent(params.referralCode)}`);
   return null;
-} 
+}

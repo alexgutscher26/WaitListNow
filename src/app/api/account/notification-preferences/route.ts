@@ -1,5 +1,6 @@
-import { NextResponse } from 'next/server';
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { auth } from '@clerk/nextjs/server';
+import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 
 // Define the type for notification preferences

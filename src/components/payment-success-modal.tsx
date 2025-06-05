@@ -1,14 +1,14 @@
 'use client';
 
+import { useQuery } from '@tanstack/react-query';
+import { CheckIcon } from 'lucide-react';
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import { client } from '@/lib/client';
-import { useQuery } from '@tanstack/react-query';
-import { useRouter } from 'next/navigation';
-import Image from 'next/image';
-import { Modal } from './ui/modal';
 import { LoadingSpinner } from './loading-spinner';
 import { Button } from './ui/button';
-import { CheckIcon } from 'lucide-react';
+import { Modal } from './ui/modal';
 
 /**
  * PaymentSuccessModal component

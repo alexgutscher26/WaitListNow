@@ -1,17 +1,14 @@
 'use client';
 
-import * as React from 'react';
-
 // synchronize auth status to database
 
-import { useQuery } from '@tanstack/react-query';
 import { LucideProps } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import * as React from 'react';
 import { useEffect } from 'react';
 
 import { Heading } from '@/components/heading';
 import { LoadingSpinner } from '@/components/loading-spinner';
-import { client } from '@/lib/client';
 
 /**
  * Renders a loading page component with a spinner and text indicating account creation.
@@ -347,4 +344,4 @@ const BackgroundPattern = (props: LucideProps) => {
   );
 };
 
-export default Page;
+export { Page };

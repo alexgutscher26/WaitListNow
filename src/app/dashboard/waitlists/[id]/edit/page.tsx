@@ -1,17 +1,19 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable import/no-default-export */
 'use client';
 
-import React from 'react';
-import { useState, useEffect, useCallback } from 'react';
-import { useRouter, useParams } from 'next/navigation';
-import { toast } from 'sonner';
-import { Button } from '@/components/ui/button';
-import { DashboardPage } from '@/components/dashboard-page';
 import { Loader2 } from 'lucide-react';
+import { useRouter, useParams } from 'next/navigation';
+import React, { useState, useEffect, useCallback } from 'react';
+
+import { toast } from 'sonner';
+import { DashboardPage } from '@/components/dashboard-page';
+import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { BasicInfoSection } from '@/components/waitlist/edit/basic-info-section';
-import { CustomFieldsSection } from '@/components/waitlist/edit/custom-fields-section';
 import { AppearanceSection } from '@/components/waitlist/edit/appearance-section';
+import { BasicInfoSection } from '@/components/waitlist/edit/basic-info-section';
 import { BehaviorSection } from '@/components/waitlist/edit/behavior-section';
+import { CustomFieldsSection } from '@/components/waitlist/edit/custom-fields-section';
 import { WaitlistPreview } from '@/components/waitlist/edit/waitlist-preview';
 
 // Reuse the same types from the new waitlist page

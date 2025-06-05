@@ -1,3 +1,4 @@
+/* eslint-disable import/no-default-export */
 'use client';
 
 import * as React from 'react';

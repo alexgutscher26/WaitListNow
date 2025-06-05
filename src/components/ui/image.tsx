@@ -1,19 +1,12 @@
-import * as React from 'react';
 import NextImage, { ImageProps as NextImageProps } from 'next/image';
+import * as React from 'react';
 
 type ImageProps = Omit<NextImageProps, 'alt'> & {
   alt: string;
   className?: string;
 };
 
-export const Image = ({
-  src,
-  alt,
-  width,
-  height,
-  className = '',
-  ...props
-}: ImageProps) => {
+export const Image = ({ src, alt, width, height, className = '', ...props }: ImageProps) => {
   if (!src) {
     return null;
   }

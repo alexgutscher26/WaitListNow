@@ -1,7 +1,7 @@
-import React from 'react';
 import { notFound } from 'next/navigation';
-import { db } from '@/lib/db';
+import React from 'react';
 import { WaitlistWidget } from '@/components/waitlist-widget';
+import { db } from '@/lib/db';
 
 interface WaitlistPageProps {
   params: {

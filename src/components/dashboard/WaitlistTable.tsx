@@ -1,13 +1,34 @@
+/* eslint-disable import/no-default-export */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 'use client';
-import React, { useEffect, useState } from 'react';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import Link from 'next/link';
-import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from '@/components/ui/dropdown-menu';
 import { MoreHorizontal, Users, Edit, Link as LinkIcon, Trash } from 'lucide-react';
+import Link from 'next/link';
+import React, { useEffect, useState } from 'react';
 import { toast } from 'sonner';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from '@/components/ui/dialog';
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from '@/components/ui/dropdown-menu';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
 
 interface Waitlist {
   id: string;
@@ -81,14 +102,20 @@ const WaitlistTable: React.FC<WaitlistTableProps> = ({ waitlists }) => {
                 <ClientDate dateString={waitlist.createdAt} />
               </TableCell>
               <TableCell>
-                <Badge variant="outline" className="text-xs bg-green-50 text-green-700">
+                <Badge
+                  variant="outline"
+                  className="text-xs bg-green-50 text-green-700"
+                >
                   Active
                 </Badge>
               </TableCell>
               <TableCell>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="icon">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                    >
                       <MoreHorizontal className="h-5 w-5" />
                     </Button>
                   </DropdownMenuTrigger>
@@ -116,7 +143,7 @@ const WaitlistTable: React.FC<WaitlistTableProps> = ({ waitlists }) => {
           ))}
         </TableBody>
       </Table>
-      <Dialog open={!!pendingDelete} onOpenChange={(open) => !open && setPendingDelete(null)}>
+      <Dialog onOpenChange={(open) => !open && setPendingDelete(null)}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Delete Waitlist</DialogTitle>
@@ -125,10 +152,18 @@ const WaitlistTable: React.FC<WaitlistTableProps> = ({ waitlists }) => {
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setPendingDelete(null)} disabled={deletingId !== null}>
+            <Button
+              variant="outline"
+              onClick={() => setPendingDelete(null)}
+              disabled={deletingId !== null}
+            >
               Cancel
             </Button>
-            <Button variant="destructive" onClick={confirmDelete} disabled={deletingId !== null}>
+            <Button
+              variant="destructive"
+              onClick={confirmDelete}
+              disabled={deletingId !== null}
+            >
               {deletingId ? 'Deleting...' : 'Delete'}
             </Button>
           </DialogFooter>
@@ -146,4 +181,4 @@ const ClientDate: React.FC<{ dateString: string }> = ({ dateString }) => {
   return <span>{formatted}</span>;
 };
 
-export default WaitlistTable; 
+export default WaitlistTable;

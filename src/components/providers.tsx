@@ -1,8 +1,8 @@
 'use client';
 
-import React, { PropsWithChildren, useState } from 'react';
 import { QueryCache, QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { HTTPException } from 'hono/http-exception';
+import React, { PropsWithChildren, useState } from 'react';
 import { PostHogProvider } from '../providers/posthog-provider';
 
 /**

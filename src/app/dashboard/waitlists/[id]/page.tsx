@@ -1,18 +1,20 @@
-import React from 'react';
-import { notFound, redirect } from 'next/navigation';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable import/no-default-export */
 import { currentUser } from '@clerk/nextjs/server';
-import { db } from '@/lib/db';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { WaitlistSettingsForm } from '@/components/waitlist/waitlist-settings-form';
-import { EmailSettingsForm } from '@/components/waitlist/email-settings-form';
-import { DangerZone } from '@/components/waitlist/danger-zone';
-import { Button } from '@/components/ui/button';
+import { formatDistanceToNow } from 'date-fns';
 import { Eye, Users, BarChart, Settings, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
-import { formatDistanceToNow } from 'date-fns';
+import { notFound, redirect } from 'next/navigation';
+import React from 'react';
 import { SubscriberGrowthChart } from '@/components/subscriber-growth-chart';
 import { SubscribersTable } from '@/components/subscribers-table';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { DangerZone } from '@/components/waitlist/danger-zone';
+import { EmailSettingsForm } from '@/components/waitlist/email-settings-form';
+import { WaitlistSettingsForm } from '@/components/waitlist/waitlist-settings-form';
+import { db } from '@/lib/db';
 
 interface WaitlistDetailPageProps {
   params: { id: string };
@@ -329,10 +331,15 @@ export default async function WaitlistDetailPage({ params }: WaitlistDetailPageP
                 <EmailSettingsForm
                   waitlist={{
                     id: waitlist.id,
-                    customFields: waitlist.customFields as {
-                      sendConfirmationEmail?: boolean;
-                      customThankYouMessage?: string;
-                    } | null,
+                    customFields:
+                      waitlist.customFields && typeof waitlist.customFields === 'object'
+                        ? {
+                            sendConfirmationEmail:
+                              (waitlist.customFields as any).sendConfirmationEmail ?? false,
+                            customThankYouMessage: (waitlist.customFields as any)
+                              .customThankYouMessage,
+                          }
+                        : { sendConfirmationEmail: false },
                   }}
                 />
               </CardContent>

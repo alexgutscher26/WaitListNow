@@ -11,8 +11,8 @@ declare module 'react' {
   }
 }
 
-import { cn } from '@/lib/utils';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { cn } from '@/lib/utils';
 
 // Enhanced Command with better performance and accessibility
 const Command = React.forwardRef<

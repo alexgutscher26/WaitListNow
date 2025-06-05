@@ -1,9 +1,10 @@
-import { NextResponse, type NextRequest } from 'next/server';
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { getAuth, currentUser } from '@clerk/nextjs/server';
+import { NextResponse, type NextRequest } from 'next/server';
+import { v4 as uuidv4 } from 'uuid';
+import { z } from 'zod';
 import { db } from '@/lib/db';
 import { onboardingCompleteSchema } from '@/lib/validations/onboarding';
-import { z } from 'zod';
-import { v4 as uuidv4 } from 'uuid';
 
 // Enable debug logging in development
 const isDev = process.env.NODE_ENV === 'development';

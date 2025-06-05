@@ -1,12 +1,12 @@
 'use client';
 
+import { CheckIcon, ClipboardIcon } from 'lucide-react';
 import * as React from 'react';
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { CheckIcon, ClipboardIcon } from 'lucide-react';
-import { useState } from 'react';
 
 /**
  * Renders a component to display an API key in a read-only input field with a copy button.

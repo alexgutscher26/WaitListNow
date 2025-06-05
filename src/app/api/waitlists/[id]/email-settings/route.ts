@@ -1,8 +1,8 @@
+import { getAuth } from '@clerk/nextjs/server';
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import { getAuth } from '@clerk/nextjs/server';
-import { db } from '@/lib/db';
 import { z } from 'zod';
+import { db } from '@/lib/db';
 
 const emailSettingsSchema = z.object({
   customFields: z.object({

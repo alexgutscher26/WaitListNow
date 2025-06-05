@@ -1,15 +1,15 @@
 'use client';
 import { formatDistanceToNow } from 'date-fns';
+import { MoreHorizontal, Users, Zap, Mail, DollarSign, TrendingUp, Bell } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import React from 'react';
 import {
   DropdownMenu,
   DropdownMenuTrigger,
   DropdownMenuContent,
   DropdownMenuItem,
 } from '@/components/ui/dropdown-menu';
-import { MoreHorizontal, Users, Zap, Mail, DollarSign, TrendingUp, Bell } from 'lucide-react';
-import React from 'react';
 import { useToast } from '@/components/ui/use-toast';
-import { useRouter } from 'next/navigation';
 
 interface ActivityItemProps {
   activity: Activity;
@@ -100,4 +100,5 @@ const ActivityItem: React.FC<ActivityItemProps> = ({ activity, iconType, message
   );
 };
 
+// eslint-disable-next-line import/no-default-export
 export default ActivityItem;

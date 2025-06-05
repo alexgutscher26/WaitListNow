@@ -1,10 +1,10 @@
-import { NextResponse, type NextRequest } from 'next/server';
-import { getAuth } from '@clerk/nextjs/server';
-import { db } from '@/lib/db';
-import { z } from 'zod';
-import { Resend } from 'resend';
-import { getConfirmationEmail } from '@/emails';
 import crypto from 'crypto';
+import { getAuth } from '@clerk/nextjs/server';
+import { NextResponse, type NextRequest } from 'next/server';
+import { Resend } from 'resend';
+import { z } from 'zod';
+import { getConfirmationEmail } from '@/emails';
+import { db } from '@/lib/db';
 
 interface WaitlistSettings {
   allowDuplicates?: boolean;
@@ -337,6 +337,7 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
   }
 }
 
+
 async function isValidApiKey(apiKey: string, waitlistId: string): Promise<boolean> {
   // Find the waitlist and its owner
   const waitlist = await db.waitlist.findUnique({
@@ -355,3 +356,4 @@ async function isValidApiKey(apiKey: string, waitlistId: string): Promise<boolea
   // Compare the provided API key with the user's stored API key
   return user.apiKey === apiKey;
 }
+

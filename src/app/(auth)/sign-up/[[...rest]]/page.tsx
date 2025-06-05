@@ -1,7 +1,7 @@
 'use client';
 
-import * as React from 'react';
 import { SignUp } from '@clerk/nextjs';
+import * as React from 'react';
 
 /**
  * Renders a SignUp component with specified redirect URLs.
@@ -17,4 +17,4 @@ const Page = () => {
   );
 };
 
-export default Page;
+export { Page };

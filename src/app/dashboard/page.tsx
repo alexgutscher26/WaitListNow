@@ -1,7 +1,10 @@
-import * as React from 'react';
+/* eslint-disable import/no-default-export */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { currentUser } from '@clerk/nextjs/server';
+
 import { redirect } from 'next/navigation';
 import { Button } from '@/components/ui/button';
+
 import {
   Users,
   TrendingUp,
@@ -13,13 +16,17 @@ import {
 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import Link from 'next/link';
-import { db } from '@/lib/db';
-import { cn } from '@/utils';
+import { redirect } from 'next/navigation';
+import * as React from 'react';
+import { getWaitlistStats } from '@/app/actions/waitlist';
 import ActivityItem from '@/components/dashboard/ActivityItem';
 import RecentActivityModal from '@/components/dashboard/RecentActivityModal';
 import WaitlistTable from '@/components/dashboard/WaitlistTable';
-import { getWaitlistStats } from '@/app/actions/waitlist';
 import { ExportButton } from '@/components/export-button';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { db } from '@/lib/db';
+import { cn } from '@/utils';
 
 // Define the type for search parameters
 type SearchParams = {
@@ -36,7 +43,7 @@ interface StatCardProps {
   value: string | number;
   icon: React.ComponentType<{ className?: string }>;
   className?: string;
-  trend?: 'up' | 'down' | undefined;
+  trend?: 'up' | 'down';
   trendValue?: string;
 }
 
@@ -398,10 +405,7 @@ export default async function Page({ searchParams = {} }: PageProps) {
 
   // Check if user has premium access
 
-  // Handle upgrade success banner
-  const upgradeParam = searchParams?.upgrade;
-
-  console.log('Clerk user ID:', user.id);
+  // console.log('Clerk user ID:', user.id);
 
   // Find the internal user ID that matches the Clerk user ID
   const dbUser = await db.user.findUnique({

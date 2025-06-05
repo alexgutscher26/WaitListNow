@@ -1,10 +1,12 @@
-import React from 'react';
+/* eslint-disable import/order */
+/* eslint-disable import/no-default-export */
 import type { Metadata, Viewport } from 'next';
 import { Inter } from 'next/font/google';
-import { cn } from '@/lib/utils';
-import { RootLayoutClient } from '@/components/root-layout-client';
+import React from 'react';
 import { ClerkProvider } from '@/components/providers/clerk-provider-wrapper';
 import { QueryProvider } from '@/components/providers/query-provider-wrapper';
+import { RootLayoutClient } from '@/components/root-layout-client';
+import { cn } from '@/lib/utils';
 import './globals.css';
 import { Toaster } from 'sonner';
 

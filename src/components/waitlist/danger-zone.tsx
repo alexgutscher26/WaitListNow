@@ -1,11 +1,9 @@
 'use client';
 
+import { Loader2, Trash2, Download } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import * as React from 'react';
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { Button } from '@/components/ui/button';
-import { toast } from '@/components/ui/use-toast';
-import { Loader2, Trash2, Download } from 'lucide-react';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -16,6 +14,8 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
+import { Button } from '@/components/ui/button';
+import { toast } from '@/components/ui/use-toast';
 
 interface DangerZoneProps {
   waitlistId: string;

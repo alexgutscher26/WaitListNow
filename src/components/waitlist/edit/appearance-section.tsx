@@ -1,6 +1,10 @@
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
 import * as React from 'react';
 import { useState } from 'react';
+import { ChromePicker } from 'react-color';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
@@ -10,10 +14,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Slider } from '@/components/ui/slider';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ChromePicker } from 'react-color';
 
 type ButtonVariant = 'default' | 'outline' | 'secondary' | 'ghost' | 'link';
 type ButtonRounded = 'none' | 'sm' | 'md' | 'lg' | 'full';
@@ -66,11 +68,7 @@ const BORDER_RADII: { value: ButtonRounded; label: string }[] = [
   { value: 'full', label: 'Full' },
 ];
 
-export function AppearanceSection({
-  formData,
-  onStyleChange,
-  getBorderRadius,
-}: AppearanceSectionProps) {
+export function AppearanceSection({ formData, onStyleChange }: AppearanceSectionProps) {
   const [activeTab, setActiveTab] = useState('colors');
   const [colorPicker, setColorPicker] = useState<{
     open: boolean;

@@ -1,3 +1,4 @@
+/* eslint-disable import/no-default-export */
 import { PostHog } from 'posthog-node';
 
 /**

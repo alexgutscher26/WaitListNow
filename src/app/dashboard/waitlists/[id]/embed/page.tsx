@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
 import { useParams } from 'next/navigation';
+import React, { useState } from 'react';
 
 const DEFAULTS = {
   width: 400,

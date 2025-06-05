@@ -30,9 +30,8 @@ export const queryParsingMiddleware: MiddlewareHandler = async (c, next) => {
 export const bodyParsingMiddleware: MiddlewareHandler = async (c, next) => {
   const rawBody = await c.req.json();
   const parsedBody: Record<string, unknown> = {};
-
   for (const [key, value] of Object.entries(rawBody)) {
-    parsedBody[key] = parseSuperJSON(value as unknown);
+    parsedBody[key] = parseSuperJSON(value as string);
   }
 
   c.set('parsedBody', parsedBody);

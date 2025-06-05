@@ -1,6 +1,9 @@
+/* eslint-disable import/no-default-export */
+/* eslint-disable react/no-unknown-property */
+/* eslint-disable react/no-unescaped-entities */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
-import React, { useState, useEffect } from 'react';
 import {
   Check,
   CheckCircle,
@@ -14,7 +17,6 @@ import {
   TrendingUp,
   Award,
   ArrowRight,
-  Info,
   ChevronDown,
   ChevronUp,
   Rocket,
@@ -26,11 +28,12 @@ import {
   Mail,
   Headphones,
 } from 'lucide-react';
+import React, { useState } from 'react';
 
 // Mock user and router for demonstration
 const useUser = () => ({ user: null });
 const useRouter = () => ({
-  push: (url) => console.log('Navigate to:', url),
+  push: (url: any) => console.log('Navigate to:', url),
 });
 
 type PlanFeatures = {

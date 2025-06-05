@@ -337,7 +337,6 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
   }
 }
 
-
 async function isValidApiKey(apiKey: string, waitlistId: string): Promise<boolean> {
   // Find the waitlist and its owner
   const waitlist = await db.waitlist.findUnique({
@@ -356,4 +355,3 @@ async function isValidApiKey(apiKey: string, waitlistId: string): Promise<boolea
   // Compare the provided API key with the user's stored API key
   return user.apiKey === apiKey;
 }
-

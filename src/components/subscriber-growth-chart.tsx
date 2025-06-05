@@ -175,9 +175,7 @@ const CustomTooltip = ({ active, payload, label }: RechartsTooltipProps<ValueTyp
           key={`tooltip-${index}`}
           className="text-sm"
           style={{ color: entry.color }}
-        >
-
-        </p>
+        ></p>
       ))}
     </div>
   );

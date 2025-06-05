@@ -36,7 +36,6 @@ export default function WidgetIframePage() {
         margin: 0,
       }}
     >
-
       <WaitlistWidget
         waitlistId={waitlistId}
         style={style}

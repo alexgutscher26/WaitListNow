@@ -378,7 +378,7 @@ const getStats = async (): Promise<{
  * 4. Fetches the user's recent waitlists with subscriber counts.
  * 5. Renders various cards, tables, and components displaying statistics, recent activity, and waitlist details.
  */
-export default async function Page({ }: PageProps) {
+export default async function Page({}: PageProps) {
   const stats = await getStats();
 
   const user = await currentUser();

@@ -8,7 +8,6 @@ dotenv.config();
 
 // pnpm email:scheduler
 
-
 // Schedule: Every day at 9:00 AM
 cron.schedule('* * * * *', async () => {
   try {
@@ -17,10 +16,12 @@ cron.schedule('* * * * *', async () => {
     });
 
     for (const user of users) {
-      await emailQueue.add('sendEmail', {
-        to: user.email,
-        subject: 'Daily Waitlist Update',
-        html: `<div style="font-family: Arial, sans-serif; background: #f9f9f9; padding: 32px; border-radius: 8px; max-width: 480px; margin: 0 auto;">
+      await emailQueue.add(
+        'sendEmail',
+        {
+          to: user.email,
+          subject: 'Daily Waitlist Update',
+          html: `<div style="font-family: Arial, sans-serif; background: #f9f9f9; padding: 32px; border-radius: 8px; max-width: 480px; margin: 0 auto;">
           <h2 style="color: #4F46E5; margin-bottom: 16px;">🚀 WaitListNow Daily Update</h2>
           <p style="font-size: 16px; color: #222; margin-bottom: 24px;">
             Hello,<br/>
@@ -34,17 +35,19 @@ cron.schedule('* * * * *', async () => {
             <span style="color: #bbb;">&copy; ${new Date().getFullYear()} WaitListNow</span>
           </p>
         </div>`,
-      }, {
-        attempts: 5, // Retry up to 5 times
-        backoff: {
-          type: 'exponential',
-          delay: 60000, // 1 minute between retries
         },
-      });
+        {
+          attempts: 5, // Retry up to 5 times
+          backoff: {
+            type: 'exponential',
+            delay: 60000, // 1 minute between retries
+          },
+        },
+      );
     }
   } catch (err) {
     console.error('Scheduler error:', err);
   }
 });
 
-console.log('Email scheduler started.'); 
+console.log('Email scheduler started.');

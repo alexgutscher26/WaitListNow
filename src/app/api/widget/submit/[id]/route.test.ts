@@ -47,4 +47,4 @@ describe('Widget Submit API - Disposable Email Detection', () => {
     expect(res.status).toBe(400);
     expect(json.error).toBeDefined();
   });
-}); 
+});

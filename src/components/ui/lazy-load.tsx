@@ -11,10 +11,10 @@ import { Skeleton } from '@/components/ui/skeleton';
  */
 export function lazyLoad<T extends object>(
   importFn: () => Promise<{ default: ComponentType<T> }>,
-  options: { ssr?: boolean } = { ssr: false }
+  options: { ssr?: boolean } = { ssr: false },
 ) {
   const LazyComponent = lazy(importFn);
-  
+
   return function LazyWrapper(props: T) {
     return (
       <Suspense fallback={<Skeleton className="w-full h-full" />}>
@@ -35,8 +35,6 @@ export function LazyBoundary({
   fallback?: ReactNode;
 }) {
   return (
-    <Suspense fallback={fallback || <Skeleton className="w-full h-full" />}>
-      {children}
-    </Suspense>
+    <Suspense fallback={fallback || <Skeleton className="w-full h-full" />}>{children}</Suspense>
   );
 }

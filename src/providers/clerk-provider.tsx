@@ -1,6 +1,5 @@
 'use client';
 
-
 import { ClerkProvider as ClerkProviderBase } from '@clerk/nextjs';
 import { usePathname } from 'next/navigation';
 import React from 'react';

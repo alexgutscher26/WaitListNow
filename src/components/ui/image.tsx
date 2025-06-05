@@ -6,14 +6,7 @@ type ImageProps = Omit<NextImageProps, 'alt'> & {
   className?: string;
 };
 
-export const Image = ({
-  src,
-  alt,
-  width,
-  height,
-  className = '',
-  ...props
-}: ImageProps) => {
+export const Image = ({ src, alt, width, height, className = '', ...props }: ImageProps) => {
   if (!src) {
     return null;
   }

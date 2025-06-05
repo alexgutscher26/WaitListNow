@@ -1318,7 +1318,7 @@ const AccountSettingsContent = () => {
                 <div className="mb-6">
                   <div className="flex items-center justify-between relative">
                     {/* Stepper Circles */}
-                    {referralInfo.rewards?.map((reward, idx) => (
+
                       <div
                         key={reward.count}
                         className="flex-1 flex flex-col items-center group"
@@ -1335,7 +1335,7 @@ const AccountSettingsContent = () => {
                           </div>
                         </div>
                         {/* Connector */}
-                        {idx < (referralInfo.rewards?.length ?? 0) - 1 && (
+
                           <div
                             className="absolute top-1/2 left-full w-full h-1 bg-green-400 z-0"
                             style={{ width: '100%', height: 4, marginLeft: -8 }}
@@ -1379,7 +1379,7 @@ const AccountSettingsContent = () => {
                 {/* Unlocked Rewards List */}
                 {(referralInfo.rewards?.length ?? 0) > 0 && (
                   <div className="mb-2 flex flex-wrap gap-2">
-                    {referralInfo.rewards?.map((reward) => (
+
                       <Badge
                         key={reward.count}
                         className="bg-green-600 text-white"

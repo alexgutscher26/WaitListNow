@@ -47,7 +47,7 @@ export function dynamicImport<T extends ComponentType<unknown>>(
   const Component = lazy(importFn);
   const LoadingComponent = loading || defaultLoading;
 
-  return function DynamicComponent(props: unknown) {
+
     return (
       <ErrorBoundary fallback={error}>
         <Suspense fallback={<LoadingComponent />}>

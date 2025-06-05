@@ -1,17 +1,7 @@
 /* eslint-disable import/no-default-export */
 'use client';
 
-import {
-  Gem,
-  Home,
-  Key,
-  LucideIcon,
-  Menu,
-  Settings,
-  Users,
-  X,
-  ArrowUpRight,
-} from 'lucide-react';
+import { Gem, Home, Key, LucideIcon, Menu, Settings, Users, X, ArrowUpRight } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import * as React from 'react';

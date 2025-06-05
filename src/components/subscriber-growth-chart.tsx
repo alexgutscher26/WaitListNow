@@ -102,7 +102,9 @@ const RechartsComponents = dynamic<ChartProps>(
                 vertical={false}
               />
               <Tooltip
-                content={(props: RechartsTooltipProps<ValueType, NameType>) => <CustomTooltip {...props} />}
+                content={(props: RechartsTooltipProps<ValueType, NameType>) => (
+                  <CustomTooltip {...props} />
+                )}
                 contentStyle={{
                   backgroundColor: isDark ? '#1e293b' : '#ffffff',
                   border: 'none',
@@ -175,7 +177,9 @@ const CustomTooltip = ({ active, payload, label }: RechartsTooltipProps<ValueTyp
           style={{ color: entry.color }}
         >
           {entry.dataKey === 'count' ? 'New Subscribers' : 'Total Subscribers'}:{' '}
-          <span className="font-medium">{entry.value !== undefined ? Number(entry.value).toLocaleString() : ''}</span>
+          <span className="font-medium">
+            {entry.value !== undefined ? Number(entry.value).toLocaleString() : ''}
+          </span>
         </p>
       ))}
     </div>

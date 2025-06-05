@@ -55,7 +55,6 @@ const caseStudies = [
   },
 ];
 
-
 const timeline = [
   {
     date: 'Day 1',

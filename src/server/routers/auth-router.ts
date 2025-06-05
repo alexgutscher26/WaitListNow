@@ -5,7 +5,10 @@ import { publicProcedure } from '../procedures';
 export const dynamic = 'force-dynamic';
 
 export const authRouter = router<{
-  getDatabaseSyncStatus: import('../__internals/types').QueryOperation<Record<string, unknown>, Record<string, unknown>>;
+  getDatabaseSyncStatus: import('../__internals/types').QueryOperation<
+    Record<string, unknown>,
+    Record<string, unknown>
+  >;
 }>({
   getDatabaseSyncStatus: publicProcedure.query(async ({ c }) => {
     const auth = await currentUser();

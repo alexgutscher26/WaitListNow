@@ -331,12 +331,15 @@ export default async function WaitlistDetailPage({ params }: WaitlistDetailPageP
                 <EmailSettingsForm
                   waitlist={{
                     id: waitlist.id,
-                    customFields: waitlist.customFields && typeof waitlist.customFields === 'object'
-                      ? {
-                          sendConfirmationEmail: (waitlist.customFields as any).sendConfirmationEmail ?? false,
-                          customThankYouMessage: (waitlist.customFields as any).customThankYouMessage,
-                        }
-                      : { sendConfirmationEmail: false },
+                    customFields:
+                      waitlist.customFields && typeof waitlist.customFields === 'object'
+                        ? {
+                            sendConfirmationEmail:
+                              (waitlist.customFields as any).sendConfirmationEmail ?? false,
+                            customThankYouMessage: (waitlist.customFields as any)
+                              .customThankYouMessage,
+                          }
+                        : { sendConfirmationEmail: false },
                   }}
                 />
               </CardContent>

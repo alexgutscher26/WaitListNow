@@ -68,10 +68,7 @@ const BORDER_RADII: { value: ButtonRounded; label: string }[] = [
   { value: 'full', label: 'Full' },
 ];
 
-export function AppearanceSection({
-  formData,
-  onStyleChange,
-}: AppearanceSectionProps) {
+export function AppearanceSection({ formData, onStyleChange }: AppearanceSectionProps) {
   const [activeTab, setActiveTab] = useState('colors');
   const [colorPicker, setColorPicker] = useState<{
     open: boolean;

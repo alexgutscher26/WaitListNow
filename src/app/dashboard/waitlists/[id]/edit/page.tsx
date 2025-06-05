@@ -335,7 +335,9 @@ export default function EditWaitlistPage() {
       >
         <Tabs
           value={activeTab}
-          onValueChange={(v: string) => setActiveTab(v as 'basic' | 'fields' | 'appearance' | 'behavior')}
+          onValueChange={(v: string) =>
+            setActiveTab(v as 'basic' | 'fields' | 'appearance' | 'behavior')
+          }
         >
           <TabsList className="w-full justify-start overflow-x-auto">
             <TabsTrigger value="basic">Basic Info</TabsTrigger>

@@ -7,7 +7,7 @@
 module.exports = function customLoader({ src, width, quality }) {
   // Get the CDN URL from environment variables
   const cdnUrl = process.env.NEXT_PUBLIC_CDN_URL || '';
-  
+
   // If no CDN URL is set, use the default loader
   if (!cdnUrl) {
     return `${src}?w=${width}&q=${quality || 75}`;
@@ -30,13 +30,13 @@ module.exports = function customLoader({ src, width, quality }) {
 
   // Remove any existing query parameters
   const cleanPath = url.pathname.split('?')[0];
-  
+
   // Build the URL with the CDN prefix and image optimization parameters
   const params = new URLSearchParams();
   params.append('url', cleanPath);
   if (width) params.append('w', width.toString());
   if (quality) params.append('q', quality.toString());
-  
+
   // Add cache busting parameter
   if (process.env.NEXT_PUBLIC_BUILD_ID) {
     params.append('v', process.env.NEXT_PUBLIC_BUILD_ID);

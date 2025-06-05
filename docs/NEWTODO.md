@@ -61,10 +61,10 @@ This document outlines the planned improvements and enhancements for the WaitLis
   - [x] Set up integration with Resend
   - [x] Create email templates for different events
   - [ ] Implement scheduled email system
-    - [X] Create email scheduling service using node-cron
-    - [X] Add queue system for email delivery using Bull
-    - [X] Implement retry logic for failed deliveries
-    - [X] Add rate limiting to prevent email spam
+    - [x] Create email scheduling service using node-cron
+    - [x] Add queue system for email delivery using Bull
+    - [x] Implement retry logic for failed deliveries
+    - [x] Add rate limiting to prevent email spam
   - [ ] Build notification service
     - [ ] Create notification queue processor
     - [ ] Implement webhook support for external integrations
@@ -531,8 +531,8 @@ This document outlines the planned improvements and enhancements for the WaitLis
   - [ ] Automated verification of high-risk signups
   - [ ] Real-time threat assessment and mitigation
 
-- [X] **Smart Data Validation**
-  - [X] AI-powered email and domain validation
-  - [X] Detection of disposable email addresses
-  - [X] Identification of bot-generated signups
-  - [X] Intelligent CAPTCHA alternatives for better user experience
+- [x] **Smart Data Validation**
+  - [x] AI-powered email and domain validation
+  - [x] Detection of disposable email addresses
+  - [x] Identification of bot-generated signups
+  - [x] Intelligent CAPTCHA alternatives for better user experience

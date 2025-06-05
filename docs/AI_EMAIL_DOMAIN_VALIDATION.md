@@ -76,4 +76,4 @@ A: Check the error message shown to the user. If you believe a valid email is bl
 
 ---
 
-For more details, see the [ZeroBounce API documentation](https://zerobounce.net/docs/). 
+For more details, see the [ZeroBounce API documentation](https://zerobounce.net/docs/).

@@ -140,9 +140,19 @@ export function WaitlistWidget({
         className={styles['waitlist-widget__form']}
       >
         {/* Honeypot field for bot detection */}
-        <input type="text" name="hp_token" style={{ display: 'none' }} tabIndex={-1} autoComplete="off" />
+        <input
+          type="text"
+          name="hp_token"
+          style={{ display: 'none' }}
+          tabIndex={-1}
+          autoComplete="off"
+        />
         {/* Timestamp for intelligent CAPTCHA */}
-        <input type="hidden" name="formRenderedAt" value={formRenderedAt} />
+        <input
+          type="hidden"
+          name="formRenderedAt"
+          value={formRenderedAt}
+        />
         <div className={styles['waitlist-widget__field']}>
           {showLabels && (
             <Label

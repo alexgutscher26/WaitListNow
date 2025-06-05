@@ -25,4 +25,4 @@ export async function validateEmailWithZeroBounce(email: string): Promise<ZeroBo
   const res = await fetch(url);
   if (!res.ok) throw new Error('Failed to validate email with ZeroBounce');
   return res.json();
-} 
+}

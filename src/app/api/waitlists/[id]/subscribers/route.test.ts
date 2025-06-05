@@ -12,7 +12,8 @@ function createRequest(body) {
 
 describe('Waitlist Subscribers API - Disposable Email Detection', () => {
   it('rejects disposable email addresses', async () => {
-    const req = createRequest({ email: 'test@mailinator.com' });
+    const old = Date.now() - 3000;
+    const req = createRequest({ email: 'test@mailinator.com', formRenderedAt: old.toString() });
     const res = await POST(req, { params: { id: 'test-id' } });
     const json = await res.json();
     expect(res.status).toBe(400);
@@ -20,14 +21,16 @@ describe('Waitlist Subscribers API - Disposable Email Detection', () => {
   });
 
   it('accepts valid non-disposable email addresses', async () => {
-    const req = createRequest({ email: 'user@example.com' });
+    const old = Date.now() - 3000;
+    const req = createRequest({ email: 'user@example.com', formRenderedAt: old.toString() });
     const res = await POST(req, { params: { id: 'test-id' } });
     const json = await res.json();
     expect(json.error || '').not.toMatch(/disposable email/i);
   });
 
   it('rejects invalid email addresses', async () => {
-    const req = createRequest({ email: 'not-an-email' });
+    const old = Date.now() - 3000;
+    const req = createRequest({ email: 'not-an-email', formRenderedAt: old.toString() });
     const res = await POST(req, { params: { id: 'test-id' } });
     const json = await res.json();
     expect(res.status).toBe(422);
@@ -35,7 +38,8 @@ describe('Waitlist Subscribers API - Disposable Email Detection', () => {
   });
 
   it('rejects bot signups with honeypot field filled', async () => {
-    const req = createRequest({ email: 'user@example.com', hp_token: 'I am a bot' });
+    const old = Date.now() - 3000;
+    const req = createRequest({ email: 'user@example.com', hp_token: 'I am a bot', formRenderedAt: old.toString() });
     const res = await POST(req, { params: { id: 'test-id' } });
     const json = await res.json();
     expect(res.status).toBe(400);
@@ -43,9 +47,35 @@ describe('Waitlist Subscribers API - Disposable Email Detection', () => {
   });
 
   it('accepts signups with honeypot field empty', async () => {
-    const req = createRequest({ email: 'user@example.com', hp_token: '' });
+    const old = Date.now() - 3000;
+    const req = createRequest({ email: 'user@example.com', hp_token: '', formRenderedAt: old.toString() });
     const res = await POST(req, { params: { id: 'test-id' } });
     const json = await res.json();
     expect(json.error || '').not.toMatch(/bot/i);
+  });
+
+  it('rejects signups with missing formRenderedAt (intelligent CAPTCHA)', async () => {
+    const req = createRequest({ email: 'user@example.com' });
+    const res = await POST(req, { params: { id: 'test-id' } });
+    const json = await res.json();
+    expect(res.status).toBe(400);
+    expect(json.error).toMatch(/timestamp/i);
+  });
+
+  it('rejects signups with formRenderedAt too recent (intelligent CAPTCHA)', async () => {
+    const now = Date.now();
+    const req = createRequest({ email: 'user@example.com', formRenderedAt: now.toString() });
+    const res = await POST(req, { params: { id: 'test-id' } });
+    const json = await res.json();
+    expect(res.status).toBe(400);
+    expect(json.error).toMatch(/too quickly/i);
+  });
+
+  it('accepts signups with formRenderedAt old enough (intelligent CAPTCHA)', async () => {
+    const old = Date.now() - 3000;
+    const req = createRequest({ email: 'user@example.com', formRenderedAt: old.toString() });
+    const res = await POST(req, { params: { id: 'test-id' } });
+    const json = await res.json();
+    expect(json.error || '').not.toMatch(/timestamp|quickly/i);
   });
 });

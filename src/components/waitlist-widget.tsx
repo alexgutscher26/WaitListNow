@@ -41,6 +41,7 @@ export function WaitlistWidget({
   const [name, setName] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
+  const [formRenderedAt] = useState(() => Date.now().toString());
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -65,7 +66,7 @@ export function WaitlistWidget({
           'Content-Type': 'application/json',
           ...(apiKey ? { Authorization: `Bearer ${apiKey}` } : {}),
         },
-        body: JSON.stringify({ email, name }),
+        body: JSON.stringify({ email, name, formRenderedAt }),
       });
 
       const data = await response.json();
@@ -138,6 +139,7 @@ export function WaitlistWidget({
         onSubmit={handleSubmit}
         className={styles['waitlist-widget__form']}
       >
+        <input type="hidden" name="formRenderedAt" value={formRenderedAt} />
         <div className={styles['waitlist-widget__field']}>
           {showLabels && (
             <Label

@@ -535,4 +535,4 @@ This document outlines the planned improvements and enhancements for the WaitLis
   - [ ] AI-powered email and domain validation
   - [X] Detection of disposable email addresses
   - [X] Identification of bot-generated signups
-  - [ ] Intelligent CAPTCHA alternatives for better user experience
+  - [X] Intelligent CAPTCHA alternatives for better user experience

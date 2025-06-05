@@ -13,6 +13,7 @@ const submissionSchema = z.object({
   fields: z.record(z.any()).optional(),
   referralCode: z.string().optional(),
   hp_token: z.string().optional(), // Honeypot field
+  formRenderedAt: z.string().optional(), // Timestamp for intelligent CAPTCHA
 });
 
 export async function POST(request: Request, { params }: { params: { id: string } }) {
@@ -61,12 +62,28 @@ export async function POST(request: Request, { params }: { params: { id: string 
       );
     }
 
-    const { email, name, fields, referralCode, hp_token } = validation.data;
+    const { email, name, fields, referralCode, hp_token, formRenderedAt } = validation.data;
 
     // Honeypot bot detection
     if (hp_token && hp_token.trim() !== '') {
       return NextResponse.json(
         { error: 'Bot-like signup detected.' },
+        { status: 400 },
+      );
+    }
+
+    // Intelligent CAPTCHA: time-based check
+    if (!formRenderedAt) {
+      return NextResponse.json(
+        { error: 'Missing form timestamp.' },
+        { status: 400 },
+      );
+    }
+    const renderTime = Number(formRenderedAt);
+    const now = Date.now();
+    if (isNaN(renderTime) || now - renderTime < 2000) {
+      return NextResponse.json(
+        { error: 'Form submitted too quickly. Please try again.' },
         { status: 400 },
       );
     }
@@ -177,71 +194,20 @@ export async function POST(request: Request, { params }: { params: { id: string 
                 html,
                 text,
               });
-            } catch (emailError) {
-              console.error('[REWARD_UNLOCKED_EMAIL_ERROR]', emailError);
+            } catch (error) {
+              console.error('Error sending reward email:', error);
             }
           }
         }
       }
     }
 
-    if (requireEmailVerification) {
-      // Generate a verification token
-      const verificationToken = uuidv4();
-      // Update subscriber with verification token in customFields
-      await db.subscriber.update({
-        where: { id: subscriber.id },
-        data: {
-          customFields: {
-            ...(typeof subscriber.customFields === 'object' && subscriber.customFields !== null
-              ? subscriber.customFields
-              : {}),
-            verificationToken,
-          },
-        },
-      });
-      // Send verification email
-      await fetch(
-        `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/api/verify-email`,
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            email: subscriber.email,
-            verificationToken,
-          }),
-        },
-      );
-    }
-
-    // Set CORS headers
-    const headers = {
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'POST, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type',
-    };
-
-    return NextResponse.json(
-      {
-        success: true,
-        message: 'Successfully joined the waitlist!',
-        requiresVerification: requireEmailVerification,
-      },
-      { headers },
-    );
+    return NextResponse.json({ message: 'Subscription successful!' }, { status: 200 });
   } catch (error) {
-    console.error('Error processing submission:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    console.error('Error processing request:', error);
+    return NextResponse.json(
+      { error: 'An error occurred while processing the request.' },
+      { status: 500 },
+    );
   }
-}
-
-export async function OPTIONS() {
-  return new Response(null, {
-    status: 204,
-    headers: {
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'POST, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type',
-    },
-  });
 }

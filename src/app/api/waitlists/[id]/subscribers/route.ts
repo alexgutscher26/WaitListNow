@@ -30,6 +30,7 @@ const subscriberSchema = z.object({
   email: z.string().email('Invalid email address'),
   name: z.string().optional(),
   hp_token: z.string().optional(), // Honeypot field
+  formRenderedAt: z.string().optional(), // Timestamp for intelligent CAPTCHA
 });
 
 // Enable debug logging in development
@@ -59,6 +60,22 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
     // Parse and validate the request body
     const json = await req.json();
     const body = subscriberSchema.parse(json);
+
+    // Intelligent CAPTCHA: time-based check
+    if (!body.formRenderedAt) {
+      return new NextResponse(
+        JSON.stringify({ error: 'Missing form timestamp.' }),
+        { status: 400, headers: { 'Content-Type': 'application/json' } }
+      );
+    }
+    const renderTime = Number(body.formRenderedAt);
+    const now = Date.now();
+    if (isNaN(renderTime) || now - renderTime < 2000) {
+      return new NextResponse(
+        JSON.stringify({ error: 'Form submitted too quickly. Please try again.' }),
+        { status: 400, headers: { 'Content-Type': 'application/json' } }
+      );
+    }
 
     // Honeypot bot detection
     if (body.hp_token && body.hp_token.trim() !== '') {

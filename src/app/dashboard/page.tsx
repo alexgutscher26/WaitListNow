@@ -1,10 +1,6 @@
 /* eslint-disable import/no-default-export */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { currentUser } from '@clerk/nextjs/server';
-
-import { redirect } from 'next/navigation';
-import { Button } from '@/components/ui/button';
-
 import {
   Users,
   TrendingUp,
@@ -14,7 +10,6 @@ import {
   CheckCircle2,
   Plus,
 } from 'lucide-react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import * as React from 'react';
@@ -383,7 +378,7 @@ const getStats = async (): Promise<{
  * 4. Fetches the user's recent waitlists with subscriber counts.
  * 5. Renders various cards, tables, and components displaying statistics, recent activity, and waitlist details.
  */
-export default async function Page({ searchParams = {} }: PageProps) {
+export default async function Page({ }: PageProps) {
   const stats = await getStats();
 
   const user = await currentUser();

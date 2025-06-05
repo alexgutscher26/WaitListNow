@@ -25,7 +25,8 @@
     "db:studio": "prisma studio",
     "postinstall": "prisma generate",
     "prepare": "husky",
-    "email:scheduler": "ts-node src/server/email/scheduler.ts"
+    "email:scheduler": "ts-node src/server/email/scheduler.ts",
+    "email:worker": "ts-node src/server/email/emailWorker.ts"
   },
   "dependencies": {
     "@clerk/nextjs": "^6.20.2",
@@ -59,6 +60,7 @@
     "@upstash/redis": "^1.34.9",
     "@vercel/analytics": "^1.5.0",
     "@vercel/speed-insights": "^1.2.0",
+    "bullmq": "^5.53.2",
     "canvas-confetti": "^1.9.3",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -68,6 +70,8 @@
     "dotenv": "^16.5.0",
     "framer-motion": "^12.15.0",
     "hono": "^4.7.10",
+    "ioredis": "^5.6.1",
+    "is-disposable-email": "^0.0.1",
     "lru-cache": "^11.1.0",
     "lucide-react": "^0.511.0",
     "next": "^15.3.3",
@@ -105,6 +109,7 @@
     "@rollup/plugin-typescript": "^12.1.2",
     "@size-limit/preset-small-lib": "^8.0.0",
     "@types/jest": "^29.5.14",
+    "@types/mocha": "^10.0.10",
     "@types/node": "^22.15.27",
     "@types/react": "^19.1.6",
     "@types/react-dom": "^19.1.5",

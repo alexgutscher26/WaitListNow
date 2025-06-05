@@ -29,7 +29,8 @@
     },
     "types": [
       "node",
-      "next"
+      "next",
+      "jest"
     ]
   },
   "include": [

@@ -1,5 +1,6 @@
 import crypto from 'crypto';
 import { getAuth } from '@clerk/nextjs/server';
+import isDisposableEmail from 'is-disposable-email';
 import { NextResponse, type NextRequest } from 'next/server';
 import { Resend } from 'resend';
 import { z } from 'zod';
@@ -57,6 +58,14 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
     // Parse and validate the request body
     const json = await req.json();
     const body = subscriberSchema.parse(json);
+
+    // Disposable email detection
+    if (isDisposableEmail(body.email)) {
+      return new NextResponse(
+        JSON.stringify({ error: 'Disposable email addresses are not allowed.' }),
+        { status: 400, headers: { 'Content-Type': 'application/json' } }
+      );
+    }
 
     // Find the waitlist
     const waitlist = await db.waitlist.findUnique({

@@ -1,3 +1,4 @@
+import isDisposableEmail from 'is-disposable-email';
 import { NextResponse } from 'next/server';
 import { Resend } from 'resend';
 import { v4 as uuidv4 } from 'uuid';
@@ -60,6 +61,14 @@ export async function POST(request: Request, { params }: { params: { id: string 
     }
 
     const { email, name, fields, referralCode } = validation.data;
+
+    // Disposable email detection
+    if (isDisposableEmail(email)) {
+      return NextResponse.json(
+        { error: 'Disposable email addresses are not allowed.' },
+        { status: 400 },
+      );
+    }
 
     // Check for existing subscriber
     const existingSubscriber = await db.subscriber.findFirst({

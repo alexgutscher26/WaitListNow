@@ -16,6 +16,10 @@ WaitListNow is a comprehensive SaaS platform designed to help businesses create,
 - 🔔 **Notification System**: Automated email notifications for waitlist updates and position changes
 - 🔐 **Secure Authentication**: User management with Clerk for secure access control
 - 🎯 **Embeddable Widgets**: Easily integrate waitlist forms into any website with customizable widgets
+   - The widget now includes built-in anti-abuse fields:
+     - A hidden honeypot field (`hp_token`) to block bots
+     - A hidden timestamp field (`formRenderedAt`) for intelligent CAPTCHA
+   - Backend validation errors (e.g., invalid/disposable email, bot detection) are shown directly in the widget UI
 - 🚫 **Disposable Email Detection**: Disposable email addresses are not allowed for waitlist signups or API usage. Attempts to use a disposable email will result in a validation error.
 - 🤖 **Bot Signup Protection**: Automated (bot) signups are blocked using a hidden honeypot field. If this field is filled, the signup is rejected as likely bot activity.
 - 🕒 **Intelligent CAPTCHA Alternative**: A hidden timestamp field ensures the form is not submitted too quickly, blocking bots without annoying real users.
@@ -213,3 +217,5 @@ All endpoints that accept email addresses (e.g., waitlist signup, subscribers AP
 - **Intelligent CAPTCHA alternative**: A hidden `formRenderedAt` timestamp is required. If the form is submitted too quickly after rendering, the request is rejected as likely bot activity.
 - Duplicate signups are prevented unless explicitly allowed by waitlist settings
 - Proper error messages are returned for invalid, blocked, or bot-like emails
+- The embeddable widget automatically includes the required `hp_token` and `formRenderedAt` fields, so you do not need to add them manually.
+- Users will see clear error messages in the widget if their signup is blocked for any reason.

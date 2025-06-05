@@ -78,4 +78,25 @@ describe('Waitlist Subscribers API - Disposable Email Detection', () => {
     const json = await res.json();
     expect(json.error || '').not.toMatch(/timestamp|quickly/i);
   });
+
+  it('rejects signups with invalid email by AI validation', async () => {
+    jest.spyOn(require('@/lib/validations/emailValidation'), 'validateEmailWithZeroBounce').mockResolvedValueOnce({
+      address: 'fake@invalid.com',
+      status: 'invalid',
+      sub_status: 'mailbox_not_found',
+      free_email: false,
+      did_you_mean: null,
+      domain: 'invalid.com',
+      mx_found: false,
+      mx_record: null,
+      smtp_provider: null,
+      reason: 'Mailbox does not exist',
+    });
+    const old = Date.now() - 3000;
+    const req = createRequest({ email: 'fake@invalid.com', formRenderedAt: old.toString() });
+    const res = await POST(req, { params: { id: 'test-id' } });
+    const json = await res.json();
+    expect(res.status).toBe(400);
+    expect(json.error).toMatch(/Email rejected: invalid/);
+  });
 });

@@ -5,6 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { z } from 'zod';
 import { getRewardUnlockedEmail } from '@/emails';
 import { db } from '@/lib/db';
+import { validateEmailWithZeroBounce } from '@/lib/validations/emailValidation';
 
 // Define validation schema
 const submissionSchema = z.object({
@@ -92,6 +93,15 @@ export async function POST(request: Request, { params }: { params: { id: string 
     if (isDisposableEmail(email)) {
       return NextResponse.json(
         { error: 'Disposable email addresses are not allowed.' },
+        { status: 400 },
+      );
+    }
+
+    // AI-powered email and domain validation (ZeroBounce)
+    const zbResult = await validateEmailWithZeroBounce(email);
+    if (zbResult.status !== 'valid') {
+      return NextResponse.json(
+        { error: `Email rejected: ${zbResult.status}${zbResult.sub_status ? ' (' + zbResult.sub_status + ')' : ''}${zbResult.reason ? ' - ' + zbResult.reason : ''}` },
         { status: 400 },
       );
     }

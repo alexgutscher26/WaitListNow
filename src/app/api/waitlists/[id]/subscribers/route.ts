@@ -7,6 +7,7 @@ import { z } from 'zod';
 import { getConfirmationEmail } from '@/emails';
 import { db } from '@/lib/db';
 import { sanitizeForConsole } from '@/lib/utils';
+import { validateEmailWithZeroBounce } from '@/lib/validations/emailValidation';
 
 interface WaitlistSettings {
   allowDuplicates?: boolean;
@@ -89,6 +90,15 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
     if (isDisposableEmail(body.email)) {
       return new NextResponse(
         JSON.stringify({ error: 'Disposable email addresses are not allowed.' }),
+        { status: 400, headers: { 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // AI-powered email and domain validation (ZeroBounce)
+    const zbResult = await validateEmailWithZeroBounce(body.email);
+    if (zbResult.status !== 'valid') {
+      return new NextResponse(
+        JSON.stringify({ error: `Email rejected: ${zbResult.status}${zbResult.sub_status ? ' (' + zbResult.sub_status + ')' : ''}${zbResult.reason ? ' - ' + zbResult.reason : ''}` }),
         { status: 400, headers: { 'Content-Type': 'application/json' } }
       );
     }

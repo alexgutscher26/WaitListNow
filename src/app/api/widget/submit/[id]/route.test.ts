@@ -47,4 +47,19 @@ describe('Widget Submit API - Disposable Email Detection', () => {
     expect(res.status).toBe(400);
     expect(json.error).toBeDefined();
   });
+
+  it('rejects bot signups with honeypot field filled', async () => {
+    const req = createRequest({ email: 'user@example.com', hp_token: 'I am a bot' });
+    const res = await POST(req, { params: { id: 'test-id' } });
+    const json = await res.json();
+    expect(res.status).toBe(400);
+    expect(json.error).toMatch(/bot/i);
+  });
+
+  it('accepts signups with honeypot field empty', async () => {
+    const req = createRequest({ email: 'user@example.com', hp_token: '' });
+    const res = await POST(req, { params: { id: 'test-id' } });
+    const json = await res.json();
+    expect(json.error || '').not.toMatch(/bot/i);
+  });
 }); 

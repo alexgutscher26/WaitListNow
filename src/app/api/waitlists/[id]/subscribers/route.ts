@@ -29,6 +29,7 @@ function getWaitlistSettings(settings: unknown): WaitlistSettings {
 const subscriberSchema = z.object({
   email: z.string().email('Invalid email address'),
   name: z.string().optional(),
+  hp_token: z.string().optional(), // Honeypot field
 });
 
 // Enable debug logging in development
@@ -58,6 +59,14 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
     // Parse and validate the request body
     const json = await req.json();
     const body = subscriberSchema.parse(json);
+
+    // Honeypot bot detection
+    if (body.hp_token && body.hp_token.trim() !== '') {
+      return new NextResponse(
+        JSON.stringify({ error: 'Bot-like signup detected.' }),
+        { status: 400, headers: { 'Content-Type': 'application/json' } }
+      );
+    }
 
     // Disposable email detection
     if (isDisposableEmail(body.email)) {

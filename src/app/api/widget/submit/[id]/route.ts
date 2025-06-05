@@ -12,6 +12,7 @@ const submissionSchema = z.object({
   name: z.string().optional(),
   fields: z.record(z.any()).optional(),
   referralCode: z.string().optional(),
+  hp_token: z.string().optional(), // Honeypot field
 });
 
 export async function POST(request: Request, { params }: { params: { id: string } }) {
@@ -60,7 +61,15 @@ export async function POST(request: Request, { params }: { params: { id: string 
       );
     }
 
-    const { email, name, fields, referralCode } = validation.data;
+    const { email, name, fields, referralCode, hp_token } = validation.data;
+
+    // Honeypot bot detection
+    if (hp_token && hp_token.trim() !== '') {
+      return NextResponse.json(
+        { error: 'Bot-like signup detected.' },
+        { status: 400 },
+      );
+    }
 
     // Disposable email detection
     if (isDisposableEmail(email)) {

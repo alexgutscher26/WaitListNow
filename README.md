@@ -17,6 +17,7 @@ WaitListNow is a comprehensive SaaS platform designed to help businesses create,
 - 🔐 **Secure Authentication**: User management with Clerk for secure access control
 - 🎯 **Embeddable Widgets**: Easily integrate waitlist forms into any website with customizable widgets
 - 🚫 **Disposable Email Detection**: Disposable email addresses are not allowed for waitlist signups or API usage. Attempts to use a disposable email will result in a validation error.
+- 🤖 **Bot Signup Protection**: Automated (bot) signups are blocked using a hidden honeypot field. If this field is filled, the signup is rejected as likely bot activity.
 
 ### User Experience
 
@@ -207,5 +208,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 All endpoints that accept email addresses (e.g., waitlist signup, subscribers API) enforce the following:
 - Email must be valid (RFC-compliant)
 - **Disposable email addresses are not allowed** (using a maintained blocklist)
+- **Bot signups are blocked** using a honeypot field (`hp_token`). If this field is filled, the request is rejected as likely bot activity.
 - Duplicate signups are prevented unless explicitly allowed by waitlist settings
-- Proper error messages are returned for invalid or blocked emails
+- Proper error messages are returned for invalid, blocked, or bot-like emails

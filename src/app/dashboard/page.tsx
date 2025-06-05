@@ -369,14 +369,16 @@ const getStats = async (): Promise<{
 };
 
 /**
- * Renders the main dashboard page for a user, displaying their waitlists and related statistics.
+ * Renders the dashboard page for authenticated users, displaying various statistics and actions related to their waitlists.
  *
- * This function performs several key tasks:
- * 1. Retrieves the current user information and checks if they are authenticated.
- * 2. Redirects to the sign-in page if the user is not logged in.
- * 3. Determines if the user has premium access and whether to display an upgrade banner based on query parameters.
- * 4. Fetches the user's recent waitlists with subscriber counts.
- * 5. Renders various cards, tables, and components displaying statistics, recent activity, and waitlist details.
+ * The component performs the following tasks:
+ * 1. Fetches initial stats and user data from `getStats` and `getUser` functions respectively.
+ * 2. Checks if the user is an admin based on their role.
+ * 3. Renders different sections of the dashboard such as system status (admin only), your waitlists, quick actions, and more.
+ * 4. Displays waitlist statistics including growth rate, active subscribers, and waitlist status.
+ * 5. Provides links for creating new waitlists, accessing account settings, and viewing analytics.
+ *
+ * @returns {JSX.Element} The dashboard page component.
  */
 export default async function Page({ }: PageProps) {
   const stats = await getStats();

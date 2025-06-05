@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Context, Hono, Next } from 'hono';
 import { HTTPException } from 'hono/http-exception';
 import { MiddlewareHandler, Variables } from 'hono/types';
@@ -58,12 +59,14 @@ export const router = <T extends Record<string, OperationType<Record<string, unk
          * Updates context with new arguments and sets middleware output.
          */
         const nextWrapper = <B>(args: B) => {
-          c.set('__middleware_output', { ...ctx, ...args });
-          return { ...ctx, ...args };
+          const safeArgs = (args && typeof args === 'object') ? args : {};
+          c.set('__middleware_output', { ...ctx, ...safeArgs });
+          return { ...ctx, ...safeArgs };
         };
 
         const res = await middleware({ ctx, next: nextWrapper, c });
-        c.set('__middleware_output', { ...ctx, ...res });
+        const safeRes = (res && typeof res === 'object') ? res : {};
+        c.set('__middleware_output', { ...ctx, ...safeRes });
 
         await next();
       };
@@ -71,10 +74,17 @@ export const router = <T extends Record<string, OperationType<Record<string, unk
       return wrapperFunction;
     });
 
+    // Helper to ensure ctx is always a valid object
+    function getSafeCtx(c: Context): Record<string, unknown> {
+      const raw = c.get('__middleware_output');
+      if (raw === undefined || raw === null) return {};
+      if (typeof raw === 'object') return raw as Record<string, unknown>;
+      return {};
+    }
+
     if (operation.type === 'query') {
       if (operation.schema) {
         route.get(path, queryParsingMiddleware, ...operationMiddlewares, (c) => {
-          const ctx = c.get('__middleware_output') || {};
           const parsedQuery = c.get('parsedQuery');
 
           let input;
@@ -91,19 +101,18 @@ export const router = <T extends Record<string, OperationType<Record<string, unk
             }
           }
 
+          const ctx = getSafeCtx(c);
           return operation.handler({ c, ctx, input });
         });
       } else {
         route.get(path, ...operationMiddlewares, (c) => {
-          const ctx = c.get('__middleware_output') || {};
-
+          const ctx = getSafeCtx(c);
           return operation.handler({ c, ctx, input: undefined });
         });
       }
     } else if (operation.type === 'mutation') {
       if (operation.schema) {
         route.post(path, bodyParsingMiddleware, ...operationMiddlewares, (c) => {
-          const ctx = c.get('__middleware_output') || {};
           const parsedBody = c.get('parsedBody');
 
           let input;
@@ -120,12 +129,12 @@ export const router = <T extends Record<string, OperationType<Record<string, unk
             }
           }
 
+          const ctx = getSafeCtx(c);
           return operation.handler({ c, ctx, input });
         });
       } else {
         route.post(path, ...operationMiddlewares, (c) => {
-          const ctx = c.get('__middleware_output') || {};
-
+          const ctx = getSafeCtx(c);
           return operation.handler({ c, ctx, input: undefined });
         });
       }

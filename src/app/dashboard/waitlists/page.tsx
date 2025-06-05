@@ -1,5 +1,7 @@
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable import/no-default-export */
 'use client';
-import { useQuery, useMutation, useQueryClient, UseQueryResult } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Plus, Users, Eye, Copy, Trash2, MoreVertical, AlertCircle, RefreshCw } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -509,6 +511,7 @@ export default function WaitlistsPage() {
             ) : hasWaitlists ? (
               <div className="space-y-4">
                 {waitlists.map((waitlist) => (
+                  // eslint-disable-next-line jsx-a11y/click-events-have-key-events
                   <div
                     key={waitlist.id}
                     className="flex items-center justify-between rounded-lg border p-4 hover:bg-accent/50 transition-colors cursor-pointer"

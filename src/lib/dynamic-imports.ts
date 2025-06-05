@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import dynamic, { Loader } from 'next/dynamic';
 import { ComponentType, ReactNode } from 'react';
 

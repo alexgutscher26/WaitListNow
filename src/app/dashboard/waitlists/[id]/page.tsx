@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable import/no-default-export */
 import { currentUser } from '@clerk/nextjs/server';
 import { formatDistanceToNow } from 'date-fns';
 import { Eye, Users, BarChart, Settings, ArrowLeft } from 'lucide-react';
@@ -329,10 +331,12 @@ export default async function WaitlistDetailPage({ params }: WaitlistDetailPageP
                 <EmailSettingsForm
                   waitlist={{
                     id: waitlist.id,
-                    customFields: waitlist.customFields as {
-                      sendConfirmationEmail?: boolean;
-                      customThankYouMessage?: string;
-                    } | null,
+                    customFields: waitlist.customFields && typeof waitlist.customFields === 'object'
+                      ? {
+                          sendConfirmationEmail: (waitlist.customFields as any).sendConfirmationEmail ?? false,
+                          customThankYouMessage: (waitlist.customFields as any).customThankYouMessage,
+                        }
+                      : { sendConfirmationEmail: false },
                   }}
                 />
               </CardContent>

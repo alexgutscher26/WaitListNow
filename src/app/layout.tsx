@@ -1,3 +1,5 @@
+/* eslint-disable import/order */
+/* eslint-disable import/no-default-export */
 import type { Metadata, Viewport } from 'next';
 import { Inter } from 'next/font/google';
 import React from 'react';

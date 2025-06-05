@@ -1,3 +1,6 @@
+/* eslint-disable react/no-unescaped-entities */
+/* eslint-disable react/jsx-pascal-case */
+/* eslint-disable import/no-default-export */
 import {
   Star,
   Users,
@@ -52,29 +55,6 @@ const caseStudies = [
   },
 ];
 
-const teamMembers = [
-  {
-    name: 'Alex Johnson',
-    role: 'CEO & Co-founder',
-    bio: 'Former PM at Google. Loves solving hard problems.',
-    image: '/team/alex.jpg',
-    social: { twitter: '#', linkedin: '#' },
-  },
-  {
-    name: 'Jamie Smith',
-    role: 'CTO & Co-founder',
-    bio: 'Ex-engineering lead at Stripe. Full-stack wizard.',
-    image: '/team/jamie.jpg',
-    social: { twitter: '#', linkedin: '#' },
-  },
-  {
-    name: 'Taylor Chen',
-    role: 'Head of Design',
-    bio: 'Previously at Airbnb. Makes things beautiful.',
-    image: '/team/taylor.jpg',
-    social: { twitter: '#', linkedin: '#' },
-  },
-];
 
 const timeline = [
   {

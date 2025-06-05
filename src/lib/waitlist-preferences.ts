@@ -125,7 +125,7 @@ export async function updateUserWaitlistPreferences(
       ),
     };
 
-    console.log(`[updateUserWaitlistPreferences] New preferences for user ${userId}:`, newPrefs);
+    // console.log(`[updateUserWaitlistPreferences] New preferences for user ${userId}:`, newPrefs);
 
     // Update in database using raw SQL to bypass TypeScript type checking
     const result = await db.$executeRaw`
@@ -146,7 +146,7 @@ export async function updateUserWaitlistPreferences(
     );
     return newPrefs;
   } catch (error) {
-    console.error(`[updateUserWaitlistPreferences] Error for user ${userId}:`, error);
+    // console.error(`[updateUserWaitlistPreferences] Error for user ${userId}:`, error);
 
     // If it's our custom error, rethrow it
     if (error instanceof WaitlistPreferencesError) {

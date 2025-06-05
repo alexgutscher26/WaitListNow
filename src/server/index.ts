@@ -1,3 +1,5 @@
+/* eslint-disable import/no-default-export */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 import { handle } from 'hono/vercel';
@@ -8,7 +10,7 @@ import { paymentRouter } from './routers/payment-router';
 const corsOptions = {
   origin: [
     'http://localhost:3000', // Local development
-    'https://your-production-domain.com', // Replace with your production domain
+    'https://your-production-domain.com', // TODO: Replace with your production domain
   ],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],

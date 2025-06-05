@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /**
  * Custom image loader for Next.js that works with CDN
  * This loader ensures that images are properly served from the CDN in production

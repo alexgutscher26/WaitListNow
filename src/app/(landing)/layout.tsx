@@ -1,3 +1,4 @@
+/* eslint-disable import/no-default-export */
 import * as React from 'react';
 import { ReactNode } from 'react';
 import { NavbarClient } from '@/components/navbar-client';

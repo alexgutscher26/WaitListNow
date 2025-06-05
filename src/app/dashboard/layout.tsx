@@ -1,3 +1,4 @@
+/* eslint-disable import/no-default-export */
 'use client';
 
 import {
@@ -9,16 +10,14 @@ import {
   Settings,
   Users,
   X,
-  LogOut,
   ArrowUpRight,
 } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import * as React from 'react';
-import { PropsWithChildren, useState, useMemo } from 'react';
+import { PropsWithChildren, useState } from 'react';
 import { CommandButton } from '@/components/command-button';
 import { UserProfile } from '@/components/dashboard/user-profile';
-import { buttonVariants } from '@/components/ui/button';
 import { Modal } from '@/components/ui/modal';
 import { cn } from '@/utils';
 

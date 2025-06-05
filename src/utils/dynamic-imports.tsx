@@ -1,14 +1,10 @@
 import { Loader2 } from 'lucide-react';
-import React, { Suspense, lazy, ComponentType, ReactNode, ComponentProps } from 'react';
+import React, { Suspense, lazy, ComponentType, ReactNode } from 'react';
 
 interface DynamicImportOptions {
   loading?: () => ReactNode;
   error?: (error: Error) => ReactNode;
 }
-
-type PropsOf<T> = T extends ComponentType<infer P> ? P : Record<string, unknown>;
-
-type DynamicComponentProps<T extends ComponentType<unknown>> = ComponentProps<T>;
 
 const defaultLoading = () => (
   <div className="flex items-center justify-center min-h-[200px]">
@@ -50,11 +46,11 @@ export function dynamicImport<T extends ComponentType<unknown>>(
   const Component = lazy(importFn);
   const LoadingComponent = loading || defaultLoading;
   
-  return function DynamicComponent(props: DynamicComponentProps<T>) {
+  return function DynamicComponent(props: unknown) {
     return (
       <ErrorBoundary fallback={error}>
         <Suspense fallback={<LoadingComponent />}>
-          <Component {...(props as any)} />
+          <Component {...(props as object)} />
         </Suspense>
       </ErrorBoundary>
     );

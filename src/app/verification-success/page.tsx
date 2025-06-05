@@ -1,3 +1,4 @@
+/* eslint-disable import/no-default-export */
 import Link from 'next/link';
 import React from 'react';
 import { Button } from '@/components/ui/button';

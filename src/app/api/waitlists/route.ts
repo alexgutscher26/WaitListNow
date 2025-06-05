@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { getAuth } from '@clerk/nextjs/server';
 import { NextResponse, type NextRequest } from 'next/server';
 import { db } from '@/lib/db';

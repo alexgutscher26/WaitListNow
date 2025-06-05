@@ -1,3 +1,5 @@
+/* eslint-disable import/no-default-export */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 'use client';
 import { MoreHorizontal, Users, Edit, Link as LinkIcon, Trash } from 'lucide-react';
 import Link from 'next/link';

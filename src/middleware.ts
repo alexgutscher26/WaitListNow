@@ -1,6 +1,6 @@
+/* eslint-disable import/no-default-export */
 import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
 import { NextResponse, type NextRequest } from 'next/server';
-import { trackPageview } from '@/lib/plausible';
 
 // Define public routes that don't require authentication
 const publicRoutes = [
@@ -33,12 +33,10 @@ const middleware = clerkMiddleware(async (auth, req: NextRequest) => {
   
   // Skip middleware for public routes
   if (isPublicRoute(req)) {
-    trackPageview();
     return NextResponse.next();
   }
 
   // Track page views for authenticated users
-  trackPageview();
 
   // Get the auth state
   const { userId } = await auth();

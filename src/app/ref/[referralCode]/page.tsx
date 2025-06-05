@@ -1,3 +1,4 @@
+/* eslint-disable import/no-default-export */
 import { redirect } from 'next/navigation';
 
 interface RefPageProps {

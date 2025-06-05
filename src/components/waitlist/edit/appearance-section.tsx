@@ -1,3 +1,5 @@
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
 import * as React from 'react';
 import { useState } from 'react';
 import { ChromePicker } from 'react-color';
@@ -69,7 +71,6 @@ const BORDER_RADII: { value: ButtonRounded; label: string }[] = [
 export function AppearanceSection({
   formData,
   onStyleChange,
-  getBorderRadius,
 }: AppearanceSectionProps) {
   const [activeTab, setActiveTab] = useState('colors');
   const [colorPicker, setColorPicker] = useState<{

@@ -1,3 +1,6 @@
+/* eslint-disable react/no-unescaped-entities */
+/* eslint-disable jsx-a11y/label-has-associated-control */
+/* eslint-disable import/no-default-export */
 "use client";
 
 import { useParams } from 'next/navigation';

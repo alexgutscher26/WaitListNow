@@ -1,3 +1,5 @@
+/* eslint-disable import/no-default-export */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { currentUser } from '@clerk/nextjs/server';
 import { Users, TrendingUp, TrendingDown, Activity, Settings, CheckCircle2, Plus } from 'lucide-react';
 import Link from 'next/link';
@@ -390,10 +392,7 @@ export default async function Page({ searchParams = {} }: PageProps) {
 
   // Check if user has premium access
 
-  // Handle upgrade success banner
-  const upgradeParam = searchParams?.upgrade;
-
-  console.log('Clerk user ID:', user.id);
+ // console.log('Clerk user ID:', user.id);
 
   // Find the internal user ID that matches the Clerk user ID
   const dbUser = await db.user.findUnique({

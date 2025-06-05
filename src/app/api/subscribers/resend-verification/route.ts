@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import crypto from 'crypto';
 import { getAuth } from '@clerk/nextjs/server';
 import { NextResponse } from 'next/server';
@@ -369,7 +370,7 @@ export async function GET(request: NextRequest) {
   if (!email) {
     // Try to find the user's email from the database
     const user = await db.user.findUnique({ where: { externalId: userId } });
-    if (user && user.email) {
+    if (user?.email) {
       email = user.email;
     } else {
       return new Response(

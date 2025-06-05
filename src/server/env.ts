@@ -23,9 +23,6 @@ const envSchema = z.object({
   VERCEL_URL: z.string().optional(),
   NEXT_PUBLIC_APP_URL: z.string().url('Invalid application URL'),
 
-  // Plausible Analytics
-  NEXT_PUBLIC_PLAUSIBLE_DOMAIN: z.string().optional(),
-
   // Next.js Runtime
   NEXT_RUNTIME: z.enum(['nodejs', 'edge', 'client']).optional(),
 

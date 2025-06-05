@@ -11,7 +11,8 @@ type SubscriberGrowthData = Array<{
 
 export async function getSubscriberGrowth(waitlistId: string, days = 30) {
   try {
-    const { userId } = auth();
+    const session = await auth();
+    const userId = session.userId;
     if (!userId) {
       throw new Error('Unauthorized');
     }
@@ -50,7 +51,6 @@ export async function getSubscriberGrowth(waitlistId: string, days = 30) {
     `;
 
     // Format the data for the chart
-    const cumulativeCount = 0;
     const result: SubscriberGrowthData = [];
 
     // Generate all dates in the range to ensure we have entries for all days

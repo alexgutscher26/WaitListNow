@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable react/no-unescaped-entities */
+/* eslint-disable import/no-default-export */
 import { Home, ArrowLeft, Users, Sparkles } from 'lucide-react';
 import Link from 'next/link';
 import React from 'react';

@@ -1,3 +1,6 @@
+/* eslint-disable react/no-unescaped-entities */
+/* eslint-disable react/jsx-pascal-case */
+/* eslint-disable import/no-default-export */
 import {
   Star,
   Users,
@@ -49,30 +52,6 @@ const caseStudies = [
       'Discover how LaunchPad validated their product and secured funding with our waitlist.',
     metrics: '10,000+ signups • 45% conversion rate • $1.2M seed round',
     logo: '/logos/launchpad.svg',
-  },
-];
-
-const teamMembers = [
-  {
-    name: 'Alex Johnson',
-    role: 'CEO & Co-founder',
-    bio: 'Former PM at Google. Loves solving hard problems.',
-    image: '/team/alex.jpg',
-    social: { twitter: '#', linkedin: '#' },
-  },
-  {
-    name: 'Jamie Smith',
-    role: 'CTO & Co-founder',
-    bio: 'Ex-engineering lead at Stripe. Full-stack wizard.',
-    image: '/team/jamie.jpg',
-    social: { twitter: '#', linkedin: '#' },
-  },
-  {
-    name: 'Taylor Chen',
-    role: 'Head of Design',
-    bio: 'Previously at Airbnb. Makes things beautiful.',
-    image: '/team/taylor.jpg',
-    social: { twitter: '#', linkedin: '#' },
   },
 ];
 

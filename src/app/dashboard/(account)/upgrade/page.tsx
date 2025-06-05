@@ -1,3 +1,5 @@
+/* eslint-disable react/no-unescaped-entities */
+/* eslint-disable import/no-default-export */
 import { currentUser } from '@clerk/nextjs/server';
 import { Check, CheckCircle, XCircle, Star, Zap, Users, Shield, Crown } from 'lucide-react';
 import { redirect } from 'next/navigation';

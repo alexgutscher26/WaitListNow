@@ -1,6 +1,6 @@
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { Plus, Trash2, GripVertical, X } from 'lucide-react';
+import { Plus, GripVertical, X } from 'lucide-react';
 import * as React from 'react';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
@@ -89,7 +89,6 @@ export function CustomFieldsSection({
   onAddField,
   onUpdateField,
   onRemoveField,
-  onReorderFields,
 }: CustomFieldsSectionProps) {
   const [newField, setNewField] = useState<Omit<CustomField, 'id'>>({
     name: '',
@@ -133,7 +132,7 @@ export function CustomFieldsSection({
         <div className="space-y-4">
           {formData.customFields.length > 0 ? (
             <div className="space-y-2">
-              {formData.customFields.map((field, index) => (
+              {formData.customFields.map((field) => (
                 <SortableItem
                   key={field.id}
                   id={field.id}

@@ -4,13 +4,6 @@ import dynamic from 'next/dynamic';
 import React, { type ReactNode } from 'react';
 
 // Client-side only providers
-const PlausibleProvider = dynamic(
-  () => import('@/app/plausible-provider').then((mod) => mod.PlausibleProvider),
-  {
-    ssr: false,
-    loading: () => null,
-  },
-);
 
 const HeroUIProvider = dynamic(() => import('@heroui/react').then((mod) => mod.HeroUIProvider), {
   ssr: false,
@@ -39,13 +32,11 @@ interface ClientProvidersProps {
 
 export function ClientProviders({ children }: ClientProvidersProps) {
   return (
-    <PlausibleProvider>
-      <HeroUIProvider>
-        {children}
-        <Toaster />
-        <Analytics />
-        <SpeedInsights />
-      </HeroUIProvider>
-    </PlausibleProvider>
+    <HeroUIProvider>
+      {children}
+      <Toaster />
+      <Analytics />
+      <SpeedInsights />
+    </HeroUIProvider>
   );
 }

@@ -4,6 +4,8 @@ import { format } from 'date-fns';
 import dynamic from 'next/dynamic';
 import { useTheme } from 'next-themes';
 import React, { useEffect, useState } from 'react';
+import type { ValueType, NameType } from 'recharts/types/component/DefaultTooltipContent';
+import type { TooltipProps as RechartsTooltipProps } from 'recharts/types/component/Tooltip';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 
@@ -15,21 +17,11 @@ interface ChartData {
   cumulative: number;
 }
 
-// Define props interface for the Chart component
-interface TooltipProps {
-  active?: boolean;
-  payload?: Array<{
-    value: number;
-    payload: ChartData;
-  }>;
-  label?: string;
-}
-
 interface ChartProps {
   data: ChartData[];
   isDark: boolean;
   maxValue: number;
-  CustomTooltip: React.ComponentType<TooltipProps>;
+  CustomTooltip: React.ComponentType<RechartsTooltipProps<ValueType, NameType>>;
 }
 
 // Create a single dynamic import for all Recharts components
@@ -110,7 +102,9 @@ const RechartsComponents = dynamic<ChartProps>(
                 vertical={false}
               />
               <Tooltip
-                content={(props: unknown) => <CustomTooltip {...props} />}
+                content={(props: RechartsTooltipProps<ValueType, NameType>) => (
+                  <CustomTooltip {...props} />
+                )}
                 contentStyle={{
                   backgroundColor: isDark ? '#1e293b' : '#ffffff',
                   border: 'none',
@@ -150,20 +144,13 @@ const RechartsComponents = dynamic<ChartProps>(
   },
 );
 
-interface ChartDataPoint {
-  date: string;
-  count: number;
-  cumulative: number;
-  formattedDate?: string;
-}
-
 interface SubscriberGrowthChartProps {
   waitlistId: string;
   className?: string;
   days?: number;
 }
 
-const CustomTooltip = ({ active, payload, label }: TooltipProps) => {
+const CustomTooltip = ({ active, payload, label }: RechartsTooltipProps<ValueType, NameType>) => {
   if (!active || !payload?.length) return null;
 
   // Find the original data point to get the correct date
@@ -183,16 +170,13 @@ const CustomTooltip = ({ active, payload, label }: TooltipProps) => {
   return (
     <div className="bg-card p-3 border border-border rounded-md shadow-sm">
       <p className="font-medium text-sm">{formattedDate}</p>
-      {payload.map((entry: unknown, index: number) => (
+      {payload.map((entry, index) => (
         <p
           key={`tooltip-${index}`}
           className="text-sm"
-          style={{ color: entry as string }}
+          style={{ color: entry.color }}
         >
-          {entry instanceof Object && entry.dataKey === 'count'
-            ? 'New Subscribers'
-            : 'Total Subscribers'}
-          : <span className="font-medium">{entry.value.toLocaleString()}</span>
+
         </p>
       ))}
     </div>

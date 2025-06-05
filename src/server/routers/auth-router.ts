@@ -1,16 +1,20 @@
 import { currentUser } from '@clerk/nextjs/server';
-// HTTPException import removed as it's not used
 import { db } from '@/lib/db';
 import { router } from '../__internals/router';
 import { publicProcedure } from '../procedures';
 export const dynamic = 'force-dynamic';
 
-export const authRouter = router({
+export const authRouter = router<{
+  getDatabaseSyncStatus: import('../__internals/types').QueryOperation<
+    Record<string, unknown>,
+    Record<string, unknown>
+  >;
+}>({
   getDatabaseSyncStatus: publicProcedure.query(async ({ c }) => {
     const auth = await currentUser();
 
     if (!auth) {
-      return c.json({ isSynced: false });
+      return c.superjson({ isSynced: false } as Record<string, unknown>);
     }
 
     const user = await db.user.findFirst({
@@ -28,7 +32,7 @@ export const authRouter = router({
       });
     }
 
-    return c.json({ isSynced: true });
+    return c.superjson({ isSynced: true } as Record<string, unknown>);
   }),
 });
 

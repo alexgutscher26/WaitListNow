@@ -36,7 +36,7 @@ export function POST(req) {
           ];
         case 2:
           user = _a.sent();
-          if (Boolean(user)) return [3 /*break*/, 4];
+          if (user) return [3 /*break*/, 4];
           email = json.email;
           if (!email) {
             return [2 /*return*/, new NextResponse('Email is required', { status: 400 })];

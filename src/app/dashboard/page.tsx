@@ -30,7 +30,7 @@ interface StatCardProps {
   value: string | number;
   icon: React.ComponentType<{ className?: string }>;
   className?: string;
-  trend?: 'up' | 'down' | undefined;
+  trend?: 'up' | 'down';
   trendValue?: string;
 }
 

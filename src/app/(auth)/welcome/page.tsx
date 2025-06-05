@@ -1,6 +1,5 @@
 'use client';
 
-
 // synchronize auth status to database
 
 import { LucideProps } from 'lucide-react';

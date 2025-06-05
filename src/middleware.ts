@@ -21,7 +21,7 @@ const protectedRoutes = [
   '/dashboard(.*)',
   '/welcome',
   '/api/auth(.*)',
-  '/api/subscribers(.*)'
+  '/api/subscribers(.*)',
   // Add other API routes that need protection
 ];
 
@@ -30,7 +30,7 @@ const isProtectedRoute = createRouteMatcher(protectedRoutes);
 
 const middleware = clerkMiddleware(async (auth, req: NextRequest) => {
   const { pathname } = req.nextUrl;
-  
+
   // Skip middleware for public routes
   if (isPublicRoute(req)) {
     return NextResponse.next();
@@ -71,6 +71,6 @@ export const config = {
     '/(api|trpc)(.*)',
     // Protect dashboard and private API routes
     '/dashboard/:path*',
-    '/api/private/:path*'
-  ]
+    '/api/private/:path*',
+  ],
 };

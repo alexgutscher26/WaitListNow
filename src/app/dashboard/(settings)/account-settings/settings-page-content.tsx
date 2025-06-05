@@ -241,7 +241,14 @@ const AccountSettingsContent = () => {
     referralCode: string;
     referralCount: number;
     rewards: { name: string; count: number; reward: string }[];
-    nextReward: { name: string; count: number; reward: string; referralsToNext: number; progress: number; message: string } | null;
+    nextReward: {
+      name: string;
+      count: number;
+      reward: string;
+      referralsToNext: number;
+      progress: number;
+      message: string;
+    } | null;
     progress: number;
     topReferrer: boolean;
   } | null>(null);
@@ -1312,7 +1319,10 @@ const AccountSettingsContent = () => {
                   <div className="flex items-center justify-between relative">
                     {/* Stepper Circles */}
                     {referralInfo.rewards?.map((reward, idx) => (
-                      <div key={reward.count} className="flex-1 flex flex-col items-center group">
+                      <div
+                        key={reward.count}
+                        className="flex-1 flex flex-col items-center group"
+                      >
                         <div className="relative z-10">
                           <div className="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center text-white font-bold shadow-lg border-2 border-green-600">
                             <span>{idx + 1}</span>
@@ -1326,7 +1336,10 @@ const AccountSettingsContent = () => {
                         </div>
                         {/* Connector */}
                         {idx < (referralInfo.rewards?.length ?? 0) - 1 && (
-                          <div className="absolute top-1/2 left-full w-full h-1 bg-green-400 z-0" style={{ width: '100%', height: 4, marginLeft: -8 }} />
+                          <div
+                            className="absolute top-1/2 left-full w-full h-1 bg-green-400 z-0"
+                            style={{ width: '100%', height: 4, marginLeft: -8 }}
+                          />
                         )}
                       </div>
                     ))}
@@ -1367,7 +1380,10 @@ const AccountSettingsContent = () => {
                 {(referralInfo.rewards?.length ?? 0) > 0 && (
                   <div className="mb-2 flex flex-wrap gap-2">
                     {referralInfo.rewards?.map((reward) => (
-                      <Badge key={reward.count} className="bg-green-600 text-white">
+                      <Badge
+                        key={reward.count}
+                        className="bg-green-600 text-white"
+                      >
                         {reward.name}
                       </Badge>
                     ))}
@@ -1376,7 +1392,10 @@ const AccountSettingsContent = () => {
                 {/* Referral Link */}
                 <div className="flex items-center justify-between mb-2">
                   <h4 className="font-medium">Your Referral Link</h4>
-                  <Badge variant="secondary">{referralInfo.referralCount} referral{referralInfo.referralCount === 1 ? '' : 's'}</Badge>
+                  <Badge variant="secondary">
+                    {referralInfo.referralCount} referral
+                    {referralInfo.referralCount === 1 ? '' : 's'}
+                  </Badge>
                 </div>
                 <div className="flex items-center gap-2">
                   <code className="flex-1 p-2 bg-white rounded border text-sm overflow-x-auto">
@@ -1442,7 +1461,10 @@ const AccountSettingsContent = () => {
               ))}
             </div>
           ) : (
-            <div className="text-sm text-gray-500">You haven&apos;t unlocked any referral badges yet. Start sharing your link to earn rewards!</div>
+            <div className="text-sm text-gray-500">
+              You haven&apos;t unlocked any referral badges yet. Start sharing your link to earn
+              rewards!
+            </div>
           )}
         </CardContent>
       </Card>

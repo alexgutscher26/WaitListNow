@@ -22,7 +22,11 @@ type OperationType<I extends Record<string, unknown>, O> =
  * @param obj - An object where keys are route identifiers and values are operation configurations.
  * @returns A configured Hono router instance with defined routes and middleware.
  */
-export const router = <T extends Record<string, OperationType<Record<string, unknown>, Record<string, unknown>>>>(obj: T) => {
+export const router = <
+  T extends Record<string, OperationType<Record<string, unknown>, Record<string, unknown>>>,
+>(
+  obj: T,
+) => {
   const route = new Hono<{ Bindings: Bindings; Variables: any }>().onError((err, c) => {
     if (err instanceof HTTPException) {
       return c.json(
@@ -59,13 +63,13 @@ export const router = <T extends Record<string, OperationType<Record<string, unk
          * Updates context with new arguments and sets middleware output.
          */
         const nextWrapper = <B>(args: B) => {
-          const safeArgs = (args && typeof args === 'object') ? args : {};
+          const safeArgs = args && typeof args === 'object' ? args : {};
           c.set('__middleware_output', { ...ctx, ...safeArgs });
           return { ...ctx, ...safeArgs };
         };
 
         const res = await middleware({ ctx, next: nextWrapper, c });
-        const safeRes = (res && typeof res === 'object') ? res : {};
+        const safeRes = res && typeof res === 'object' ? res : {};
         c.set('__middleware_output', { ...ctx, ...safeRes });
 
         await next();
@@ -141,8 +145,10 @@ export const router = <T extends Record<string, OperationType<Record<string, unk
     }
   });
 
-  type InferInput<T> = T extends OperationType<infer I, Record<string, unknown>> ? I : Record<string, never>;
-  type InferOutput<T> = T extends OperationType<Record<string, unknown>, infer I> ? I : Record<string, never>;
+  type InferInput<T> =
+    T extends OperationType<infer I, Record<string, unknown>> ? I : Record<string, never>;
+  type InferOutput<T> =
+    T extends OperationType<Record<string, unknown>, infer I> ? I : Record<string, never>;
 
   return route as Hono<
     { Bindings: Bindings; Variables: Variables },

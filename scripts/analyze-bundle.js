@@ -29,8 +29,8 @@ const pagesDir = join(nextDir, 'server/pages');
 
 function getFiles(dir, fileList = []) {
   const files = readdirSync(dir, { withFileTypes: true });
-  
-  files.forEach(file => {
+
+  files.forEach((file) => {
     const filePath = join(dir, file.name);
     if (file.isDirectory()) {
       getFiles(filePath, fileList);
@@ -45,7 +45,7 @@ function getFiles(dir, fileList = []) {
       });
     }
   });
-  
+
   return fileList;
 }
 
@@ -67,14 +67,10 @@ console.log('-'.repeat(110));
 let totalSize = 0;
 let totalGzip = 0;
 
-allFiles.slice(0, 20).forEach(file => {
+allFiles.slice(0, 20).forEach((file) => {
   const size = filesize(file.size, { round: 1 });
   const gzip = filesize(file.gzip, { round: 1 });
-  console.log(
-    file.path.padEnd(80) +
-    size.padStart(15) +
-    gzip.padStart(15)
-  );
+  console.log(file.path.padEnd(80) + size.padStart(15) + gzip.padStart(15));
   totalSize += file.size;
   totalGzip += file.gzip;
 });
@@ -93,14 +89,11 @@ const results = {
   totalFiles: allFiles.length,
   totalSize,
   totalGzip,
-  largestFiles: allFiles.slice(0, 10).map(f => ({
+  largestFiles: allFiles.slice(0, 10).map((f) => ({
     path: f.path,
     size: f.size,
     gzip: f.gzip,
   })),
 };
 
-writeFileSync(
-  join(process.cwd(), 'bundle-stats.json'),
-  JSON.stringify(results, null, 2)
-);
+writeFileSync(join(process.cwd(), 'bundle-stats.json'), JSON.stringify(results, null, 2));

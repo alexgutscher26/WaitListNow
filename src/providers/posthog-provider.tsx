@@ -6,7 +6,6 @@ import posthog from 'posthog-js';
 import { PostHogProvider as PHProvider, usePostHog } from 'posthog-js/react';
 import React, { Suspense, useEffect } from 'react';
 
-
 /**
  * Provides PostHog tracking context and captures page views.
  */

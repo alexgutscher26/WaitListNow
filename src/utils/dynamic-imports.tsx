@@ -15,16 +15,17 @@ const defaultLoading = () => (
 const defaultError = (error: Error) => (
   <div className="text-red-500 p-4">
     <p>Failed to load component</p>
-    {process.env.NODE_ENV === 'development' && (
-      <pre className="text-xs mt-2">{error.message}</pre>
-    )}
+    {process.env.NODE_ENV === 'development' && <pre className="text-xs mt-2">{error.message}</pre>}
   </div>
 );
 
-class ErrorBoundary extends React.Component<{
-  fallback: (error: Error) => ReactNode;
-  children: ReactNode;
-}, { hasError: boolean; error: Error | null }> {
+class ErrorBoundary extends React.Component<
+  {
+    fallback: (error: Error) => ReactNode;
+    children: ReactNode;
+  },
+  { hasError: boolean; error: Error | null }
+> {
   state = { hasError: false, error: null };
 
   static getDerivedStateFromError(error: Error) {
@@ -41,11 +42,11 @@ class ErrorBoundary extends React.Component<{
 
 export function dynamicImport<T extends ComponentType<unknown>>(
   importFn: () => Promise<{ default: T }>,
-  { loading, error = defaultError }: DynamicImportOptions = {}
+  { loading, error = defaultError }: DynamicImportOptions = {},
 ) {
   const Component = lazy(importFn);
   const LoadingComponent = loading || defaultLoading;
-  
+
   return function DynamicComponent(props: unknown) {
     return (
       <ErrorBoundary fallback={error}>

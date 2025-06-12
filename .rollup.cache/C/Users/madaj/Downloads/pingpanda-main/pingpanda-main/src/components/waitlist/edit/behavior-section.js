@@ -11,8 +11,8 @@ import { Copy, Check } from 'lucide-react';
 /**
  * Renders a behavior section component for configuring waitlist settings.
  *
- * This function manages various tabs for different configuration options such as confirmation, verification,
- * referrals, and embedding. It uses React hooks to manage the state of active tab and copy status.
+ * This function manages multiple tabs for different configuration options such as confirmation, verification,
+ * referrals, and embedding. It uses React hooks to manage the state of the active tab and copy status.
  * The component provides UI elements for users to configure settings like email verification, referral
  * tracking, and embedding code. It also includes functionality to copy the embed code to clipboard.
  */

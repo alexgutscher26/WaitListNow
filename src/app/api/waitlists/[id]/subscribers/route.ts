@@ -188,7 +188,11 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
         );
         if (!verifyRes.ok) {
           const errText = await verifyRes.text();
-          console.error('[WAITLIST_VERIFICATION_EMAIL_ERROR]', sanitizeForConsole(verifyRes.status), sanitizeForConsole(errText));
+          console.error(
+            '[WAITLIST_VERIFICATION_EMAIL_ERROR]',
+            sanitizeForConsole(verifyRes.status),
+            sanitizeForConsole(errText),
+          );
         } else {
           console.log('[WAITLIST_VERIFICATION_EMAIL_SENT]', subscriber.email);
         }
@@ -382,6 +386,3 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
     );
   }
 }
-
-
-

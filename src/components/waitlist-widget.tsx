@@ -30,6 +30,16 @@ export interface WaitlistWidgetProps {
   className?: string;
 }
 
+/**
+ * A React component that renders a waitlist subscription widget.
+ *
+ * This component manages state for email and name inputs, handles form submission,
+ * and applies dynamic styling based on provided props. It uses the Fetch API to
+ * submit user data to a server endpoint. Error handling is implemented using toast notifications.
+ *
+ * @param {WaitlistWidgetProps} props - The properties passed to the widget component.
+ * @returns {JSX.Element} A React element representing the waitlist widget.
+ */
 export function WaitlistWidget({
   waitlistId,
   style = {},
@@ -43,6 +53,16 @@ export function WaitlistWidget({
   const { toast } = useToast();
   const [formRenderedAt] = useState(() => Date.now().toString());
 
+  /**
+   * Handles form submission for adding a subscriber to a waitlist.
+   *
+   * This function prevents the default form submission behavior, validates the email input,
+   * and sends a POST request to the server with the subscriber's details. It handles success
+   * by displaying a success toast and clearing the input fields, while errors are caught and
+   * displayed in an error toast.
+   *
+   * @param e - The React form event object.
+   */
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 

@@ -40,6 +40,17 @@ const log = (...args: unknown[]) => isDev && console.log('[Waitlist Subscribers 
 
 // GET /api/waitlists/[id]/subscribers - Get subscribers for a specific waitlist
 // POST /api/waitlists/[id]/subscribers - Add a new subscriber to a waitlist
+/**
+ * Handles POST requests to subscribe an email to a waitlist.
+ *
+ * This function processes incoming requests to add subscribers to a specified waitlist.
+ * It validates the request body, checks for disposable emails, and ensures that duplicates are handled based on settings.
+ * If required, it generates a verification token and sends either a verification or confirmation email.
+ *
+ * @param req - The NextRequest object containing the request details.
+ * @param { params: { id: string } } - An object containing the waitlist ID from URL parameters.
+ * @returns A JSON response with the subscriber details if successful, or an error message if not.
+ */
 export async function POST(req: NextRequest, { params }: { params: { id: string } }) {
   // const apiKey = req.headers.get('authorization')?.replace('Bearer ', '');
   // if (!apiKey || !(await isValidApiKey(apiKey, params.id))) {
@@ -90,7 +101,7 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
     if (isDisposableEmail(body.email)) {
       return new NextResponse(
         JSON.stringify({ error: 'Disposable email addresses are not allowed.' }),
-        { status: 400, headers: { 'Content-Type': 'application/json' } }
+        { status: 400, headers: { 'Content-Type': 'application/json' } },
       );
     }
 
@@ -188,7 +199,11 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
         );
         if (!verifyRes.ok) {
           const errText = await verifyRes.text();
-          console.error('[WAITLIST_VERIFICATION_EMAIL_ERROR]', sanitizeForConsole(verifyRes.status), sanitizeForConsole(errText));
+          console.error(
+            '[WAITLIST_VERIFICATION_EMAIL_ERROR]',
+            sanitizeForConsole(verifyRes.status),
+            sanitizeForConsole(errText),
+          );
         } else {
           console.log('[WAITLIST_VERIFICATION_EMAIL_SENT]', subscriber.email);
         }
@@ -382,6 +397,3 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
     );
   }
 }
-
-
-

@@ -17,6 +17,24 @@ const submissionSchema = z.object({
   formRenderedAt: z.string().optional(), // Timestamp for intelligent CAPTCHA
 });
 
+/**
+ * Handles POST requests to join a waitlist.
+ *
+ * This function processes incoming requests to join a waitlist, performing various checks and actions including:
+ * 1. Handling CORS preflight requests.
+ * 2. Retrieving the waitlist details based on the provided ID.
+ * 3. Parsing and validating the request body against a schema.
+ * 4. Checking for disposable email addresses.
+ * 5. Verifying if the user is already subscribed to the waitlist.
+ * 6. Creating a new subscriber entry in the database.
+ * 7. Updating referral counts and sending emails for new reward tiers reached by referrers.
+ * 8. Generating and sending verification emails if required by the waitlist settings.
+ *
+ * @param request - The incoming HTTP request object.
+ * @param params - An object containing route parameters, specifically the waitlist ID.
+ * @returns A JSON response indicating success or failure of the operation.
+ * @throws Error If an internal server error occurs during processing.
+ */
 export async function POST(request: Request, { params }: { params: { id: string } }) {
   try {
     // Handle CORS preflight

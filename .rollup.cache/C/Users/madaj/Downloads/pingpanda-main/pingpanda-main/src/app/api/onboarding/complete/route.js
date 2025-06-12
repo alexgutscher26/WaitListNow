@@ -14,6 +14,18 @@ var log = function () {
   return isDev && console.log.apply(console, __spreadArray(['[Onboarding API]'], args, false));
 };
 // POST /api/onboarding/complete - Mark onboarding as complete
+/**
+ * Handles POST request to complete user onboarding and create a default waitlist.
+ *
+ * This function processes incoming JSON data, verifies user authentication,
+ * creates or updates user information in the database, and then creates a default waitlist.
+ * It handles various error scenarios including validation errors, database constraint violations,
+ * and Prisma-specific errors. The function logs detailed information at each step for debugging purposes.
+ *
+ * @param req - The incoming HTTP request object containing user data and authentication details.
+ * @returns A NextResponse object with the result of the onboarding process, including updated user
+ *          and waitlist details if successful, or an error message and status code if unsuccessful.
+ */
 export function POST(req) {
   return __awaiter(this, void 0, void 0, function () {
     var userId,
